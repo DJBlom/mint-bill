@@ -12,17 +12,17 @@ system should be stored in the docs directory under their respective child direc
 
 
 ## Project Tool
-The project tool used to set up the development for the developer is called `MintBill.sh`,                       
+The project tool used to set up the development for the developer is called `mintbill.sh`,                       
 located in the **scripts** directory found in the project base directory.                       
-- For a description of the tool and its capabilities, run `./scripts/MintBill.sh -h`.        
+- For a description of the tool and its capabilities, run `./scripts/mintbill.sh -h`.        
 
 
 ## Getting Ready For Development
 Follow the below steps to set up your system for development for this project.          
 **NOTE: Currently, the project supports development on Fedora and Ubuntu.**                 
-- To install all required packages for code development: `./scripts/MintBill.sh -i develop` 
-- To install all required tools for GUI design: `./scripts/MintBill.sh -i design`
-- To install all required tools for analysis: `./scripts/MintBill.sh -i analysis`
+- To install all required packages for code development: `./scripts/mintbill.sh -i develop` 
+- To install all required tools for GUI design: `./scripts/mintbill.sh -i design`
+- To install all required tools for analysis: `./scripts/mintbill.sh -i analysis`
 
 
 ## Rules For Developments
