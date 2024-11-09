@@ -40,7 +40,7 @@ function run_build()
 
 function host_build()
 {
-    mkdir $BIN_DIR
+    mkdir -p $BIN_DIR
     $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
                                                  -DCMAKE_PROJECT_NAME=$PROJECT_NAME  \
                                                  -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \

@@ -55,13 +55,8 @@ function static_code_analysis()
              --suppress=missingIncludeSystem \
              --suppress=checkersReport \
              -I $prj_dir/app/include \
-             -I $prj_dir/api/include \
-             -I $prj_dir/system/include \
              -I $prj_dir/features/include \
-             -I $prj_dir/algorithms/include \
              $prj_dir/app/source \
-             $prj_dir/api/source \
-             $prj_dir/system/source \
              $prj_dir/features/source 
 }
 
