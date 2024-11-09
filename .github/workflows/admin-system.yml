@@ -1,0 +1,99 @@
+name: admin-system
+on:
+  pull_request:
+    branches:
+    - main
+    - develop
+    - feature/*
+    - refactor/*
+
+  push:
+    branches:
+    - main
+    - develop
+    - feature/*
+    - refactor/*
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    container:
+      image: dawidblom/admin-system:v1.0
+      credentials:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Build
+      run: sudo -E scripts/mintbill.sh --build=host
+
+  Statistics:
+    runs-on: ubuntu-latest
+    container:
+      image: dawidblom/admin-system:v1.0
+      credentials:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Statistics
+      run: sudo -E scripts/mintbill.sh --stats=lc
+
+  StaticCodeAnalysis:
+    runs-on: ubuntu-latest
+    container:
+      image: dawidblom/admin-system:v1.0
+      credentials:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+    needs: Build
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Static Code Analysis
+      run: sudo -E scripts/mintbill.sh --test=sca
+
+  UnitTest:
+    runs-on: ubuntu-latest
+    container:
+      image: dawidblom/admin-system:v1.0
+      credentials:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+    needs: Build
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Unit Tests
+      run: sudo -E scripts/mintbill.sh --test=unit
+      env:
+        CPPUTEST_HOME: ${{ vars.CPPUTEST_HOME  }}
+
+  CodeCoverage:
+    runs-on: ubuntu-latest
+    container:
+      image: dawidblom/admin-system:v1.0
+      credentials:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+    needs: Build
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Code Coverage
+      run: sudo -E scripts/mintbill.sh --test=coverage
