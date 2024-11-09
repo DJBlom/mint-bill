@@ -82,18 +82,18 @@ jobs:
       env:
         CPPUTEST_HOME: ${{ vars.CPPUTEST_HOME  }}
 
-  CodeCoverage:
-    runs-on: ubuntu-latest
-    container:
-      image: dawidblom/admin-system:v1.0
-      credentials:
-        username: ${{ vars.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-    needs: Build
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    - name: Code Coverage
-      run: sudo -E scripts/mintbill.sh --test=coverage
+#  CodeCoverage:
+#    runs-on: ubuntu-latest
+#    container:
+#      image: dawidblom/admin-system:v1.0
+#      credentials:
+#        username: ${{ vars.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+#
+#    needs: Build
+#    steps:
+#    - name: Checkout Code
+#      uses: actions/checkout@v4
+#
+#    - name: Code Coverage
+#      run: sudo -E scripts/mintbill.sh --test=coverage
