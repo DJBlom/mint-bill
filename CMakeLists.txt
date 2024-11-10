@@ -34,57 +34,57 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 if(BUILD_PROJECT)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
+        find_package(PkgConfig REQUIRED)
+        pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
 
-    add_compile_options(
-        -Wall
-        -Werror
-        -Wextra
-        -Wconversion
-        $<$<CONFIG:DEBUG>:-g3>
-        $<$<CONFIG:DEBUG>:-Og>
-    )
-
-    add_compile_definitions(
-        $<$<CONFIG:DEBUG>:DEBUG>
-        $<$<CONFIG:DEBUG>:TRACE_ENABLED>
-    )
-
-    add_executable(${PROJECT_NAME}
-        ${CMAKE_SOURCE_DIR}/app/source/main.cpp
-        ${CMAKE_SOURCE_DIR}/app/source/admin.cpp
-    )
-
-    target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_SOURCE_DIR}/app/include
-        ${CMAKE_SOURCE_DIR}/features/include
-        ${GTKMM_INCLUDE_DIRS}
-    )
-
-    target_link_options(${PROJECT_NAME} PRIVATE
-        LINKER:-lpthread
-        LINKER:-lrt
-    )
-
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARIES})
-    target_link_directories(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARY_DIRS})
-
-    #    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
-    #        add_subdirectory(${CMAKE_SOURCE_DIR}/features)
-    #        target_link_libraries(${PROJECT_NAME} PRIVATE features)
-    #    else()
-    #        message(STATUS "Directory features, does not exist")
-    #    endif()
-
-    if (EXISTS ${CMAKE_OBJDUMP})
-        add_custom_command(
-            TARGET ${PROJECT_NAME}
-            POST_BUILD
-            COMMAND ${CMAKE_OBJDUMP} -hS $<TARGET_FILE:${PROJECT_NAME}>
-                    >${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_NAME:${PROJECT_NAME}>.S
+        add_compile_options(
+                -Wall
+                -Werror
+                -Wextra
+                -Wconversion
+                $<$<CONFIG:DEBUG>:-g3>
+                $<$<CONFIG:DEBUG>:-Og>
         )
-    else ()
-        message(STATUS "'objdump' not found: cannot generate .S file")
-    endif()
+
+        add_compile_definitions(
+                $<$<CONFIG:DEBUG>:DEBUG>
+                $<$<CONFIG:DEBUG>:TRACE_ENABLED>
+        )
+
+        add_executable(${PROJECT_NAME}
+                ${CMAKE_SOURCE_DIR}/app/source/main.cpp
+                ${CMAKE_SOURCE_DIR}/app/source/admin.cpp
+        )
+
+        target_include_directories(${PROJECT_NAME} PRIVATE
+                ${CMAKE_SOURCE_DIR}/app/include
+                ${CMAKE_SOURCE_DIR}/features/include
+                ${GTKMM_INCLUDE_DIRS}
+        )
+
+        target_link_options(${PROJECT_NAME} PRIVATE
+                LINKER:-lpthread
+                LINKER:-lrt
+        )
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARIES})
+        target_link_directories(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARY_DIRS})
+
+        #    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
+        #        add_subdirectory(${CMAKE_SOURCE_DIR}/features)
+        #        target_link_libraries(${PROJECT_NAME} PRIVATE features)
+        #    else()
+        #        message(STATUS "Directory features, does not exist")
+        #    endif()
+
+        if (EXISTS ${CMAKE_OBJDUMP})
+                add_custom_command(
+                        TARGET ${PROJECT_NAME}
+                        POST_BUILD
+                        COMMAND ${CMAKE_OBJDUMP} -hS $<TARGET_FILE:${PROJECT_NAME}>
+                        >${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_NAME:${PROJECT_NAME}>.S
+                )
+        else ()
+                message(STATUS "'objdump' not found: cannot generate .S file")
+        endif()
 endif()

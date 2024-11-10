@@ -13,6 +13,6 @@
 
 int main(int argc, char** argv)
 {
-    app::admin admin_app;
-    return admin_app.run(argc, argv);
+        app::admin admin_app;
+        return admin_app.run(argc, argv);
 }

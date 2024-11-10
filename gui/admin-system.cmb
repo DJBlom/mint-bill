@@ -430,7 +430,7 @@
 	(1,95,123,"GtkGridLayoutChild","row","15",None,None,None,None),
 	(1,95,123,"GtkGridLayoutChild","row-span","1",None,None,None,None),
 	(1,95,124,"GtkGridLayoutChild","column","2",None,None,None,None),
-	(1,95,124,"GtkGridLayoutChild","column-span","3",None,None,None,None),
+	(1,95,124,"GtkGridLayoutChild","column-span","2",None,None,None,None),
 	(1,95,124,"GtkGridLayoutChild","row","1",None,None,None,None),
 	(1,95,146,"GtkGridLayoutChild","row","1",None,None,None,None),
 	(1,95,147,"GtkGridLayoutChild","column","1",None,None,None,None),

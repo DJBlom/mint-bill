@@ -8,8 +8,8 @@
 #ifndef _ERRORS_H_
 #define _ERRORS_H_
 namespace System {
-	enum class Errors {
-		construction = 1
-	};
+        enum class Errors {
+                construction = 1
+        };
 }
 #endif

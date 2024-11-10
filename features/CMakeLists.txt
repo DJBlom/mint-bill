@@ -14,16 +14,16 @@ project(target-features VERSION 0.0.1 LANGUAGES CXX C)
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-    add_library(features 
-        OBJECT
-    )
+        add_library(features 
+                OBJECT
+        )
 
-    target_include_directories(features 
-        PRIVATE
-        ${PROJECT_SOURCE_DIR}/include/
-        PUBLIC
-        ${CMAKE_SOURCE_DIR}/app/include
-    )
+        target_include_directories(features 
+                PRIVATE
+                ${PROJECT_SOURCE_DIR}/include/
+                PUBLIC
+                ${CMAKE_SOURCE_DIR}/app/include
+        )
 else ()
-    message(STATUS "There are no files in, features/source.")
+        message(STATUS "There are no files in, features/source.")
 endif()

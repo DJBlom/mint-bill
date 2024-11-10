@@ -63,9 +63,9 @@ function static_code_analysis()
 function code_coverage()
 {
 	local prj_dir=$(pwd)
-    local coverage_dir=$BUILD_DIR/coverage
-    mkdir -p $coverage_dir
-    make -C $TEST_DIR -s gcov
+        local coverage_dir=$BUILD_DIR/coverage
+        mkdir -p $coverage_dir
+        make -C $TEST_DIR -s gcov
 	gcovr --exclude="^[^\/]+\/mocks\/?(?:[^\/]+\/?)*$" --exclude-throw-branches -r $prj_dir \
 	--html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
 
@@ -75,41 +75,41 @@ function code_coverage()
 	threshold=80
 	if [[ $total_coverage -lt $threshold ]];
 	then
-        $ECHO "${ERROR_COLOR}FAILED: Total coverage should be ${threshold}.0% or higher.${END_COLOR}"
-        $ECHO "${INFO_COLOR}INFO: Currently, it is ${total_coverage}.0%${END_COLOR}"
+                $ECHO "${ERROR_COLOR}FAILED: Total coverage should be ${threshold}.0% or higher.${END_COLOR}"
+                $ECHO "${INFO_COLOR}INFO: Currently, it is ${total_coverage}.0%${END_COLOR}"
         if [ -d $coverage_dir ];
         then
-            rm -rf $coverage_dir
-            make -C $TEST_DIR -s clean
+                rm -rf $coverage_dir
+                make -C $TEST_DIR -s clean
         fi
-        exit 1
+                exit 1
 	else
-        $ECHO "${SUCCESS_COLOR}PASS: Total coverage is: ${total_coverage}.0%${END_COLOR}"
+                $ECHO "${SUCCESS_COLOR}PASS: Total coverage is: ${total_coverage}.0%${END_COLOR}"
         if [ -d $coverage_dir ];
         then
-            rm -rf $coverage_dir
-            make -C $TEST_DIR -s clean
+                rm -rf $coverage_dir
+                make -C $TEST_DIR -s clean
         fi
-        exit 0
+                exit 0
 	fi
 }
 
 function unit_test()
 {
 	local prj_dir=$(pwd)
-    make -C $TEST_DIR -s
-    make -C $TEST_DIR -s clean
+        make -C $TEST_DIR -s
+        make -C $TEST_DIR -s clean
 }
 
 function show_code_coverage()
 {
 	local prj_dir=$(pwd)
-    local coverage_dir=$BUILD_DIR/coverage
-    sudo mkdir -p $coverage_dir
-    sudo -E make -C $TEST_DIR -s gcov
-	sudo gcovr -e $TEST_DIR/mocks --exclude-throw-branches -r $prj_dir \
-	--html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
+        local coverage_dir=$BUILD_DIR/coverage
+        sudo mkdir -p $coverage_dir
+        sudo -E make -C $TEST_DIR -s gcov
+        sudo gcovr -e $TEST_DIR/mocks --exclude-throw-branches -r $prj_dir \
+                --html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
 
-    firefox $coverage_dir/coverage.html
-    sudo -E make -C $TEST_DIR -s clean
+        firefox $coverage_dir/coverage.html
+        sudo -E make -C $TEST_DIR -s clean
 }
