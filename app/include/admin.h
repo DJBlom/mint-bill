@@ -62,7 +62,7 @@ namespace app {
                                 Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
                                 try
                                 {
-                                        refBuilder->add_from_file("/home/odin/workspace/software/admin-system/gui/admin-system.ui");
+                                        refBuilder->add_from_file("admin-system.ui");
                                 }
                                 catch(const Glib::FileError& ex)
                                 {
