@@ -23,47 +23,20 @@
 </name>
 <ownedPresentation>
 <reflist>
-<ref refid="9af4a564-9b6e-11ef-8ea1-396cc00fc51d"/>
 <ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+<ref refid="864bcafc-a053-11ef-b976-59cb4ab0743f"/>
+<ref refid="8bc5364c-a053-11ef-9fea-59cb4ab0743f"/>
+<ref refid="9029c8c3-a053-11ef-ac06-59cb4ab0743f"/>
+<ref refid="933d6072-a053-11ef-bd36-59cb4ab0743f"/>
+<ref refid="9704839d-a053-11ef-bc35-59cb4ab0743f"/>
+<ref refid="c92f2586-a054-11ef-a520-59cb4ab0743f"/>
+<ref refid="cb4a7d3f-a054-11ef-96a9-59cb4ab0743f"/>
+<ref refid="cd079ebf-a054-11ef-aeb9-59cb4ab0743f"/>
+<ref refid="cfa47785-a054-11ef-9914-59cb4ab0743f"/>
+<ref refid="d247a5ae-a054-11ef-b35d-59cb4ab0743f"/>
 </reflist>
 </ownedPresentation>
 </Diagram>
-<Requirement id="9af46de4-9b6e-11ef-ae67-396cc00fc51d">
-<externalId>
-<val>001</val>
-</externalId>
-<name>
-<val></val>
-</name>
-<package>
-<ref refid="c4f6dd0e-9b6e-11ef-94ad-396cc00fc51d"/>
-</package>
-<presentation>
-<reflist>
-<ref refid="9af4a564-9b6e-11ef-8ea1-396cc00fc51d"/>
-</reflist>
-</presentation>
-</Requirement>
-<RequirementItem id="9af4a564-9b6e-11ef-8ea1-396cc00fc51d">
-<matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 400.66796875, 522.42578125)</val>
-</matrix>
-<top-left>
-<val>(0.0, 0.0)</val>
-</top-left>
-<width>
-<val>149.0</val>
-</width>
-<height>
-<val>83.0</val>
-</height>
-<diagram>
-<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
-</diagram>
-<subject>
-<ref refid="9af46de4-9b6e-11ef-ae67-396cc00fc51d"/>
-</subject>
-</RequirementItem>
 <Block id="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d">
 <name>
 <val>mintbill</val>
@@ -74,8 +47,20 @@
 <presentation>
 <reflist>
 <ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+<ref refid="c71835bd-a053-11ef-a314-59cb4ab0743f"/>
 </reflist>
 </presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="ead3ab15-9f6f-11ef-995d-59cb4ab0743f"/>
+<ref refid="efc85915-9f6f-11ef-9ad3-59cb4ab0743f"/>
+<ref refid="f3112fd9-9f6f-11ef-a579-59cb4ab0743f"/>
+<ref refid="f61fb35c-9f6f-11ef-9f88-59cb4ab0743f"/>
+<ref refid="083a9afc-9f70-11ef-ae14-59cb4ab0743f"/>
+<ref refid="be48935b-a054-11ef-94d9-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
 </Block>
 <BlockItem id="9ca8e531-9b6e-11ef-86b6-396cc00fc51d">
 <matrix>
@@ -106,11 +91,6 @@
 <ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
 </reflist>
 </ownedDiagram>
-<ownedType>
-<reflist>
-<ref refid="9af46de4-9b6e-11ef-ae67-396cc00fc51d"/>
-</reflist>
-</ownedType>
 <package>
 <ref refid="58d6c2e8-66f8-11ec-b4c8-0456e5e540ed"/>
 </package>
@@ -137,6 +117,50 @@
 <ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
 </reflist>
 </ownedDiagram>
+<ownedType>
+<reflist>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+<ref refid="65ea1ecb-9f66-11ef-a799-59cb4ab0743f"/>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+<ref refid="caa697d7-9f66-11ef-88f0-59cb4ab0743f"/>
+<ref refid="0563b368-9f67-11ef-bc25-59cb4ab0743f"/>
+<ref refid="81cbf2c1-9f67-11ef-8475-59cb4ab0743f"/>
+<ref refid="a5aee1d7-9f67-11ef-868d-59cb4ab0743f"/>
+<ref refid="08bc54d5-9f68-11ef-a8dd-59cb4ab0743f"/>
+<ref refid="526731d3-9f6a-11ef-8ea2-59cb4ab0743f"/>
+<ref refid="b03ddd7b-9f6e-11ef-808e-59cb4ab0743f"/>
+<ref refid="18088569-9f70-11ef-ae06-59cb4ab0743f"/>
+<ref refid="4d051922-9f70-11ef-a2b7-59cb4ab0743f"/>
+<ref refid="7678667e-9f70-11ef-91e2-59cb4ab0743f"/>
+<ref refid="99bffa5e-9f8c-11ef-96f0-59cb4ab0743f"/>
+<ref refid="50612bda-9f8d-11ef-a4a6-59cb4ab0743f"/>
+<ref refid="1ed9d659-9f8e-11ef-bf64-59cb4ab0743f"/>
+<ref refid="201ebd7d-9f8e-11ef-95fb-59cb4ab0743f"/>
+<ref refid="5994dd89-9f8e-11ef-a1f9-59cb4ab0743f"/>
+<ref refid="af7afa60-9f8e-11ef-b312-59cb4ab0743f"/>
+<ref refid="887c52bb-9f8f-11ef-ba67-59cb4ab0743f"/>
+<ref refid="c90ffba6-9f8f-11ef-943f-59cb4ab0743f"/>
+<ref refid="fadcd0c3-9f90-11ef-8f07-59cb4ab0743f"/>
+<ref refid="e72344b0-9f91-11ef-99c8-59cb4ab0743f"/>
+<ref refid="236259e7-9f92-11ef-b9db-59cb4ab0743f"/>
+<ref refid="82ae6df1-9f92-11ef-97cc-59cb4ab0743f"/>
+<ref refid="bbe1c30e-9f92-11ef-8f32-59cb4ab0743f"/>
+<ref refid="d70f66e4-9f92-11ef-ad77-59cb4ab0743f"/>
+<ref refid="664b35c1-9f93-11ef-8437-59cb4ab0743f"/>
+<ref refid="40581ec6-a036-11ef-ba45-59cb4ab0743f"/>
+<ref refid="a045958a-a036-11ef-8a3f-59cb4ab0743f"/>
+<ref refid="ec33b288-a036-11ef-b91d-59cb4ab0743f"/>
+<ref refid="13add8bc-a037-11ef-9be6-59cb4ab0743f"/>
+<ref refid="e6d4a271-a04e-11ef-bc6e-59cb4ab0743f"/>
+<ref refid="0722eaf3-a04f-11ef-b7da-59cb4ab0743f"/>
+<ref refid="247cc8b9-a051-11ef-be77-59cb4ab0743f"/>
+<ref refid="000d8189-a052-11ef-a10f-59cb4ab0743f"/>
+<ref refid="f248eae2-a052-11ef-99c9-59cb4ab0743f"/>
+<ref refid="10647777-a053-11ef-8caf-59cb4ab0743f"/>
+</reflist>
+</ownedType>
 <package>
 <ref refid="58d6c2e8-66f8-11ec-b4c8-0456e5e540ed"/>
 </package>
@@ -150,6 +174,11 @@
 <ref refid="1dea6ec9-9b72-11ef-8746-396cc00fc51d"/>
 </reflist>
 </ownedDiagram>
+<ownedType>
+<reflist>
+<ref refid="6f0464e6-a054-11ef-b947-59cb4ab0743f"/>
+</reflist>
+</ownedType>
 <package>
 <ref refid="58d6c2e8-66f8-11ec-b4c8-0456e5e540ed"/>
 </package>
@@ -164,6 +193,13 @@
 <name>
 <val>requirements</val>
 </name>
+<ownedPresentation>
+<reflist>
+<ref refid="c71835bd-a053-11ef-a314-59cb4ab0743f"/>
+<ref refid="6f049cb7-a054-11ef-a4be-59cb4ab0743f"/>
+<ref refid="bd788036-a054-11ef-88e8-59cb4ab0743f"/>
+</reflist>
+</ownedPresentation>
 </SysMLDiagram>
 <SysMLDiagram id="27ebd174-9b72-11ef-a0cd-396cc00fc51d">
 <diagramType>
@@ -175,6 +211,89 @@
 <name>
 <val>requirements</val>
 </name>
+<ownedPresentation>
+<reflist>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+<ref refid="65ea4fbc-9f66-11ef-a9b3-59cb4ab0743f"/>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+<ref refid="caa6c7ac-9f66-11ef-ba0d-59cb4ab0743f"/>
+<ref refid="0563e59a-9f67-11ef-8dd2-59cb4ab0743f"/>
+<ref refid="81cc23eb-9f67-11ef-9571-59cb4ab0743f"/>
+<ref refid="a5af1191-9f67-11ef-8c78-59cb4ab0743f"/>
+<ref refid="08bc8406-9f68-11ef-a8db-59cb4ab0743f"/>
+<ref refid="5267692d-9f6a-11ef-9809-59cb4ab0743f"/>
+<ref refid="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f"/>
+<ref refid="1808b445-9f70-11ef-b356-59cb4ab0743f"/>
+<ref refid="4d054792-9f70-11ef-b0b8-59cb4ab0743f"/>
+<ref refid="767895a7-9f70-11ef-8a6f-59cb4ab0743f"/>
+<ref refid="99c02b18-9f8c-11ef-aa27-59cb4ab0743f"/>
+<ref refid="50615e1d-9f8d-11ef-a33c-59cb4ab0743f"/>
+<ref refid="201eed9c-9f8e-11ef-ba58-59cb4ab0743f"/>
+<ref refid="59951110-9f8e-11ef-aa6a-59cb4ab0743f"/>
+<ref refid="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f"/>
+<ref refid="887c8433-9f8f-11ef-9fa0-59cb4ab0743f"/>
+<ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
+<ref refid="fadd0519-9f90-11ef-b730-59cb4ab0743f"/>
+<ref refid="e72378a1-9f91-11ef-bb8e-59cb4ab0743f"/>
+<ref refid="23628e92-9f92-11ef-9c7d-59cb4ab0743f"/>
+<ref refid="82aea37e-9f92-11ef-9609-59cb4ab0743f"/>
+<ref refid="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f"/>
+<ref refid="d70f9bc8-9f92-11ef-95fa-59cb4ab0743f"/>
+<ref refid="664b6d10-9f93-11ef-b2d5-59cb4ab0743f"/>
+<ref refid="40585754-a036-11ef-8990-59cb4ab0743f"/>
+<ref refid="a045cbe8-a036-11ef-a376-59cb4ab0743f"/>
+<ref refid="ec33e639-a036-11ef-a040-59cb4ab0743f"/>
+<ref refid="13ae0bc2-a037-11ef-b3a7-59cb4ab0743f"/>
+<ref refid="e6d4d956-a04e-11ef-84b9-59cb4ab0743f"/>
+<ref refid="0723193d-a04f-11ef-860a-59cb4ab0743f"/>
+<ref refid="247cfd15-a051-11ef-89f3-59cb4ab0743f"/>
+<ref refid="000db878-a052-11ef-bb09-59cb4ab0743f"/>
+<ref refid="f24922a7-a052-11ef-b271-59cb4ab0743f"/>
+<ref refid="1064b05a-a053-11ef-9614-59cb4ab0743f"/>
+<ref refid="c9de71bb-9f6f-11ef-bd79-59cb4ab0743f"/>
+<ref refid="d927133d-9f6f-11ef-bf8d-59cb4ab0743f"/>
+<ref refid="df31b727-9f6f-11ef-8939-59cb4ab0743f"/>
+<ref refid="fb38c73c-9f6f-11ef-b436-59cb4ab0743f"/>
+<ref refid="fd544e2b-9f6f-11ef-8952-59cb4ab0743f"/>
+<ref refid="feeeae59-9f6f-11ef-97cd-59cb4ab0743f"/>
+<ref refid="00a18e07-9f70-11ef-9433-59cb4ab0743f"/>
+<ref refid="4a7b7e3e-9f70-11ef-b5d5-59cb4ab0743f"/>
+<ref refid="72cdf357-9f70-11ef-b1a6-59cb4ab0743f"/>
+<ref refid="9e5f38d0-9f70-11ef-85ca-59cb4ab0743f"/>
+<ref refid="4d4afea0-9f8d-11ef-8d74-59cb4ab0743f"/>
+<ref refid="1d008f05-9f8e-11ef-85c4-59cb4ab0743f"/>
+<ref refid="52f41a72-9f8e-11ef-ad6c-59cb4ab0743f"/>
+<ref refid="ab94b9d9-9f8e-11ef-a102-59cb4ab0743f"/>
+<ref refid="8530d8d3-9f8f-11ef-909a-59cb4ab0743f"/>
+<ref refid="a920b2ed-9f8f-11ef-821e-59cb4ab0743f"/>
+<ref refid="217456c2-9f91-11ef-8d22-59cb4ab0743f"/>
+<ref refid="128172ea-9f92-11ef-9d5d-59cb4ab0743f"/>
+<ref refid="164ea8c5-9f92-11ef-b6a5-59cb4ab0743f"/>
+<ref refid="6c4d2e09-9f92-11ef-9142-59cb4ab0743f"/>
+<ref refid="b7808994-9f92-11ef-94fc-59cb4ab0743f"/>
+<ref refid="3e132932-9f93-11ef-aeae-59cb4ab0743f"/>
+<ref refid="4034c57c-9f93-11ef-9c0a-59cb4ab0743f"/>
+<ref refid="9b42d195-9f93-11ef-8caa-59cb4ab0743f"/>
+<ref refid="8fccc96f-a036-11ef-a72a-59cb4ab0743f"/>
+<ref refid="e7c8e48b-a036-11ef-ab3f-59cb4ab0743f"/>
+<ref refid="115b0132-a037-11ef-ba1d-59cb4ab0743f"/>
+<ref refid="55aadf2d-a037-11ef-8dd2-59cb4ab0743f"/>
+<ref refid="05f68e24-a04f-11ef-b26d-59cb4ab0743f"/>
+<ref refid="22b4a719-a051-11ef-b727-59cb4ab0743f"/>
+<ref refid="970bd74c-a051-11ef-87f1-59cb4ab0743f"/>
+<ref refid="777795f2-a052-11ef-a073-59cb4ab0743f"/>
+<ref refid="0db9f7ae-a053-11ef-ba9f-59cb4ab0743f"/>
+<ref refid="347d5caf-a053-11ef-96e1-59cb4ab0743f"/>
+<ref refid="0765eb6f-9f70-11ef-93ca-59cb4ab0743f"/>
+<ref refid="f584b2ff-9f6f-11ef-833b-59cb4ab0743f"/>
+<ref refid="e9a00c4d-9f6f-11ef-948a-59cb4ab0743f"/>
+<ref refid="f216ec54-9f6f-11ef-a58f-59cb4ab0743f"/>
+<ref refid="ef0d4e08-9f6f-11ef-889c-59cb4ab0743f"/>
+</reflist>
+</ownedPresentation>
 </SysMLDiagram>
 <Package id="32311c8b-9b72-11ef-a9dd-396cc00fc51d">
 <name>
@@ -194,4 +313,3661 @@
 <ref refid="32311c8b-9b72-11ef-a9dd-396cc00fc51d"/>
 </package>
 </Package>
+<BlockItem id="9762d9aa-9f65-11ef-9598-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 546.6796875, 123.5546875)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>312.30462646484375</val>
+</width>
+<height>
+<val>225.08984375</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</subject>
+</BlockItem>
+<Requirement id="9dde5e1f-9f65-11ef-a697-59cb4ab0743f">
+<externalId>
+<val>001</val>
+</externalId>
+<name>
+<val>main-window</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+<ref refid="9029c8c3-a053-11ef-ac06-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="fbe73b89-9f6f-11ef-b6ef-59cb4ab0743f"/>
+<ref refid="fe1a58c7-9f6f-11ef-9341-59cb4ab0743f"/>
+<ref refid="ff995172-9f6f-11ef-aa99-59cb4ab0743f"/>
+<ref refid="018aa5f2-9f70-11ef-b0b1-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The main window shall control the closing, sizing, and minimizing of the application</val>
+</text>
+</Requirement>
+<RequirementItem id="9dde8c49-9f65-11ef-af8a-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 125.03912353515625, 219.15232849121094)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>235.28903198242188</val>
+</width>
+<height>
+<val>134.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="cf082608-9f65-11ef-8a37-59cb4ab0743f">
+<externalId>
+<val>002</val>
+</externalId>
+<name>
+<val>invoices</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+<ref refid="933d6072-a053-11ef-bd36-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="4e05b725-9f8d-11ef-824f-59cb4ab0743f"/>
+<ref refid="1dbd10af-9f8e-11ef-bd00-59cb4ab0743f"/>
+<ref refid="5504226a-9f8e-11ef-90f3-59cb4ab0743f"/>
+<ref refid="acd03c60-9f8e-11ef-920a-59cb4ab0743f"/>
+<ref refid="86c14920-9f8f-11ef-ab34-59cb4ab0743f"/>
+<ref refid="17b06be8-9f92-11ef-a6b3-59cb4ab0743f"/>
+<ref refid="b926c955-9f92-11ef-a41d-59cb4ab0743f"/>
+<ref refid="41db611b-9f93-11ef-8b01-59cb4ab0743f"/>
+<ref refid="91f569b1-a036-11ef-a2f8-59cb4ab0743f"/>
+<ref refid="e9411432-a036-11ef-846b-59cb4ab0743f"/>
+<ref refid="125378d9-a037-11ef-979d-59cb4ab0743f"/>
+<ref refid="56fc5de0-a037-11ef-8421-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The system shall have a page to enter invoice data.</val>
+</text>
+</Requirement>
+<RequirementItem id="cf08541d-9f65-11ef-95af-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 377.0893629748138, 350.96329574538066)</val>
+</matrix>
+<top-left>
+<val>(163.99502139978597, 230.02095946463635)</val>
+</top-left>
+<width>
+<val>323.4952327156442</val>
+</width>
+<height>
+<val>119.00001100354496</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="0564434d-9f66-11ef-ac91-59cb4ab0743f">
+<externalId>
+<val>003</val>
+</externalId>
+<name>
+<val>statements</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+<ref refid="9704839d-a053-11ef-bc35-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="06b983ac-a04f-11ef-810e-59cb4ab0743f"/>
+<ref refid="2379a2e7-a051-11ef-af44-59cb4ab0743f"/>
+<ref refid="784f798f-a052-11ef-93c6-59cb4ab0743f"/>
+<ref refid="0ec81b4d-a053-11ef-8c96-59cb4ab0743f"/>
+<ref refid="3568b439-a053-11ef-9b16-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The system shall have a page to see all statements and associated invoices.</val>
+</text>
+</Requirement>
+<RequirementItem id="056472e7-9f66-11ef-8d08-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1034.515625, 202.796875)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>216.73052978515625</val>
+</width>
+<height>
+<val>134.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="65ea1ecb-9f66-11ef-a799-59cb4ab0743f">
+<externalId>
+<val>004</val>
+</externalId>
+<name>
+<val>business-information</val>
+</name>
+<note>
+<val></val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="65ea4fbc-9f66-11ef-a9b3-59cb4ab0743f"/>
+<ref refid="864bcafc-a053-11ef-b976-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="d9b00d88-9f6f-11ef-836a-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The system shall have a page to enter business related data into, but all the business data should already be placed in the enteries for easier understanding.</val>
+</text>
+</Requirement>
+<RequirementItem id="65ea4fbc-9f66-11ef-a9b3-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 749.3417663574216, -229.20201432490208)</val>
+</matrix>
+<top-left>
+<val>(2.642547607421875, 0.0)</val>
+</top-left>
+<width>
+<val>214.0</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="65ea1ecb-9f66-11ef-a799-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="7e98cc87-9f66-11ef-aa69-59cb4ab0743f">
+<externalId>
+<val>005</val>
+</externalId>
+<name>
+<val>client-register</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+<ref refid="8bc5364c-a053-11ef-9fea-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="cbc05848-9f6f-11ef-ae78-59cb4ab0743f"/>
+<ref refid="4b6d7191-9f70-11ef-98c2-59cb4ab0743f"/>
+<ref refid="7396b304-9f70-11ef-825d-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The system shall have a page to enter client data  into</val>
+</text>
+</Requirement>
+<RequirementItem id="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 150.12128166118472, -158.78773188578407)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>222.82427978515625</val>
+</width>
+<height>
+<val>117.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="caa697d7-9f66-11ef-88f0-59cb4ab0743f">
+<externalId>
+<val>006</val>
+</externalId>
+<name>
+<val>close-application</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="caa6c7ac-9f66-11ef-ba0d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>Upon single clicking the close button, the application shall close.</val>
+</text>
+</Requirement>
+<RequirementItem id="caa6c7ac-9f66-11ef-ba0d-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1063.2245352818277, -51.664374086231895)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>224.92575022438984</val>
+</width>
+<height>
+<val>134.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="caa697d7-9f66-11ef-88f0-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="0563b368-9f67-11ef-bc25-59cb4ab0743f">
+<externalId>
+<val>007</val>
+</externalId>
+<name>
+<val>adjust-application-size</val>
+</name>
+<note>
+<val>The size --680 x 940-- is not a hard requirement and might be adjusted based on growing requirements.</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="0563e59a-9f67-11ef-8dd2-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>Upon single clicking the maximize button, the application shall go full screen. If clicked again, it shall retract to it's default size of 680 x 960.
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="0563e59a-9f67-11ef-8dd2-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1152.067490225762, 143.44827181752285)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>313.76870516832406</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="0563b368-9f67-11ef-bc25-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="81cbf2c1-9f67-11ef-8475-59cb4ab0743f">
+<externalId>
+<val>007</val>
+</externalId>
+<name>
+<val>minimize-application</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="81cc23eb-9f67-11ef-9571-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>Upon single clicking the minimize button, the application shall hide itself for later use.</val>
+</text>
+</Requirement>
+<RequirementItem id="81cc23eb-9f67-11ef-9571-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1094.4680547987607, 375.6491797672597)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>243.28217013866788</val>
+</width>
+<height>
+<val>134.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="81cbf2c1-9f67-11ef-8475-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="a5aee1d7-9f67-11ef-868d-59cb4ab0743f">
+<externalId>
+<val>008</val>
+</externalId>
+<name>
+<val>main-window-size</val>
+</name>
+<note>
+<val>Not a hard requirement and might be adjusted based on growing requirements.</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="a5af1191-9f67-11ef-8c78-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The main window shall open up with a default screen size of 680 x 940
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="a5af1191-9f67-11ef-8c78-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1092.7639097749245, 569.2586501009304)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>254.46512471748656</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="a5aee1d7-9f67-11ef-868d-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="08bc54d5-9f68-11ef-a8dd-59cb4ab0743f">
+<externalId>
+<val>009</val>
+</externalId>
+<name>
+<val>business-page-entries</val>
+</name>
+<note>
+<val>Placeholder text for all entries.
+
+Algemene Inligtin:
+- Business name = Besigheid se naam . . .
+- Street name &amp; number = Straat adres . . .
+- Town the bussiness is located in = Dorp se naam . . .
+- Business cellphone number = Kontak nommer . . .
+- Business e-mail = E-pos adres . . .
+
+Bank Inligting:
+- Bank name = Bank se naam . . .
+- Branch code = Tak se kode . . .
+- Account number = Rekeningnommer . . .
+- Thank you message = Boodskap vir kliënt . . .</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="08bc8406-9f68-11ef-a8db-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="dfd6e680-9f6f-11ef-bc29-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The business page shall have the following entry fields on it in two different sections, called Algemene Inligting and Bank Inligting.
+
+Algemene Inligtin:
+- Business name.
+- Street name &amp; number.
+- Town the bussiness is located in.
+- Business cellphone number.
+- Business e-mail.
+
+Bank Inligting:
+- Bank name.
+- Branch code.
+- Rekeningnommer.
+- Thank you message.
+
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="08bc8406-9f68-11ef-a8db-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 951.9297794022822, -1315.8234495442914)</val>
+</matrix>
+<top-left>
+<val>(-109.91951994469412, 0.0)</val>
+</top-left>
+<width>
+<val>258.9195199446941</val>
+</width>
+<height>
+<val>440.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="08bc54d5-9f68-11ef-a8dd-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="526731d3-9f6a-11ef-8ea2-59cb4ab0743f">
+<externalId>
+<val>010</val>
+</externalId>
+<name>
+<val>save-button-for-bussiness-data</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="5267692d-9f6a-11ef-9809-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The bussiness data page shall have a button to save all the information into a database.</val>
+</text>
+</Requirement>
+<RequirementItem id="5267692d-9f6a-11ef-9809-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1320.6280753978435, -1301.2990120053148)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>223.23457725318985</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="526731d3-9f6a-11ef-8ea2-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="b03ddd7b-9f6e-11ef-808e-59cb4ab0743f">
+<externalId>
+<val>011</val>
+</externalId>
+<name>
+<val>client-page-entries</val>
+</name>
+<note>
+<val>The following placeholder text should be in each entry.
+
+Placeholder Text:
+- Business name = Besigheid naam . . .
+- Street Address = Straat adres . . .
+- Area code = Gebied kode . . .
+- Town the business is located in = Dorp se naam . . .
+- Cellphone number = Kontak nommer . . .
+- E-mail address = E-pos adres . . .
+- VAT number = BTW nommer . . .</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The client page shall have the following entry fields on it.
+
+Entry Fields:
+- Business name.
+- Streed Address.
+- Area code.
+- Town the business is located in.
+- Cellphone number.
+- E-mail address.
+- VAT number.
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -743.3423917749966, -1315.8234495442914)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>271.0707472272857</val>
+</width>
+<height>
+<val>304.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="b03ddd7b-9f6e-11ef-808e-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="c9de71bb-9f6f-11ef-bd79-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="cbc05848-9f6f-11ef-ae78-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -593.239155678274, -976.4332266974961)</val>
+</matrix>
+<points>
+<val>[(29.818481067868788, -35.39022284679538), (787.7467808904073, 817.6454948117121)]</val>
+</points>
+<head-connection>
+<ref refid="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="cbc05848-9f6f-11ef-ae78-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="c9de71bb-9f6f-11ef-bd79-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="b03ddd7b-9f6e-11ef-808e-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="d927133d-9f6f-11ef-bf8d-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="d9b00d88-9f6f-11ef-836a-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1100.4011573020666, -868.6168291832163)</val>
+</matrix>
+<points>
+<val>[(-128.93113787213179, -7.2066203610751245), (-230.55368466736536, 639.4148148583142)]</val>
+</points>
+<head-connection>
+<ref refid="08bc8406-9f68-11ef-a8db-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="65ea4fbc-9f66-11ef-a9b3-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="d9b00d88-9f6f-11ef-836a-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="d927133d-9f6f-11ef-bf8d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="08bc54d5-9f68-11ef-a8dd-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="65ea1ecb-9f66-11ef-a799-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="df31b727-9f6f-11ef-8939-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="dfd6e680-9f6f-11ef-bc29-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1317.8223613460577, -1223.8644645306144)</val>
+</matrix>
+<points>
+<val>[(2.805714051786026, 2.2737367544323206e-13), (-216.89258194377544, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="5267692d-9f6a-11ef-9809-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="08bc8406-9f68-11ef-a8db-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="dfd6e680-9f6f-11ef-bc29-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="df31b727-9f6f-11ef-8939-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="526731d3-9f6a-11ef-8ea2-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="08bc54d5-9f68-11ef-a8dd-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Satisfy id="ead3ab15-9f6f-11ef-995d-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="e9a00c4d-9f6f-11ef-948a-59cb4ab0743f"/>
+<ref refid="cd079ebf-a054-11ef-aeb9-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<Satisfy id="efc85915-9f6f-11ef-9ad3-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="ef0d4e08-9f6f-11ef-889c-59cb4ab0743f"/>
+<ref refid="cb4a7d3f-a054-11ef-96a9-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="65ea1ecb-9f66-11ef-a799-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<Satisfy id="f3112fd9-9f6f-11ef-a579-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="f216ec54-9f6f-11ef-a58f-59cb4ab0743f"/>
+<ref refid="c92f2586-a054-11ef-a520-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<Satisfy id="f61fb35c-9f6f-11ef-9f88-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="f584b2ff-9f6f-11ef-833b-59cb4ab0743f"/>
+<ref refid="cfa47785-a054-11ef-9914-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<DeriveReqtItem id="fb38c73c-9f6f-11ef-b436-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="fbe73b89-9f6f-11ef-b6ef-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -160.23849945117965, 0.2717187775840557)</val>
+</matrix>
+<points>
+<val>[(-678.0602856062584, -7.534318649069306), (285.2776229863359, 218.88060971362688)]</val>
+</points>
+<head-connection>
+<ref refid="caa6c7ac-9f66-11ef-ba0d-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="fbe73b89-9f6f-11ef-b6ef-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="fb38c73c-9f6f-11ef-b436-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="caa697d7-9f66-11ef-88f0-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="fd544e2b-9f6f-11ef-8952-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="fe1a58c7-9f6f-11ef-9341-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -157.75502620180583, 223.4326305687826)</val>
+</matrix>
+<points>
+<val>[(-680.5437588556322, -4.352494173688228), (282.7941497369621, 22.663864268761245)]</val>
+</points>
+<head-connection>
+<ref refid="0563e59a-9f67-11ef-8dd2-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="fe1a58c7-9f6f-11ef-9341-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="fd544e2b-9f6f-11ef-8952-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="0563b368-9f67-11ef-bc25-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="feeeae59-9f6f-11ef-97cd-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="ff995172-9f6f-11ef-aa99-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -167.39802285715422, 412.5760372745896)</val>
+</matrix>
+<points>
+<val>[(-683.7878618029386, -7.5343186490692915), (292.43714639231047, -142.77916227458957)]</val>
+</points>
+<head-connection>
+<ref refid="81cc23eb-9f67-11ef-9571-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="ff995172-9f6f-11ef-aa99-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="feeeae59-9f6f-11ef-97cd-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="81cbf2c1-9f67-11ef-8475-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="00a18e07-9f70-11ef-9433-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="018aa5f2-9f70-11ef-b0b1-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -160.39914369982796, 614.6013760274109)</val>
+</matrix>
+<points>
+<val>[(-677.89964135761, -7.534318649069519), (285.4382672349842, -294.32631394239877)]</val>
+</points>
+<head-connection>
+<ref refid="a5af1191-9f67-11ef-8c78-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="018aa5f2-9f70-11ef-b0b1-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="00a18e07-9f70-11ef-9433-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="a5aee1d7-9f67-11ef-868d-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Satisfy id="083a9afc-9f70-11ef-ae14-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="0765eb6f-9f70-11ef-93ca-59cb4ab0743f"/>
+<ref refid="d247a5ae-a054-11ef-b35d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<Requirement id="18088569-9f70-11ef-ae06-59cb4ab0743f">
+<externalId>
+<val>012</val>
+</externalId>
+<name>
+<val>save-client-data</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="1808b445-9f70-11ef-b356-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="9bf793e0-9f93-11ef-93f3-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The client register page shall have a save button that saves all the entered data into the database.</val>
+</text>
+</Requirement>
+<RequirementItem id="1808b445-9f70-11ef-b356-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1068.693855593451, -840.4674252768025)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>217.50797093335814</val>
+</width>
+<height>
+<val>151.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="18088569-9f70-11ef-ae06-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="4a7b7e3e-9f70-11ef-b5d5-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="4b6d7191-9f70-11ef-98c2-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -851.2379854974923, -791.7767525797052)</val>
+</matrix>
+<points>
+<val>[(0.05210083739950733, 2.10018812853707), (1001.3592671586771, 666.9861830707243)]</val>
+</points>
+<head-connection>
+<ref refid="1808b445-9f70-11ef-b356-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="4b6d7191-9f70-11ef-98c2-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="4a7b7e3e-9f70-11ef-b5d5-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="18088569-9f70-11ef-ae06-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="4d051922-9f70-11ef-a2b7-59cb4ab0743f">
+<externalId>
+<val>013</val>
+</externalId>
+<name>
+<val>search-for-specific-client</val>
+</name>
+<note>
+<val>The placeholder text for the search bar:
+
+Besigheid naam . . .</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="4d054792-9f70-11ef-b0b8-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="9f473a51-9f70-11ef-84a5-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The client register page shall have a search bar to search for a specific clients information.
+
+The clienst shall be searched for based on their "Business name".
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="4d054792-9f70-11ef-b0b8-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1109.9360101315665, -1109.4051830089163)</val>
+</matrix>
+<top-left>
+<val>(-115.43698585703766, -15.1676411591219)</val>
+</top-left>
+<width>
+<val>330.23567932580835</val>
+</width>
+<height>
+<val>219.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="4d051922-9f70-11ef-a2b7-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="72cdf357-9f70-11ef-b1a6-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="7396b304-9f70-11ef-825d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -895.9448457226714, -987.2837374381828)</val>
+</matrix>
+<points>
+<val>[(0.8075290598756055, 31.173388720554726), (1046.0661273838562, 828.4960055523987)]</val>
+</points>
+<head-connection>
+<ref refid="4d054792-9f70-11ef-b0b8-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="7396b304-9f70-11ef-825d-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="72cdf357-9f70-11ef-b1a6-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="4d051922-9f70-11ef-a2b7-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="7678667e-9f70-11ef-91e2-59cb4ab0743f">
+<externalId>
+<val>014</val>
+</externalId>
+<name>
+<val>registered-client-data</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="767895a7-9f70-11ef-8a6f-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>After searching for a client on the client page, the data should be loaded into their respective entries for modification or inspection.</val>
+</text>
+</Requirement>
+<RequirementItem id="767895a7-9f70-11ef-8a6f-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1157.8423796275358, -1412.8757402516355)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>262.70506296474014</val>
+</width>
+<height>
+<val>151.0577115267162</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="7678667e-9f70-11ef-91e2-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="9e5f38d0-9f70-11ef-85ca-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="9f473a51-9f70-11ef-84a5-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1016.8618553610715, -1197.0224642334038)</val>
+</matrix>
+<points>
+<val>[(2.2737367544323206e-13, -64.7955644915155), (1.1368683772161603e-13, 72.44964006536547)]</val>
+</points>
+<head-connection>
+<ref refid="767895a7-9f70-11ef-8a6f-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="4d054792-9f70-11ef-b0b8-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="9f473a51-9f70-11ef-84a5-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="9e5f38d0-9f70-11ef-85ca-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="7678667e-9f70-11ef-91e2-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="4d051922-9f70-11ef-a2b7-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="99bffa5e-9f8c-11ef-96f0-59cb4ab0743f">
+<externalId>
+<val>015</val>
+</externalId>
+<name>
+<val>invoice-number</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="99c02b18-9f8c-11ef-aa27-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have an entry for the invoice number. 
+
+The invoice number shall be unique, incrimental, an integer type, and generate by default. 
+
+The invoice number shall be immutable so the client can't change it acidentilly.</val>
+</text>
+</Requirement>
+<RequirementItem id="99c02b18-9f8c-11ef-aa27-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -172.59634158862224, 1336.218723348478)</val>
+</matrix>
+<top-left>
+<val>(-221.12375825158608, 0.0)</val>
+</top-left>
+<width>
+<val>374.0997278073463</val>
+</width>
+<height>
+<val>219.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="99bffa5e-9f8c-11ef-96f0-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="4d4afea0-9f8d-11ef-8d74-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="4e05b725-9f8d-11ef-824f-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 408.16092795597206, 805.2938562279539)</val>
+</matrix>
+<points>
+<val>[(-429.4896751314517, 530.9248671205241), (132.92345641862767, -105.30959001439237)]</val>
+</points>
+<head-connection>
+<ref refid="99c02b18-9f8c-11ef-aa27-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="4e05b725-9f8d-11ef-824f-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="4d4afea0-9f8d-11ef-8d74-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="99bffa5e-9f8c-11ef-96f0-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="50612bda-9f8d-11ef-a4a6-59cb4ab0743f">
+<externalId>
+<val>016</val>
+</externalId>
+<name>
+<val>invoice-date</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="50615e1d-9f8d-11ef-a33c-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall show a date entry.
+
+The date entry shall be automatically generated by default.</val>
+</text>
+</Requirement>
+<RequirementItem id="50615e1d-9f8d-11ef-a33c-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -22.252501322226145, 1670.3527523513249)</val>
+</matrix>
+<top-left>
+<val>(-184.41773461430887, 0.0)</val>
+</top-left>
+<width>
+<val>333.41773461430887</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="50612bda-9f8d-11ef-a4a6-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="1d008f05-9f8e-11ef-85c4-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="1dbd10af-9f8e-11ef-bd00-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 321.65377483250427, 912.4694298559734)</val>
+</matrix>
+<points>
+<val>[(-197.77160384633666, 757.8833224953514), (219.43060954209545, -212.48516364241186)]</val>
+</points>
+<head-connection>
+<ref refid="50615e1d-9f8d-11ef-a33c-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="1dbd10af-9f8e-11ef-bd00-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="1d008f05-9f8e-11ef-85c4-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="50612bda-9f8d-11ef-a4a6-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Activity id="1ed9d659-9f8e-11ef-bf64-59cb4ab0743f">
+<name>
+<val>Activity</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+</Activity>
+<Requirement id="201ebd7d-9f8e-11ef-95fb-59cb4ab0743f">
+<externalId>
+<val>017</val>
+</externalId>
+<name>
+<val>invoice-job-card-number</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="201eed9c-9f8e-11ef-ba58-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have an entry for the user type in the job card number. 
+
+The job card number shall be a string type.</val>
+</text>
+</Requirement>
+<RequirementItem id="201eed9c-9f8e-11ef-ba58-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -23.960876464843533, 1968.7769805718115)</val>
+</matrix>
+<top-left>
+<val>(-141.96155697504912, 0.0)</val>
+</top-left>
+<width>
+<val>290.9615569750491</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="201ebd7d-9f8e-11ef-95fb-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="52f41a72-9f8e-11ef-ad6c-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="5504226a-9f8e-11ef-90f3-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 316.03134084022827, 1180.380542165025)</val>
+</matrix>
+<points>
+<val>[(-192.1445159912113, 788.3964384067865), (225.05304353437145, -480.3962759514634)]</val>
+</points>
+<head-connection>
+<ref refid="201eed9c-9f8e-11ef-ba58-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="5504226a-9f8e-11ef-90f3-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="52f41a72-9f8e-11ef-ad6c-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="201ebd7d-9f8e-11ef-95fb-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="5994dd89-9f8e-11ef-a1f9-59cb4ab0743f">
+<externalId>
+<val>018</val>
+</externalId>
+<name>
+<val>invoice-order-number</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="59951110-9f8e-11ef-aa6a-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have an entry for the order number. 
+
+The order number shall be of string type.</val>
+</text>
+</Requirement>
+<RequirementItem id="59951110-9f8e-11ef-aa6a-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1.5738269607784832, 2194.7736728412897)</val>
+</matrix>
+<top-left>
+<val>(-93.0, 0.0)</val>
+</top-left>
+<width>
+<val>216.46529657437793</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="5994dd89-9f8e-11ef-a1f9-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="ab94b9d9-9f8e-11ef-a102-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="acd03c60-9f8e-11ef-920a-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 301.60492984264863, 1398.82016099012)</val>
+</matrix>
+<points>
+<val>[(-179.85914585392072, 795.9535118511697), (270.6802118181888, -698.8358947765585)]</val>
+</points>
+<head-connection>
+<ref refid="59951110-9f8e-11ef-aa6a-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="acd03c60-9f8e-11ef-920a-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="ab94b9d9-9f8e-11ef-a102-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="5994dd89-9f8e-11ef-a1f9-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="af7afa60-9f8e-11ef-b312-59cb4ab0743f">
+<externalId>
+<val>019</val>
+</externalId>
+<name>
+<val>invoice-work-description</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="a9a87017-9f8f-11ef-8af8-59cb4ab0743f"/>
+<ref refid="22056ae5-9f91-11ef-ace0-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The invoice page shall have the ability to create a list of items.
+
+The list of items shall contain 3 columns in each list.
+
+The first column shall have the header "Hoeveelheid".
+
+The second column shall have the header "Materiaal Wat Gebruik Is".
+
+The third column shall have the header "Prys"</val>
+</text>
+</Requirement>
+<RequirementItem id="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -25.113175150983086, 2417.3403699405003)</val>
+</matrix>
+<top-left>
+<val>(-181.55706078555193, 0.0)</val>
+</top-left>
+<width>
+<val>330.5570607855519</val>
+</width>
+<height>
+<val>321.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="af7afa60-9f8e-11ef-b312-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="8530d8d3-9f8f-11ef-909a-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="86c14920-9f8f-11ef-ab34-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 323.17234441119683, 1577.224704171947)</val>
+</matrix>
+<points>
+<val>[(-199.2855195621799, 844.1944175727249), (281.815359813227, -877.2404379583854)]</val>
+</points>
+<head-connection>
+<ref refid="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="86c14920-9f8f-11ef-ab34-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="8530d8d3-9f8f-11ef-909a-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="af7afa60-9f8e-11ef-b312-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="887c52bb-9f8f-11ef-ba67-59cb4ab0743f">
+<externalId>
+<val>020</val>
+</externalId>
+<name>
+<val>invoice-description-total</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="887c8433-9f8f-11ef-9fa0-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice description area shall have a total label.
+
+The total label shall display the sum of the Price column.</val>
+</text>
+</Requirement>
+<RequirementItem id="887c8433-9f8f-11ef-9fa0-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -531.7739165068357, 2330.7819039550222)</val>
+</matrix>
+<top-left>
+<val>(-192.84905650827693, 86.55846598547771)</val>
+</top-left>
+<width>
+<val>341.84905650827693</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="887c52bb-9f8f-11ef-ba67-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="a920b2ed-9f8f-11ef-821e-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="a9a87017-9f8f-11ef-8af8-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -394.1553313374394, 2503.445886414913)</val>
+</matrix>
+<points>
+<val>[(11.381414830603774, -50.70563922204019), (187.48509540090438, -40.906680663512816)]</val>
+</points>
+<head-connection>
+<ref refid="887c8433-9f8f-11ef-9fa0-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="a9a87017-9f8f-11ef-8af8-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="a920b2ed-9f8f-11ef-821e-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="887c52bb-9f8f-11ef-ba67-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="af7afa60-9f8e-11ef-b312-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="c90ffba6-9f8f-11ef-943f-59cb4ab0743f">
+<externalId>
+<val>021</val>
+</externalId>
+<name>
+<val>invoice-material-used</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="13409095-9f92-11ef-842e-59cb4ab0743f"/>
+<ref refid="6cfa69f1-9f92-11ef-b475-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The invoice page shall have the ability to create a list of items.
+
+The list of items shall contain 3 columns in each list.
+
+The first column shall have the header "Hoeveelheid".
+
+The second column shall have the header "Materiaal Wat Gebruik Is".
+
+The third column shall have the header "Prys".</val>
+</text>
+</Requirement>
+<RequirementItem id="c9103270-9f8f-11ef-b111-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -25.11317515098317, 2749.1375589333575)</val>
+</matrix>
+<top-left>
+<val>(-114.17355925764991, -8.35555872261466)</val>
+</top-left>
+<width>
+<val>263.1735592576499</val>
+</width>
+<height>
+<val>321.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="c90ffba6-9f8f-11ef-943f-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="fadcd0c3-9f90-11ef-8f07-59cb4ab0743f">
+<externalId>
+<val>022</val>
+</externalId>
+<name>
+<val>invoice-description-label</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="fadd0519-9f90-11ef-b730-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice description area shall have a label saying, "Beskrywing/Arbeid".</val>
+</text>
+</Requirement>
+<RequirementItem id="fadd0519-9f90-11ef-b730-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -575.7491448124819, 2557.389204932562)</val>
+</matrix>
+<top-left>
+<val>(-148.8738282026307, 62.34238791211351)</val>
+</top-left>
+<width>
+<val>297.8738282026307</val>
+</width>
+<height>
+<val>139.6576120878865</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="fadcd0c3-9f90-11ef-8f07-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="217456c2-9f91-11ef-8d22-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="22056ae5-9f91-11ef-ace0-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -428.81755270783253, 2645.837446077576)</val>
+</matrix>
+<points>
+<val>[(2.068407895350674, 1.408988922924891), (222.1473167712975, -38.889438118650105)]</val>
+</points>
+<head-connection>
+<ref refid="fadd0519-9f90-11ef-b730-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="22056ae5-9f91-11ef-ace0-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="217456c2-9f91-11ef-8d22-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="fadcd0c3-9f90-11ef-8f07-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="af7afa60-9f8e-11ef-b312-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="e72344b0-9f91-11ef-99c8-59cb4ab0743f">
+<externalId>
+<val>022</val>
+</externalId>
+<name>
+<val>invoice-material-used-label</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="e72378a1-9f91-11ef-bb8e-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The material used section shall have a label that states, "Materiaal Wat Gebruik Is"
+</val>
+</text>
+</Requirement>
+<RequirementItem id="e72378a1-9f91-11ef-bb8e-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -463.7177316343194, 2986.1958485156465)</val>
+</matrix>
+<top-left>
+<val>(-190.1640995463939, 7.586151695096191)</val>
+</top-left>
+<width>
+<val>303.1640995463939</val>
+</width>
+<height>
+<val>151.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="e72344b0-9f91-11ef-99c8-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="128172ea-9f92-11ef-9d5d-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="13409095-9f92-11ef-842e-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -351.35675696510555, 3004.6353624390017)</val>
+</matrix>
+<points>
+<val>[(0.6390253307860689, 12.32827441180143), (212.07002255647245, -216.31991087185952)]</val>
+</points>
+<head-connection>
+<ref refid="e72378a1-9f91-11ef-bb8e-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="13409095-9f92-11ef-842e-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="128172ea-9f92-11ef-9d5d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="e72344b0-9f91-11ef-99c8-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="c90ffba6-9f8f-11ef-943f-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="164ea8c5-9f92-11ef-b6a5-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="17b06be8-9f92-11ef-a6b3-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 318.7701207754824, 1920.0175272694464)</val>
+</matrix>
+<points>
+<val>[(-194.88329592646556, 852.6561215854904), (324.27877443471834, -1220.0332610558849)]</val>
+</points>
+<head-connection>
+<ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="17b06be8-9f92-11ef-a6b3-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="164ea8c5-9f92-11ef-b6a5-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="c90ffba6-9f8f-11ef-943f-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="236259e7-9f92-11ef-b9db-59cb4ab0743f">
+<externalId>
+<val>023</val>
+</externalId>
+<name>
+<val>invoice-material-used-total</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="23628e92-9f92-11ef-9c7d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The material used section shall have a label at the bottom that says, "Total".
+
+The total shall be the sum of the Price column.</val>
+</text>
+</Requirement>
+<RequirementItem id="23628e92-9f92-11ef-9c7d-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -559.5745770482381, 3249.0040405451064)</val>
+</matrix>
+<top-left>
+<val>(-137.24773542547268, 0.0)</val>
+</top-left>
+<width>
+<val>286.2477354254727</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="236259e7-9f92-11ef-b9db-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="6c4d2e09-9f92-11ef-9142-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="6cfa69f1-9f92-11ef-b475-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -410.9195607992036, 3271.644253725386)</val>
+</matrix>
+<points>
+<val>[(0.34498375096575273, 2.2909739527653983), (271.63282639057053, -263.04073862071755)]</val>
+</points>
+<head-connection>
+<ref refid="23628e92-9f92-11ef-9c7d-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="6cfa69f1-9f92-11ef-b475-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="6c4d2e09-9f92-11ef-9142-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="236259e7-9f92-11ef-b9db-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="c90ffba6-9f8f-11ef-943f-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="82ae6df1-9f92-11ef-97cc-59cb4ab0743f">
+<externalId>
+<val>024</val>
+</externalId>
+<name>
+<val>invoice-grand-total-label</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="82aea37e-9f92-11ef-9609-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice shall have a label at the bottom that displays the grand-total of the invoice.
+
+The grand-total of the invoice is the sum of the description and the material used section's price column.</val>
+</text>
+</Requirement>
+<RequirementItem id="82aea37e-9f92-11ef-9609-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -3.9922051210124754, 3191.152045313887)</val>
+</matrix>
+<top-left>
+<val>(-301.09367621997023, 0.0)</val>
+</top-left>
+<width>
+<val>450.09367621997023</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="82ae6df1-9f92-11ef-97cc-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="b7808994-9f92-11ef-94fc-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="b926c955-9f92-11ef-a41d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 358.6051962474353, 2381.963757109721)</val>
+</matrix>
+<points>
+<val>[(-217.41510902941684, 809.1882882041659), (314.3620243117364, -1681.9794908961594)]</val>
+</points>
+<head-connection>
+<ref refid="82aea37e-9f92-11ef-9609-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="b926c955-9f92-11ef-a41d-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="b7808994-9f92-11ef-94fc-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="82ae6df1-9f92-11ef-97cc-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="bbe1c30e-9f92-11ef-8f32-59cb4ab0743f">
+<externalId>
+<val>025</val>
+</externalId>
+<name>
+<val>invoice-save</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="3e9855c6-9f93-11ef-8fb2-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The invoice page shall have a save button.
+
+The save button shall save the newly created invoice.</val>
+</text>
+</Requirement>
+<RequirementItem id="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 8.810235216956425, 3492.8082999323155)</val>
+</matrix>
+<top-left>
+<val>(-105.40954668707059, 0.0)</val>
+</top-left>
+<width>
+<val>254.4095466870706</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="bbe1c30e-9f92-11ef-8f32-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<Requirement id="d70f66e4-9f92-11ef-ad77-59cb4ab0743f">
+<externalId>
+<val>026</val>
+</externalId>
+<name>
+<val>invoice-save-dialog</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="d70f9bc8-9f92-11ef-95fa-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>A dialog box shall be displayed upon single clicking the save button.
+
+The diaglog box shall have a "Ja and Nee" button.
+
+The chosen button shall default to "Ja".
+
+The dialog box shall have a sentance written that says, "Is jy seker jy wil die faktuur stoor?"</val>
+</text>
+</Requirement>
+<RequirementItem id="d70f9bc8-9f92-11ef-95fa-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -510.05611188180615, 3391.966624733515)</val>
+</matrix>
+<top-left>
+<val>(-195.58455740236502, 135.36208820347588)</val>
+</top-left>
+<width>
+<val>344.584557402365</val>
+</width>
+<height>
+<val>253.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="d70f66e4-9f92-11ef-ad77-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="3e132932-9f93-11ef-aeae-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="3e9855c6-9f93-11ef-8fb2-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -362.61463097366084, 3559.1602951635355)</val>
+</matrix>
+<points>
+<val>[(1.5585190918546914, 9.337523731211604), (266.0153195035463, -27.94517811343576)]</val>
+</points>
+<head-connection>
+<ref refid="d70f9bc8-9f92-11ef-95fa-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="3e9855c6-9f93-11ef-8fb2-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="3e132932-9f93-11ef-aeae-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="d70f66e4-9f92-11ef-ad77-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="bbe1c30e-9f92-11ef-8f32-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<DeriveReqtItem id="4034c57c-9f93-11ef-9c0a-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="41db611b-9f93-11ef-8b01-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 354.59741799342214, 2670.9173711824633)</val>
+</matrix>
+<points>
+<val>[(-196.78718277646607, 821.8909287498523), (355.326753846187, -1970.9331049689017)]</val>
+</points>
+<head-connection>
+<ref refid="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="41db611b-9f93-11ef-8b01-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="4034c57c-9f93-11ef-9c0a-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="bbe1c30e-9f92-11ef-8f32-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="664b35c1-9f93-11ef-8437-59cb4ab0743f">
+<externalId>
+<val>027</val>
+</externalId>
+<name>
+<val>save-client-dialog</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="664b6d10-9f93-11ef-b2d5-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The save button shall open a dialog box that asks the user if they want to save the clients details.
+
+The diaglog box shall have a "Yes and No" button.
+
+The chosen button shall default to "Yes".
+
+Sentance to add. "Is jy seker jy wil die informasie stoor?"</val>
+</text>
+</Requirement>
+<RequirementItem id="664b6d10-9f93-11ef-b2d5-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -2000.5629343767725, -823.4674252768025)</val>
+</matrix>
+<top-left>
+<val>(307.78369697245785, -17.0)</val>
+</top-left>
+<width>
+<val>419.21630302754215</val>
+</width>
+<height>
+<val>219.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="664b35c1-9f93-11ef-8437-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="9b42d195-9f93-11ef-8caa-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="9bf793e0-9f93-11ef-93f3-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -1275.4924427277292, -814.2339905407385)</val>
+</matrix>
+<points>
+<val>[(1.9295083509566666, 11.813732199022184), (206.79858713427825, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="664b6d10-9f93-11ef-b2d5-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="1808b445-9f70-11ef-b356-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="9bf793e0-9f93-11ef-93f3-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="9b42d195-9f93-11ef-8caa-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="664b35c1-9f93-11ef-8437-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="18088569-9f70-11ef-ae06-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="40581ec6-a036-11ef-ba45-59cb4ab0743f">
+<externalId>
+<val>028</val>
+</externalId>
+<name>
+<val>search-for-client</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="40585754-a036-11ef-8990-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have the ability to search for a specific client.
+The client shall be searchable based on their business name.</val>
+</text>
+</Requirement>
+<RequirementItem id="40585754-a036-11ef-8990-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1317.1533751844586, 1161.1657085459838)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>299.9491340670422</val>
+</width>
+<height>
+<val>151.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="40581ec6-a036-11ef-ba45-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="8fccc96f-a036-11ef-a72a-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="91f569b1-a036-11ef-a2f8-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1148.449383889003, 1405.7795761850616)</val>
+</matrix>
+<points>
+<val>[(168.70399129545558, -243.78075595328028), (-283.869766798759, -705.7953099715)]</val>
+</points>
+<head-connection>
+<ref refid="40585754-a036-11ef-8990-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="91f569b1-a036-11ef-a2f8-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="8fccc96f-a036-11ef-a72a-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="40581ec6-a036-11ef-ba45-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="a045958a-a036-11ef-8a3f-59cb4ab0743f">
+<externalId>
+<val>029</val>
+</externalId>
+<name>
+<val>display-latest-invoice</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="a045cbe8-a036-11ef-a376-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall display the latest 10 invoice in a list of items.
+
+The list of items shall be a list of invoices in pdf format.
+
+The list item shall be selectable.
+
+The list item shall have the ability to be previewed.</val>
+</text>
+</Requirement>
+<RequirementItem id="a045cbe8-a036-11ef-a376-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1317.1533751844586, 1374.762394044095)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>367.78547735477196</val>
+</width>
+<height>
+<val>236.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="a045958a-a036-11ef-8a3f-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="e7c8e48b-a036-11ef-ab3f-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="e9411432-a036-11ef-846b-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1317.0598983642153, 1500.5175698305834)</val>
+</matrix>
+<points>
+<val>[(0.09347682024326787, -125.75517578648851), (-473.3118916681525, -800.5333036170218)]</val>
+</points>
+<head-connection>
+<ref refid="a045cbe8-a036-11ef-a376-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="e9411432-a036-11ef-846b-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="e7c8e48b-a036-11ef-ab3f-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="a045958a-a036-11ef-8a3f-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="ec33b288-a036-11ef-b91d-59cb4ab0743f">
+<externalId>
+<val>030</val>
+</externalId>
+<name>
+<val>invoice-print</val>
+</name>
+<note>
+<val>See what the layout of the invoice shall be by opening up the invoice-layout.pdf file.
+
+File location:
+Project-root-directory: admin-system/docs/invoice-layout.pdf</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="ec33e639-a036-11ef-a040-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have the ability to print the invoices in pdf format.
+
+The invoice to be printed shall be selectable.
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="ec33e639-a036-11ef-a040-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1317.1533751844586, 1659.5310536352767)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>331.76675272241164</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="ec33b288-a036-11ef-b91d-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="115b0132-a037-11ef-ba1d-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="125378d9-a037-11ef-979d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1315.093310406939, 1657.9902795946755)</val>
+</matrix>
+<points>
+<val>[(2.0600647775195284, 1.5407740406012636), (-498.13635245839373, -958.0060133811139)]</val>
+</points>
+<head-connection>
+<ref refid="ec33e639-a036-11ef-a040-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="125378d9-a037-11ef-979d-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="115b0132-a037-11ef-ba1d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="ec33b288-a036-11ef-b91d-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="13add8bc-a037-11ef-9be6-59cb4ab0743f">
+<externalId>
+<val>031</val>
+</externalId>
+<name>
+<val>invoice-email</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="13ae0bc2-a037-11ef-b3a7-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The invoice page shall have the ability to send a invoice by email.
+
+The invoice format shall be pdf.
+
+The invoice to send shall be selectable.</val>
+</text>
+</Requirement>
+<RequirementItem id="13ae0bc2-a037-11ef-b3a7-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1335.2578404873834, 1943.6301025151595)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>313.6622874194866</val>
+</width>
+<height>
+<val>185.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="13add8bc-a037-11ef-9be6-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="55aadf2d-a037-11ef-8dd2-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="56fc5de0-a037-11ef-8421-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1334.9664941233427, 1940.9275005441839)</val>
+</matrix>
+<points>
+<val>[(0.2913463640406917, 2.7026019709753655), (-545.7797141598551, -1240.9432343306223)]</val>
+</points>
+<head-connection>
+<ref refid="13ae0bc2-a037-11ef-b3a7-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="56fc5de0-a037-11ef-8421-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="55aadf2d-a037-11ef-8dd2-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="13add8bc-a037-11ef-9be6-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="e6d4a271-a04e-11ef-bc6e-59cb4ab0743f">
+<externalId>
+<val>032</val>
+</externalId>
+<name>
+<val>search-client-statement</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="e6d4d956-a04e-11ef-84b9-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The statement page shall have the ability to search for a clients statements based on the clients business name.</val>
+</text>
+</Requirement>
+<RequirementItem id="e6d4d956-a04e-11ef-84b9-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2311.653765706571, -670.2628344143046)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>253.45660656120845</val>
+</width>
+<height>
+<val>151.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="e6d4a271-a04e-11ef-bc6e-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="05f68e24-a04f-11ef-b26d-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="06b983ac-a04f-11ef-810e-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1580.4955681256215, 57.03175766642096)</val>
+</matrix>
+<points>
+<val>[(731.1581975809495, -701.7010361198724), (-329.24941334046525, 166.26900832478998)]</val>
+</points>
+<head-connection>
+<ref refid="e6d4d956-a04e-11ef-84b9-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="06b983ac-a04f-11ef-810e-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="05f68e24-a04f-11ef-b26d-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="e6d4a271-a04e-11ef-bc6e-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="0722eaf3-a04f-11ef-b7da-59cb4ab0743f">
+<externalId>
+<val>033</val>
+</externalId>
+<name>
+<val>cliient-statements</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="0723193d-a04f-11ef-860a-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<targetDirectedRelationshipPropertyPath_>
+<reflist>
+<ref refid="97b229ec-a051-11ef-bf3d-59cb4ab0743f"/>
+</reflist>
+</targetDirectedRelationshipPropertyPath_>
+<text>
+<val>The statement page shall show a list of statements connected to a client.
+
+The list item shall have 3 columns.
+
+The first list column shall say, "Staat Nommer", which is the statement number.
+
+The second list column shall say, "Date", which is the date the statement was created.
+
+The third column list column shall say, "Naam", which is the Business name of the client.</val>
+</text>
+</Requirement>
+<RequirementItem id="0723193d-a04f-11ef-860a-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2311.653765706571, -424.71678090985523)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>383.6891863169999</val>
+</width>
+<height>
+<val>304.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="0722eaf3-a04f-11ef-b7da-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="22b4a719-a051-11ef-b727-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="2379a2e7-a051-11ef-af44-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1576.885165559376, 315.8074119704203)</val>
+</matrix>
+<points>
+<val>[(734.768600147195, -701.7010361198722), (-325.63901077421974, -71.27321494615376)]</val>
+</points>
+<head-connection>
+<ref refid="0723193d-a04f-11ef-860a-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="2379a2e7-a051-11ef-af44-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="22b4a719-a051-11ef-b727-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="0722eaf3-a04f-11ef-b7da-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="247cc8b9-a051-11ef-be77-59cb4ab0743f">
+<externalId>
+<val>034</val>
+</externalId>
+<name>
+<val>associated-invoices</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="247cfd15-a051-11ef-89f3-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>When a client statement is selected, a list of invoices associated to that statement shall be generated.
+
+The list item generated shall have 3 columns.
+
+The first column shall say, "Faktuur Nommer", which is the invoice number on it.
+
+The second column shall say, "Datum", which is the date that invoice was created.
+
+The third column shall say, "Is Betaal?", which shall be a check box that says whether or not the client has payed it.</val>
+</text>
+</Requirement>
+<RequirementItem id="247cfd15-a051-11ef-89f3-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2889.3310706007596, -438.287731885784)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>333.4658070248681</val>
+</width>
+<height>
+<val>338.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="247cc8b9-a051-11ef-be77-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="970bd74c-a051-11ef-87f1-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="97b229ec-a051-11ef-bf3d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2888.899111722299, -400.93168111330203)</val>
+</matrix>
+<points>
+<val>[(0.4319588784605912, -6.383570765911713), (-193.55615969872815, -5.684341886080802e-14)]</val>
+</points>
+<head-connection>
+<ref refid="247cfd15-a051-11ef-89f3-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="0723193d-a04f-11ef-860a-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="97b229ec-a051-11ef-bf3d-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="970bd74c-a051-11ef-87f1-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="247cc8b9-a051-11ef-be77-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0722eaf3-a04f-11ef-b7da-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="000d8189-a052-11ef-a10f-59cb4ab0743f">
+<externalId>
+<val>035</val>
+</externalId>
+<name>
+<val>statement-print</val>
+</name>
+<note>
+<val>See the pdfs of what the layout of the statement shall be.
+
+File location:
+Project-root-directory: admin-system/docs/statement-layout.pdf</val>
+</note>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="000db878-a052-11ef-bb09-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The statement page shall have the ability to print the statement associated with a specific client.
+
+The print format shall be in pdf.
+
+See the Notes!</val>
+</text>
+</Requirement>
+<RequirementItem id="000db878-a052-11ef-bb09-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2311.6537657065714, 0.7968749999997762)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>266.196169902104</val>
+</width>
+<height>
+<val>202.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="000d8189-a052-11ef-a10f-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="777795f2-a052-11ef-a073-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="784f798f-a052-11ef-93c6-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2368.052269862381, 141.47654520027106)</val>
+</matrix>
+<points>
+<val>[(-56.39850415580986, -117.59443076425424), (-1116.8061150772246, 128.32032979972905)]</val>
+</points>
+<head-connection>
+<ref refid="000db878-a052-11ef-bb09-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="784f798f-a052-11ef-93c6-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="777795f2-a052-11ef-a073-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="000d8189-a052-11ef-a10f-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="f248eae2-a052-11ef-99c9-59cb4ab0743f">
+<externalId>
+<val>036</val>
+</externalId>
+<name>
+<val>statement-email</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="f24922a7-a052-11ef-b271-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The statement page shall have the ability to email a selected statement to the email address associated with that client.</val>
+</text>
+</Requirement>
+<RequirementItem id="f24922a7-a052-11ef-b271-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2305.3079716385914, 288.697276082285)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>247.88391991169078</val>
+</width>
+<height>
+<val>168.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="f248eae2-a052-11ef-99c9-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="0db9f7ae-a053-11ef-ba9f-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="0ec81b4d-a053-11ef-8c96-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2326.5477327933195, 325.3079914859448)</val>
+</matrix>
+<points>
+<val>[(-21.239761154728058, -13.933464418582503), (-1075.3015780081632, -36.61071540365981)]</val>
+</points>
+<head-connection>
+<ref refid="f24922a7-a052-11ef-b271-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="0ec81b4d-a053-11ef-8c96-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="0db9f7ae-a053-11ef-ba9f-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="f248eae2-a052-11ef-99c9-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<Requirement id="10647777-a053-11ef-8caf-59cb4ab0743f">
+<externalId>
+<val>037</val>
+</externalId>
+<name>
+<val>statement-save</val>
+</name>
+<package>
+<ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="1064b05a-a053-11ef-9614-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The statement page shall have the ability to save the updated statements to the database.</val>
+</text>
+</Requirement>
+<RequirementItem id="1064b05a-a053-11ef-9614-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2311.586071284763, 542.9858314258074)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>241.60582026551924</val>
+</width>
+<height>
+<val>151.0</val>
+</height>
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="10647777-a053-11ef-8caf-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<DeriveReqtItem id="347d5caf-a053-11ef-96e1-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="3568b439-a053-11ef-9b16-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 2400.4991389051133, 618.6238297825728)</val>
+</matrix>
+<points>
+<val>[(-88.91306762035038, -53.87757159419425), (-1149.252984119957, -295.9983980587758)]</val>
+</points>
+<head-connection>
+<ref refid="1064b05a-a053-11ef-9614-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</tail-connection>
+</DeriveReqtItem>
+<DeriveReqt id="3568b439-a053-11ef-9b16-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="347d5caf-a053-11ef-96e1-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="10647777-a053-11ef-8caf-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</targetContext>
+</DeriveReqt>
+<RequirementItem id="864bcafc-a053-11ef-b976-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 715.4179229736328, -413.2138366699219)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>275.92578125</val>
+</width>
+<height>
+<val>181.0</val>
+</height>
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="65ea1ecb-9f66-11ef-a799-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<RequirementItem id="8bc5364c-a053-11ef-9fea-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 339.9688262939453, -395.7109069824219)</val>
+</matrix>
+<top-left>
+<val>(-134.9258575439453, 0.0)</val>
+</top-left>
+<width>
+<val>247.9258575439453</val>
+</width>
+<height>
+<val>145.994140625</val>
+</height>
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="7e98cc87-9f66-11ef-aa69-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<RequirementItem id="9029c8c3-a053-11ef-ac06-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -98.73044967651367, 80.587890625)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>235.5</val>
+</width>
+<height>
+<val>147.0</val>
+</height>
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="9dde5e1f-9f65-11ef-a697-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<RequirementItem id="933d6072-a053-11ef-bd36-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 472.1524200439453, 584.4219055175781)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>258.1698760986328</val>
+</width>
+<height>
+<val>130.0</val>
+</height>
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="cf082608-9f65-11ef-8a37-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<RequirementItem id="9704839d-a053-11ef-bc35-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1031.062484741211, 87.87893676757812)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>229.89064025878906</val>
+</width>
+<height>
+<val>147.0</val>
+</height>
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="0564434d-9f66-11ef-ac91-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<BlockItem id="c71835bd-a053-11ef-a314-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 408.28907775878906, 237.90237426757812)</val>
+</matrix>
+<top-left>
+<val>(0.0, 0.0)</val>
+</top-left>
+<width>
+<val>624.9296722412109</val>
+</width>
+<height>
+<val>493.4140319824219</val>
+</height>
+<diagram>
+<ref refid="1dea6ec9-9b72-11ef-8746-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</subject>
+</BlockItem>
+<Requirement id="6f0464e6-a054-11ef-b947-59cb4ab0743f">
+<externalId>
+<val>038</val>
+</externalId>
+<name>
+<val>semantics</val>
+</name>
+<package>
+<ref refid="79159115-9b6f-11ef-8825-396cc00fc51d"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="6f049cb7-a054-11ef-a4be-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<text>
+<val>The system shall not make use of icons, pictures, or any other kind of indication on what the action of a button or the meaning of a label is. Instead, the application shall contain words for all meaning and action related things. 
+
+The words shall be stated in Afrikaans for comfortable understanding for the client.</val>
+</text>
+</Requirement>
+<RequirementItem id="6f049cb7-a054-11ef-a4be-59cb4ab0743f">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, -123.5663833618164, 114.05859375)</val>
+</matrix>
+<top-left>
+<val>(0.0, 187.0)</val>
+</top-left>
+<width>
+<val>319.21092987060547</val>
+</width>
+<height>
+<val>236.0</val>
+</height>
+<diagram>
+<ref refid="1dea6ec9-9b72-11ef-8746-396cc00fc51d"/>
+</diagram>
+<subject>
+<ref refid="6f0464e6-a054-11ef-b947-59cb4ab0743f"/>
+</subject>
+</RequirementItem>
+<SatisfyItem id="bd788036-a054-11ef-88e8-59cb4ab0743f">
+<diagram>
+<ref refid="1dea6ec9-9b72-11ef-8746-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="be48935b-a054-11ef-94d9-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 194.30857849121094, 327.7890930175781)</val>
+</matrix>
+<points>
+<val>[(1.335968017578125, 0.0), (213.98049926757812, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="6f049cb7-a054-11ef-a4be-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="c71835bd-a053-11ef-a314-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
+<Satisfy id="be48935b-a054-11ef-94d9-59cb4ab0743f">
+<presentation>
+<reflist>
+<ref refid="bd788036-a054-11ef-88e8-59cb4ab0743f"/>
+</reflist>
+</presentation>
+<sourceContext>
+<ref refid="6f0464e6-a054-11ef-b947-59cb4ab0743f"/>
+</sourceContext>
+<targetContext>
+<ref refid="9ca8b09e-9b6e-11ef-a1b9-396cc00fc51d"/>
+</targetContext>
+</Satisfy>
+<SatisfyItem id="c92f2586-a054-11ef-a520-59cb4ab0743f">
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="f3112fd9-9f6f-11ef-a579-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1029.687211077608, 119.75424845312833)</val>
+</matrix>
+<points>
+<val>[(1.3752736636029113, 0.0), (-222.77711586276428, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="9704839d-a053-11ef-bc35-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="cb4a7d3f-a054-11ef-96a9-59cb4ab0743f">
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="efc85915-9f6f-11ef-9ad3-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 840.8828364359715, -233.16788640333317)</val>
+</matrix>
+<points>
+<val>[(0.0, 0.9540497334112956), (-135.57221560740834, 274.05851140333317)]</val>
+</points>
+<head-connection>
+<ref refid="864bcafc-a053-11ef-b976-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="cd079ebf-a054-11ef-aeb9-59cb4ab0743f">
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="ead3ab15-9f6f-11ef-995d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 353.71242670039044, -247.85553748616385)</val>
+</matrix>
+<points>
+<val>[(0.0, -1.861228871258021), (118.7307557341761, 288.7461624861638)]</val>
+</points>
+<head-connection>
+<ref refid="8bc5364c-a053-11ef-9fea-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="cfa47785-a054-11ef-9914-59cb4ab0743f">
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="f61fb35c-9f6f-11ef-9f88-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 133.9960723671971, 113.49291386645905)</val>
+</matrix>
+<points>
+<val>[(2.7734779562892413, 0.0), (246.3398651328029, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="9029c8c3-a053-11ef-ac06-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="d247a5ae-a054-11ef-b35d-59cb4ab0743f">
+<diagram>
+<ref refid="58d6c536-66f8-11ec-b4c8-0456e5e540ed"/>
+</diagram>
+<subject>
+<ref refid="083a9afc-9f70-11ef-ae14-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 588.6490613859517, 583.1165924613266)</val>
+</matrix>
+<points>
+<val>[(0.0, 1.3053130562515207), (0.0, -204.8314362113266), (0.0, -204.8314362113266)]</val>
+</points>
+<head-connection>
+<ref refid="933d6072-a053-11ef-bd36-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9ca8e531-9b6e-11ef-86b6-396cc00fc51d"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="0765eb6f-9f70-11ef-93ca-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="083a9afc-9f70-11ef-ae14-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 692.6912165662511, 525.3352746163514)</val>
+</matrix>
+<points>
+<val>[(3.754426373873571, 55.648980593665556), (0.0, -176.6907433663514)]</val>
+</points>
+<head-connection>
+<ref refid="cf08541d-9f65-11ef-95af-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="f584b2ff-9f6f-11ef-833b-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="f61fb35c-9f6f-11ef-9f88-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 359.3761771428952, 235.94827181752282)</val>
+</matrix>
+<points>
+<val>[(0.9519783746829376, 0.0), (187.3035103571048, 0.0)]</val>
+</points>
+<head-connection>
+<ref refid="9dde8c49-9f65-11ef-af8a-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="e9a00c4d-9f6f-11ef-948a-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="ead3ab15-9f6f-11ef-995d-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 58.45907334964994, -323.0937134785866)</val>
+</matrix>
+<points>
+<val>[(314.48648809669106, 278.89169915368444), (488.22061415035006, 446.6484009785866)]</val>
+</points>
+<head-connection>
+<ref refid="7e98fd27-9f66-11ef-bbb7-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="f216ec54-9f6f-11ef-a58f-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="f3112fd9-9f6f-11ef-a579-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 1033.1007890280962, 223.19659186400713)</val>
+</matrix>
+<points>
+<val>[(1.4148359719038126, 0.0), (-174.11647506325244, 0.10417412720380526)]</val>
+</points>
+<head-connection>
+<ref refid="056472e7-9f66-11ef-8d08-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
+<SatisfyItem id="ef0d4e08-9f6f-11ef-889c-59cb4ab0743f">
+<diagram>
+<ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
+</diagram>
+<horizontal>
+<val>0</val>
+</horizontal>
+<orthogonal>
+<val>0</val>
+</orthogonal>
+<subject>
+<ref refid="efc85915-9f6f-11ef-9ad3-59cb4ab0743f"/>
+</subject>
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 991.5807633571836, -425.35030730781716)</val>
+</matrix>
+<points>
+<val>[(-132.59644939234, 381.14829298291505), (-132.59644939234, 548.9049948078172)]</val>
+</points>
+<head-connection>
+<ref refid="65ea4fbc-9f66-11ef-a9b3-59cb4ab0743f"/>
+</head-connection>
+<tail-connection>
+<ref refid="9762d9aa-9f65-11ef-9598-59cb4ab0743f"/>
+</tail-connection>
+</SatisfyItem>
 </gaphor>
