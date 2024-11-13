@@ -53,7 +53,7 @@ if(BUILD_PROJECT)
 
         add_executable(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/app/source/main.cpp
-                ${CMAKE_SOURCE_DIR}/app/source/admin.cpp
+                ${CMAKE_SOURCE_DIR}/app/source/admin-system.cpp
         )
 
         target_include_directories(${PROJECT_NAME} PRIVATE
