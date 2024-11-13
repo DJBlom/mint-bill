@@ -878,6 +878,7 @@ Placeholder Text:
 - Town the business is located in = Dorp se naam . . .
 - Cellphone number = Kontak nommer . . .
 - E-mail address = E-pos adres . . .
+- Statement schedule = Staatskedule . . .
 - VAT number = BTW nommer . . .</val>
 </note>
 <package>
@@ -897,6 +898,7 @@ Entry Fields:
 - Town the business is located in.
 - Cellphone number.
 - E-mail address.
+- Statement schedule.
 - VAT number.
 
 See the Notes!</val>
@@ -910,10 +912,10 @@ See the Notes!</val>
 <val>(0.0, 0.0)</val>
 </top-left>
 <width>
-<val>271.0707472272857</val>
+<val>381.91988743879085</val>
 </width>
 <height>
-<val>287.0</val>
+<val>304.0</val>
 </height>
 <diagram>
 <ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
@@ -939,7 +941,7 @@ See the Notes!</val>
 <val>(1.0, 0.0, 0.0, 1.0, -593.239155678274, -976.4332266974961)</val>
 </matrix>
 <points>
-<val>[(29.818481067868788, -52.390222846795496), (787.7467808904073, 817.6454948117121)]</val>
+<val>[(103.39398804188363, -35.390222846795496), (787.7467808904073, 817.6454948117121)]</val>
 </points>
 <head-connection>
 <ref refid="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f"/>
@@ -2576,7 +2578,7 @@ The dialog box shall have a sentance written that says, "Is jy seker jy wil die 
 <val>(1.0, 0.0, 0.0, 1.0, 354.59741799342214, 2670.9173711824633)</val>
 </matrix>
 <points>
-<val>[(-196.78718277646607, 821.8909287498523), (355.326753846187, -1972.9331159724466)]</val>
+<val>[(-196.78718277646607, 821.8909287498523), (355.326753846187, -1972.9331159724463)]</val>
 </points>
 <head-connection>
 <ref refid="bbe1fd2b-9f92-11ef-87a6-59cb4ab0743f"/>
@@ -2823,7 +2825,7 @@ The list item shall have the ability to be previewed.</val>
 <val>(1.0, 0.0, 0.0, 1.0, 1317.0598983642153, 1500.5175698305834)</val>
 </matrix>
 <points>
-<val>[(0.09347682024326787, -125.75517578648851), (-473.3118916681525, -802.5333146205663)]</val>
+<val>[(0.09347682024326787, -125.75517578648851), (-473.3118916681525, -802.5333146205664)]</val>
 </points>
 <head-connection>
 <ref refid="a045cbe8-a036-11ef-a376-59cb4ab0743f"/>
