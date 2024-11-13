@@ -875,6 +875,7 @@ See the Notes!</val>
 Placeholder Text:
 - Business name = Besigheid naam . . .
 - Street Address = Straat adres . . .
+- Area Code = Gebied kode . . .
 - Town the business is located in = Dorp se naam . . .
 - Cellphone number = Kontak nommer . . .
 - E-mail address = E-pos adres . . .
@@ -894,7 +895,8 @@ Placeholder Text:
 
 Entry Fields:
 - Business name.
-- Streed Address.
+- Street Address.
+- Area Code.
 - Town the business is located in.
 - Cellphone number.
 - E-mail address.
@@ -915,7 +917,7 @@ See the Notes!</val>
 <val>381.91988743879085</val>
 </width>
 <height>
-<val>304.0</val>
+<val>321.0</val>
 </height>
 <diagram>
 <ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
@@ -941,7 +943,7 @@ See the Notes!</val>
 <val>(1.0, 0.0, 0.0, 1.0, -593.239155678274, -976.4332266974961)</val>
 </matrix>
 <points>
-<val>[(103.39398804188363, -35.390222846795496), (787.7467808904073, 817.6454948117121)]</val>
+<val>[(103.39398804188363, -18.390222846795496), (787.7467808904073, 817.6454948117121)]</val>
 </points>
 <head-connection>
 <ref refid="b03e0e5b-9f6e-11ef-a1b0-59cb4ab0743f"/>
@@ -1538,6 +1540,9 @@ See the Notes!</val>
 <text>
 <val>The invoice page shall have an entry for the invoice number. 
 
+Entry field:
+- Invoice number = Faktuur nommer . . .
+
 The invoice number shall be unique, incrimental, an integer type, and generate by default. 
 
 The invoice number shall be immutable so the client can't change it acidentilly.</val>
@@ -1545,7 +1550,7 @@ The invoice number shall be immutable so the client can't change it acidentilly.
 </Requirement>
 <RequirementItem id="99c02b18-9f8c-11ef-aa27-59cb4ab0743f">
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, -172.59634158862224, 1336.218723348478)</val>
+<val>(1.0, 0.0, 0.0, 1.0, -172.59634158862212, 1336.218723348478)</val>
 </matrix>
 <top-left>
 <val>(-221.12375825158608, 0.0)</val>
@@ -1554,7 +1559,7 @@ The invoice number shall be immutable so the client can't change it acidentilly.
 <val>374.0997278073463</val>
 </width>
 <height>
-<val>219.0</val>
+<val>270.0</val>
 </height>
 <diagram>
 <ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
