@@ -49,14 +49,16 @@ function static_code_analysis()
              --enable=unusedFunction \
              --library=posix \
              --std=c11 \
-             --std=c++20 \
+             --std=c++23 \
              --error-exitcode=1 \
              --platform=unix32 unix64 win32A win32W win64 \
              --suppress=missingIncludeSystem \
              --suppress=checkersReport \
              -I $prj_dir/app/include \
+             -I $prj_dir/gui/include \
              -I $prj_dir/features/include \
              $prj_dir/app/source \
+             $prj_dir/gui/source \
              $prj_dir/features/source 
 }
 
