@@ -13,6 +13,7 @@
 namespace error {
         const std::string message_file{"Error: failed to load the ui file."};
         const std::string message_main_window{"Error: failed to create the main window."};
+        const std::string message_business{"Error: failed to create the business page."};
 }
 
 
@@ -34,9 +35,15 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->business_info_page.create(ui_builder) == false)
+                if (this->tme_create(ui_builder) == false)
                 {
-                        std::cerr << error::message_main_window << std::endl;
+                        std::cerr << error::message_business << std::endl;
+                        return;
+                }
+
+                if (this->tce_create(ui_builder) == false)
+                {
+                        std::cerr << error::message_business << std::endl;
                         return;
                 }
         }
@@ -67,4 +74,26 @@ bool app::admin_system::verify_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_buil
         }
 
         return verified;
+}
+
+bool app::admin_system::tme_create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        if (this->business_info_tme.create(ui_builder) == false)
+        {
+                std::cerr << error::message_business << std::endl;
+                return false;
+        }
+
+        return true;
+}
+
+bool app::admin_system::tce_create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        if (this->business_info_tce.create(ui_builder) == false)
+        {
+                std::cerr << error::message_business << std::endl;
+                return false;
+        }
+
+        return true;
 }

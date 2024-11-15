@@ -25,10 +25,13 @@ namespace app {
 
                 private:
                         [[nodiscard]] bool verify_ui_file(const Glib::RefPtr<Gtk::Builder>&);
+                        [[nodiscard]] bool tme_create(const Glib::RefPtr<Gtk::Builder>&);
+                        [[nodiscard]] bool tce_create(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
                         gui::main_window main_window;
-                        gui::business_info_page business_info_page;
+                        gui::business_info_page business_info_tme{"tme"};
+                        gui::business_info_page business_info_tce{"tce"};
         };
 }
 

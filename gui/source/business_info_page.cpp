@@ -11,9 +11,10 @@
 bool gui::business_info_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         bool created{false};
-        this->business_name = ui_builder->get_widget<Gtk::Entry>("tme-business-info-name-entry");
+        this->business_name = ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry");
         if (this->business_name)
         {
+                created = true;
                 connect_save_button(ui_builder);
         }
 
@@ -23,7 +24,7 @@ bool gui::business_info_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builde
 void gui::business_info_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Button* save_button{nullptr};
-        save_button = ui_builder->get_widget<Gtk::Button>("tme-business-info-save-button");
+        save_button = ui_builder->get_widget<Gtk::Button>(this->business_prefix + "-business-info-save-button");
         if (save_button)
         {
                 save_button->signal_clicked().connect([this] () { this->save_clicked(); });

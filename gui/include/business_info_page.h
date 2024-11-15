@@ -13,7 +13,7 @@
 namespace gui {
         class business_info_page : public interface::gui {
                 public:
-                        business_info_page() = default;
+                        explicit business_info_page(const std::string&& business_prefix) : business_prefix{business_prefix} {}
                         business_info_page(const business_info_page&) = delete;
                         business_info_page(business_info_page&&) = delete;
                         business_info_page& operator= (const business_info_page&) = delete;
@@ -27,6 +27,7 @@ namespace gui {
                         void save_clicked();
 
                 private:
+                        std::string business_prefix;
                         Gtk::Entry* business_name;
         };
 }
