@@ -1,7 +1,7 @@
 /********************************************************
  * Contents: Main Window class definition
  * Author: Dawid J. Blom
- * Date: October 26, 2024
+ * Date: November 14, 2024
  *
  * NOTE:
  *******************************************************/
@@ -20,22 +20,18 @@ namespace gui {
                         main_window& operator= (main_window&&) = delete;
                         ~main_window() = default;
 
-                        void setup(const Glib::RefPtr<Gtk::Application>&);
+                        [[nodiscard]] bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
 
                 private:
-                        [[nodiscard]] bool verify_ui_file();
-                        [[nodiscard]] bool create_window();
-                        void connect_exit_button();
-                        void connect_max_button();
-                        void connect_min_button();
-
+                        void connect_exit_button(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_max_button(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_min_button(const Glib::RefPtr<Gtk::Builder>&);
                         void exit_clicked();
                         void min_clicked();
                         void max_clicked();
 
                 private:
                         Gtk::Window* window{nullptr};
-                        Glib::RefPtr<Gtk::Builder> ui_builder;
         };
 }
 #endif
