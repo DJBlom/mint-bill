@@ -16,17 +16,20 @@ namespace data {
         struct business : public interface::data {
                 public:
                         business() = default;
-                        business(const business&) = delete;
-                        business(business&&) = delete;
-                        business& operator= (const business&) = delete;
-                        business& operator= (business&&) = delete;
+                        business(const business&) = default;
+                        business(business&&) = default;
+                        business& operator= (const business&) = default;
+                        business& operator= (business&&) = default;
                         virtual ~business() = default;
 
                         [[nodiscard]] virtual bool is_valid() override;
+
                         void set_name(const std::string&);
                         [[nodiscard]] std::string get_name();
                         void set_address(const std::string&);
                         [[nodiscard]] std::string get_address();
+                        void set_area_code(const std::string&);
+                        [[nodiscard]] std::string get_area_code();
                         void set_town(const std::string&);
                         [[nodiscard]] std::string get_town();
                         void set_cellphone(const std::string&);
@@ -50,6 +53,7 @@ namespace data {
                 private:
                         std::string name{""};
                         std::string address{""};
+                        std::string area_code{""};
                         std::string town{""};
                         std::string cellphone{""};
                         std::string email{""};
@@ -57,8 +61,21 @@ namespace data {
                         std::string branch_code{""};
                         std::string account_number{""};
                         std::string client_message{""};
-                        std::uint8_t flags{0};
+                        std::uint16_t flags{0x0};
                         std::mutex data;
+                        std::uint16_t mask{0xFFFF};
+                        enum FLAG {
+                                NAME = 0,
+                                ADDRESS,
+                                AREA_CODE,
+                                TOWN,
+                                CELLPHONE,
+                                EMAIL,
+                                BANK,
+                                BRANCH_CODE,
+                                ACCOUNT_NUMBER,
+                                CLIENT_MESSAGE
+                        };
         };
 }
 #endif

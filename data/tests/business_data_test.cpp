@@ -39,6 +39,7 @@ TEST(business_data_test, the_data_is_valid)
 {
         business_data.set_name("tme");
         business_data.set_address("geelsterd 8");
+        business_data.set_area_code("5432");
         business_data.set_town("george");
         business_data.set_cellphone("0832315944");
         business_data.set_email("odn@gmail.com");
@@ -54,6 +55,7 @@ TEST(business_data_test, the_data_is_not_valid)
 {
         business_data.set_name("");
         business_data.set_address("geelsterd 8");
+        business_data.set_area_code("");
         business_data.set_town("george");
         business_data.set_cellphone("0832315944");
         business_data.set_email("");
@@ -69,6 +71,7 @@ TEST(business_data_test, verify_flag_bits_are_properly_cleared)
 {
         business_data.set_name("");
         business_data.set_address("");
+        business_data.set_area_code("");
         business_data.set_town("");
         business_data.set_cellphone("");
         business_data.set_email("");
@@ -96,6 +99,15 @@ TEST(business_data_test, get_business_address_from_structure)
         business_data.set_address(address);
 
         CHECK_EQUAL(expected, business_data.get_address());
+}
+
+TEST(business_data_test, get_business_area_code_from_structure)
+{
+        std::string expected{"5467"};
+        std::string code{expected};
+        business_data.set_area_code(code);
+
+        CHECK_EQUAL(expected, business_data.get_area_code());
 }
 
 TEST(business_data_test, get_business_town_from_structure)

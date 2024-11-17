@@ -24,19 +24,18 @@ void data::business::set_name(const std::string& business_name)
 {
         if (!business_name.empty())
         {
-                set_flag(0);
+                set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->name = business_name;
         }
         else
         {
-                clear_flag(0);
+                clear_flag(FLAG::NAME);
         }
 }
 
 std::string data::business::get_name()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->name;
 }
 
@@ -44,39 +43,56 @@ void data::business::set_address(const std::string& street_address)
 {
         if (!street_address.empty())
         {
-                set_flag(1);
+                set_flag(FLAG::ADDRESS);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->address = street_address;
         }
         else
         {
-                clear_flag(1);
+                clear_flag(FLAG::ADDRESS);
         }
 }
 
 std::string data::business::get_address()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->address;
+}
+
+void data::business::set_area_code(const std::string& code)
+{
+        if (!code.empty())
+        {
+                set_flag(FLAG::AREA_CODE);
+                std::lock_guard<std::mutex> guard(this->data);
+                this->area_code = code;
+        }
+        else
+        {
+                clear_flag(FLAG::AREA_CODE);
+        }
+}
+
+std::string data::business::get_area_code()
+{
+        return this->area_code;
 }
 
 void data::business::set_town(const std::string& business_town)
 {
         if (!business_town.empty())
         {
-                set_flag(2);
+                set_flag(FLAG::TOWN);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->town = business_town;
         }
         else
         {
-                clear_flag(2);
+                clear_flag(FLAG::TOWN);
         }
 }
 
 std::string data::business::get_town()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->town;
 }
 
@@ -84,19 +100,18 @@ void data::business::set_cellphone(const std::string& cellphone_number)
 {
         if (!cellphone_number.empty())
         {
-                set_flag(3);
+                set_flag(FLAG::CELLPHONE);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->cellphone = cellphone_number;
         }
         else
         {
-                clear_flag(3);
+                clear_flag(FLAG::CELLPHONE);
         }
 }
 
 std::string data::business::get_cellphone()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->cellphone;
 }
 
@@ -104,19 +119,18 @@ void data::business::set_email(const std::string& email_address)
 {
         if (!email_address.empty())
         {
-                set_flag(4);
+                set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->email = email_address;
         }
         else
         {
-                clear_flag(4);
+                clear_flag(FLAG::EMAIL);
         }
 }
 
 std::string data::business::get_email()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->email;
 }
 
@@ -124,19 +138,18 @@ void data::business::set_bank(const std::string& bank_name)
 {
         if (!bank_name.empty())
         {
-                set_flag(5);
+                set_flag(FLAG::BANK);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->bank = bank_name;
         }
         else
         {
-                clear_flag(5);
+                clear_flag(FLAG::BANK);
         }
 }
 
 std::string data::business::get_bank()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->bank;
 }
 
@@ -144,19 +157,18 @@ void data::business::set_branch_code(const std::string& branch_num)
 {
         if (!branch_num.empty())
         {
-                set_flag(6);
+                set_flag(FLAG::BRANCH_CODE);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->branch_code = branch_num;
         }
         else
         {
-                clear_flag(6);
+                clear_flag(FLAG::BRANCH_CODE);
         }
 }
 
 std::string data::business::get_branch_code()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->branch_code;
 }
 
@@ -164,19 +176,18 @@ void data::business::set_account_number(const std::string& account_num)
 {
         if (!account_num.empty())
         {
-                set_flag(7);
+                set_flag(FLAG::ACCOUNT_NUMBER);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->account_number = account_num;
         }
         else
         {
-                clear_flag(7);
+                clear_flag(FLAG::ACCOUNT_NUMBER);
         }
 }
 
 std::string data::business::get_account_number()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->account_number;
 }
 
@@ -184,36 +195,34 @@ void data::business::set_client_message(const std::string& message)
 {
         if (!message.empty())
         {
-                set_flag(8);
+                set_flag(FLAG::CLIENT_MESSAGE);
                 std::lock_guard<std::mutex> guard(this->data);
                 this->client_message = message;
         }
         else
         {
-                clear_flag(8);
+                clear_flag(FLAG::CLIENT_MESSAGE);
         }
 }
 
 std::string data::business::get_client_message()
 {
-        std::lock_guard<std::mutex> guard(this->data);
         return this->client_message;
 }
 
 bool data::business::check_flags()
 {
-        std::lock_guard<std::mutex> guard(this->data);
-        return ((this->flags & 0xff) == 0xff) ? true : false;
+        return ((this->flags & this->mask) == 0x03FF) ? true : false;
 }
 
 void data::business::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->data);
-        this->flags |= static_cast<uint8_t>(1 << bit);
+        this->flags |= static_cast<uint16_t>(1 << bit);
 }
 
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->data);
-        this->flags |= static_cast<uint8_t>(0 << bit);
+        this->flags |= static_cast<uint16_t>(0 << bit);
 }
