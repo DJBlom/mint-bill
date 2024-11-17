@@ -760,6 +760,7 @@ See the Notes!</val>
 Algemene Inligtin:
 - Business name = Besigheid se naam . . .
 - Street name &amp; number = Straat adres . . .
+- Area code = Area kode . . .
 - Town the bussiness is located in = Dorp se naam . . .
 - Business cellphone number = Kontak nommer . . .
 - Business e-mail = E-pos adres . . .
@@ -789,6 +790,7 @@ Bank Inligting:
 Algemene Inligtin:
 - Business name.
 - Street name &amp; number.
+- Area code.
 - Town the bussiness is located in.
 - Business cellphone number.
 - Business e-mail.
@@ -814,7 +816,7 @@ See the Notes!</val>
 <val>258.9195199446941</val>
 </width>
 <height>
-<val>440.0</val>
+<val>457.0</val>
 </height>
 <diagram>
 <ref refid="27ebd174-9b72-11ef-a0cd-396cc00fc51d"/>
@@ -982,7 +984,7 @@ See the Notes!</val>
 <val>(1.0, 0.0, 0.0, 1.0, 1100.4011573020666, -868.6168291832163)</val>
 </matrix>
 <points>
-<val>[(-128.93113787213179, -7.2066203610751245), (-230.55368466736536, 639.4148148583142)]</val>
+<val>[(-128.93113787213179, 9.793379638924876), (-230.55368466736536, 639.4148148583142)]</val>
 </points>
 <head-connection>
 <ref refid="08bc8406-9f68-11ef-a8db-59cb4ab0743f"/>
@@ -1021,7 +1023,7 @@ See the Notes!</val>
 <val>(1.0, 0.0, 0.0, 1.0, 1317.8223613460577, -1223.8644645306144)</val>
 </matrix>
 <points>
-<val>[(2.805714051786026, 0.0), (-216.89258194377544, 0.0)]</val>
+<val>[(2.805714051786026, 0.0), (-216.89258194377544, 3.552960784619245)]</val>
 </points>
 <head-connection>
 <ref refid="5267692d-9f6a-11ef-9809-59cb4ab0743f"/>

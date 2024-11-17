@@ -699,7 +699,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">3</property>
+                                      <property name="row">4</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -710,7 +710,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">4</property>
+                                      <property name="row">5</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -721,7 +721,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">7</property>
+                                      <property name="row">8</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -732,7 +732,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">9</property>
+                                      <property name="row">10</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -743,18 +743,18 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">8</property>
+                                      <property name="row">9</property>
                                     </layout>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="tme-business-info-client-message-entry">
                                     <property name="placeholder-text">Boodskap vir kliënt . . .</property>
-                                    <property name="text">Thank you for your support</property>
+                                    <property name="text">Thank you for your support.</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">10</property>
+                                      <property name="row">11</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -769,7 +769,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">6</property>
+                                      <property name="row">7</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -779,7 +779,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">11</property>
+                                      <property name="row">12</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -805,7 +805,18 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">5</property>
+                                      <property name="row">6</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="tme-business-info-area-code-entry">
+                                    <property name="placeholder-text">Area kode . . .</property>
+                                    <property name="text">6536</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">3</property>
                                     </layout>
                                   </object>
                                 </child>
