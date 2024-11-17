@@ -86,12 +86,12 @@ if(BUILD_PROJECT)
         #            message(STATUS "Directory features, does not exist")
         #        endif()
 
-        #        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
-        #            add_subdirectory(${CMAKE_SOURCE_DIR}/data)
-        #            target_link_libraries(${PROJECT_NAME} PRIVATE data)
-        #        else()
-        #            message(STATUS "Directory features, does not exist")
-        #        endif()
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/data)
+            target_link_libraries(${PROJECT_NAME} PRIVATE data)
+        else()
+            message(STATUS "Directory features, does not exist")
+        endif()
 
 
         if (EXISTS ${CMAKE_OBJDUMP})

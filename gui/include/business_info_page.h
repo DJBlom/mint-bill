@@ -9,6 +9,7 @@
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
 #include <vector>
+#include <business_data.h>
 
 namespace gui {
         class business_info_page : public interface::gui {
@@ -31,6 +32,7 @@ namespace gui {
                 private:
                         std::string business_prefix;
                         std::vector<std::string> page_entries;
+                        data::business business_data;
         };
 }
 #endif
