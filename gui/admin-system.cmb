@@ -170,7 +170,8 @@
 	(1,248,"GtkListItemFactory",None,180,None,None,None,2,None,None),
 	(1,249,"GtkListItemFactory",None,203,None,None,None,1,None,None),
 	(1,250,"GtkListItemFactory",None,203,None,None,None,2,None,None),
-	(1,251,"GtkEntry","tme-business-info-area-code-entry",72,None,None,None,13,None,None)
+	(1,251,"GtkEntry","tme-business-info-area-code-entry",72,None,None,None,13,None,None),
+	(1,252,"GtkEntry","tce-business-info-area-code-entry",230,None,None,None,12,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -689,7 +690,9 @@
 	(1,241,"GtkWidget","margin-bottom","19",0,None,None,None,None,None,None,None,None),
 	(1,242,"GtkEntry","placeholder-text","E-pos . . .",0,None,None,None,None,None,None,None,None),
 	(1,251,"GtkEditable","text","6536",None,None,None,None,None,None,None,None,None),
-	(1,251,"GtkEntry","placeholder-text","Area kode . . .",None,None,None,None,None,None,None,None,None)
+	(1,251,"GtkEntry","placeholder-text","Area kode . . .",None,None,None,None,None,None,None,None,None),
+	(1,252,"GtkEditable","text","6536",0,None,None,None,None,None,None,None,None),
+	(1,252,"GtkEntry","placeholder-text","Area kode . . .",0,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),
@@ -918,34 +921,36 @@
 	(1,230,232,"GtkGridLayoutChild","row-span","1",0,None,None,None),
 	(1,230,233,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,233,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,233,"GtkGridLayoutChild","row","3",0,None,None,None),
+	(1,230,233,"GtkGridLayoutChild","row","4",0,None,None,None),
 	(1,230,234,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,234,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,234,"GtkGridLayoutChild","row","4",0,None,None,None),
+	(1,230,234,"GtkGridLayoutChild","row","5",0,None,None,None),
 	(1,230,235,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,235,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,235,"GtkGridLayoutChild","row","7",0,None,None,None),
+	(1,230,235,"GtkGridLayoutChild","row","8",0,None,None,None),
 	(1,230,236,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,236,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,236,"GtkGridLayoutChild","row","9",0,None,None,None),
+	(1,230,236,"GtkGridLayoutChild","row","10",0,None,None,None),
 	(1,230,237,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,237,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,237,"GtkGridLayoutChild","row","8",0,None,None,None),
+	(1,230,237,"GtkGridLayoutChild","row","9",0,None,None,None),
 	(1,230,238,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,238,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,238,"GtkGridLayoutChild","row","10",0,None,None,None),
+	(1,230,238,"GtkGridLayoutChild","row","11",0,None,None,None),
 	(1,230,239,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,239,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,239,"GtkGridLayoutChild","row","6",0,None,None,None),
+	(1,230,239,"GtkGridLayoutChild","row","7",0,None,None,None),
 	(1,230,240,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,240,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,240,"GtkGridLayoutChild","row","11",0,None,None,None),
+	(1,230,240,"GtkGridLayoutChild","row","12",0,None,None,None),
 	(1,230,241,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,241,"GtkGridLayoutChild","column-span","3",0,None,None,None),
 	(1,230,241,"GtkGridLayoutChild","row","0",0,None,None,None),
 	(1,230,242,"GtkGridLayoutChild","column","0",0,None,None,None),
 	(1,230,242,"GtkGridLayoutChild","column-span","3",0,None,None,None),
-	(1,230,242,"GtkGridLayoutChild","row","5",0,None,None,None)
+	(1,230,242,"GtkGridLayoutChild","row","6",0,None,None,None),
+	(1,230,252,"GtkGridLayoutChild","column-span","3",None,None,None,None),
+	(1,230,252,"GtkGridLayoutChild","row","3",None,None,None,None)
   </object_layout_property>
   <object_data>
 	(1,1,"GtkWidget",2,2,None,1,None,None,None,None)
