@@ -34,5 +34,4 @@ namespace app {
                         gui::business_info_page business_info_tce{"tce"};
         };
 }
-
 #endif

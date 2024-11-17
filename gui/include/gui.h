@@ -13,8 +13,8 @@ namespace interface {
         class gui {
                 public:
                         ~gui() = default;
+
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         };
 }
-
 #endif

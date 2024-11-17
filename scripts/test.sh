@@ -107,11 +107,11 @@ function show_code_coverage()
 {
 	local prj_dir=$(pwd)
         local coverage_dir=$BUILD_DIR/coverage
-        sudo mkdir -p $coverage_dir
-        sudo -E make -C $TEST_DIR -s gcov
-        sudo gcovr -e $TEST_DIR/mocks --exclude-throw-branches -r $prj_dir \
+        mkdir -p $coverage_dir
+        make -C $TEST_DIR -s gcov
+        gcovr --exclude="^[^\/]+\/mocks\/?(?:[^\/]+\/?)*$" --exclude-throw-branches -r $prj_dir \
                 --html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
 
         firefox $coverage_dir/coverage.html
-        sudo -E make -C $TEST_DIR -s clean
+        make -C $TEST_DIR -s clean
 }

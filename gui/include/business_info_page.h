@@ -8,7 +8,7 @@
 #ifndef _BUSINESS_INFO_PAGE_H_
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
-#include <iostream>
+#include <vector>
 
 namespace gui {
         class business_info_page : public interface::gui {
@@ -23,12 +23,14 @@ namespace gui {
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 
                 private:
+                        [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void save_clicked();
+                        void extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
+                        void save_clicked(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
                         std::string business_prefix;
-                        Gtk::Entry* business_name;
+                        std::vector<std::string> page_entries;
         };
 }
 #endif

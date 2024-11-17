@@ -25,6 +25,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${GTKMM_INCLUDE_DIRS}
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
+                ${CMAKE_SOURCE_DIR}/features/include
         )
 else ()
         message(STATUS "There are no files in, gui/source.")

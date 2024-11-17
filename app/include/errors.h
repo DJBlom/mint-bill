@@ -7,8 +7,8 @@
  ******************************************************************************/
 #ifndef _ERRORS_H_
 #define _ERRORS_H_
-namespace System {
-        enum class Errors {
+namespace app {
+        enum class errors {
                 construction = 1
         };
 }

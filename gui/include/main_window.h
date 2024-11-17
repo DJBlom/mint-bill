@@ -8,7 +8,6 @@
 #ifndef _MAIN_WINDOW_H_
 #define _MAIN_WINDOW_H_
 #include <gtkmm.h>
-#include <iostream>
 
 namespace gui {
         class main_window {
@@ -20,7 +19,7 @@ namespace gui {
                         main_window& operator= (main_window&&) = delete;
                         ~main_window() = default;
 
-                        [[nodiscard]] bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
+                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
 
                 private:
                         void connect_exit_button(const Glib::RefPtr<Gtk::Builder>&);

@@ -1503,7 +1503,7 @@
                                 <child>
                                   <object class="GtkEntry" id="tce-business-info-bank-name-entry">
                                     <property name="placeholder-text">Bank se naam . . .</property>
-                                    <property name="text">Standard Bank Oudtshoorn</property>
+                                    <property name="text">Nedbank</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
