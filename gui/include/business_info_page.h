@@ -8,8 +8,8 @@
 #ifndef _BUSINESS_INFO_PAGE_H_
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
-#include <vector>
 #include <business_data.h>
+#include <business_feature.h>
 
 namespace gui {
         class business_info_page : public interface::gui {
@@ -31,8 +31,8 @@ namespace gui {
 
                 private:
                         std::string business_prefix;
-                        std::vector<std::string> page_entries;
-                        data::business business_data;
+                        data::business business_data{};
+                        feature::business business_feature{};
         };
 }
 #endif

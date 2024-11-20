@@ -16,6 +16,31 @@ bool gui::business_info_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builde
         if (verify_ui_builder(ui_builder) == true)
         {
                 created = true;
+
+                Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry")};
+                Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-address-entry")};
+                Gtk::Entry* area_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-area-code-entry")};
+                Gtk::Entry* town_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-town-name-entry")};
+                Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-cell-number-entry")};
+                Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-email-entry")};
+                Gtk::Entry* bank_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-bank-name-entry")};
+                Gtk::Entry* branch_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-branch-code-entry")};
+                Gtk::Entry* account_number{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-account-number-entry")};
+                Gtk::Entry* client_message{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-client-message-entry")};
+
+                this->business_feature.load(this->business_data);
+
+                name->set_text(this->business_data.get_name());
+                street_address->set_text(this->business_data.get_address());
+                area_code->set_text(this->business_data.get_area_code());
+                town_name->set_text(this->business_data.get_town());
+                cellphone->set_text(this->business_data.get_cellphone());
+                email->set_text(this->business_data.get_email());
+                bank_name->set_text(this->business_data.get_bank());
+                branch_code->set_text(this->business_data.get_branch_code());
+                account_number->set_text(this->business_data.get_account_number());
+                client_message->set_text(this->business_data.get_client_message());
+
                 connect_save_button(ui_builder);
         }
 

@@ -16,6 +16,7 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(features 
                 OBJECT
+                ${PROJECT_SOURCE_DIR}/source/business_feature.cpp
         )
 
         target_include_directories(features 
@@ -23,6 +24,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/include/
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
+                ${CMAKE_SOURCE_DIR}/data/include
         )
 else ()
         message(STATUS "There are no files in, features/source.")
