@@ -16,10 +16,36 @@ namespace data {
         struct business : public interface::data {
                 public:
                         business() = default;
-                        business(const business&) = default;
+                        business(const business& new_data)
+                                : name{new_data.name}, address{new_data.address}, area_code{new_data.area_code},
+                                  town{new_data.town}, cellphone{new_data.cellphone}, email{new_data.email},
+                                  bank{new_data.bank}, branch_code{new_data.branch_code}, account_number{new_data.account_number},
+                                  client_message{new_data.client_message}, flags{new_data.flags}, business_data{}, mask{new_data.mask}{}
                         business(business&&) = default;
-                        business& operator= (const business&) = default;
-                        business& operator= (business&&) = default;
+                        business& operator= (const business& new_data)
+                        {
+                                business temp {new_data};
+                                std::swap(temp, *this);
+                                return *this;
+                        }
+
+                        business& operator= (business&& new_data)
+                        {
+                                std::swap(name, new_data.name);
+                                std::swap(address, new_data.address);
+                                std::swap(area_code, new_data.area_code);
+                                std::swap(town, new_data.town);
+                                std::swap(cellphone, new_data.cellphone);
+                                std::swap(email, new_data.email);
+                                std::swap(bank, new_data.bank);
+                                std::swap(branch_code, new_data.branch_code);
+                                std::swap(account_number, new_data.account_number);
+                                std::swap(client_message, new_data.client_message);
+                                std::swap(flags, new_data.flags);
+                                std::swap(mask, new_data.mask);
+
+                                return *this;
+                        }
                         virtual ~business() = default;
 
                         [[nodiscard]] virtual bool is_valid() override;
@@ -62,7 +88,7 @@ namespace data {
                         std::string account_number{""};
                         std::string client_message{""};
                         std::uint16_t flags{0x0};
-                        std::mutex data;
+                        std::mutex business_data{};
                         std::uint16_t mask{0xFFFF};
                         enum FLAG {
                                 NAME = 0,
