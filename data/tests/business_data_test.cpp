@@ -8,6 +8,7 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
+
 #include <business_data.h>
 extern "C"
 {
@@ -21,6 +22,9 @@ extern "C"
  * 2) Verify that the data is incorrect (Done)
  * 3) Get the data from the structure (Done)
  * 4) Ensure that flag bits are cleared properly (Done)
+ * 5) Verify the copy ability of the data (Done)
+ * 6) Verify the move ability of the data (Done)
+ * 7) Verify the email to ensure it's a valid email (Done)
  ******************************************************************************/
 TEST_GROUP(business_data_test)
 {
@@ -51,7 +55,7 @@ TEST(business_data_test, the_data_is_valid)
 	CHECK_EQUAL(true, business_data.is_valid());
 }
 
-TEST(business_data_test, the_data_is_not_valid)
+TEST(business_data_test, data_is_not_valid)
 {
         business_data.set_name("");
         business_data.set_address("geelsterd 8");
@@ -65,6 +69,54 @@ TEST(business_data_test, the_data_is_not_valid)
         business_data.set_client_message("Thank you for your support");
 
 	CHECK_EQUAL(false, business_data.is_valid());
+}
+
+TEST(business_data_test, fail_when_no_email_is_specified)
+{
+        business_data.set_name("T.M Engineering");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("6625");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+	CHECK_EQUAL(false, business_data.is_valid());
+}
+
+TEST(business_data_test, fail_when_wrong_email_format_is_used)
+{
+        business_data.set_name("T.M Engineering");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("6625");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("odngmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+	CHECK_EQUAL(false, business_data.is_valid());
+}
+
+TEST(business_data_test, pass_when_correct_email_format_is_used)
+{
+        business_data.set_name("T.M Engineering");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("6625");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+	CHECK_EQUAL(true, business_data.is_valid());
 }
 
 TEST(business_data_test, verify_flag_bits_are_properly_cleared)
@@ -171,4 +223,59 @@ TEST(business_data_test, get_business_client_message_from_structure)
         business_data.set_client_message(message);
 
         CHECK_EQUAL(expected, business_data.get_client_message());
+}
+
+TEST(business_data_test, ensure_data_copy_ability)
+{
+        business_data.set_name("tme");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("5432");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+        data::business tmp_data;
+        tmp_data = business_data;
+
+
+        CHECK_EQUAL(true, tmp_data.is_valid());
+}
+
+TEST(business_data_test, ensure_data_move_ability)
+{
+        business_data.set_name("tme");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("5432");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+        data::business tmp_data;
+        tmp_data = std::move(business_data);
+
+        CHECK_EQUAL(true, tmp_data.is_valid());
+}
+
+TEST(business_data_test, ensure_email_is_of_valid_format)
+{
+        business_data.set_name("tme");
+        business_data.set_address("geelsterd 8");
+        business_data.set_area_code("5432");
+        business_data.set_town("george");
+        business_data.set_cellphone("0832315944");
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+        CHECK_EQUAL(true, business_data.is_valid());
 }

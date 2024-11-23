@@ -7,6 +7,7 @@
  *******************************************************/
 #include <business_data.h>
 #include <iostream>
+#include <regex>
 
 
 bool data::business::is_valid()
@@ -117,7 +118,8 @@ std::string data::business::get_cellphone()
 
 void data::business::set_email(const std::string& email_address)
 {
-        if (!email_address.empty())
+        std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
+        if (std::regex_search(email_address, email_regex)== 1)
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->business_data);
