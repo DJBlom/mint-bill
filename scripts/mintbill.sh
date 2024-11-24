@@ -1,12 +1,10 @@
 ############################################################################
 # Contents: Main Function
-# 
 # Author: Dawid Blom
-#
 # Date: September 15, 2023
 #
 # NOTE: Allows the user to build, test, draw statistics, and install 
-# project related packages.
+#       project related packages.
 ############################################################################
 #!/bin/bash
 source $(dirname "$0")/build.sh
