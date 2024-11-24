@@ -7,13 +7,12 @@
  *******************************************************/
 #ifndef _BUSINESS_DATA_H_
 #define _BUSINESS_DATA_H_
-#include <data.h>
 #include <string>
 #include <cstdint>
 #include <mutex>
 
 namespace data {
-        struct business : public interface::data {
+        struct business {
                 public:
                         business() = default;
                         business(const business& new_data)
@@ -46,9 +45,9 @@ namespace data {
 
                                 return *this;
                         }
-                        virtual ~business() = default;
+                        ~business() = default;
 
-                        [[nodiscard]] virtual bool is_valid() override;
+                        [[nodiscard]] bool is_valid();
 
                         void set_name(const std::string&);
                         [[nodiscard]] std::string get_name();
