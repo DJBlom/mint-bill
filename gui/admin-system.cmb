@@ -171,7 +171,9 @@
 	(1,249,"GtkListItemFactory",None,203,None,None,None,1,None,None),
 	(1,250,"GtkListItemFactory",None,203,None,None,None,2,None,None),
 	(1,251,"GtkEntry","tme-business-info-area-code-entry",72,None,None,None,13,None,None),
-	(1,252,"GtkEntry","tce-business-info-area-code-entry",230,None,None,None,12,None,None)
+	(1,252,"GtkEntry","tce-business-info-area-code-entry",230,None,None,None,12,None,None),
+	(1,254,"GtkMessageDialog","save-button-alert",None,None,None,None,1,None,None),
+	(1,255,"GtkMessageDialog","wrong-info-alert",None,None,None,None,2,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -692,7 +694,21 @@
 	(1,251,"GtkEditable","text","6536",None,None,None,None,None,None,None,None,None),
 	(1,251,"GtkEntry","placeholder-text","Area kode . . .",None,None,None,None,None,None,None,None,None),
 	(1,252,"GtkEditable","text","6536",0,None,None,None,None,None,None,None,None),
-	(1,252,"GtkEntry","placeholder-text","Area kode . . .",0,None,None,None,None,None,None,None,None)
+	(1,252,"GtkEntry","placeholder-text","Area kode . . .",0,None,None,None,None,None,None,None,None),
+	(1,254,"GtkAccessible","accessible-role","dialog",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkMessageDialog","buttons","yes-no",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkMessageDialog","message-type","question",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkMessageDialog","text","Is u seker u wil die inligting stoor?",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","deletable","False",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","destroy-with-parent","True",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","hide-on-close","True",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","title","Waarskuwing",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkMessageDialog","buttons","close",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkMessageDialog","message-type","warning",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkWindow","title","Maak Seker Oor Die Volgende",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),
@@ -727,6 +743,7 @@
 	(1,95,41,"GtkGridLayoutChild","column-span","3",None,None,None,None),
 	(1,95,43,"GtkGridLayoutChild","column-span","2",None,None,None,None),
 	(1,95,46,"GtkGridLayoutChild","column","3",None,None,None,None),
+	(1,95,46,"GtkGridLayoutChild","column-span","2",None,None,None,None),
 	(1,95,46,"GtkGridLayoutChild","row","16",None,None,None,None),
 	(1,95,47,"GtkGridLayoutChild","column","2",None,None,None,None),
 	(1,95,47,"GtkGridLayoutChild","row","16",None,None,None,None),
@@ -744,14 +761,14 @@
 	(1,95,60,"GtkGridLayoutChild","row","10",None,None,None,None),
 	(1,95,60,"GtkGridLayoutChild","row-span","4",None,None,None,None),
 	(1,95,69,"GtkGridLayoutChild","column","2",None,None,None,None),
-	(1,95,69,"GtkGridLayoutChild","column-span","2",None,None,None,None),
+	(1,95,69,"GtkGridLayoutChild","column-span","3",None,None,None,None),
 	(1,95,69,"GtkGridLayoutChild","row","4",None,None,None,None),
 	(1,95,69,"GtkGridLayoutChild","row-span","10",None,None,None,None),
 	(1,95,123,"GtkGridLayoutChild","column","1",None,None,None,None),
 	(1,95,123,"GtkGridLayoutChild","row","15",None,None,None,None),
 	(1,95,123,"GtkGridLayoutChild","row-span","1",None,None,None,None),
 	(1,95,124,"GtkGridLayoutChild","column","2",None,None,None,None),
-	(1,95,124,"GtkGridLayoutChild","column-span","2",None,None,None,None),
+	(1,95,124,"GtkGridLayoutChild","column-span","3",None,None,None,None),
 	(1,95,124,"GtkGridLayoutChild","row","1",None,None,None,None),
 	(1,95,146,"GtkGridLayoutChild","row","1",None,None,None,None),
 	(1,95,147,"GtkGridLayoutChild","column","1",None,None,None,None),
@@ -953,6 +970,13 @@
 	(1,230,252,"GtkGridLayoutChild","row","3",None,None,None,None)
   </object_layout_property>
   <object_data>
-	(1,1,"GtkWidget",2,2,None,1,None,None,None,None)
+	(1,1,"GtkWidget",2,2,None,1,None,None,None,None),
+	(1,254,"GtkDialog",2,2,None,1,None,None,None,None),
+	(1,254,"GtkDialog",2,3,None,1,None,None,None,None),
+	(1,254,"GtkDialog",2,5,None,4,None,None,None,None)
   </object_data>
+  <object_data_arg>
+	(1,254,"GtkDialog",2,2,"response","2"),
+	(1,254,"GtkDialog",2,3,"response","1")
+  </object_data_arg>
 </cambalache-project>
