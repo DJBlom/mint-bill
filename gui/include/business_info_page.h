@@ -11,6 +11,7 @@
 #include <business_data.h>
 #include <business_feature.h>
 
+
 namespace gui {
         class business_info_page : public interface::gui {
                 public:
@@ -24,15 +25,18 @@ namespace gui {
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 
                 private:
+                        [[nodiscard]] data::business extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
                         [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
+                        void update_business_info_with_db_data(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
-                        void save_clicked(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
-                        std::string business_prefix;
-                        data::business business_data{};
+                        std::string business_prefix{""};
                         feature::business business_feature{};
+                        Gtk::MessageDialog* wrong_info_alert_dialog{};
+                        Gtk::MessageDialog* save_alert_dialog{};
         };
 }
 #endif
