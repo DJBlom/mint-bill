@@ -5,18 +5,17 @@
  *
  * Note: Refer to the TEST LIST for details on what this fixture tests.
  ******************************************************************************/
+#include <business_data.h>
+
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
 
-
-#include <business_data.h>
 #include <business_feature.h>
 extern "C"
 {
 
 }
-
 
 
 /**********************************TEST LIST************************************

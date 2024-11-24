@@ -1,6 +1,17 @@
+/********************************************************
+ * Contents: Business feature implementation
+ * Author: Dawid J. Blom
+ * Date: November 18, 2024
+ *
+ * NOTE:
+ *******************************************************/
 #include <business_feature.h>
+#include <iostream>
 
+feature::business::~business()
+{
 
+}
 
 void feature::business::load(data::business& data)
 {
@@ -22,6 +33,19 @@ bool feature::business::save(data::business& data)
         if (data.is_valid() == true)
         {
                 saved = true;
+                std::cout << "Name: " << data.get_name() << std::endl;
+                std::cout << "Address: " << data.get_address() << std::endl;
+                std::cout << "Area Code: " << data.get_area_code() << std::endl;
+                std::cout << "Town: " << data.get_town() << std::endl;
+                std::cout << "Cellphone: " << data.get_cellphone() << std::endl;
+                std::cout << "Email: " << data.get_email() << std::endl;
+                std::cout << "Bank: " << data.get_bank() << std::endl;
+                std::cout << "Branch Code: " << data.get_branch_code() << std::endl;
+                std::cout << "Account Number: " << data.get_account_number() << std::endl;
+                std::cout << "Client Message: " << data.get_client_message() << std::endl;
+        }
+        else
+        {
         }
 
         return saved;

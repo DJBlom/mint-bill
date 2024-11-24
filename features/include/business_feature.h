@@ -7,20 +7,20 @@
  *******************************************************/
 #ifndef _BUSINESS_FEATURE_H_
 #define _BUSINESS_FEATURE_H_
-#include <business_data.h>
+#include <feature.h>
 
 namespace feature {
-        class business {
+        class business: public interface::feature {
                 public:
                         business() = default;
                         business(const business&) = default;
                         business(business&&) = default;
                         business& operator= (const business&) = default;
                         business& operator= (business&&) = default;
-                        ~business() = default;
+                        virtual ~business() override;
 
-                        void load(data::business&);
-                        [[nodiscard]] bool save(data::business&);
+                        virtual void load(data::business&) override;
+                        [[nodiscard]] virtual bool save(data::business&) override;
         };
 }
 #endif
