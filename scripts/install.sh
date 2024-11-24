@@ -46,49 +46,38 @@ function install_develop()
         apt_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf libgtk-4-1 
                 libgtk-4-dev gtk-4-examples flatpak gnome-software-plugin-flatpak)
 
-                DNF=""
-                APT=""
-                for pkg_manager in apt dnf; 
-                do
-                        if [[ "${pkg_manager}" == "dnf" ]];
-                        then
-                                DNF=$pkg_manager
-                        elif [[ "${pkg_manager}" == "apt" ]];
-                        then
-                                APT=$pkg_manager
-                        else
-                                $ECHO "${ERROR_COLOR}ERROR: Could not find system package manager${END_COLOR}"
-                        fi
-                done
+        DNF=$(which dnf)
+        APT=$(which apt)
 
-                if [[ ! -z $DNF ]];
-                then
-                        sudo dnf update
-                        sudo dnf -y install ${dnf_packages[@]}
-                        install_cpputest
-                        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                elif [[ ! -z $APT ]];
-                then
-                        sudo apt -y install ${apt_packages[@]}
-                        sudo apt update
-                        install_cpputest
-                        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                else
-                        $ECHO "${ERROR_COLOR}ERROR: This system does not use the dnf based package manage${END_COLOR}"
-                        fi
+        if [[ ! -z $DNF ]];
+        then
+                sudo dnf update
+                sudo dnf -y install ${dnf_packages[@]}
+                install_cpputest
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        elif [[ ! -z $APT ]];
+        then
+                sudo apt -y install ${apt_packages[@]}
+                sudo apt update
+                install_cpputest
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        else
+                $ECHO "${ERROR_COLOR}ERROR: This system does not use the dnf based package manage${END_COLOR}"
+        fi
 }
 
 function install_cpputest()
 {
         if [[ -z "$CPPUTEST_HOME" ]];
         then
-                cd /opt
+                local tool_dir=$(pwd)/../
+                cd $tool_dir
                 git clone https://github.com/cpputest/cpputest.git
                 cd cpputest
                 autoreconf --install
                 ./configure
                 make tdd
-                echo "export CPPUTEST_HOME=/opt/cpputest/" >> /home/$(whoami)/.bashrc
+                echo "export CPPUTEST_HOME=$tool_dir/cpputest/" >> /home/$(whoami)/.bashrc
                 source /home/$(whoami)/.bashrc
         else
                 $ECHO "${INFO_COLOR}INFO: CppUTest is already installed @ $CPPUTEST_HOME${END_COLOR}"
