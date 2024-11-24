@@ -7,15 +7,14 @@
  *******************************************************/
 #ifndef _FEATURE_H_
 #define _FEATURE_H_
-#include <business_data.h>
-
 namespace interface {
         class feature {
                 public:
                         virtual ~feature() = default;
 
-                        virtual void load(data::business&) = 0;
-                        [[nodiscard]] virtual bool save(data::business&) = 0;
+                        [[nodiscard]] virtual bool is_valid() = 0;
+                        [[nodiscard]] virtual bool load() = 0;
+                        [[nodiscard]] virtual bool save() = 0;
         };
 }
 #endif

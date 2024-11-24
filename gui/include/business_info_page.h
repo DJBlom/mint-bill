@@ -8,9 +8,7 @@
 #ifndef _BUSINESS_INFO_PAGE_H_
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
-//#include <business_data.h>
-#include <business_feature.h>
-
+#include <business.h>
 
 namespace gui {
         class business_info_page : public interface::gui {
@@ -30,11 +28,10 @@ namespace gui {
                         void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
-                        [[nodiscard]] data::business extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
+                        feature::business extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
                         std::string business_prefix{""};
-                        feature::business business_feature{};
                         Gtk::MessageDialog* wrong_info_alert_dialog{};
                         Gtk::MessageDialog* save_alert_dialog{};
         };

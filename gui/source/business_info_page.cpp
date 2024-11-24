@@ -36,30 +36,31 @@ bool gui::business_info_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>
 
 void gui::business_info_page::update_business_info_with_db_data(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        data::business tmp_data{};
-        this->business_feature.load(tmp_data);
+        feature::business business;
+        if (business.load() == true)
+        {
+                Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry")};
+                Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-address-entry")};
+                Gtk::Entry* area_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-area-code-entry")};
+                Gtk::Entry* town_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-town-name-entry")};
+                Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-cell-number-entry")};
+                Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-email-entry")};
+                Gtk::Entry* bank_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-bank-name-entry")};
+                Gtk::Entry* branch_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-branch-code-entry")};
+                Gtk::Entry* account_number{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-account-number-entry")};
+                Gtk::Entry* client_message{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-client-message-entry")};
 
-        Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry")};
-        Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-address-entry")};
-        Gtk::Entry* area_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-area-code-entry")};
-        Gtk::Entry* town_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-town-name-entry")};
-        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-cell-number-entry")};
-        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-email-entry")};
-        Gtk::Entry* bank_name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-bank-name-entry")};
-        Gtk::Entry* branch_code{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-branch-code-entry")};
-        Gtk::Entry* account_number{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-account-number-entry")};
-        Gtk::Entry* client_message{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-client-message-entry")};
-
-        name->set_text(tmp_data.get_name());
-        street_address->set_text(tmp_data.get_address());
-        area_code->set_text(tmp_data.get_area_code());
-        town_name->set_text(tmp_data.get_town());
-        cellphone->set_text(tmp_data.get_cellphone());
-        email->set_text(tmp_data.get_email());
-        bank_name->set_text(tmp_data.get_bank());
-        branch_code->set_text(tmp_data.get_branch_code());
-        account_number->set_text(tmp_data.get_account_number());
-        client_message->set_text(tmp_data.get_client_message());
+                name->set_text(business.get_name());
+                street_address->set_text(business.get_address());
+                area_code->set_text(business.get_area_code());
+                town_name->set_text(business.get_town());
+                cellphone->set_text(business.get_cellphone());
+                email->set_text(business.get_email());
+                bank_name->set_text(business.get_bank());
+                branch_code->set_text(business.get_branch_code());
+                account_number->set_text(business.get_account_number());
+                client_message->set_text(business.get_client_message());
+        }
 }
 
 void gui::business_info_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
@@ -80,11 +81,11 @@ void gui::business_info_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder
         if (save_signal_connected == false)
         {
                 this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
-                        data::business tmp_data = extract_page_entries(ui_builder);
+                        feature::business business = extract_page_entries(ui_builder);
                         switch(response)
                         {
                                 case GTK_RESPONSE_YES:
-                                        if (this->business_feature.save(tmp_data) == false)
+                                        if (business.save() == false)
                                         {
                                                 this->save_alert_dialog->hide();
                                                 this->wrong_info_alert_dialog->show();
@@ -129,7 +130,7 @@ void gui::business_info_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::B
         }
 }
 
-data::business gui::business_info_page::extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+feature::business gui::business_info_page::extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry")};
         Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-address-entry")};
@@ -142,17 +143,17 @@ data::business gui::business_info_page::extract_page_entries(const Glib::RefPtr<
         Gtk::Entry* account_number{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-account-number-entry")};
         Gtk::Entry* client_message{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-client-message-entry")};
 
-        data::business tmp_data{};
-        tmp_data.set_name(name->get_text());
-        tmp_data.set_address(street_address->get_text());
-        tmp_data.set_area_code(area_code->get_text());
-        tmp_data.set_town(town_name->get_text());
-        tmp_data.set_cellphone(cellphone->get_text());
-        tmp_data.set_email(email->get_text());
-        tmp_data.set_bank(bank_name->get_text());
-        tmp_data.set_branch_code(branch_code->get_text());
-        tmp_data.set_account_number(account_number->get_text());
-        tmp_data.set_client_message(client_message->get_text());
+        feature::business business{};
+        business.set_name(name->get_text());
+        business.set_address(street_address->get_text());
+        business.set_area_code(area_code->get_text());
+        business.set_town(town_name->get_text());
+        business.set_cellphone(cellphone->get_text());
+        business.set_email(email->get_text());
+        business.set_bank(bank_name->get_text());
+        business.set_branch_code(branch_code->get_text());
+        business.set_account_number(account_number->get_text());
+        business.set_client_message(client_message->get_text());
 
-        return tmp_data;
+        return business;
 }

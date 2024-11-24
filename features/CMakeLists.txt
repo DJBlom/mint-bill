@@ -16,7 +16,7 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(features 
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/business_feature.cpp
+                ${PROJECT_SOURCE_DIR}/source/business.cpp
         )
 
         target_include_directories(features 

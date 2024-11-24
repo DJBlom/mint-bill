@@ -1,53 +1,30 @@
 /********************************************************
- * Contents: Business data  definition
+ * Contents: Business feature  definition
  * Author: Dawid J. Blom
- * Date: November 16, 2024
+ * Date: November 18, 2024
  *
  * NOTE:
  *******************************************************/
-#ifndef _BUSINESS_DATA_H_
-#define _BUSINESS_DATA_H_
+#ifndef _BUSINESS_FEATURE_H_
+#define _BUSINESS_FEATURE_H_
+#include <feature.h>
 #include <string>
 #include <cstdint>
 #include <mutex>
 
-namespace data {
-        struct business {
+namespace feature {
+        class business: public interface::feature {
                 public:
                         business() = default;
-                        business(const business& new_data)
-                                : name{new_data.name}, address{new_data.address}, area_code{new_data.area_code},
-                                  town{new_data.town}, cellphone{new_data.cellphone}, email{new_data.email},
-                                  bank{new_data.bank}, branch_code{new_data.branch_code}, account_number{new_data.account_number},
-                                  client_message{new_data.client_message}, flags{new_data.flags}, business_data{}, mask{new_data.mask}{}
-                        business(business&&) = default;
-                        business& operator= (const business& new_data)
-                        {
-                                business temp {new_data};
-                                std::swap(temp, *this);
-                                return *this;
-                        }
+                        business(const business& new_data);
+                        business(business&&);
+                        business& operator= (const business&);
+                        business& operator= (business&&);
+                        virtual ~business() override;
 
-                        business& operator= (business&& new_data)
-                        {
-                                std::swap(name, new_data.name);
-                                std::swap(address, new_data.address);
-                                std::swap(area_code, new_data.area_code);
-                                std::swap(town, new_data.town);
-                                std::swap(cellphone, new_data.cellphone);
-                                std::swap(email, new_data.email);
-                                std::swap(bank, new_data.bank);
-                                std::swap(branch_code, new_data.branch_code);
-                                std::swap(account_number, new_data.account_number);
-                                std::swap(client_message, new_data.client_message);
-                                std::swap(flags, new_data.flags);
-                                std::swap(mask, new_data.mask);
-
-                                return *this;
-                        }
-                        ~business() = default;
-
-                        [[nodiscard]] bool is_valid();
+                        [[nodiscard]] virtual bool is_valid() override;
+                        [[nodiscard]] virtual bool load() override;
+                        [[nodiscard]] virtual bool save() override;
 
                         void set_name(const std::string&);
                         [[nodiscard]] std::string get_name();
