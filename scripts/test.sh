@@ -53,9 +53,11 @@ function static_code_analysis()
              --suppress=checkersReport \
              -I $prj_dir/app/include \
              -I $prj_dir/gui/include \
+             -I $prj_dir/storage/include \
              -I $prj_dir/features/include \
              $prj_dir/app/source \
              $prj_dir/gui/source \
+             $prj_dir/storage/source \
              $prj_dir/features/source 
 }
 

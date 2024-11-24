@@ -69,30 +69,37 @@ feature::business::~business()
 
 }
 
-bool feature::business::load()
+bool feature::business::load(const interface::storage& storage)
 {
         bool loaded{false};
-        loaded = true;
-        set_name("T.M Engineering");
-        set_address("Geelsterd 8");
-        set_area_code("6536");
-        set_town("george");
-        set_cellphone("0832315944");
-        set_email("odn@gmail.com");
-        set_bank("Standard Bank Oudtshoorn");
-        set_branch_code("050514");
-        set_account_number("371613191");
-        set_client_message("Thank you for your support.");
+        std::vector<std::unordered_map<std::string, std::string>> container;
+        container = storage.retrieve();
+        std::unordered_map<std::string, std::string> data = container.front();
+
+        set_name(data.at("name"));
+        set_address(data.at("address"));
+        set_area_code(data.at("area code"));
+        set_town(data.at("town"));
+        set_cellphone(data.at("cellphone"));
+        set_email(data.at("email"));
+        set_bank(data.at("bank"));
+        set_branch_code(data.at("branch code"));
+        set_account_number(data.at("account number"));
+        set_client_message(data.at("client message"));
+        if (is_valid() == true)
+        {
+                loaded = true;
+        }
 
         return loaded;
 }
 
-bool feature::business::save()
+bool feature::business::save(const interface::storage& storage)
 {
         bool saved{false};
         if (this->is_valid() == true)
         {
-                saved = true;
+                saved = storage.update();
 
                 std::cout << "Name: " << get_name() << std::endl;
                 std::cout << "Address: " << get_address() << std::endl;

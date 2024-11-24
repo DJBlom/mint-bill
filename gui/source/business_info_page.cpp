@@ -37,7 +37,7 @@ bool gui::business_info_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>
 void gui::business_info_page::update_business_info_with_db_data(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         feature::business business;
-        if (business.load() == true)
+        if (business.load(sql) == true)
         {
                 Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-name-entry")};
                 Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>(this->business_prefix + "-business-info-address-entry")};
@@ -85,7 +85,7 @@ void gui::business_info_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder
                         switch(response)
                         {
                                 case GTK_RESPONSE_YES:
-                                        if (business.save() == false)
+                                        if (business.save(this->sql) == false)
                                         {
                                                 this->save_alert_dialog->hide();
                                                 this->wrong_info_alert_dialog->show();

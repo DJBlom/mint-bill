@@ -6,6 +6,7 @@
  * Note: Refer to the TEST LIST for details on what this fixture tests.
  ******************************************************************************/
 #include <business.h>
+#include <sql.h>
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -30,6 +31,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(business_feature_test)
 {
+        storage::sql sql;
         feature::business business_feature;
 	void setup()
 	{
@@ -138,7 +140,7 @@ TEST(business_feature_test, verify_flag_bits_are_properly_cleared)
 
 TEST(business_feature_test, successfully_load_data_from_database)
 {
-        CHECK_EQUAL(true, business_feature.load());
+        CHECK_EQUAL(true, business_feature.load(sql));
 }
 
 TEST(business_feature_test, successfully_save_the_data)
@@ -154,7 +156,7 @@ TEST(business_feature_test, successfully_save_the_data)
         business_feature.set_account_number("0932443824");
         business_feature.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(true, business_feature.save());
+        CHECK_EQUAL(true, business_feature.save(sql));
 }
 
 TEST(business_feature_test, unsuccessfully_save_the_data)
@@ -170,7 +172,7 @@ TEST(business_feature_test, unsuccessfully_save_the_data)
         business_feature.set_account_number("0932443824");
         business_feature.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(false, business_feature.save());
+        CHECK_EQUAL(false, business_feature.save(sql));
 }
 
 TEST(business_feature_test, get_business_name_from_structure)

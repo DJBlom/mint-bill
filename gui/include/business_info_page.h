@@ -8,6 +8,7 @@
 #ifndef _BUSINESS_INFO_PAGE_H_
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
+#include <sql.h>
 #include <business.h>
 
 namespace gui {
@@ -31,6 +32,7 @@ namespace gui {
                         feature::business extract_page_entries(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
+                        storage::sql sql{};
                         std::string business_prefix{""};
                         Gtk::MessageDialog* wrong_info_alert_dialog{};
                         Gtk::MessageDialog* save_alert_dialog{};

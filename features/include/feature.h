@@ -7,14 +7,16 @@
  *******************************************************/
 #ifndef _FEATURE_H_
 #define _FEATURE_H_
+#include <storage.h>
+
 namespace interface {
-        class feature {
+        struct feature {
                 public:
                         virtual ~feature() = default;
 
                         [[nodiscard]] virtual bool is_valid() = 0;
-                        [[nodiscard]] virtual bool load() = 0;
-                        [[nodiscard]] virtual bool save() = 0;
+                        [[nodiscard]] virtual bool load(const interface::storage&) = 0;
+                        [[nodiscard]] virtual bool save(const interface::storage&) = 0;
         };
 }
 #endif

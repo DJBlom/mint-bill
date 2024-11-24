@@ -13,7 +13,7 @@
 #include <mutex>
 
 namespace feature {
-        class business: public interface::feature {
+        struct business: public interface::feature {
                 public:
                         business() = default;
                         business(const business& new_data);
@@ -23,8 +23,8 @@ namespace feature {
                         virtual ~business() override;
 
                         [[nodiscard]] virtual bool is_valid() override;
-                        [[nodiscard]] virtual bool load() override;
-                        [[nodiscard]] virtual bool save() override;
+                        [[nodiscard]] virtual bool load(const interface::storage&) override;
+                        [[nodiscard]] virtual bool save(const interface::storage&) override;
 
                         void set_name(const std::string&);
                         [[nodiscard]] std::string get_name();
