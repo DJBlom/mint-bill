@@ -9,6 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <sql.h>
 extern "C"
 {
 
@@ -20,6 +21,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(sql_test)
 {
+        storage::sql sql{};
 	void setup()
 	{
 	}
@@ -29,7 +31,12 @@ TEST_GROUP(sql_test)
 	}
 };
 
-TEST(sql_test, pass)
+TEST(sql_test, insert)
 {
-	CHECK_EQUAL(true, true);
+        CHECK_EQUAL(true, sql.insert());
+}
+
+TEST(sql_test, update)
+{
+        CHECK_EQUAL(true, sql.update());
 }

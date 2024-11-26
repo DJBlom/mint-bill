@@ -60,7 +60,7 @@ namespace data {
                         std::string account_number{""};
                         std::string client_message{""};
                         std::uint16_t flags{0x0};
-                        mutable std::mutex business_data{};
+                        std::mutex business_data{};
                         std::uint16_t mask{0xFFFF};
                         enum FLAG {
                                 NAME = 0,

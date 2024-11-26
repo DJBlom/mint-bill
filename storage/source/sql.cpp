@@ -12,41 +12,22 @@ storage::sql::~sql()
 
 }
 
-std::vector<std::unordered_map<std::string, std::string>> storage::sql::retrieve(const std::string& name) const
+std::vector<std::unordered_map<std::string, std::string>> storage::sql::retrieve() const
 {
         std::vector<std::unordered_map<std::string, std::string>> vector;
-        if (name == "tme")
-        {
-                std::unordered_map<std::string, std::string> data = {
-                        {"name", "T.M Engineering"},
-                        {"address", "Geelsterd 8"},
-                        {"area code", "6536"},
-                        {"town", "George"},
-                        {"cellphone", "0832315944"},
-                        {"email", "odn@gmail.com"},
-                        {"bank", "Standard Bank"},
-                        {"branch code", "050514"},
-                        {"account number", "371613191"},
-                        {"client message", "Thank you for your support."}
-                };
-                vector.push_back(data);
-        }
-        else
-        {
-                std::unordered_map<std::string, std::string> data = {
-                        {"name", "T.C Engineering & Hydraulics"},
-                        {"address", "Rademeyer Straat 13"},
-                        {"area code", "6536"},
-                        {"town", "George"},
-                        {"cellphone", "0832315944"},
-                        {"email", "odn@gmail.com"},
-                        {"bank", "Nedbank"},
-                        {"branch code", "050514"},
-                        {"account number", "371613191"},
-                        {"client message", "Thank you for your support."}
-                };
-                vector.push_back(data);
-        }
+        std::unordered_map<std::string, std::string> data = {
+                {"name", "T.M Engineering"},
+                {"address", "Geelsterd 8"},
+                {"area code", "6536"},
+                {"town", "George"},
+                {"cellphone", "0832315944"},
+                {"email", "odn@gmail.com"},
+                {"bank", "Standard Bank"},
+                {"branch code", "050514"},
+                {"account number", "371613191"},
+                {"client message", "Thank you for your support."}
+        };
+        vector.push_back(data);
 
         return vector;
 }
