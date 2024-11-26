@@ -827,7 +827,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkMessageDialog" id="save-button-alert">
+  <object class="GtkMessageDialog" id="business-save-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
     <property name="deletable">False</property>
@@ -838,7 +838,27 @@
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="wrong-info-alert">
+  <object class="GtkMessageDialog" id="business-wrong-info-alert">
+    <property name="buttons">close</property>
+    <property name="message-type">warning</property>
+    <property name="text">1) - Is alle inskrywingsvelde ingevul?
+
+2) - Is u e-pos korrek ingevul?</property>
+    <property name="title">Maak Seker Oor Die Volgende</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="client-save-button-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="deletable">False</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="message-type">question</property>
+    <property name="text">Is u seker u wil die inligting stoor?</property>
+    <property name="title">Waarskuwing</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="client-wrong-info-alert">
     <property name="buttons">close</property>
     <property name="message-type">warning</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?

@@ -90,9 +90,11 @@
 	(1,163,"GtkLabel","statement-label",134,None,None,None,6,None,None),
 	(1,164,"GtkLabel","statement-invoice-label",134,None,None,None,7,None,None),
 	(1,251,"GtkEntry","business-info-area-code-entry",72,None,None,None,13,None,None),
-	(1,254,"GtkMessageDialog","save-button-alert",None,None,None,None,1,None,None),
-	(1,255,"GtkMessageDialog","wrong-info-alert",None,None,None,None,2,None,None),
-	(1,256,"GtkLabel","organization-name",2,None,None,None,3,None,None)
+	(1,254,"GtkMessageDialog","business-save-button-alert",None,None,None,None,1,None,None),
+	(1,255,"GtkMessageDialog","business-wrong-info-alert",None,None,None,None,2,None,None),
+	(1,256,"GtkLabel","organization-name",2,None,None,None,3,None,None),
+	(1,257,"GtkMessageDialog","client-save-button-alert",None,None,None,None,3,None,None),
+	(1,258,"GtkMessageDialog","client-wrong-info-alert",None,None,None,None,4,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -365,7 +367,21 @@
 	(1,255,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","title","Maak Seker Oor Die Volgende",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
-	(1,256,"GtkLabel","label","Temp",None,None,None,None,None,None,None,None,None)
+	(1,256,"GtkLabel","label","Temp",None,None,None,None,None,None,None,None,None),
+	(1,257,"GtkAccessible","accessible-role","dialog",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkMessageDialog","buttons","yes-no",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkMessageDialog","message-type","question",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkMessageDialog","text","Is u seker u wil die inligting stoor?",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","title","Waarskuwing",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkMessageDialog","buttons","close",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkMessageDialog","message-type","warning",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkWindow","title","Maak Seker Oor Die Volgende",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),
