@@ -17,7 +17,7 @@ namespace gui {
                         main_window(main_window&&) = delete;
                         main_window& operator= (const main_window&) = delete;
                         main_window& operator= (main_window&&) = delete;
-                        ~main_window() = default;
+                        virtual ~main_window() = default;
 
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
 

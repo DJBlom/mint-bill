@@ -59,6 +59,7 @@ if(BUILD_PROJECT)
         target_include_directories(${PROJECT_NAME} PRIVATE
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
+                ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
                 ${GTKMM_INCLUDE_DIRS}
@@ -76,7 +77,14 @@ if(BUILD_PROJECT)
             add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
             target_link_libraries(${PROJECT_NAME} PRIVATE gui)
         else()
-            message(STATUS "Directory features, does not exist")
+            message(STATUS "Directory gui, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/data)
+            target_link_libraries(${PROJECT_NAME} PRIVATE data)
+        else()
+            message(STATUS "Directory data, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/storage)

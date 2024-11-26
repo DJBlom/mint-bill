@@ -7,18 +7,14 @@
     <property name="default-height">680</property>
     <property name="default-width">940</property>
     <property name="destroy-with-parent">True</property>
-    <property name="icon-name">applications-system</property>
+    <property name="icon-name">application-x-executable</property>
     <property name="title">Administrasie</property>
     <property name="titlebar">
       <object class="GtkHeaderBar" id="nav-bar">
         <property name="show-title-buttons">False</property>
         <property name="title-widget">
-          <object class="GtkStackSwitcher" id="business-operation-option">
-            <property name="hexpand">True</property>
-            <property name="margin-bottom">10</property>
-            <property name="margin-top">10</property>
-            <property name="name">stack</property>
-            <property name="stack">body-stack</property>
+          <object class="GtkLabel" id="organization-name">
+            <property name="label">Temp</property>
           </object>
         </property>
         <child type="end">
@@ -49,26 +45,26 @@
       <object class="GtkStack" id="body-stack">
         <property name="transition-type">slide-left-right</property>
         <child>
-          <object class="GtkStackPage" id="tme-page">
+          <object class="GtkStackPage" id="main-page">
             <property name="child">
-              <object class="GtkBox" id="tme-box">
+              <object class="GtkBox" id="main-box">
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkStackSidebar" id="tme-stack-side-bar">
+                  <object class="GtkStackSidebar" id="side-bar">
                     <property name="margin-bottom">20</property>
                     <property name="margin-top">20</property>
-                    <property name="stack">tme-stack</property>
+                    <property name="stack">business-stack</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStack" id="tme-stack">
+                  <object class="GtkStack" id="business-stack">
                     <property name="hexpand">True</property>
                     <property name="transition-type">over-left</property>
                     <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkStackPage" id="tme-invoice-page">
+                      <object class="GtkStackPage" id="invoice-page">
                         <property name="child">
-                          <object class="GtkBox" id="tme-invoice-box">
+                          <object class="GtkBox" id="invoice-box">
                             <property name="hexpand">True</property>
                             <property name="margin-bottom">50</property>
                             <property name="margin-end">50</property>
@@ -77,14 +73,14 @@
                             <property name="orientation">vertical</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkGrid" id="tme-invoice-grid">
+                              <object class="GtkGrid" id="invoice-grid">
                                 <property name="column-spacing">5</property>
                                 <property name="hexpand">True</property>
                                 <property name="orientation">vertical</property>
                                 <property name="row-homogeneous">True</property>
                                 <property name="vexpand">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="tme-new-invoice-label">
+                                  <object class="GtkLabel" id="new-invoice-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="focus-on-click">False</property>
@@ -98,7 +94,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-new-invoice-job-card-entry">
+                                  <object class="GtkEntry" id="new-invoice-job-card-entry">
                                     <property name="hexpand">True</property>
                                     <property name="placeholder-text">Werk kaart . . .</property>
                                     <property name="valign">center</property>
@@ -110,7 +106,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-new-invoice-order-number-entry">
+                                  <object class="GtkEntry" id="new-invoice-order-number-entry">
                                     <property name="hexpand">True</property>
                                     <property name="placeholder-text">Bestel nommer . . .</property>
                                     <property name="valign">center</property>
@@ -122,7 +118,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-new-invoice-description-label">
+                                  <object class="GtkLabel" id="new-invoice-description-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="focus-on-click">False</property>
@@ -137,7 +133,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkColumnView" id="tme-new-invoice-description">
+                                  <object class="GtkColumnView" id="new-invoice-description">
                                     <property name="enable-rubberband">True</property>
                                     <property name="header-factory">
                                       <object class="GtkListItemFactory"/>
@@ -162,7 +158,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-new-invoice-material-used-label">
+                                  <object class="GtkLabel" id="new-invoice-material-used-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="focus-on-click">False</property>
@@ -177,16 +173,16 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkColumnView" id="tme-new-invoice-material">
+                                  <object class="GtkColumnView" id="new-invoice-material">
                                     <property name="hadjustment">
                                       <object class="GtkAdjustment"/>
                                     </property>
                                     <property name="header-factory">
-                                      <object class="GtkListItemFactory" id="tme-new-invoice-material-list-header"/>
+                                      <object class="GtkListItemFactory" id="new-invoice-material-list-header"/>
                                     </property>
                                     <property name="hexpand">True</property>
                                     <property name="row-factory">
-                                      <object class="GtkListItemFactory" id="tme-new-invoice-material-list-row"/>
+                                      <object class="GtkListItemFactory" id="new-invoice-material-list-row"/>
                                     </property>
                                     <property name="vadjustment">
                                       <object class="GtkAdjustment"/>
@@ -201,7 +197,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-known-invoice-label">
+                                  <object class="GtkLabel" id="known-invoice-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="focus-on-click">False</property>
@@ -215,7 +211,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkListView" id="tme-known-invoice-list-view">
+                                  <object class="GtkListView" id="known-invoice-list-view">
                                     <property name="hexpand">True</property>
                                     <property name="vexpand">True</property>
                                     <layout>
@@ -227,7 +223,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-known-invoice-print-button">
+                                  <object class="GtkButton" id="known-invoice-print-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Print</property>
@@ -241,7 +237,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-known-invoice-email-button">
+                                  <object class="GtkButton" id="known-invoice-email-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Stuur E-pos</property>
@@ -254,7 +250,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-new-invoice-save-button">
+                                  <object class="GtkButton" id="new-invoice-save-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Stoor</property>
@@ -268,7 +264,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkSearchEntry" id="tme-known-invoice-search-entry">
+                                  <object class="GtkSearchEntry" id="known-invoice-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
                                     <property name="valign">center</property>
                                     <layout>
@@ -279,7 +275,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-invoice-material-button">
+                                  <object class="GtkButton" id="invoice-material-button">
                                     <property name="halign">end</property>
                                     <property name="label">Byvoeg</property>
                                     <property name="valign">center</property>
@@ -290,7 +286,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkText" id="tme-new-invoice-total-text">
+                                  <object class="GtkText" id="new-invoice-total-text">
                                     <property name="editable">False</property>
                                     <property name="enable-undo">False</property>
                                     <property name="hexpand">True</property>
@@ -306,7 +302,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-new-invoice-nommer-entry">
+                                  <object class="GtkEntry" id="new-invoice-nommer-entry">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="enable-undo">False</property>
@@ -321,7 +317,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkText" id="tme-new-invoice-material-total-text">
+                                  <object class="GtkText" id="new-invoice-material-total-text">
                                     <property name="editable">False</property>
                                     <property name="enable-undo">False</property>
                                     <property name="hexpand">True</property>
@@ -336,7 +332,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-new-invoice-date-entry">
+                                  <object class="GtkEntry" id="new-invoice-date-entry">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="enable-undo">False</property>
@@ -351,7 +347,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkText" id="tme-new-invoice-description-total-text">
+                                  <object class="GtkText" id="new-invoice-description-total-text">
                                     <property name="editable">False</property>
                                     <property name="enable-undo">False</property>
                                     <property name="hexpand">True</property>
@@ -366,7 +362,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-invoice-description-button">
+                                  <object class="GtkButton" id="invoice-description-button">
                                     <property name="halign">end</property>
                                     <property name="label">Byvoeg</property>
                                     <property name="valign">center</property>
@@ -380,21 +376,21 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">tme-invoice-page</property>
+                        <property name="name">invoice-page</property>
                         <property name="title">Fakture</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage" id="tme-statement-page">
+                      <object class="GtkStackPage" id="statement-page">
                         <property name="child">
-                          <object class="GtkBox" id="tme-statement-box">
+                          <object class="GtkBox" id="statement-box">
                             <property name="hexpand">True</property>
                             <property name="margin-end">150</property>
                             <property name="margin-start">150</property>
                             <property name="orientation">vertical</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkGrid" id="tme-statement-grid">
+                              <object class="GtkGrid" id="statement-grid">
                                 <property name="column-homogeneous">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="orientation">vertical</property>
@@ -402,7 +398,7 @@
                                 <property name="valign">center</property>
                                 <property name="vexpand">True</property>
                                 <child>
-                                  <object class="GtkSearchEntry" id="tme-statement-search">
+                                  <object class="GtkSearchEntry" id="statement-search">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
                                     <property name="valign">center</property>
                                     <layout>
@@ -413,7 +409,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkColumnView" id="tme-statement-column-view">
+                                  <object class="GtkColumnView" id="statement-column-view">
                                     <property name="model">
                                       <object class="GtkSingleSelection"/>
                                     </property>
@@ -426,7 +422,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-statement-save-button">
+                                  <object class="GtkButton" id="statement-save-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Stoor</property>
@@ -440,7 +436,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-statement-email-button">
+                                  <object class="GtkButton" id="statement-email-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Stuur E-pos</property>
@@ -454,7 +450,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-statement-print-button">
+                                  <object class="GtkButton" id="statement-print-button">
                                     <property name="can-shrink">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="label">Print</property>
@@ -468,7 +464,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkColumnView" id="tme-statement-invoices-column-view">
+                                  <object class="GtkColumnView" id="statement-invoices-column-view">
                                     <property name="header-factory">
                                       <object class="GtkListItemFactory"/>
                                     </property>
@@ -487,7 +483,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-statement-label">
+                                  <object class="GtkLabel" id="statement-label">
                                     <property name="halign">start</property>
                                     <property name="label">Staat</property>
                                     <layout>
@@ -497,7 +493,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-statement-invoice-label">
+                                  <object class="GtkLabel" id="statement-invoice-label">
                                     <property name="halign">start</property>
                                     <property name="label">Fakture</property>
                                     <layout>
@@ -510,14 +506,14 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">tme-statements-page</property>
+                        <property name="name">statements-page</property>
                         <property name="title">State</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage" id="tme-register-page">
+                      <object class="GtkStackPage" id="register-page">
                         <property name="child">
-                          <object class="GtkBox" id="tme-register-box">
+                          <object class="GtkBox" id="register-box">
                             <property name="margin-bottom">50</property>
                             <property name="margin-end">150</property>
                             <property name="margin-start">150</property>
@@ -525,13 +521,13 @@
                             <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkGrid" id="tme-register-grid">
+                              <object class="GtkGrid" id="register-grid">
                                 <property name="column-homogeneous">True</property>
                                 <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">6</property>
                                 <property name="valign">center</property>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-business-name-entry">
+                                  <object class="GtkEntry" id="register-business-name-entry">
                                     <property name="placeholder-text">Besigheid naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -541,7 +537,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-address-entry">
+                                  <object class="GtkEntry" id="register-address-entry">
                                     <property name="placeholder-text">Straat adres . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -552,7 +548,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-town-name-entry">
+                                  <object class="GtkEntry" id="register-town-name-entry">
                                     <property name="placeholder-text">Dorp se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -562,7 +558,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-cell-number-entry">
+                                  <object class="GtkEntry" id="register-cell-number-entry">
                                     <property name="placeholder-text">Selfoon nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -572,7 +568,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-vat-number-entry">
+                                  <object class="GtkEntry" id="register-vat-number-entry">
                                     <property name="placeholder-text">BTW nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -582,7 +578,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-register-save-button">
+                                  <object class="GtkButton" id="register-save-button">
                                     <property name="label">Stoor</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -592,7 +588,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-register-grid-label">
+                                  <object class="GtkLabel" id="register-grid-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -608,7 +604,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-statement-day-entry">
+                                  <object class="GtkEntry" id="register-statement-day-entry">
                                     <property name="placeholder-text">Staatskedule (In dae/maand) . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -618,7 +614,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-email-code-entry">
+                                  <object class="GtkEntry" id="register-email-code-entry">
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -628,7 +624,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-register-area-code-entry">
+                                  <object class="GtkEntry" id="register-area-code-entry">
                                     <property name="placeholder-text">Gebied kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -638,7 +634,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkSearchEntry" id="tme-register-search-entry">
+                                  <object class="GtkSearchEntry" id="register-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -651,14 +647,14 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">tme-register-page</property>
+                        <property name="name">register-page</property>
                         <property name="title">Nuwe Kliënt</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage" id="tme-business-info">
+                      <object class="GtkStackPage" id="business-info">
                         <property name="child">
-                          <object class="GtkBox" id="tme-business-info-box">
+                          <object class="GtkBox" id="business-info-box">
                             <property name="margin-bottom">50</property>
                             <property name="margin-end">150</property>
                             <property name="margin-start">150</property>
@@ -666,14 +662,13 @@
                             <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkGrid" id="tme-business-info-grid">
+                              <object class="GtkGrid" id="business-info-grid">
                                 <property name="column-homogeneous">True</property>
                                 <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">6</property>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-name-entry">
+                                  <object class="GtkEntry" id="business-info-name-entry">
                                     <property name="placeholder-text">Besigheid se naam . . .</property>
-                                    <property name="text">T.M Engineering</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -682,9 +677,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-address-entry">
+                                  <object class="GtkEntry" id="business-info-address-entry">
                                     <property name="placeholder-text">Straat adres . . .</property>
-                                    <property name="text">Geelsterd 8</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -694,9 +688,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-town-name-entry">
+                                  <object class="GtkEntry" id="business-info-town-name-entry">
                                     <property name="placeholder-text">Dorp se naam . . .</property>
-                                    <property name="text">George</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -705,9 +698,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-cell-number-entry">
+                                  <object class="GtkEntry" id="business-info-cell-number-entry">
                                     <property name="placeholder-text">Kontak nommer . . .</property>
-                                    <property name="text">0832315944</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -716,9 +708,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-bank-name-entry">
+                                  <object class="GtkEntry" id="business-info-bank-name-entry">
                                     <property name="placeholder-text">Bank se naam . . .</property>
-                                    <property name="text">Standard Bank Oudtshoorn</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -727,9 +718,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-account-number-entry">
+                                  <object class="GtkEntry" id="business-info-account-number-entry">
                                     <property name="placeholder-text">Rekeningnommer . . .</property>
-                                    <property name="text">371613191</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -738,9 +728,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-branch-code-entry">
+                                  <object class="GtkEntry" id="business-info-branch-code-entry">
                                     <property name="placeholder-text">Tak se kode . . .</property>
-                                    <property name="text">050514</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -749,9 +738,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-client-message-entry">
+                                  <object class="GtkEntry" id="business-info-client-message-entry">
                                     <property name="placeholder-text">Boodskap vir kliënt . . .</property>
-                                    <property name="text">Thank you for your support.</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -760,7 +748,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-business-info-bank-label">
+                                  <object class="GtkLabel" id="business-info-bank-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -775,7 +763,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="tme-business-info-save-button">
+                                  <object class="GtkButton" id="business-info-save-button">
                                     <property name="label">Stoor</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -785,7 +773,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="tme-business-info-grid-label">
+                                  <object class="GtkLabel" id="business-info-grid-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -801,7 +789,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-email-entry">
+                                  <object class="GtkEntry" id="business-info-email-entry">
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -811,9 +799,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="tme-business-info-area-code-entry">
+                                  <object class="GtkEntry" id="business-info-area-code-entry">
                                     <property name="placeholder-text">Area kode . . .</property>
-                                    <property name="text">6536</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -825,813 +812,16 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">tme-business-info</property>
+                        <property name="name">business-info</property>
                         <property name="title">T.M.E Inligting</property>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkStackSidebar" id="tme-stack-side-bar_2">
-                        <property name="margin-bottom">20</property>
-                        <property name="margin-top">20</property>
-                        <property name="stack">tme-stack</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
             </property>
-            <property name="name">tme-page</property>
+            <property name="name">main-page</property>
             <property name="title">T.M.E</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkStackPage" id="tce-page">
-            <property name="child">
-              <object class="GtkBox" id="tce-box">
-                <child>
-                  <object class="GtkStackSidebar" id="tce-stack-side-bar">
-                    <property name="margin-bottom">20</property>
-                    <property name="margin-top">20</property>
-                    <property name="stack">tce-stack</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkStack" id="tce-stack">
-                    <property name="hexpand">True</property>
-                    <property name="transition-type">over-left</property>
-                    <property name="vexpand">True</property>
-                    <child>
-                      <object class="GtkStackPage" id="tce-invoice-page">
-                        <property name="child">
-                          <object class="GtkBox" id="tce-invoice-box">
-                            <property name="hexpand">True</property>
-                            <property name="margin-bottom">50</property>
-                            <property name="margin-end">50</property>
-                            <property name="margin-start">50</property>
-                            <property name="margin-top">50</property>
-                            <property name="orientation">vertical</property>
-                            <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkGrid" id="tce-invoice-grid">
-                                <property name="column-spacing">5</property>
-                                <property name="hexpand">True</property>
-                                <property name="orientation">vertical</property>
-                                <property name="row-homogeneous">True</property>
-                                <property name="vexpand">True</property>
-                                <child>
-                                  <object class="GtkLabel" id="tce-new-invoice-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="label">Nuwe Fakture</property>
-                                    <property name="margin-bottom">10</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">0</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-new-invoice-job-card-entry">
-                                    <property name="hexpand">True</property>
-                                    <property name="placeholder-text">Werk kaart . . .</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">2</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-new-invoice-order-number-entry">
-                                    <property name="hexpand">True</property>
-                                    <property name="placeholder-text">Bestel nommer . . .</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">2</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-new-invoice-description-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="label">Beskrywing/Arbeid</property>
-                                    <property name="margin-bottom">5</property>
-                                    <property name="margin-top">5</property>
-                                    <property name="xalign">0.0</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">3</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkColumnView" id="tce-new-invoice-description">
-                                    <property name="enable-rubberband">True</property>
-                                    <property name="header-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="hexpand">True</property>
-                                    <property name="hscroll-policy">natural</property>
-                                    <property name="model">
-                                      <object class="GtkSingleSelection"/>
-                                    </property>
-                                    <property name="row-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="single-click-activate">True</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="vscroll-policy">natural</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">4</property>
-                                      <property name="row-span">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-new-invoice-material-used-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="label">Materiaal Wat Gebruik Is</property>
-                                    <property name="margin-bottom">5</property>
-                                    <property name="margin-top">5</property>
-                                    <property name="xalign">0.0</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkColumnView" id="tce-new-invoice-material">
-                                    <property name="header-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="hexpand">True</property>
-                                    <property name="model">
-                                      <object class="GtkSingleSelection"/>
-                                    </property>
-                                    <property name="row-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">10</property>
-                                      <property name="row-span">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-known-invoice-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="label">Gestoorde Fakture</property>
-                                    <property name="margin-bottom">10</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">0</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkListView" id="tce-known-invoice-list-view">
-                                    <property name="hexpand">True</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">4</property>
-                                      <property name="row-span">10</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-known-invoice-print-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Print</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">3</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-known-invoice-email-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stuur E-pos</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-new-invoice-save-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stoor</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSearchEntry" id="tce-known-invoice-search-entry">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-invoice-material-button">
-                                    <property name="halign">end</property>
-                                    <property name="label">Byvoeg</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkText" id="tce-new-invoice-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="text">Groottotaal: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">15</property>
-                                      <property name="row-span">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-new-invoice-nommer-entry">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="placeholder-text">Faktuur nommer . . .</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkText" id="tce-new-invoice-material-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="text">Totaal: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">14</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-new-invoice-date-entry">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="placeholder-text">Datum . . .</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkText" id="tce-new-invoice-description-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="text">Totaal: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">8</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-invoice-description-button">
-                                    <property name="halign">end</property>
-                                    <property name="label">Byvoeg</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">3</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                        <property name="name">tce-invoice-page</property>
-                        <property name="title">Fakture</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkStackPage" id="tce-statement-page">
-                        <property name="child">
-                          <object class="GtkBox" id="tce-statement-box">
-                            <property name="hexpand">True</property>
-                            <property name="margin-end">150</property>
-                            <property name="margin-start">150</property>
-                            <property name="orientation">vertical</property>
-                            <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkGrid" id="tce-statement-grid">
-                                <property name="column-homogeneous">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="orientation">vertical</property>
-                                <property name="row-homogeneous">True</property>
-                                <property name="valign">center</property>
-                                <property name="vexpand">True</property>
-                                <child>
-                                  <object class="GtkSearchEntry" id="tce-statement-search">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">0</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkColumnView" id="tce-statement-column-view">
-                                    <property name="header-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="model">
-                                      <object class="GtkSingleSelection"/>
-                                    </property>
-                                    <property name="row-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">2</property>
-                                      <property name="row-span">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-statement-save-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stoor</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-statement-email-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stuur E-pos</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">17</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-statement-print-button">
-                                    <property name="can-shrink">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Print</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">17</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkColumnView" id="tce-statement-invoices-column-view">
-                                    <property name="header-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="model">
-                                      <object class="GtkMultiSelection"/>
-                                    </property>
-                                    <property name="row-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">7</property>
-                                      <property name="row-span">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-statement-label">
-                                    <property name="halign">start</property>
-                                    <property name="label">Staat</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-statement-invoice-label">
-                                    <property name="halign">start</property>
-                                    <property name="label">Fakture</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">6</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                        <property name="name">tce-statements-page</property>
-                        <property name="title">State</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkStackPage" id="tce-register-page">
-                        <property name="child">
-                          <object class="GtkBox" id="tce-register-box">
-                            <property name="margin-bottom">50</property>
-                            <property name="margin-end">150</property>
-                            <property name="margin-start">150</property>
-                            <property name="margin-top">50</property>
-                            <property name="orientation">vertical</property>
-                            <property name="valign">center</property>
-                            <child>
-                              <object class="GtkGrid" id="tce-register-grid">
-                                <property name="column-homogeneous">True</property>
-                                <property name="row-homogeneous">True</property>
-                                <property name="row-spacing">6</property>
-                                <property name="valign">center</property>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-business-name-entry">
-                                    <property name="placeholder-text">Besigheid naam . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">2</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-address-entry">
-                                    <property name="placeholder-text">Straat adres . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">3</property>
-                                      <property name="row-span">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-town-name-entry">
-                                    <property name="placeholder-text">Dorp se naam . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">5</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-cell-number-entry">
-                                    <property name="placeholder-text">Selfoon nommer . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">6</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-vat-number-entry">
-                                    <property name="placeholder-text">BTW nommer . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">8</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-register-save-button">
-                                    <property name="label">Stoor</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">10</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-register-grid-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="ellipsize">middle</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="justify">center</property>
-                                    <property name="label">Nuwe Kliënt Inligting</property>
-                                    <property name="margin-bottom">19</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">0</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-statement-day-entry">
-                                    <property name="placeholder-text">Staatskedule (In dae/maand) . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-email-code-entry">
-                                    <property name="placeholder-text">E-pos . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">7</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-register-area-code-entry">
-                                    <property name="placeholder-text">Gebied kode . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSearchEntry" id="tce-register-search-entry">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                        <property name="name">tce-register-page</property>
-                        <property name="title">Nuwe Kliënt</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkStackPage" id="tce-business-info">
-                        <property name="child">
-                          <object class="GtkBox" id="tce-business-info-box">
-                            <property name="margin-bottom">50</property>
-                            <property name="margin-end">150</property>
-                            <property name="margin-start">150</property>
-                            <property name="margin-top">50</property>
-                            <property name="orientation">vertical</property>
-                            <property name="valign">center</property>
-                            <child>
-                              <object class="GtkGrid" id="tce-business-info-grid">
-                                <property name="column-homogeneous">True</property>
-                                <property name="row-homogeneous">True</property>
-                                <property name="row-spacing">6</property>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-name-entry">
-                                    <property name="placeholder-text">Besigheid se naam . . .</property>
-                                    <property name="text">T.C Engineering &amp; Hydraulics</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-address-entry">
-                                    <property name="placeholder-text">Straat adres . . .</property>
-                                    <property name="text">Rademeyer straat 13</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">2</property>
-                                      <property name="row-span">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-town-name-entry">
-                                    <property name="placeholder-text">Dorp se naam . . .</property>
-                                    <property name="text">Oudtshoorn</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-cell-number-entry">
-                                    <property name="placeholder-text">Kontak nommer . . .</property>
-                                    <property name="text">0832315944</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">5</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-bank-name-entry">
-                                    <property name="placeholder-text">Bank se naam . . .</property>
-                                    <property name="text">Nedbank</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">8</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-account-number-entry">
-                                    <property name="placeholder-text">Rekeningnommer . . .</property>
-                                    <property name="text">1752042751</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">10</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-branch-code-entry">
-                                    <property name="placeholder-text">Tak se kode . . .</property>
-                                    <property name="text">113909</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-client-message-entry">
-                                    <property name="placeholder-text">Boodskap vir kliënt . . .</property>
-                                    <property name="text">Thank you for your support.</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">11</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-business-info-bank-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="ellipsize">middle</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="justify">center</property>
-                                    <property name="label">Bank Inligting</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">7</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="tce-business-info-save-button">
-                                    <property name="label">Stoor</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">12</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="tce-business-info-grid-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="ellipsize">middle</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="justify">center</property>
-                                    <property name="label">Algemene Inligting</property>
-                                    <property name="margin-bottom">19</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">0</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-email-entry">
-                                    <property name="placeholder-text">E-pos . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">6</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="tce-business-info-area-code-entry">
-                                    <property name="placeholder-text">Area kode . . .</property>
-                                    <property name="text">6536</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">3</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </property>
-                        <property name="name">tce-business-info</property>
-                        <property name="title">T.C.E Inligting</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </property>
-            <property name="name">tce-page</property>
-            <property name="title">T.C.E</property>
           </object>
         </child>
       </object>

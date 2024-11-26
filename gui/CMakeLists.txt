@@ -24,7 +24,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/include/
                 ${GTKMM_INCLUDE_DIRS}
                 PUBLIC
-                ${CMAKE_SOURCE_DIR}/app/include
+                ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
         )

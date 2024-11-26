@@ -21,8 +21,6 @@ if(${FILES_IN_DIR} GREATER 0)
         target_include_directories(storage
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include
-                PUBLIC
-                ${CMAKE_SOURCE_DIR}/app/include
         )
 else ()
         message(STATUS "There are no files in, gui/source.")

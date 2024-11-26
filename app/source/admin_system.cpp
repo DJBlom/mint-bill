@@ -35,13 +35,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->tme_create(ui_builder) == false)
-                {
-                        std::cerr << error::message_business << std::endl;
-                        return;
-                }
-
-                if (this->tce_create(ui_builder) == false)
+                if (this->business_info_page.create(ui_builder) == false)
                 {
                         std::cerr << error::message_business << std::endl;
                         return;
@@ -74,26 +68,4 @@ bool app::admin_system::verify_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_buil
         }
 
         return verified;
-}
-
-bool app::admin_system::tme_create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
-{
-        if (this->business_info_tme.create(ui_builder) == false)
-        {
-                std::cerr << error::message_business << std::endl;
-                return false;
-        }
-
-        return true;
-}
-
-bool app::admin_system::tce_create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
-{
-        if (this->business_info_tce.create(ui_builder) == false)
-        {
-                std::cerr << error::message_business << std::endl;
-                return false;
-        }
-
-        return true;
 }

@@ -1,16 +1,15 @@
 /********************************************************
- * Contents: Business feature implementation
+ * Contents: Business data implementation
  * Author: Dawid J. Blom
  * Date: November 18, 2024
  *
  * NOTE:
  *******************************************************/
-#include <business.h>
-#include <iostream>
+#include <business_data.h>
 #include <regex>
 
 
-feature::business::business(const business& new_data)
+data::business::business(const business& new_data)
         : name{new_data.name}, address{new_data.address}, area_code{new_data.area_code},
           town{new_data.town}, cellphone{new_data.cellphone}, email{new_data.email},
           bank{new_data.bank}, branch_code{new_data.branch_code}, account_number{new_data.account_number},
@@ -18,7 +17,7 @@ feature::business::business(const business& new_data)
 {
 }
 
-feature::business::business(business&& new_data)
+data::business::business(business&& new_data)
         : name{new_data.name}, address{new_data.address}, area_code{new_data.area_code},
           town{new_data.town}, cellphone{new_data.cellphone}, email{new_data.email},
           bank{new_data.bank}, branch_code{new_data.branch_code}, account_number{new_data.account_number},
@@ -38,7 +37,7 @@ feature::business::business(business&& new_data)
         new_data.mask = 0x0;
 }
 
-feature::business& feature::business::operator= (const business& new_data)
+data::business& data::business::operator= (const business& new_data)
 {
         business temp {new_data};
         std::swap(temp, *this);
@@ -46,7 +45,7 @@ feature::business& feature::business::operator= (const business& new_data)
         return *this;
 }
 
-feature::business& feature::business::operator= (business&& new_data)
+data::business& data::business::operator= (business&& new_data)
 {
         std::swap(name, new_data.name);
         std::swap(address, new_data.address);
@@ -64,59 +63,7 @@ feature::business& feature::business::operator= (business&& new_data)
         return *this;
 }
 
-feature::business::~business()
-{
-
-}
-
-bool feature::business::load(const interface::storage& storage)
-{
-        bool loaded{false};
-        std::vector<std::unordered_map<std::string, std::string>> container;
-        container = storage.retrieve();
-        std::unordered_map<std::string, std::string> data = container.front();
-
-        set_name(data.at("name"));
-        set_address(data.at("address"));
-        set_area_code(data.at("area code"));
-        set_town(data.at("town"));
-        set_cellphone(data.at("cellphone"));
-        set_email(data.at("email"));
-        set_bank(data.at("bank"));
-        set_branch_code(data.at("branch code"));
-        set_account_number(data.at("account number"));
-        set_client_message(data.at("client message"));
-        if (is_valid() == true)
-        {
-                loaded = true;
-        }
-
-        return loaded;
-}
-
-bool feature::business::save(const interface::storage& storage)
-{
-        bool saved{false};
-        if (this->is_valid() == true)
-        {
-                saved = storage.update();
-
-                std::cout << "Name: " << get_name() << std::endl;
-                std::cout << "Address: " << get_address() << std::endl;
-                std::cout << "Area Code: " << get_area_code() << std::endl;
-                std::cout << "Town: " << get_town() << std::endl;
-                std::cout << "Cellphone: " << get_cellphone() << std::endl;
-                std::cout << "Email: " << get_email() << std::endl;
-                std::cout << "Bank: " << get_bank() << std::endl;
-                std::cout << "Branch Code: " << get_branch_code() << std::endl;
-                std::cout << "Account Number: " << get_account_number() << std::endl;
-                std::cout << "Client Message: " << get_client_message() << std::endl;
-        }
-
-        return saved;
-}
-
-bool feature::business::is_valid()
+bool data::business::is_valid() const
 {
         bool is_valid{false};
         if (this->check_flags() == true)
@@ -127,7 +74,7 @@ bool feature::business::is_valid()
         return is_valid;
 }
 
-void feature::business::set_name(const std::string& business_name)
+void data::business::set_name(const std::string& business_name)
 {
         if (!business_name.empty())
         {
@@ -141,12 +88,12 @@ void feature::business::set_name(const std::string& business_name)
         }
 }
 
-std::string feature::business::get_name()
+std::string data::business::get_name() const
 {
         return this->name;
 }
 
-void feature::business::set_address(const std::string& street_address)
+void data::business::set_address(const std::string& street_address)
 {
         if (!street_address.empty())
         {
@@ -160,12 +107,12 @@ void feature::business::set_address(const std::string& street_address)
         }
 }
 
-std::string feature::business::get_address()
+std::string data::business::get_address() const
 {
         return this->address;
 }
 
-void feature::business::set_area_code(const std::string& code)
+void data::business::set_area_code(const std::string& code)
 {
         if (!code.empty())
         {
@@ -179,12 +126,12 @@ void feature::business::set_area_code(const std::string& code)
         }
 }
 
-std::string feature::business::get_area_code()
+std::string data::business::get_area_code() const
 {
         return this->area_code;
 }
 
-void feature::business::set_town(const std::string& business_town)
+void data::business::set_town(const std::string& business_town)
 {
         if (!business_town.empty())
         {
@@ -198,12 +145,12 @@ void feature::business::set_town(const std::string& business_town)
         }
 }
 
-std::string feature::business::get_town()
+std::string data::business::get_town() const
 {
         return this->town;
 }
 
-void feature::business::set_cellphone(const std::string& cellphone_number)
+void data::business::set_cellphone(const std::string& cellphone_number)
 {
         if (!cellphone_number.empty())
         {
@@ -217,12 +164,12 @@ void feature::business::set_cellphone(const std::string& cellphone_number)
         }
 }
 
-std::string feature::business::get_cellphone()
+std::string data::business::get_cellphone() const
 {
         return this->cellphone;
 }
 
-void feature::business::set_email(const std::string& email_address)
+void data::business::set_email(const std::string& email_address)
 {
         std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
         if (std::regex_search(email_address, email_regex)== 1)
@@ -237,12 +184,12 @@ void feature::business::set_email(const std::string& email_address)
         }
 }
 
-std::string feature::business::get_email()
+std::string data::business::get_email() const
 {
         return this->email;
 }
 
-void feature::business::set_bank(const std::string& bank_name)
+void data::business::set_bank(const std::string& bank_name)
 {
         if (!bank_name.empty())
         {
@@ -256,12 +203,12 @@ void feature::business::set_bank(const std::string& bank_name)
         }
 }
 
-std::string feature::business::get_bank()
+std::string data::business::get_bank() const
 {
         return this->bank;
 }
 
-void feature::business::set_branch_code(const std::string& branch_num)
+void data::business::set_branch_code(const std::string& branch_num)
 {
         if (!branch_num.empty())
         {
@@ -275,12 +222,12 @@ void feature::business::set_branch_code(const std::string& branch_num)
         }
 }
 
-std::string feature::business::get_branch_code()
+std::string data::business::get_branch_code() const
 {
         return this->branch_code;
 }
 
-void feature::business::set_account_number(const std::string& account_num)
+void data::business::set_account_number(const std::string& account_num)
 {
         if (!account_num.empty())
         {
@@ -294,12 +241,12 @@ void feature::business::set_account_number(const std::string& account_num)
         }
 }
 
-std::string feature::business::get_account_number()
+std::string data::business::get_account_number() const
 {
         return this->account_number;
 }
 
-void feature::business::set_client_message(const std::string& message)
+void data::business::set_client_message(const std::string& message)
 {
         if (!message.empty())
         {
@@ -313,23 +260,23 @@ void feature::business::set_client_message(const std::string& message)
         }
 }
 
-std::string feature::business::get_client_message()
+std::string data::business::get_client_message() const
 {
         return this->client_message;
 }
 
-bool feature::business::check_flags()
+bool data::business::check_flags() const
 {
         return ((this->flags & this->mask) == 0x03FF) ? true : false;
 }
 
-void feature::business::set_flag(const int& bit)
+void data::business::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
         this->flags |= static_cast<uint16_t>(1 << bit);
 }
 
-void feature::business::clear_flag(const int& bit)
+void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
         this->flags |= static_cast<uint16_t>(0 << bit);
