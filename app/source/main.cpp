@@ -6,14 +6,18 @@
  * Note:
  *******************************************************************************/
 #include <gtkmm.h>
-#include <main_window.h>
+#include <admin_system.h>
+
+
+
+
 
 int main(int argc, char** argv)
 {
-        gui::main_window window;
+        app::admin_system admin_system;
         Glib::RefPtr<Gtk::Application> app;
         app = Gtk::Application::create("org.engineering.admin-system");
-        app->signal_activate().connect([&] () { window.setup(app); });
+        app->signal_activate().connect([&] () { admin_system.start(app); });
 
         return app->run(argc, argv);
 }

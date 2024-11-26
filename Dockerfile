@@ -4,11 +4,12 @@ FROM fedora:40
 # Shell that will be used
 SHELL ["/bin/bash", "-c"]
 
+
 # Installing all development dependencies
 RUN dnf -y install \
     python3 lcov cloc cppcheck git texinfo help2man \
     make cmake dh-autoreconf autoconf automake \
-    binutils bison valgrind check gcc gcc-c++ \
+    binutils bison valgrind check gcovr gcc gcc-c++ \
     glibc-devel curl gtk4 gtk4-devel gtkmm4.0-devel
 
 ENV USER=admin-system

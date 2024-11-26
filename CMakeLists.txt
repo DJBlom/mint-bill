@@ -53,11 +53,14 @@ if(BUILD_PROJECT)
 
         add_executable(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/app/source/main.cpp
+                ${CMAKE_SOURCE_DIR}/app/source/admin_system.cpp
         )
 
         target_include_directories(${PROJECT_NAME} PRIVATE
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
+                ${CMAKE_SOURCE_DIR}/data/include
+                ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
                 ${GTKMM_INCLUDE_DIRS}
         )
@@ -74,16 +77,29 @@ if(BUILD_PROJECT)
             add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
             target_link_libraries(${PROJECT_NAME} PRIVATE gui)
         else()
-            message(STATUS "Directory features, does not exist")
+            message(STATUS "Directory gui, does not exist")
         endif()
 
-        #    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
-        #        add_subdirectory(${CMAKE_SOURCE_DIR}/features)
-        #        target_link_libraries(${PROJECT_NAME} PRIVATE features)
-        #    else()
-        #        message(STATUS "Directory features, does not exist")
-        #    endif()
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/data)
+            target_link_libraries(${PROJECT_NAME} PRIVATE data)
+        else()
+            message(STATUS "Directory data, does not exist")
+        endif()
 
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/storage)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/storage)
+            target_link_libraries(${PROJECT_NAME} PRIVATE storage)
+        else()
+            message(STATUS "Directory storage, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/features)
+            target_link_libraries(${PROJECT_NAME} PRIVATE features)
+        else()
+            message(STATUS "Directory features, does not exist")
+        endif()
 
         if (EXISTS ${CMAKE_OBJDUMP})
                 add_custom_command(

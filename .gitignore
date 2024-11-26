@@ -6,9 +6,10 @@
 build
 
 # Created test folders
-test/obj
+test/objs
+test/lib
 test/coverage
-test/gcov
+test/admin-system
 
 # Vim .swp files
 *.swp

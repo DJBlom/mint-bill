@@ -19,7 +19,9 @@ located in the **scripts** directory found in the project base directory.
 
 ## Getting Ready For Development
 Follow the below steps to set up your system for development for this project.          
-**NOTE: Currently, the project supports development on Fedora and Ubuntu.**                 
+**NOTE: Currently, the project supports development on Fedora and Ubuntu.** 
+It's important to note that you will need to call **source** when executing the script
+in the case of using **Ubuntu.** For example, `source ./scripts/mintbill.sh -i develop`                
 - To install all required packages for code development: `./scripts/mintbill.sh -i develop` 
 - To install all required tools for GUI design: `./scripts/mintbill.sh -i design`
 - To install all required tools for analysis: `./scripts/mintbill.sh -i analysis`

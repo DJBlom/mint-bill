@@ -1,12 +1,9 @@
 ############################################################################
 # Contents: Project Test Functions
-# 
 # Author: Dawid Blom
-#
 # Date: September 15, 2023
 #
 # NOTE: 
-#
 ############################################################################
 #!/bin/bash
 
@@ -56,9 +53,13 @@ function static_code_analysis()
              --suppress=checkersReport \
              -I $prj_dir/app/include \
              -I $prj_dir/gui/include \
+             -I $prj_dir/data/include \
+             -I $prj_dir/storage/include \
              -I $prj_dir/features/include \
              $prj_dir/app/source \
              $prj_dir/gui/source \
+             $prj_dir/data/source \
+             $prj_dir/storage/source \
              $prj_dir/features/source 
 }
 
@@ -107,11 +108,11 @@ function show_code_coverage()
 {
 	local prj_dir=$(pwd)
         local coverage_dir=$BUILD_DIR/coverage
-        sudo mkdir -p $coverage_dir
-        sudo -E make -C $TEST_DIR -s gcov
-        sudo gcovr -e $TEST_DIR/mocks --exclude-throw-branches -r $prj_dir \
+        mkdir -p $coverage_dir
+        make -C $TEST_DIR -s gcov
+        gcovr --exclude="^[^\/]+\/mocks\/?(?:[^\/]+\/?)*$" --exclude-throw-branches -r $prj_dir \
                 --html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
 
         firefox $coverage_dir/coverage.html
-        sudo -E make -C $TEST_DIR -s clean
+        make -C $TEST_DIR -s clean
 }

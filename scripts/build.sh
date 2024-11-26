@@ -1,19 +1,16 @@
 ############################################################################
 # Contents: Project Build Functions
-# 
 # Author: Dawid Blom
-#
 # Date: September 15, 2023
 #
 # NOTE:
-#
 ############################################################################
 #!/bin/bash
 
 
 readonly PROJECT_VERSION_NUM=0.0.1
 readonly PROJECT_VERSION_PREFIX=-v
-readonly BIN_SUFFIX=.elf
+readonly BIN_SUFFIX=
 readonly CMAKE=cmake
 readonly BUILD_TYPE="Debug"
 readonly BUILD_DIR=build

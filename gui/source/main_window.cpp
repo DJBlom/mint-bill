@@ -8,59 +8,7 @@
 #include <main_window.h>
 
 
-void gui::main_window::setup(const Glib::RefPtr<Gtk::Application>& app)
-{
-        if (this->verify_ui_file() == true)
-        {
-                if (this->create_window() == true)
-                {
-                        this->connect_exit_button();
-                        this->connect_max_button();
-                        this->connect_min_button();
-                        app->add_window(*this->window);
-                }
-                else
-                {
-                        std::cerr << "Error: failed to load the main window" << std::endl;
-                        return;
-                }
-        }
-        else
-        {
-                std::cerr << "Error: failed to load the ui file" << std::endl;
-                return;
-        }
-}
-
-bool gui::main_window::verify_ui_file()
-{
-        bool verified{false};
-        this->ui_builder = Gtk::Builder::create();
-        try
-        {
-                verified = true;
-                this->ui_builder->add_from_file("gui/admin-system.ui");
-        }
-        catch(const Glib::FileError& ex)
-        {
-                std::cerr << "FileError: " << ex.what() << std::endl;
-                return verified;
-        }
-        catch(const Glib::MarkupError& ex)
-        {
-                std::cerr << "MarkupError: " << ex.what() << std::endl;
-                return verified;
-        }
-        catch(const Gtk::BuilderError& ex)
-        {
-                std::cerr << "BuilderError: " << ex.what() << std::endl;
-                return verified;
-        }
-
-        return verified;
-}
-
-bool gui::main_window::create_window()
+bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, const Glib::RefPtr<Gtk::Application>& app)
 {
         bool created{false};
         this->window = ui_builder->get_widget<Gtk::Window>("main-window");
@@ -69,12 +17,16 @@ bool gui::main_window::create_window()
                 created = true;
                 this->window->signal_hide().connect([this] () { delete this->window; });
                 this->window->set_visible(true);
+                this->connect_exit_button(ui_builder);
+                this->connect_max_button(ui_builder);
+                this->connect_min_button(ui_builder);
+                app->add_window(*this->window);
         }
 
         return created;
 }
 
-void gui::main_window::connect_exit_button()
+void gui::main_window::connect_exit_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Button* exit_button{nullptr};
         exit_button = ui_builder->get_widget<Gtk::Button>("exit");
@@ -84,7 +36,7 @@ void gui::main_window::connect_exit_button()
         }
 }
 
-void gui::main_window::connect_max_button()
+void gui::main_window::connect_max_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Button* max_button{nullptr};
         max_button = ui_builder->get_widget<Gtk::Button>("maximize");
@@ -94,10 +46,10 @@ void gui::main_window::connect_max_button()
         }
 }
 
-void gui::main_window::connect_min_button()
+void gui::main_window::connect_min_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Button* min_button{nullptr};
-        min_button = this->ui_builder->get_widget<Gtk::Button>("minimize");
+        min_button = ui_builder->get_widget<Gtk::Button>("minimize");
         if (min_button)
         {
                 min_button->signal_clicked().connect([this] () { this->min_clicked(); });
@@ -106,9 +58,9 @@ void gui::main_window::connect_min_button()
 
 void gui::main_window::exit_clicked()
 {
-        if (window)
+        if (this->window)
         {
-                window->close();
+                this->window->close();
         }
         else
         {
@@ -118,13 +70,13 @@ void gui::main_window::exit_clicked()
 
 void gui::main_window::max_clicked()
 {
-        if ((window) && (window->is_maximized() == true))
+        if ((this->window) && (this->window->is_maximized() == true))
         {
-                window->unmaximize();
+                this->window->unmaximize();
         }
-        else if ((window) && (window->is_maximized() == false))
+        else if ((this->window) && (this->window->is_maximized() == false))
         {
-                window->maximize();
+                this->window->maximize();
         }
         else
         {
