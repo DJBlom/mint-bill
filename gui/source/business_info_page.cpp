@@ -77,7 +77,7 @@ void gui::business_info_page::connect_save_button(const Glib::RefPtr<Gtk::Builde
 
 void gui::business_info_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        this->save_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("save-button-alert");
+        this->save_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert");
         this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
                 data::business data = extract_page_entries(ui_builder);
                 switch(response)
@@ -105,7 +105,7 @@ void gui::business_info_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder
 
 void gui::business_info_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        this->wrong_info_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("wrong-info-alert");
+        this->wrong_info_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert");
         this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
                 switch (response)
                 {

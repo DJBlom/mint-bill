@@ -20,6 +20,16 @@ namespace gui {
                         ~client_register_page() override;
 
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+
+                private:
+                        [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
+
+                private:
+                        Gtk::MessageDialog* wrong_info_alert_dialog{};
+                        Gtk::MessageDialog* save_alert_dialog{};
         };
 }
 #endif

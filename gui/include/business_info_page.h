@@ -9,7 +9,6 @@
 #define _BUSINESS_INFO_PAGE_H_
 #include <gui.h>
 #include <sql.h>
-#include <business_data.h>
 #include <business_info.h>
 
 namespace gui {
