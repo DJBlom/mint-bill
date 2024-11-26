@@ -10,6 +10,7 @@
 #include <gtkmm.h>
 #include <main_window.h>
 #include <business_info_page.h>
+#include <client_register_page.h>
 
 namespace app {
         class admin_system {
@@ -29,6 +30,7 @@ namespace app {
                 private:
                         gui::main_window main_window;
                         gui::business_info_page business_info_page{};
+                        gui::client_register_page client_register_page{};
         };
 }
 #endif
