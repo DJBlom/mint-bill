@@ -20,7 +20,7 @@ namespace interface {
                                 ::vector<std
                                 ::unordered_map<std
                                 ::string, std
-                                ::string>> retrieve() const = 0;
+                                ::string>> retrieve(const std::string&) const = 0;
                         [[nodiscard]] virtual bool update() const = 0;
                         [[nodiscard]] virtual bool insert() const = 0;
         };

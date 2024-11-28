@@ -1,5 +1,5 @@
 /********************************************************
- * Contents: Storage class definition
+ * Contents: SQL class definition
  * Author: Dawid J. Blom
  * Date: November 25, 2024
  *
@@ -18,7 +18,7 @@ namespace storage {
                                 ::vector<std
                                 ::unordered_map<std
                                 ::string, std
-                                ::string>> retrieve() const override;
+                                ::string>> retrieve(const std::string&) const override;
 
                         [[nodiscard]] virtual bool update() const override;
                         [[nodiscard]] virtual bool insert() const override;

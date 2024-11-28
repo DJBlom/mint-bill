@@ -8,6 +8,10 @@
 #include <business_data.h>
 #include <regex>
 
+namespace upper_bound {
+        constexpr std::uint8_t string_length{50};
+        constexpr std::uint8_t message_length{100};
+}
 
 data::business::business(const business& new_data)
         : name{new_data.name}, address{new_data.address}, area_code{new_data.area_code},
@@ -76,7 +80,7 @@ bool data::business::is_valid() const
 
 void data::business::set_name(const std::string& business_name)
 {
-        if (!business_name.empty())
+        if (!business_name.empty() && (business_name.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -95,7 +99,7 @@ std::string data::business::get_name() const
 
 void data::business::set_address(const std::string& street_address)
 {
-        if (!street_address.empty())
+        if (!street_address.empty() && (street_address.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::ADDRESS);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -114,7 +118,7 @@ std::string data::business::get_address() const
 
 void data::business::set_area_code(const std::string& code)
 {
-        if (!code.empty())
+        if (!code.empty() && (code.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::AREA_CODE);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -133,7 +137,7 @@ std::string data::business::get_area_code() const
 
 void data::business::set_town(const std::string& business_town)
 {
-        if (!business_town.empty())
+        if (!business_town.empty() && (business_town.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::TOWN);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -152,7 +156,7 @@ std::string data::business::get_town() const
 
 void data::business::set_cellphone(const std::string& cellphone_number)
 {
-        if (!cellphone_number.empty())
+        if (!cellphone_number.empty() && (cellphone_number.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::CELLPHONE);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -172,7 +176,8 @@ std::string data::business::get_cellphone() const
 void data::business::set_email(const std::string& email_address)
 {
         std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
-        if (std::regex_search(email_address, email_regex)== 1)
+        bool correct_email_format{std::regex_search(email_address, email_regex)};
+        if (correct_email_format && (email_address.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -191,7 +196,7 @@ std::string data::business::get_email() const
 
 void data::business::set_bank(const std::string& bank_name)
 {
-        if (!bank_name.empty())
+        if (!bank_name.empty() && (bank_name.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::BANK);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -210,7 +215,7 @@ std::string data::business::get_bank() const
 
 void data::business::set_branch_code(const std::string& branch_num)
 {
-        if (!branch_num.empty())
+        if (!branch_num.empty() && (branch_num.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::BRANCH_CODE);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -229,7 +234,7 @@ std::string data::business::get_branch_code() const
 
 void data::business::set_account_number(const std::string& account_num)
 {
-        if (!account_num.empty())
+        if (!account_num.empty() && (account_num.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::ACCOUNT_NUMBER);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -248,7 +253,7 @@ std::string data::business::get_account_number() const
 
 void data::business::set_client_message(const std::string& message)
 {
-        if (!message.empty())
+        if (!message.empty() && (message.length() <= upper_bound::message_length))
         {
                 set_flag(FLAG::CLIENT_MESSAGE);
                 std::lock_guard<std::mutex> guard(this->business_data);
@@ -273,11 +278,11 @@ bool data::business::check_flags() const
 void data::business::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<uint16_t>(1 << bit);
+        this->flags |= static_cast<std::uint16_t>(1 << bit);
 }
 
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<uint16_t>(0 << bit);
+        this->flags |= static_cast<std::uint16_t>(0 << bit);
 }

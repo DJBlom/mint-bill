@@ -19,7 +19,7 @@ data::business feature::business::load(const interface::storage& storage)
 {
         data::business business_data{};
         std::vector<std::unordered_map<std::string, std::string>> container;
-        container = storage.retrieve();
+        container = storage.retrieve("tme");
         std::unordered_map<std::string, std::string> data = container.front();
 
         business_data.set_name(data.at("name"));

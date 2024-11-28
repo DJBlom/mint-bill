@@ -11,7 +11,7 @@
 #include <business_data.h>
 
 namespace interface {
-        struct business {
+        class business {
                 public:
                         virtual ~business() = default;
 

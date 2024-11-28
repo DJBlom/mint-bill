@@ -24,6 +24,7 @@ extern "C"
  * 5) Verify the copy ability of the data. (Done)
  * 6) Verify the move ability of the data. (Done)
  * 7) Verify the email to ensure it's a valid email. (Done)
+ * 8) Entry fields may not hold more than 50 characters. (Done)
  ******************************************************************************/
 TEST_GROUP(business_data_test)
 {
@@ -260,4 +261,72 @@ TEST(business_data_test, ensure_data_move_ability)
         tmp_feature = std::move(business_data);
 
         CHECK_EQUAL(true, tmp_feature.is_valid());
+}
+
+TEST(business_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
+{
+        std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
+        business_data.set_name(dummy_data);
+        business_data.set_address(dummy_data);
+        business_data.set_area_code(dummy_data);
+        business_data.set_town(dummy_data);
+        business_data.set_cellphone(dummy_data);
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+        CHECK_EQUAL(true, business_data.is_valid());
+}
+
+TEST(business_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
+{
+        std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
+        business_data.set_name(dummy_data);
+        business_data.set_address(dummy_data);
+        business_data.set_area_code(dummy_data);
+        business_data.set_town(dummy_data);
+        business_data.set_cellphone(dummy_data);
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message("Thank you for your support");
+
+        CHECK_EQUAL(false, business_data.is_valid());
+}
+
+TEST(business_data_test, client_message_is_less_than_or_equal_to_100_characters)
+{
+        std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
+        business_data.set_name(dummy_data);
+        business_data.set_address(dummy_data);
+        business_data.set_area_code(dummy_data);
+        business_data.set_town(dummy_data);
+        business_data.set_cellphone(dummy_data);
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message(dummy_data + dummy_data);
+
+        CHECK_EQUAL(true, business_data.is_valid());
+}
+
+TEST(business_data_test, client_message_is_more_than_100_characters)
+{
+        std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
+        business_data.set_name(dummy_data);
+        business_data.set_address(dummy_data);
+        business_data.set_area_code(dummy_data);
+        business_data.set_town(dummy_data);
+        business_data.set_cellphone(dummy_data);
+        business_data.set_email("odn@gmail.com");
+        business_data.set_bank("Standard Bank");
+        business_data.set_branch_code("043232");
+        business_data.set_account_number("0932443824");
+        business_data.set_client_message(dummy_data + dummy_data + dummy_data);
+
+        CHECK_EQUAL(false, business_data.is_valid());
 }
