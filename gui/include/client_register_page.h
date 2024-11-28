@@ -8,6 +8,8 @@
 #ifndef _CLIENT_REGISTER_PAGE_H_
 #define _CLIENT_REGISTER_PAGE_H_
 #include <gui.h>
+#include <sql.h>
+#include <client_register.h>
 
 namespace gui {
         class client_register_page : public interface::gui {
@@ -23,11 +25,15 @@ namespace gui {
 
                 private:
                         [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void display_on_ui(const data::client&, const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_search(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
+                        storage::sql db{};
+                        feature::client client_register{};
                         Gtk::MessageDialog* wrong_info_alert_dialog{};
                         Gtk::MessageDialog* save_alert_dialog{};
         };

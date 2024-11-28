@@ -15,6 +15,7 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(data 
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/business_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_data.cpp
         )
 
         target_include_directories(data 

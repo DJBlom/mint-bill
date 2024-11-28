@@ -6,6 +6,8 @@
  * NOTE:
  *******************************************************/
 #include <client_register_page.h>
+#include <client_data.h>
+#include <iostream>
 
 gui::client_register_page::~client_register_page()
 {
@@ -17,6 +19,7 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& ui_buil
         if (verify_ui_builder(ui_builder) == true)
         {
                 created = true;
+                connect_search(ui_builder);
                 connect_save_button(ui_builder);
                 connect_save_alert(ui_builder);
                 connect_wrong_info_alert(ui_builder);
@@ -36,6 +39,19 @@ bool gui::client_register_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builde
         return verified;
 }
 
+void gui::client_register_page::connect_search(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        Gtk::SearchEntry* search_entry{ui_builder->get_widget<Gtk::SearchEntry>("register-search-entry")};
+        if (search_entry)
+        {
+                search_entry->signal_search_changed().connect([search_entry, ui_builder, this] () {
+                                data::client data = client_register.search(search_entry->get_text(), this->db);
+                                display_on_ui(data, ui_builder);
+                                std::cout << "Searching for: " << search_entry->get_text() << std::endl;
+                });
+        }
+}
+
 void gui::client_register_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         Gtk::Button* save_button{ui_builder->get_widget<Gtk::Button>("register-save-button")};
@@ -47,15 +63,47 @@ void gui::client_register_page::connect_save_button(const Glib::RefPtr<Gtk::Buil
         }
 }
 
+data::client extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        Gtk::Entry* business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
+        Gtk::Entry* business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
+        Gtk::Entry* business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
+        Gtk::Entry* business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
+        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
+        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
+        Gtk::Entry* vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
+        Gtk::Entry* statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
+
+        data::client data{};
+        data.set_business_name(business_name->get_text());
+        data.set_business_address(business_street_address->get_text());
+        data.set_business_area_code(business_area_code->get_text());
+        data.set_business_town_name(business_town_name->get_text());
+        data.set_cellphone_number(cellphone->get_text());
+        data.set_email(email->get_text());
+        data.set_vat_number(vat_number->get_text());
+        data.set_statement_schedule(statment_schedule->get_text());
+
+        return data;
+}
+
 void gui::client_register_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         this->save_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert");
         this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
+                data::client data = extract_page_entries(ui_builder);
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
-                                this->save_alert_dialog->hide();
-                                this->wrong_info_alert_dialog->show();
+                                if (this->client_register.save(data, this->db) == false)
+                                {
+                                        this->save_alert_dialog->hide();
+                                        this->wrong_info_alert_dialog->show();
+                                }
+                                else
+                                {
+                                        this->save_alert_dialog->hide();
+                                }
                                 break;
                         case GTK_RESPONSE_NO:
                                 this->save_alert_dialog->hide();
@@ -83,30 +131,23 @@ void gui::client_register_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk:
         });
 }
 
-//data::business gui::client_register_page::extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
-//{
-//        Gtk::Entry* name{ui_builder->get_widget<Gtk::Entry>("business-info-name-entry")};
-//        Gtk::Entry* street_address{ui_builder->get_widget<Gtk::Entry>("business-info-address-entry")};
-//        Gtk::Entry* area_code{ui_builder->get_widget<Gtk::Entry>("business-info-area-code-entry")};
-//        Gtk::Entry* town_name{ui_builder->get_widget<Gtk::Entry>("business-info-town-name-entry")};
-//        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>("business-info-cell-number-entry")};
-//        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>("business-info-email-entry")};
-//        Gtk::Entry* bank_name{ui_builder->get_widget<Gtk::Entry>("business-info-bank-name-entry")};
-//        Gtk::Entry* branch_code{ui_builder->get_widget<Gtk::Entry>("business-info-branch-code-entry")};
-//        Gtk::Entry* account_number{ui_builder->get_widget<Gtk::Entry>("business-info-account-number-entry")};
-//        Gtk::Entry* client_message{ui_builder->get_widget<Gtk::Entry>("business-info-client-message-entry")};
-//
-//        data::business data{};
-//        data.set_name(name->get_text());
-//        data.set_address(street_address->get_text());
-//        data.set_area_code(area_code->get_text());
-//        data.set_town(town_name->get_text());
-//        data.set_cellphone(cellphone->get_text());
-//        data.set_email(email->get_text());
-//        data.set_bank(bank_name->get_text());
-//        data.set_branch_code(branch_code->get_text());
-//        data.set_account_number(account_number->get_text());
-//        data.set_client_message(client_message->get_text());
-//
-//        return data;
-//}
+void gui::client_register_page::display_on_ui(const data::client& data, const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        Gtk::Entry* business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
+        Gtk::Entry* business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
+        Gtk::Entry* business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
+        Gtk::Entry* business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
+        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
+        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
+        Gtk::Entry* vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
+        Gtk::Entry* statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
+
+        business_name->set_text(data.get_business_name());
+        business_street_address->set_text(data.get_business_address());
+        business_area_code->set_text(data.get_business_area_code());
+        business_town_name->set_text(data.get_business_town_name());
+        cellphone->set_text(data.get_cellphone_number());
+        email->set_text(data.get_email());
+        vat_number->set_text(data.get_vat_number());
+        statment_schedule->set_text(data.get_statement_schedule());
+}
