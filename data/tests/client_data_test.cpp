@@ -40,7 +40,7 @@ extern "C"
  * 22) Assign the statement schedule. (Done)
  * 23) Retrieve the satement schedule. (Done)
  * 24) Entry fields may not hold more than 50 characters. (Done)
- * 25) Ensure that the statment field cannot hold more than 2 numbers. (Done)
+ * 25) Ensure that the statement field cannot hold more than 2 numbers. (Done)
  ******************************************************************************/
 TEST_GROUP(client_data_test)
 {
@@ -113,9 +113,9 @@ TEST(client_data_test, assign_vat_number_and_retrieve_it)
 TEST(client_data_test, assign_statement_schedule_and_retrieve_it)
 {
         std::string expected{"4,4"};
-        client_data.set_statment_schedule(expected);
+        client_data.set_statement_schedule(expected);
 
-        CHECK_EQUAL(expected, client_data.get_statment_schedule());
+        CHECK_EQUAL(expected, client_data.get_statement_schedule());
 }
 
 TEST(client_data_test, ensure_all_fields_are_filled)
@@ -127,7 +127,7 @@ TEST(client_data_test, ensure_all_fields_are_filled)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(true, client_data.is_valid());
 }
@@ -141,7 +141,7 @@ TEST(client_data_test, handle_no_fields_filled)
         client_data.set_cellphone_number("");
         client_data.set_email("");
         client_data.set_vat_number("");
-        client_data.set_statment_schedule("");
+        client_data.set_statement_schedule("");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }
@@ -155,7 +155,7 @@ TEST(client_data_test, handle_bad_email_format)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odngmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }
@@ -169,7 +169,7 @@ TEST(client_data_test, handle_bad_schedule_format)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4");
+        client_data.set_statement_schedule("4");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }
@@ -183,7 +183,7 @@ TEST(client_data_test, handle_correct_schedule_format)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(true, client_data.is_valid());
 }
@@ -198,7 +198,7 @@ TEST(client_data_test, ensure_the_data_is_copyable)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
         tmp_data = client_data;
 
         CHECK_EQUAL(true, tmp_data.is_valid());
@@ -213,7 +213,7 @@ TEST(client_data_test, ensure_the_data_is_constructor_copyable)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
         data::client tmp_data{client_data};
 
         CHECK_EQUAL(true, tmp_data.is_valid());
@@ -229,7 +229,7 @@ TEST(client_data_test, ensure_the_data_is_movable)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
         tmp_data = std::move(client_data);
 
         CHECK_EQUAL(true, tmp_data.is_valid());
@@ -244,7 +244,7 @@ TEST(client_data_test, ensure_the_data_is_constructor_movable)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
         data::client tmp_data{std::move(client_data)};
 
         CHECK_EQUAL(true, tmp_data.is_valid());
@@ -260,7 +260,7 @@ TEST(client_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
         client_data.set_cellphone_number(dummy_data);
         client_data.set_email(dummy_data + "odn@gmail.com");
         client_data.set_vat_number(dummy_data);
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }
@@ -275,12 +275,12 @@ TEST(client_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
         client_data.set_cellphone_number(dummy_data);
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number(dummy_data);
-        client_data.set_statment_schedule("4,4");
+        client_data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(true, client_data.is_valid());
 }
 
-TEST(client_data_test, ensure_that_statment_schedule_cannot_hold_more_than_2_numbers)
+TEST(client_data_test, ensure_that_statement_schedule_cannot_hold_more_than_2_numbers)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
         client_data.set_business_name(dummy_data);
@@ -290,7 +290,7 @@ TEST(client_data_test, ensure_that_statment_schedule_cannot_hold_more_than_2_num
         client_data.set_cellphone_number(dummy_data);
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number(dummy_data);
-        client_data.set_statment_schedule("4,4,3");
+        client_data.set_statement_schedule("4,4,3");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }

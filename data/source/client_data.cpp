@@ -9,11 +9,16 @@
 #include <regex>
 
 
+namespace upper_bound {
+        constexpr std::uint8_t string_length{50};
+        constexpr std::uint8_t statement_format_length{3};
+}
+
 data::client::client(const client& new_data)
         : business_name{new_data.business_name}, business_address{new_data.business_address},
           business_area_code{new_data.business_area_code}, business_town_name{new_data.business_town_name},
           cellphone_number{new_data.cellphone_number}, email{new_data.email}, vat_number{new_data.vat_number},
-          statment_schedule{new_data.statment_schedule}, flags{new_data.flags}, client_data{}, mask{new_data.mask}
+          statement_schedule{new_data.statement_schedule}, flags{new_data.flags}, client_data{}, mask{new_data.mask}
 {
 }
 
@@ -21,7 +26,7 @@ data::client::client(client&& new_data)
         : business_name{new_data.business_name}, business_address{new_data.business_address},
           business_area_code{new_data.business_area_code}, business_town_name{new_data.business_town_name},
           cellphone_number{new_data.cellphone_number}, email{new_data.email}, vat_number{new_data.vat_number},
-          statment_schedule{new_data.statment_schedule}, flags{new_data.flags}, client_data{}, mask{new_data.mask}
+          statement_schedule{new_data.statement_schedule}, flags{new_data.flags}, client_data{}, mask{new_data.mask}
 {
         new_data.business_name.clear();
         new_data.business_address.clear();
@@ -30,7 +35,7 @@ data::client::client(client&& new_data)
         new_data.cellphone_number.clear();
         new_data.email.clear();
         new_data.vat_number.clear();
-        new_data.statment_schedule.clear();
+        new_data.statement_schedule.clear();
         new_data.flags = 0;
         new_data.mask = 0x0;
 }
@@ -52,7 +57,7 @@ data::client& data::client::operator= (client&& new_data)
         std::swap(cellphone_number, new_data.cellphone_number);
         std::swap(email, new_data.email);
         std::swap(vat_number, new_data.vat_number);
-        std::swap(statment_schedule, new_data.statment_schedule);
+        std::swap(statement_schedule, new_data.statement_schedule);
         std::swap(flags, new_data.flags);
         std::swap(mask, new_data.mask);
 
@@ -72,7 +77,7 @@ bool data::client::is_valid() const
 
 void data::client::set_business_name(const std::string& name)
 {
-        if (!name.empty() && (name.length() <= 50))
+        if (!name.empty() && (name.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -91,7 +96,7 @@ std::string data::client::get_business_name() const
 
 void data::client::set_business_address(const std::string& address)
 {
-        if (!address.empty() && (address.length() <= 50))
+        if (!address.empty() && (address.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::ADDRESS);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -110,7 +115,7 @@ std::string data::client::get_business_address() const
 
 void data::client::set_business_area_code(const std::string& code)
 {
-        if (!code.empty() && (code.length() <= 50))
+        if (!code.empty() && (code.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::AREA_CODE);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -129,7 +134,7 @@ std::string data::client::get_business_area_code() const
 
 void data::client::set_business_town_name(const std::string& town_name)
 {
-        if (!town_name.empty() && (town_name.length() <= 50))
+        if (!town_name.empty() && (town_name.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::TOWN);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -148,7 +153,7 @@ std::string data::client::get_business_town_name() const
 
 void data::client::set_cellphone_number(const std::string& number)
 {
-        if (!number.empty() && (number.length() <= 50))
+        if (!number.empty() && (number.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::CELLPHONE);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -168,7 +173,8 @@ std::string data::client::get_cellphone_number() const
 void data::client::set_email(const std::string& email_address)
 {
         std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
-        if (std::regex_search(email_address, email_regex) == 1 && (email_address.length() <= 50))
+        bool email_format_correct{std::regex_search(email_address, email_regex)};
+        if (email_format_correct && (email_address.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -187,7 +193,7 @@ std::string data::client::get_email() const
 
 void data::client::set_vat_number(const std::string& vat)
 {
-        if (!vat.empty() && (vat.length() <= 50))
+        if (!vat.empty() && (vat.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::VAT_NUMBER);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -204,13 +210,13 @@ std::string data::client::get_vat_number() const
         return this->vat_number;
 }
 
-void data::client::set_statment_schedule(const std::string& schedule)
+void data::client::set_statement_schedule(const std::string& schedule)
 {
-        if (!schedule.empty() && schedule.contains(",") && (schedule.length() == 3))
+        if (!schedule.empty() && schedule.contains(",") && (schedule.length() == upper_bound::statement_format_length))
         {
                 set_flag(FLAG::STATMENT_SCHEDULE);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->statment_schedule = schedule;
+                this->statement_schedule = schedule;
         }
         else
         {
@@ -218,9 +224,9 @@ void data::client::set_statment_schedule(const std::string& schedule)
         }
 }
 
-std::string data::client::get_statment_schedule() const
+std::string data::client::get_statement_schedule() const
 {
-        return this->statment_schedule;
+        return this->statement_schedule;
 }
 
 bool data::client::check_flags() const

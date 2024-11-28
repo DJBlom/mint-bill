@@ -36,8 +36,8 @@ namespace data {
                         [[nodiscard]] std::string get_email() const;
                         virtual void set_vat_number(const std::string&);
                         [[nodiscard]] std::string get_vat_number() const;
-                        virtual void set_statment_schedule(const std::string&);
-                        [[nodiscard]] std::string get_statment_schedule() const;
+                        virtual void set_statement_schedule(const std::string&);
+                        [[nodiscard]] std::string get_statement_schedule() const;
 
                 private:
                         void set_flag(const int&);
@@ -52,7 +52,7 @@ namespace data {
                         std::string cellphone_number{""};
                         std::string email{""};
                         std::string vat_number{""};
-                        std::string statment_schedule{""};
+                        std::string statement_schedule{""};
                         std::uint8_t flags{0x0};
                         std::mutex client_data{};
                         std::uint8_t mask{0xFF};
