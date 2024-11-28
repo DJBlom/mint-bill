@@ -17,6 +17,7 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(features 
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/business_info.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_register.cpp
         )
 
         target_include_directories(features 
