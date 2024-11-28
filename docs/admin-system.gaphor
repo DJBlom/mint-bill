@@ -913,7 +913,9 @@ Placeholder Text:
 - E-mail address = E-pos adres . . .
 - Statement schedule = Staatskedule . . .
 - Day of week = Dag van die week . . .
-- VAT number = BTW nommer . . .</val>
+- VAT number = BTW nommer . . .
+
+All entries shall be retricted to a length of 50 characters.</val>
 </note>
 <package>
 <ref refid="72b5d4d6-9b6f-11ef-9573-396cc00fc51d"/>

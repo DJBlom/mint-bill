@@ -604,8 +604,8 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="register-statement-day-entry">
-                                    <property name="placeholder-text">Staatskedule (In dae/maand) . . .</property>
+                                  <object class="GtkEntry" id="register-statement-schedule-entry">
+                                    <property name="placeholder-text">Staatskedule (Aantal dae elke maand),(dag van week) . . .</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
@@ -614,7 +614,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="register-email-code-entry">
+                                  <object class="GtkEntry" id="register-email-entry">
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -636,6 +636,7 @@
                                 <child>
                                   <object class="GtkSearchEntry" id="register-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
+                                    <property name="search-delay">700</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
@@ -863,7 +864,11 @@
     <property name="message-type">warning</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
-2) - Is u e-pos korrek ingevul?</property>
+2) - Is u e-pos korrek ingevul?
+
+3) - Is die staatskedule formaat korrek dag/maand, dag/week?
+        Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag van 
+        die week vir 4 keer 'n maand gegenereer gaan word.</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
