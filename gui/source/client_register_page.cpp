@@ -47,7 +47,6 @@ void gui::client_register_page::connect_search(const Glib::RefPtr<Gtk::Builder>&
                 search_entry->signal_search_changed().connect([search_entry, ui_builder, this] () {
                                 data::client data = client_register.search(search_entry->get_text(), this->db);
                                 display_on_ui(data, ui_builder);
-                                std::cout << "Searching for: " << search_entry->get_text() << std::endl;
                 });
         }
 }
