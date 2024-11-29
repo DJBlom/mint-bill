@@ -18,6 +18,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/main_window.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_info_page.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register_page.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_page.cpp
         )
 
         target_include_directories(gui

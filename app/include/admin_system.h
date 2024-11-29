@@ -11,6 +11,7 @@
 #include <main_window.h>
 #include <business_info_page.h>
 #include <client_register_page.h>
+#include <invoice_page.h>
 
 namespace app {
         class admin_system {
@@ -31,6 +32,7 @@ namespace app {
                         gui::main_window main_window;
                         gui::business_info_page business_info_page{};
                         gui::client_register_page client_register_page{};
+                        gui::invoice_page invoice_page{};
         };
 }
 #endif

@@ -15,6 +15,7 @@ namespace error {
         const std::string message_main_window{"Error: failed to create the main window."};
         const std::string message_business{"Error: failed to create the business page."};
         const std::string message_client{"Error: failed to create the client registration page."};
+        const std::string message_invoice{"Error: failed to create the invoice page."};
 }
 
 
@@ -45,6 +46,12 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                 if (this->client_register_page.create(ui_builder) == false)
                 {
                         std::cerr << error::message_client << std::endl;
+                        return;
+                }
+
+                if (this->invoice_page.create(ui_builder) == false)
+                {
+                        std::cerr << error::message_invoice << std::endl;
                         return;
                 }
         }
