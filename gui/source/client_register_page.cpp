@@ -7,7 +7,6 @@
  *******************************************************/
 #include <client_register_page.h>
 #include <client_data.h>
-#include <iostream>
 
 gui::client_register_page::~client_register_page()
 {
