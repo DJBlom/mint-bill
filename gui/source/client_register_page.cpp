@@ -22,8 +22,8 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& ui_buil
                 connect_save_button(ui_builder);
                 connect_save_alert(ui_builder);
                 connect_wrong_info_alert(ui_builder);
-
         }
+
         return created;
 }
 
