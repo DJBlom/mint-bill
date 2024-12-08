@@ -7,6 +7,9 @@
  **********************************************************/
 #include <invoice_page.h>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <regex>
 
 
 gui::invoice_page::~invoice_page()
@@ -20,10 +23,13 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
         if (verify_ui_builder(ui_builder) == true)
         {
                 created = true;
+                this->grand_total = std::unique_ptr<Gtk::Label> (ui_builder->get_widget<Gtk::Label>("new-invoice-total-label"));
                 connect_search(ui_builder);
                 connect_save_button(ui_builder);
                 connect_save_alert(ui_builder);
                 connect_wrong_info_alert(ui_builder);
+                connect_wrong_data_in_quantity_column_alert(ui_builder);
+                connect_wrong_data_in_amount_column_alert(ui_builder);
                 connect_description_view(ui_builder);
                 connect_material_view(ui_builder);
         }
@@ -102,15 +108,106 @@ void gui::invoice_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder
         });
 }
 
+void gui::invoice_page::connect_wrong_data_in_quantity_column_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        this->wrong_data_in_quantity_column = std::unique_ptr<Gtk::MessageDialog>
+                (ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-quantity-column-alert"));
+        this->wrong_data_in_quantity_column->signal_response().connect([this] (int response) {
+                switch (response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->wrong_data_in_quantity_column->hide();
+                                break;
+                        default:
+                                this->wrong_data_in_quantity_column->hide();
+                                break;
+                }
+        });
+}
+
+void gui::invoice_page::connect_wrong_data_in_amount_column_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        this->wrong_data_in_amount_column = std::unique_ptr<Gtk::MessageDialog>
+                (ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-amount-column-alert"));
+        this->wrong_data_in_amount_column->signal_response().connect([this] (int response) {
+                switch (response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->wrong_data_in_amount_column->hide();
+                                break;
+                        default:
+                                this->wrong_data_in_amount_column->hide();
+                                break;
+                }
+        });
+}
+
+void gui::invoice_page::connect_description_list_store(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        this->description_total = std::unique_ptr<Gtk::Label>(
+                        ui_builder->get_widget<Gtk::Label>("new-invoice-description-total-label"));
+        this->description_store->signal_items_changed().connect(
+                        sigc::mem_fun(*this, &invoice_page::update_description_total));
+}
+
+void gui::invoice_page::update_description_total(uint position, uint removed, uint added)
+{
+        position++;
+        removed++;
+        added++;
+
+        std::ostringstream doss{""};
+        doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
+        this->description_total->set_text("Total: R " + doss.str());
+
+        std::ostringstream moss{""};
+        moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
+        this->material_total->set_text("Total: R " + moss.str());
+
+        std::ostringstream goss{""};
+        goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
+        this->grand_total->set_text("Grand Total: R " + goss.str());
+}
+
+void gui::invoice_page::connect_material_list_store(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        this->material_total = std::unique_ptr<Gtk::Label>(
+                        ui_builder->get_widget<Gtk::Label>("new-invoice-material-total-label"));
+        this->material_store->signal_items_changed().connect(
+                        sigc::mem_fun(*this, &invoice_page::update_material_total));
+}
+
+void gui::invoice_page::update_material_total(uint position, uint removed, uint added)
+{
+        position++;
+        removed++;
+        added++;
+
+        std::ostringstream doss{""};
+        doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
+        this->description_total->set_text("Total: R " + doss.str());
+
+        std::ostringstream moss{""};
+        moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
+        this->material_total->set_text("Total: R " + moss.str());
+
+        std::ostringstream goss{""};
+        goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
+        this->grand_total->set_text("Grand Total: R " + goss.str());
+}
+
 void gui::invoice_page::connect_description_view(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        std::unique_ptr<Gtk::ColumnView> view{ui_builder->get_widget<Gtk::ColumnView>("new-invoice-description")};
+        std::shared_ptr<Gtk::ColumnView> view{ui_builder->get_widget<Gtk::ColumnView>("new-invoice-description")};
+        std::shared_ptr<Gtk::ScrolledWindow> scroll_window{ui_builder->get_widget<Gtk::ScrolledWindow>("new-invoice-description-view-scroll-bar")};
         this->description_store = Gio::ListStore<column_entries>::create();
         Glib::RefPtr<Gtk::MultiSelection> selection_model = Gtk::MultiSelection::create(this->description_store);
         view->set_model(selection_model);
+        view->set_name("description_view");
 
         connect_description_add_button(ui_builder);
         connect_description_delete_button(selection_model, ui_builder);
+        connect_description_list_store(ui_builder);
 
         quantity_column(view);
         description_column(view);
@@ -120,7 +217,7 @@ void gui::invoice_page::connect_description_view(const Glib::RefPtr<Gtk::Builder
 void gui::invoice_page::connect_description_add_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         std::unique_ptr<Gtk::Button> description_add_button{ui_builder->get_widget<Gtk::Button>("invoice-description-add-button")};
-        Glib::RefPtr<Gtk::Adjustment> adjustment{ui_builder->get_object<Gtk::Adjustment>("new-invoice-description-column-view-adjustment")};
+        Glib::RefPtr<Gtk::Adjustment> adjustment{ui_builder->get_object<Gtk::Adjustment>("new-invoice-description-column-view-vadjustment")};
         if (description_add_button)
         {
                 description_add_button->signal_clicked().connect([adjustment, this] () {
@@ -150,13 +247,15 @@ void gui::invoice_page::connect_description_delete_button(const Glib::RefPtr<Gtk
 
 void gui::invoice_page::connect_material_view(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        std::unique_ptr<Gtk::ColumnView> view{ui_builder->get_widget<Gtk::ColumnView>("new-invoice-material")};
+        std::shared_ptr<Gtk::ColumnView> view{ui_builder->get_widget<Gtk::ColumnView>("new-invoice-material")};
         this->material_store = Gio::ListStore<column_entries>::create();
         Glib::RefPtr<Gtk::MultiSelection> selection_model = Gtk::MultiSelection::create(this->material_store);
         view->set_model(selection_model);
+        view->set_name("material_view");
 
         connect_material_add_button(ui_builder);
         connect_material_delete_button(selection_model, ui_builder);
+        connect_material_list_store(ui_builder);
 
         quantity_column(view);
         description_column(view);
@@ -194,7 +293,7 @@ void gui::invoice_page::connect_material_delete_button(const Glib::RefPtr<Gtk::M
         }
 }
 
-void gui::invoice_page::quantity_column(const std::unique_ptr<Gtk::ColumnView>& view)
+void gui::invoice_page::quantity_column(const std::shared_ptr<Gtk::ColumnView>& view)
 {
         Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
         factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::setup)));
@@ -205,7 +304,7 @@ void gui::invoice_page::quantity_column(const std::unique_ptr<Gtk::ColumnView>& 
         view->append_column(column);
 }
 
-void gui::invoice_page::description_column(const std::unique_ptr<Gtk::ColumnView>& view)
+void gui::invoice_page::description_column(const std::shared_ptr<Gtk::ColumnView>& view)
 {
         Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
         factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::setup)));
@@ -216,7 +315,7 @@ void gui::invoice_page::description_column(const std::unique_ptr<Gtk::ColumnView
         view->append_column(column);
 }
 
-void gui::invoice_page::amount_column(const std::unique_ptr<Gtk::ColumnView>& view)
+void gui::invoice_page::amount_column(const std::shared_ptr<Gtk::ColumnView>& view)
 {
         Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
         factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::setup)));
@@ -239,24 +338,117 @@ void gui::invoice_page::teardown(const Glib::RefPtr<Gtk::ListItem>& list_item)
 
 void gui::invoice_page::bind_quantity(const Glib::RefPtr<Gtk::ListItem>& list_item)
 {
-        std::reference_wrapper<Gtk::Entry> entry{*dynamic_cast<Gtk::Entry*>(list_item->get_child())};
-        entry.get().signal_changed().connect([entry] {
-                std::cout << "Quantity: " << entry.get().get_text() << std::endl;
+        auto columns = std::dynamic_pointer_cast<column_entries>(list_item->get_item());
+        if (!columns)
+                return;
+
+
+        auto entry = dynamic_cast<Gtk::Entry*>(list_item->get_child());
+        if (!entry)
+                return;
+
+        entry->set_max_length(9);
+        entry->signal_changed().connect([entry, columns, this] () {
+                std::string text{entry->get_text()};
+                if (text.length() > 0)
+                {
+                        if (all_of(text.begin(), text.end(), ::isdigit) == true)
+                                columns->quantity = std::stoi(text);
+                        else
+                        {
+                                this->wrong_data_in_quantity_column->show();
+                                columns->quantity = 0;
+                        }
+                }
+                else
+                {
+                        entry->set_text("");
+                }
+                std::cout << "Data: " << columns->quantity << std::endl;
         });
 }
 
 void gui::invoice_page::bind_description(const Glib::RefPtr<Gtk::ListItem>& list_item)
 {
-        std::reference_wrapper<Gtk::Entry> entry{*dynamic_cast<Gtk::Entry*>(list_item->get_child())};
-        entry.get().signal_changed().connect([entry] {
-                std::cout << "Description: " << entry.get().get_text() << std::endl;
+        auto columns = std::dynamic_pointer_cast<column_entries>(list_item->get_item());
+        if (!columns)
+                return;
+
+
+        auto entry = dynamic_cast<Gtk::Entry*>(list_item->get_child());
+        if (!entry)
+                return;
+
+        entry->signal_changed().connect([entry, columns, this] () {
+               columns->description = entry->get_text();
+               std::cout << "Data: " << columns->amount << std::endl;
         });
 }
 
 void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item)
 {
-        std::reference_wrapper<Gtk::Entry> entry{*dynamic_cast<Gtk::Entry*>(list_item->get_child())};
-        entry.get().signal_changed().connect([entry, this] {
-                std::cout << "Amount: " << entry.get().get_text() << std::endl;
+        auto columns = std::dynamic_pointer_cast<column_entries>(list_item->get_item());
+        if (!columns)
+                return;
+
+        auto entry = dynamic_cast<Gtk::Entry*>(list_item->get_child());
+        if (!entry)
+                return;
+
+        entry->set_max_length(15);
+        entry->signal_changed().connect([entry, columns, this] () {
+                std::string text{entry->get_text()};
+                std::regex double_regex(R"(^-?([0-9]+(\.[0-9]*)?|\.[0-9]+)$)");
+                bool correct_double_format{std::regex_search(text, double_regex)};
+                if ((text.length() > 0) && (correct_double_format))
+                {
+                        columns->amount = std::stod(text);
+                        std::unique_ptr<Gtk::Widget> ancestor{entry->get_ancestor(Gtk::ColumnView::get_type())};
+                        if (ancestor->get_name() == "description_view")
+                        {
+                                std::ostringstream doss{""};
+                                doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
+                                this->description_total->set_text("Total: R " + doss.str());
+                        }
+                        else
+                        {
+                                std::ostringstream moss{""};
+                                moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
+                                this->material_total->set_text("Total: R " + moss.str());
+                        }
+
+                        std::ostringstream goss{""};
+                        goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
+                        this->grand_total->set_text("Grand Total: R " + goss.str());
+                }
+                else
+                {
+                        this->wrong_data_in_amount_column->show();
+                        columns->amount = 0;
+                        entry->select_region(0, 15);
+                }
         });
+}
+
+double gui::invoice_page::compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>& store)
+{
+        double total{0.0};
+        for (guint i = 0; i < store->get_n_items(); ++i)
+        {
+                auto item = store->get_item(i);
+                if (item)
+                {
+                        total += item->amount;
+                }
+        }
+
+        return total;
+}
+
+double gui::invoice_page::compute_grand_total()
+{
+        double total{0.0};
+        total = (this->compute_total(this->description_store) + this->compute_total(this->material_store));
+
+        return total;
 }

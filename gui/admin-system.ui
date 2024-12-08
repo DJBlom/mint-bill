@@ -236,23 +236,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkText" id="new-invoice-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand-set">True</property>
-                                    <property name="text">Grand Total: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">4</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">16</property>
-                                      <property name="row-span">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkEntry" id="new-invoice-nommer-entry">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
@@ -265,21 +248,6 @@
                                       <property name="column">2</property>
                                       <property name="column-span">2</property>
                                       <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkText" id="new-invoice-material-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="text">Totaal: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">5</property>
-                                      <property name="row">15</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -300,46 +268,12 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkText" id="new-invoice-description-total-text">
-                                    <property name="editable">False</property>
-                                    <property name="enable-undo">False</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="text">Totaal: R 00.00</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="xalign">1.0</property>
-                                    <layout>
-                                      <property name="column">5</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkButton" id="invoice-description-add-button">
                                     <property name="label">Byvoeg</property>
                                     <property name="valign">center</property>
                                     <layout>
                                       <property name="column">5</property>
                                       <property name="row">3</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkScrolledWindow" id="new-invoice-description-view-scroll-bar">
-                                    <property name="child">
-                                      <object class="GtkColumnView" id="new-invoice-description">
-                                        <property name="hexpand">True</property>
-                                        <property name="reorderable">False</property>
-                                      </object>
-                                    </property>
-                                    <property name="vadjustment">
-                                      <object class="GtkAdjustment" id="new-invoice-description-column-view-adjustment"/>
-                                    </property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">6</property>
-                                      <property name="row">4</property>
-                                      <property name="row-span">5</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -354,9 +288,38 @@
                                   </object>
                                 </child>
                                 <child>
+                                  <object class="GtkScrolledWindow" id="new-invoice-description-view-scroll-bar">
+                                    <property name="child">
+                                      <object class="GtkColumnView" id="new-invoice-description">
+                                        <property name="hscroll-policy">natural</property>
+                                        <property name="reorderable">False</property>
+                                        <property name="vscroll-policy">natural</property>
+                                      </object>
+                                    </property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="focusable">False</property>
+                                    <property name="hadjustment">
+                                      <object class="GtkAdjustment" id="new-invoice-description-column-view-hadjustment"/>
+                                    </property>
+                                    <property name="kinetic-scrolling">False</property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="new-invoice-description-column-view-vadjustment"/>
+                                    </property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">6</property>
+                                      <property name="row">4</property>
+                                      <property name="row-span">5</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
                                   <object class="GtkScrolledWindow" id="new-invoice-material-view-scroll-bar">
                                     <property name="child">
-                                      <object class="GtkColumnView" id="new-invoice-material"/>
+                                      <object class="GtkColumnView" id="new-invoice-material">
+                                        <property name="focus-on-click">False</property>
+                                        <property name="reorderable">False</property>
+                                      </object>
                                     </property>
                                     <property name="vadjustment">
                                       <object class="GtkAdjustment" id="new-invoice-material-column-view-adjustment"/>
@@ -389,6 +352,50 @@
                                       <property name="column-span">2</property>
                                       <property name="row">2</property>
                                       <property name="row-span">15</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="new-invoice-description-total-label">
+                                    <property name="can-focus">False</property>
+                                    <property name="can-target">False</property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="label">Total: R 0.00</property>
+                                    <property name="xalign">0.0</property>
+                                    <layout>
+                                      <property name="column">4</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">9</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="new-invoice-material-total-label">
+                                    <property name="can-focus">False</property>
+                                    <property name="can-target">False</property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="focusable">True</property>
+                                    <property name="label">Total: R 0.00</property>
+                                    <property name="xalign">0.0</property>
+                                    <layout>
+                                      <property name="column">4</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">15</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="new-invoice-total-label">
+                                    <property name="can-focus">False</property>
+                                    <property name="can-target">False</property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="focusable">True</property>
+                                    <property name="label">Grand Total: R 0.00</property>
+                                    <property name="xalign">-0.0</property>
+                                    <layout>
+                                      <property name="column">4</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">16</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -936,6 +943,16 @@
     <property name="message-type">question</property>
     <property name="text">Is u seker u wil die faktuur e-pos?</property>
     <property name="title">Waarskuwing</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="invoice-data-in-quantity-column-alert">
+    <property name="buttons">close</property>
+    <property name="text">Hierdie kolom kan slegs syfers bevat.</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="invoice-data-in-amount-column-alert">
+    <property name="buttons">close</property>
+    <property name="text">Hierdie kolom kan slegs syfers en punte bevat.</property>
     <property name="transient-for">main-window</property>
   </object>
 </interface>

@@ -12,7 +12,9 @@
 namespace gui {
         class column_entries : public Glib::Object {
                 public:
-                        Gtk::Entry* entry{nullptr};
+                        unsigned int quantity{0};
+                        std::string description{""};
+                        double amount{0.0};
 
                         static Glib::RefPtr<column_entries> create()
                         {
@@ -40,6 +42,12 @@ namespace gui {
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_wrong_data_in_quantity_column_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_wrong_data_in_amount_column_alert(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_description_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void update_description_total(uint, uint, uint);
+                        void connect_material_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void update_material_total(uint, uint, uint);
 
                         void connect_description_view(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_description_add_button(const Glib::RefPtr<Gtk::Builder>&);
@@ -49,22 +57,29 @@ namespace gui {
                         void connect_material_add_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&, const Glib::RefPtr<Gtk::Builder>&);
 
-                        void quantity_column(const std::unique_ptr<Gtk::ColumnView>&);
-                        void description_column(const std::unique_ptr<Gtk::ColumnView>&);
-                        void amount_column(const std::unique_ptr<Gtk::ColumnView>&);
+                        void quantity_column(const std::shared_ptr<Gtk::ColumnView>&);
+                        void description_column(const std::shared_ptr<Gtk::ColumnView>&);
+                        void amount_column(const std::shared_ptr<Gtk::ColumnView>&);
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>& list_item);
                         void bind_quantity(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_description(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
 
+                        double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
+                        double compute_grand_total();
+
 
                 private:
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog;
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog;
+                        std::unique_ptr<Gtk::MessageDialog> wrong_data_in_quantity_column;
+                        std::unique_ptr<Gtk::MessageDialog> wrong_data_in_amount_column;
                         Glib::RefPtr<Gio::ListStore<column_entries>> description_store;
                         Glib::RefPtr<Gio::ListStore<column_entries>> material_store;
-                        double description_total{0.0};
+                        std::unique_ptr<Gtk::Label> description_total;
+                        std::unique_ptr<Gtk::Label> material_total;
+                        std::unique_ptr<Gtk::Label> grand_total;
         };
 }
 #endif
