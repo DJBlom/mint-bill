@@ -204,17 +204,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkSearchEntry" id="known-invoice-search-entry">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">7</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkButton" id="invoice-material-button">
                                     <property name="label">Byvoeg</property>
                                     <property name="valign">center</property>
@@ -225,7 +214,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkSearchEntry" id="new-invoice-search-entry">
+                                  <object class="GtkSearchEntry" id="invoice-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
                                     <property name="valign">center</property>
                                     <layout>
@@ -321,6 +310,7 @@
                                         <property name="reorderable">False</property>
                                       </object>
                                     </property>
+                                    <property name="kinetic-scrolling">False</property>
                                     <property name="vadjustment">
                                       <object class="GtkAdjustment" id="new-invoice-material-column-view-adjustment"/>
                                     </property>
@@ -347,11 +337,12 @@
                                     <property name="child">
                                       <object class="GtkColumnView" id="known-invoice-view"/>
                                     </property>
+                                    <property name="kinetic-scrolling">False</property>
                                     <layout>
                                       <property name="column">7</property>
                                       <property name="column-span">2</property>
-                                      <property name="row">2</property>
-                                      <property name="row-span">15</property>
+                                      <property name="row">1</property>
+                                      <property name="row-span">16</property>
                                     </layout>
                                   </object>
                                 </child>

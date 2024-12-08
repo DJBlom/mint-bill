@@ -44,18 +44,19 @@ namespace gui {
                         void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_data_in_quantity_column_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_data_in_amount_column_alert(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_description_list_store(const Glib::RefPtr<Gtk::Builder>&);
-                        void update_description_total(uint, uint, uint);
-                        void connect_material_list_store(const Glib::RefPtr<Gtk::Builder>&);
-                        void update_material_total(uint, uint, uint);
+                        void connect_grand_total_label(const Glib::RefPtr<Gtk::Builder>&);
 
                         void connect_description_view(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_description_add_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_description_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&, const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_description_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void update_description_total(uint, uint, uint);
 
                         void connect_material_view(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_material_add_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&, const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_material_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void update_material_total(uint, uint, uint);
 
                         void quantity_column(const std::shared_ptr<Gtk::ColumnView>&);
                         void description_column(const std::shared_ptr<Gtk::ColumnView>&);
@@ -68,7 +69,6 @@ namespace gui {
 
                         double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
                         double compute_grand_total();
-
 
                 private:
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog;
