@@ -10,7 +10,7 @@
 #include <gui.h>
 
 namespace gui {
-        class column_entries : public Glib::Object {
+        struct column_entries : public Glib::Object {
                 public:
                         unsigned int quantity{0};
                         std::string description{""};

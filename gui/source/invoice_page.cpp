@@ -17,8 +17,6 @@ namespace limit {
         constexpr std::uint8_t MAX_AMOUNT{15};
 }
 
-namespace
-
 gui::invoice_page::~invoice_page()
 {
 
