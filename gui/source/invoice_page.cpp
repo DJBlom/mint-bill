@@ -15,6 +15,7 @@
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint8_t MAX_AMOUNT{15};
+        constexpr std::string MAX_DESCRIPTION{200};
 }
 
 gui::invoice_page::~invoice_page()
@@ -391,6 +392,7 @@ void gui::invoice_page::bind_description(const Glib::RefPtr<Gtk::ListItem>& list
         if (!entry)
                 return;
 
+        entry->set_max_length(limit::MAX_DESCRIPTION);
         entry->signal_changed().connect([entry, columns, this] () {
                columns->description = entry->get_text();
                std::cout << "Data: " << columns->amount << std::endl;
