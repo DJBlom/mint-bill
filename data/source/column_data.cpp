@@ -1,14 +1,13 @@
 /********************************************************
- * Contents: Invoice column implementation
+ * Contents: Column data implementation
  * Author: Dawid J. Blom
  * Date: December 9, 2024
  *
  * NOTE:
  *******************************************************/
-#include <invoice_column.h>
+#include <column_data.h>
 #include <sstream>
 #include <iomanip>
-#include <iostream>
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
@@ -111,8 +110,6 @@ void data::column::set_amount(const double& am)
         std::ostringstream amss{std::to_string(am)};
         amss << std::fixed << std::setprecision(2) << am;
         std::string tmp{amss.str()};
-        std::cout << "Length: " << tmp.length() << std::endl;
-        std::cout << "TMP: " << tmp << std::endl;
         if (tmp.length() <= limit::MAX_AMOUNT)
         {
                 this->set_flag(FLAG::AMOUNT);

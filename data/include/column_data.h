@@ -1,12 +1,12 @@
 /********************************************************
- * Contents: Invoice column definition
+ * Contents: Column data definition
  * Author: Dawid J. Blom
  * Date: December 8, 2024
  *
  * NOTE:
  *******************************************************/
-#ifndef _INVOICE_COLUMN_H_
-#define _INVOICE_COLUMN_H_
+#ifndef _COLUMN_DATA_H_
+#define _COLUMN_DATA_H_
 #include <string>
 #include <cstdint>
 #include <mutex>

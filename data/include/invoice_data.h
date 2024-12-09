@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <mutex>
 #include <vector>
-#include <invoice_column.h>
+#include <column_data.h>
 
 namespace data {
         struct invoice {

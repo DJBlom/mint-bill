@@ -9,7 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 #include <climits>
-#include <invoice_column.h>
+#include <column_data.h>
 extern "C"
 {
 
