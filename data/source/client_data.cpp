@@ -37,7 +37,7 @@ data::client::client(client&& new_data)
         new_data.vat_number.clear();
         new_data.statement_schedule.clear();
         new_data.flags = 0;
-        new_data.mask = 0x0;
+        new_data.mask = 0xFF;
 }
 
 data::client& data::client::operator= (const client& new_data)

@@ -38,7 +38,7 @@ data::business::business(business&& new_data)
         new_data.account_number.clear();
         new_data.client_message.clear();
         new_data.flags = 0;
-        new_data.mask = 0x0;
+        new_data.mask = 0xFFFF;
 }
 
 data::business& data::business::operator= (const business& new_data)

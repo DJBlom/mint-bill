@@ -44,7 +44,7 @@ data::invoice::invoice(invoice&& new_data)
         new_data.description_column.clear();
         new_data.material_column.clear();
         new_data.flags = 0;
-        new_data.mask = 0x0;
+        new_data.mask = 0x7F;
 }
 
 data::invoice& data::invoice::operator= (const invoice& new_data)
