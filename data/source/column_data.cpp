@@ -81,7 +81,7 @@ void data::column::set_quantity(const unsigned int& quan)
         }
 }
 
-unsigned int data::column::get_quantity()
+unsigned int data::column::get_quantity() const
 {
         return this->quantity;
 }
@@ -100,7 +100,7 @@ void data::column::set_description(const std::string& desc)
         }
 }
 
-std::string data::column::get_description()
+std::string data::column::get_description() const
 {
         return this->description;
 }
@@ -122,7 +122,7 @@ void data::column::set_amount(const double& am)
         }
 }
 
-double data::column::get_amount()
+double data::column::get_amount() const
 {
         return this->amount;
 }

@@ -35,9 +35,9 @@ namespace data {
                         virtual void set_order_number(const std::string&);
                         [[nodiscard]] std::string get_order_number() const;
                         virtual void set_description_column(const std::vector<data::column>&);
-                        [[nodiscard]] std::vector<data::column> get_description_column();
+                        [[nodiscard]] std::vector<data::column> get_description_column() const;
                         virtual void set_material_column(const std::vector<data::column>&);
-                        [[nodiscard]] std::vector<data::column> get_material_column();
+                        [[nodiscard]] std::vector<data::column> get_material_column() const;
 
                 private:
                         void set_flag(const int&);

@@ -5,7 +5,6 @@
  *
  * NOTE:
  *******************************************************/
-#include <iostream>
 #include <invoice_data.h>
 
 
@@ -189,7 +188,7 @@ void data::invoice::set_description_column(const std::vector<data::column>& col)
         }
 }
 
-std::vector<data::column> data::invoice::get_description_column()
+std::vector<data::column> data::invoice::get_description_column() const
 {
         return std::move(this->description_column);
 }
@@ -208,7 +207,7 @@ void data::invoice::set_material_column(const std::vector<data::column>& col)
         }
 }
 
-std::vector<data::column> data::invoice::get_material_column()
+std::vector<data::column> data::invoice::get_material_column() const
 {
         return std::move(this->material_column);
 }

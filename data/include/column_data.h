@@ -23,11 +23,11 @@ namespace data {
 
                         [[nodiscard]] virtual bool is_valid() const;
                         void set_quantity(const unsigned int&);
-                        [[nodiscard]] unsigned int get_quantity();
+                        [[nodiscard]] unsigned int get_quantity() const;
                         void set_description(const std::string&);
-                        [[nodiscard]] std::string get_description();
+                        [[nodiscard]] std::string get_description() const;
                         void set_amount(const double&);
-                        [[nodiscard]] double get_amount();
+                        [[nodiscard]] double get_amount() const;
 
                 private:
                         void set_flag(const int&);
