@@ -832,7 +832,7 @@
                           </object>
                         </property>
                         <property name="name">business-info</property>
-                        <property name="title">T.M.E Inligting</property>
+                        <property name="title">Besigheids-inligting</property>
                       </object>
                     </child>
                   </object>

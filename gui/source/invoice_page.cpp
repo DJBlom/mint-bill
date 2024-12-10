@@ -82,14 +82,24 @@ void gui::invoice_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui_
 {
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>
                 (ui_builder->get_widget<Gtk::MessageDialog>("invoice-save-button-alert"));
-        this->save_alert_dialog->signal_response().connect([this] (int response) {
+        this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
+                data::invoice data{extract_invoice_data(ui_builder)};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
                                 // Todo (Handle the saving of the data)
-                                this->save_alert_dialog->hide();
-                                this->wrong_info_alert_dialog->show();
-                                this->description_store->remove_all();
+                                if (this->client_invoice.save(data, this->db))
+                                {
+                                        this->save_alert_dialog->hide();
+                                        this->description_store->remove_all();
+                                        this->material_store->remove_all();
+                                        // Save the data
+                                }
+                                else
+                                {
+                                        this->save_alert_dialog->hide();
+                                        this->wrong_info_alert_dialog->show();
+                                }
                                 break;
                         case GTK_RESPONSE_NO:
                                 this->save_alert_dialog->hide();
@@ -372,11 +382,19 @@ void gui::invoice_page::bind_quantity(const Glib::RefPtr<Gtk::ListItem>& list_it
         entry->set_max_length(limit::MAX_QUANTITY);
         entry->signal_changed().connect([entry, columns, this] () {
                 std::string text{entry->get_text()};
-                if (all_of(text.begin(), text.end(), ::isdigit) == true)
+                if (text.empty())
+                        text = "0";
+
+                std::regex int_regex(R"(^[0-9]+$)");
+                bool correct_in_format{std::regex_search(text, int_regex)};
+                if (correct_in_format)
+                {
                         columns->quantity = std::stoi(text);
+                }
                 else
                 {
                         this->wrong_data_in_quantity_column->show();
+                        entry->select_region(0, limit::MAX_QUANTITY);
                         columns->quantity = 0;
                 }
         });
@@ -412,6 +430,9 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
         entry->set_max_length(limit::MAX_AMOUNT);
         entry->signal_changed().connect([entry, columns, this] () {
                 std::string text{entry->get_text()};
+                if (text.empty())
+                        text = "0";
+
                 std::regex double_regex(R"(^-?([0-9]+(\.[0-9]*)?|\.[0-9]+)$)");
                 bool correct_double_format{std::regex_search(text, double_regex)};
                 if (correct_double_format)
@@ -437,9 +458,9 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
                 }
                 else
                 {
-                        columns->amount = 0;
-                        entry->select_region(0, 15);
                         this->wrong_data_in_amount_column->show();
+                        entry->select_region(0, limit::MAX_AMOUNT);
+                        columns->amount = 0;
                 }
         });
 }
@@ -465,4 +486,15 @@ double gui::invoice_page::compute_grand_total()
         total = (this->compute_total(this->description_store) + this->compute_total(this->material_store));
 
         return total;
+}
+
+data::invoice gui::invoice_page::extract_invoice_data(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        data::invoice data{};
+        if (ui_builder)
+        {
+
+        }
+
+        return data;
 }

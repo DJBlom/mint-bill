@@ -198,7 +198,7 @@
 	(1,59,"GtkWidget","margin-top","5",None,None,None,None,None,None,None,None,None),
 	(1,70,"GtkStackPage","child",None,None,None,None,None,71,None,None,None,None),
 	(1,70,"GtkStackPage","name","business-info",None,None,None,None,None,None,None,None,None),
-	(1,70,"GtkStackPage","title","T.M.E Inligting",None,None,None,None,None,None,None,None,None),
+	(1,70,"GtkStackPage","title","Besigheids-inligting",None,None,None,None,None,None,None,None,None),
 	(1,71,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
 	(1,71,"GtkWidget","margin-bottom","50",None,None,None,None,None,None,None,None,None),
 	(1,71,"GtkWidget","margin-end","150",None,None,None,None,None,None,None,None,None),
