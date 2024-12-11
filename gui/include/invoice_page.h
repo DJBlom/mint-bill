@@ -8,6 +8,11 @@
 #ifndef _INVOICE_PAGE_H_
 #define _INVOICE_PAGE_H_
 #include <gui.h>
+#include <vector>
+#include <sql.h>
+#include <invoice_data.h>
+#include <client_invoice.h>
+#include <email.h>
 
 namespace gui {
         struct column_entries : public Glib::Object {
@@ -40,6 +45,7 @@ namespace gui {
                         [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_search(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_email_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_data_in_quantity_column_alert(const Glib::RefPtr<Gtk::Builder>&);
@@ -70,6 +76,9 @@ namespace gui {
                         double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
                         double compute_grand_total();
 
+                        [[nodiscard]] data::invoice extract_invoice_data(const Glib::RefPtr<Gtk::Builder>&);
+                        std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
+
                 private:
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog;
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog;
@@ -80,6 +89,9 @@ namespace gui {
                         std::unique_ptr<Gtk::Label> description_total;
                         std::unique_ptr<Gtk::Label> material_total;
                         std::unique_ptr<Gtk::Label> grand_total;
+                        storage::sql db{};
+                        feature::invoice client_invoice{};
+                        feature::email email;
         };
 }
 #endif

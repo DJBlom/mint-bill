@@ -31,6 +31,7 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
                 created = true;
                 connect_search(ui_builder);
                 connect_save_button(ui_builder);
+                connect_email_button(ui_builder);
                 connect_save_alert(ui_builder);
                 connect_wrong_info_alert(ui_builder);
                 connect_wrong_data_in_quantity_column_alert(ui_builder);
@@ -58,9 +59,15 @@ void gui::invoice_page::connect_search(const Glib::RefPtr<Gtk::Builder>& ui_buil
 {
         std::shared_ptr<Gtk::SearchEntry> search_entry{ui_builder->get_widget<Gtk::SearchEntry>
                 ("invoice-search-entry")};
+        std::shared_ptr<Gtk::Entry> invoice_number{ui_builder->get_widget<Gtk::Entry>
+                ("new-invoice-nommer-entry")};
+        std::shared_ptr<Gtk::Entry> invoice_date{ui_builder->get_widget<Gtk::Entry>
+                ("new-invoice-date-entry")};
         if (search_entry)
         {
-                search_entry->signal_search_changed().connect([search_entry] () {
+                search_entry->signal_search_changed().connect([search_entry, invoice_number, invoice_date] () {
+                        invoice_number->set_text("1");
+                        invoice_date->set_text("10-12-2024");
                         std::cout << "Searching: " << search_entry->get_text() << std::endl;
                 });
         }
@@ -74,6 +81,19 @@ void gui::invoice_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui
         {
                 save_button->signal_clicked().connect([this] () {
                         this->save_alert_dialog->show();
+                });
+        }
+}
+
+void gui::invoice_page::connect_email_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+{
+        std::unique_ptr<Gtk::Button> email_button{ui_builder->get_widget<Gtk::Button>
+                ("known-invoice-email-button")};
+        if (email_button)
+        {
+                email_button->signal_clicked().connect([this] () {
+                          if (this->email.send("Hello from the desktop application"))
+                                std::cout << "Email sent\n";
                 });
         }
 }
@@ -413,7 +433,7 @@ void gui::invoice_page::bind_description(const Glib::RefPtr<Gtk::ListItem>& list
         entry->set_max_length(limit::MAX_DESCRIPTION);
         entry->signal_changed().connect([entry, columns, this] () {
                columns->description = entry->get_text();
-               std::cout << "Data: " << columns->amount << std::endl;
+               std::cout << "Description: " << columns->description << std::endl;
         });
 }
 
@@ -493,8 +513,48 @@ data::invoice gui::invoice_page::extract_invoice_data(const Glib::RefPtr<Gtk::Bu
         data::invoice data{};
         if (ui_builder)
         {
+                std::unique_ptr<Gtk::SearchEntry> search_entry{ui_builder->get_widget<Gtk::SearchEntry>
+                        ("invoice-search-entry")};
+                std::unique_ptr<Gtk::Entry> invoice_number{ui_builder->get_widget<Gtk::Entry>
+                        ("new-invoice-nommer-entry")};
+                std::unique_ptr<Gtk::Entry> date{ui_builder->get_widget<Gtk::Entry>
+                        ("new-invoice-date-entry")};
+                std::unique_ptr<Gtk::Entry> job_card{ui_builder->get_widget<Gtk::Entry>
+                        ("new-invoice-job-card-entry")};
+                std::unique_ptr<Gtk::Entry> order_number{ui_builder->get_widget<Gtk::Entry>
+                        ("new-invoice-order-number-entry")};
 
+                data.set_business_name(search_entry->get_text());
+                data.set_invoice_number(std::stoi(invoice_number->get_text()));
+                data.set_invoice_date(date->get_text());
+                data.set_job_card_number(job_card->get_text());
+                data.set_order_number(order_number->get_text());
+
+                std::vector<data::column> description_columns{this->retrieve_column_data(this->description_store)};
+                data.set_description_column(description_columns);
+
+                std::vector<data::column> material_columns{this->retrieve_column_data(this->material_store)};
+                data.set_material_column(material_columns);
         }
 
         return data;
+}
+
+std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>& store)
+{
+        std::vector<data::column> columns{};
+        for (guint i = 0; i < store->get_n_items(); ++i)
+        {
+                auto item = store->get_item(i);
+                if (item)
+                {
+                        data::column column;
+                        column.set_quantity(item->quantity);
+                        column.set_description(item->description);
+                        column.set_amount(item->amount);
+                        columns.push_back(column);
+                }
+        }
+
+        return columns;
 }
