@@ -12,7 +12,7 @@
 namespace feature {
         class client: public interface::client {
                 public:
-                        virtual ~client() override;
+                        virtual ~client();
 
                         [[nodiscard]] virtual data::client load(const std::string&, const interface::storage&) override;
                         [[nodiscard]] virtual bool save(const data::client&, const interface::storage&) override;

@@ -14,11 +14,8 @@ namespace storage {
                 public:
                         virtual ~sql() override;
 
-                        [[nodiscard]] virtual std
-                                ::vector<std
-                                ::unordered_map<std
-                                ::string, std
-                                ::string>> retrieve(const std::string&) const override;
+                        [[nodiscard]] virtual std::vector<std::unordered_map<std::string, std::string>>
+                                retrieve(const std::string&) const override;
 
                         [[nodiscard]] virtual bool update() const override;
                         [[nodiscard]] virtual bool insert() const override;
