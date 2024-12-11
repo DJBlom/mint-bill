@@ -36,6 +36,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(BUILD_PROJECT)
         find_package(PkgConfig REQUIRED)
         pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
+        find_package(CURL REQUIRED)
 
         add_compile_options(
                 -Wall
@@ -63,6 +64,7 @@ if(BUILD_PROJECT)
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
                 ${GTKMM_INCLUDE_DIRS}
+                ${CURL_INCLUDE_DIR}
         )
 
         target_link_options(${PROJECT_NAME} PRIVATE
@@ -70,8 +72,16 @@ if(BUILD_PROJECT)
                 LINKER:-lrt
         )
 
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARIES})
-        target_link_directories(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARY_DIRS})
+        target_link_libraries(${PROJECT_NAME} 
+                PRIVATE 
+                ${GTKMM_LIBRARIES} 
+                ${CURL_LIBRARIES}
+        )
+
+        target_link_directories(${PROJECT_NAME} 
+                PRIVATE 
+                ${GTKMM_LIBRARY_DIRS}
+        )
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui)
             add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
