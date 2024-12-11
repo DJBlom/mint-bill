@@ -12,10 +12,6 @@
 #define TO_MAIL       "<dawidjblom@gmail.com>"
 #define CC_MAIL       "<dawidjblom@gmail.com>"
 
-struct upload_status {
-        size_t bytes_read;
-};
-
 bool feature::email::send(const std::string& msg)
 {
         CURL *curl;

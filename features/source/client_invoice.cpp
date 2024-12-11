@@ -15,10 +15,8 @@ feature::invoice::~invoice() {}
 data::invoice feature::invoice::load(const std::string& business_name, const interface::storage& db)
 {
         data::invoice data{};
-        std::vector<std::unordered_map<std::string, std::string>> db_data;
-        if (!business_name.empty())
+        if (!business_name.empty() && db.update())
         {
-                db_data = db.retrieve(business_name);
         }
 
         return data;
@@ -46,7 +44,7 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
                 }
 
                 std::vector<data::column> material_data = data.get_material_column();
-                for (const auto& column : description_data)
+                for (const auto& column : material_data)
                 {
                         std::cout << "Quantity: " << column.get_quantity() << std::endl;
                         std::cout << "Description: " << column.get_description() << std::endl;
@@ -63,10 +61,8 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
 std::vector<data::invoice> feature::invoice::search(const std::string& business_name, const interface::storage& db)
 {
         std::vector<data::invoice> data{};
-        std::vector<std::unordered_map<std::string, std::string>> db_data;
-        if (!business_name.empty())
+        if (!business_name.empty() && db.update())
         {
-                db_data = db.retrieve(business_name);
         }
 
         return data;
