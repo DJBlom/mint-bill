@@ -4,13 +4,15 @@ FROM fedora:40
 # Shell that will be used
 SHELL ["/bin/bash", "-c"]
 
-
 # Installing all development dependencies
 RUN dnf -y install \
     python3 lcov cloc cppcheck git texinfo help2man \
     make cmake dh-autoreconf autoconf automake \
     binutils bison valgrind check gcovr gcc gcc-c++ \
-    glibc-devel curl gtk4 gtk4-devel gtkmm4.0-devel
+    glibc-devel curl gtk4 gtk4-devel gtkmm4.0-devel \
+    libcurl libcurl-devel
+
+RUN dnf swap libcurl-minimal libcurl
 
 ENV USER=admin-system
 ENV HOME_DIR=/home/${USER}

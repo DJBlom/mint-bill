@@ -39,7 +39,8 @@ function run_install()
 
 function install_develop()
 {
-        dnf_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf gtk4 gtk4-devel)
+        dnf_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf gtk4 gtk4-devel
+                      libcurl libcurl-devel)
         apt_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf libgtk-4-1 
                 libgtk-4-dev gtk-4-examples flatpak gnome-software-plugin-flatpak)
 
@@ -50,6 +51,7 @@ function install_develop()
         then
                 sudo dnf update
                 sudo dnf -y install ${dnf_packages[@]}
+                sudo dnf swap libcurl-minimal libcurl
                 install_cpputest
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
         elif [[ ! -z $APT ]];
