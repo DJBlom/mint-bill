@@ -17,7 +17,7 @@ namespace data {
         struct invoice {
                 public:
                         invoice();
-                        invoice(const invoice& new_data);
+                        invoice(const invoice&);
                         invoice(invoice&&);
                         invoice& operator= (const invoice&);
                         invoice& operator= (invoice&&);
@@ -34,6 +34,12 @@ namespace data {
                         [[nodiscard]] std::string get_job_card_number() const;
                         virtual void set_order_number(const std::string&);
                         [[nodiscard]] std::string get_order_number() const;
+                        virtual void set_description_total(const std::string&);
+                        [[nodiscard]] std::string get_description_total() const;
+                        virtual void set_material_total(const std::string&);
+                        [[nodiscard]] std::string get_material_total() const;
+                        virtual void set_grand_total(const std::string&);
+                        [[nodiscard]] std::string get_grand_total() const;
                         virtual void set_description_column(const std::vector<data::column>&);
                         [[nodiscard]] std::vector<data::column> get_description_column() const;
                         virtual void set_material_column(const std::vector<data::column>&);
@@ -50,17 +56,23 @@ namespace data {
                         std::string invoice_date{""};
                         std::string job_card_number{""};
                         std::string order_number{""};
+                        std::string description_total{""};
+                        std::string material_total{""};
+                        std::string grand_total{""};
                         std::vector<data::column> description_column{};
                         std::vector<data::column> material_column{};
-                        std::uint8_t flags{0x0};
+                        std::uint16_t flags{0x0};
                         std::mutex invoice_data{};
-                        std::uint8_t mask{0x7F};
+                        std::uint16_t mask{0x3FF};
                         enum FLAG {
                                 NAME = 0,
                                 NUMBER,
                                 DATE,
                                 JOB_CARD,
                                 ORDER_NUMBER,
+                                DESCRIPTION_TOTAL,
+                                MATERIAL_TOTAL,
+                                GRAND_TOTAL,
                                 DESCRIPTION_COL,
                                 MATERIAL_COL
                         };

@@ -38,6 +38,12 @@ extern "C"
  * 15) Ensure the data is copyable. (Done)
  * 16) Ensure the data is moveable. (Done)
  * 17) Ensure the data is thread safe. (Done)
+ * 18) Assign the total description data.
+ * 19) Retrieve the total description data.
+ * 20) Assign the total material data.
+ * 21) Retrieve the total material data.
+ * 22) Assign the grand total data.
+ * 23) Retrieve the grand total data.
  ******************************************************************************/
 TEST_GROUP(invoice_data_test)
 {
@@ -96,6 +102,33 @@ TEST(invoice_data_test, handle_the_invoice_order_number)
         STRCMP_EQUAL(expected.c_str(), result.c_str());
 }
 
+TEST(invoice_data_test, handle_description_total_data)
+{
+        std::string expected{"5999.90"};
+        invoice_data.set_description_total(expected);
+        std::string result{invoice_data.get_description_total()};
+
+        STRCMP_EQUAL(expected.c_str(), result.c_str());
+}
+
+TEST(invoice_data_test, handle_material_total_data)
+{
+        std::string expected{"5999.90"};
+        invoice_data.set_material_total(expected);
+        std::string result{invoice_data.get_material_total()};
+
+        STRCMP_EQUAL(expected.c_str(), result.c_str());
+}
+
+TEST(invoice_data_test, handle_grand_total_data)
+{
+        std::string expected{"5999.90"};
+        invoice_data.set_grand_total(expected);
+        std::string result{invoice_data.get_grand_total()};
+
+        STRCMP_EQUAL(expected.c_str(), result.c_str());
+}
+
 TEST(invoice_data_test, handle_description_column_data)
 {
         const int size{50};
@@ -148,6 +181,9 @@ TEST(invoice_data_test, handle_the_copy_of_the_data)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
@@ -155,6 +191,9 @@ TEST(invoice_data_test, handle_the_copy_of_the_data)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
         data::invoice result;
@@ -179,6 +218,9 @@ TEST(invoice_data_test, handle_the_move_of_the_data)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
@@ -186,6 +228,9 @@ TEST(invoice_data_test, handle_the_move_of_the_data)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
         data::invoice result{};
@@ -210,6 +255,9 @@ TEST(invoice_data_test, handle_copy_constructing_of_the_data)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
@@ -217,6 +265,9 @@ TEST(invoice_data_test, handle_copy_constructing_of_the_data)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
         data::invoice result{invoice_data};
@@ -240,6 +291,9 @@ TEST(invoice_data_test, handle_move_constructing_of_the_data)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
@@ -247,6 +301,9 @@ TEST(invoice_data_test, handle_move_constructing_of_the_data)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
         data::invoice result{std::move(invoice_data)};
@@ -261,6 +318,9 @@ TEST(invoice_data_test, handle_failure_to_set_data)
         std::string card_number{""};
         std::string date{""};
         std::string name{""};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{0};
 
         invoice_data.set_business_name(name);
@@ -268,6 +328,9 @@ TEST(invoice_data_test, handle_failure_to_set_data)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
 
@@ -291,6 +354,9 @@ TEST(invoice_data_test, handle_data_limits)
         std::string card_number{limit};
         std::string date{limit};
         std::string name{limit};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
@@ -298,6 +364,9 @@ TEST(invoice_data_test, handle_data_limits)
         invoice_data.set_invoice_date(date);
         invoice_data.set_job_card_number(card_number);
         invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
         invoice_data.set_material_column(vec);
         invoice_data.set_description_column(vec);
 
