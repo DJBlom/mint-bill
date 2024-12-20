@@ -38,7 +38,7 @@ data::business::business(business&& new_data)
         new_data.account_number.clear();
         new_data.client_message.clear();
         new_data.flags = 0;
-        new_data.mask = 0xFFFF;
+        new_data.mask = this->mask;
 }
 
 data::business& data::business::operator= (const business& new_data)
@@ -272,17 +272,17 @@ std::string data::business::get_client_message() const
 
 bool data::business::check_flags() const
 {
-        return ((this->flags & this->mask) == 0x03FF) ? true : false;
+        return ((this->flags & this->mask) == this->mask) ? true : false;
 }
 
 void data::business::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<std::uint16_t>(1 << bit);
+        this->flags |= static_cast<std::uint16_t>(BIT::SET << bit);
 }
 
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<std::uint16_t>(0 << bit);
+        this->flags |= static_cast<std::uint16_t>(BIT::UNSET << bit);
 }

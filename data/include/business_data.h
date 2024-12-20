@@ -61,7 +61,7 @@ namespace data {
                         std::string client_message{""};
                         std::uint16_t flags{0x0};
                         std::mutex business_data{};
-                        std::uint16_t mask{0xFFFF};
+                        std::uint16_t mask{0x3FF};
                         enum FLAG {
                                 NAME = 0,
                                 ADDRESS,
@@ -73,6 +73,11 @@ namespace data {
                                 BRANCH_CODE,
                                 ACCOUNT_NUMBER,
                                 CLIENT_MESSAGE
+                        };
+
+                        enum BIT {
+                                UNSET = 0,
+                                SET
                         };
         };
 }
