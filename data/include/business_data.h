@@ -42,6 +42,8 @@ namespace data {
                         [[nodiscard]] std::string get_account_number() const;
                         virtual void set_client_message(const std::string&);
                         [[nodiscard]] std::string get_client_message() const;
+                        virtual void set_password(const std::string&);
+                        [[nodiscard]] std::string get_password() const;
 
                 private:
                         void set_flag(const int&);
@@ -59,9 +61,10 @@ namespace data {
                         std::string branch_code{""};
                         std::string account_number{""};
                         std::string client_message{""};
+                        std::string password{""};
                         std::uint16_t flags{0x0};
                         std::mutex business_data{};
-                        std::uint16_t mask{0x3FF};
+                        std::uint16_t mask{0x7FF};
                         enum FLAG {
                                 NAME = 0,
                                 ADDRESS,
@@ -72,7 +75,8 @@ namespace data {
                                 BANK,
                                 BRANCH_CODE,
                                 ACCOUNT_NUMBER,
-                                CLIENT_MESSAGE
+                                CLIENT_MESSAGE,
+                                PASSWORD
                         };
 
                         enum BIT {

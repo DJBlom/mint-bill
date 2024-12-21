@@ -50,6 +50,7 @@ TEST(business_data_test, the_feature_is_valid)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fadsfdsafadsf");
 
 	CHECK_EQUAL(true, business_data.is_valid());
 }
@@ -66,6 +67,7 @@ TEST(business_data_test, data_is_not_valid)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fadsfdsafadsf");
 
 	CHECK_EQUAL(false, business_data.is_valid());
 }
@@ -114,6 +116,7 @@ TEST(business_data_test, pass_when_correct_email_format_is_used)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fdasfdsafdsf");
 
 	CHECK_EQUAL(true, business_data.is_valid());
 }
@@ -130,6 +133,7 @@ TEST(business_data_test, verify_flag_bits_are_properly_cleared)
         business_data.set_branch_code("");
         business_data.set_account_number("");
         business_data.set_client_message("");
+        business_data.set_password("");
 
 	CHECK_EQUAL(false, business_data.is_valid());
 }
@@ -236,6 +240,7 @@ TEST(business_data_test, ensure_feature_copy_ability)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fdasfdsafdsf");
 
         data::business tmp_feature;
         tmp_feature = business_data;
@@ -256,6 +261,7 @@ TEST(business_data_test, ensure_data_move_ability)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fdasfdsafdsf");
 
         data::business tmp_feature;
         tmp_feature = std::move(business_data);
@@ -276,6 +282,7 @@ TEST(business_data_test, entry_fields_hold_less_than_or_equal_to_fifty_character
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fdasfdsafdsf");
 
         CHECK_EQUAL(true, business_data.is_valid());
 }
@@ -293,6 +300,7 @@ TEST(business_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message("Thank you for your support");
+        business_data.set_password("fdasfdsafdsf");
 
         CHECK_EQUAL(false, business_data.is_valid());
 }
@@ -310,6 +318,7 @@ TEST(business_data_test, client_message_is_less_than_or_equal_to_100_characters)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message(dummy_data + dummy_data);
+        business_data.set_password("fdasfdsafdsf");
 
         CHECK_EQUAL(true, business_data.is_valid());
 }
@@ -327,6 +336,7 @@ TEST(business_data_test, client_message_is_more_than_100_characters)
         business_data.set_branch_code("043232");
         business_data.set_account_number("0932443824");
         business_data.set_client_message(dummy_data + dummy_data + dummy_data);
+        business_data.set_password("fdasfdsafdsf");
 
         CHECK_EQUAL(false, business_data.is_valid());
 }
