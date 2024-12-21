@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.94.0 -->
+<!-- Created with Cambalache 0.94.1 -->
 <interface>
   <!-- interface-name invoice-system.ui -->
   <requires lib="gtk" version="4.14"/>
@@ -216,6 +216,7 @@
                                 <child>
                                   <object class="GtkSearchEntry" id="invoice-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
+                                    <property name="search-delay">0</property>
                                     <property name="valign">center</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -418,6 +419,7 @@
                                 <child>
                                   <object class="GtkSearchEntry" id="statement-search">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
+                                    <property name="search-delay">0</property>
                                     <property name="valign">center</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -654,7 +656,7 @@
                                 <child>
                                   <object class="GtkSearchEntry" id="register-search-entry">
                                     <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="search-delay">700</property>
+                                    <property name="search-delay">0</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
@@ -687,6 +689,7 @@
                                 <property name="row-spacing">6</property>
                                 <child>
                                   <object class="GtkEntry" id="business-info-name-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Besigheid se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -697,6 +700,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-address-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Straat adres . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -708,6 +712,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-town-name-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Dorp se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -718,6 +723,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-cell-number-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Kontak nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -728,27 +734,8 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-bank-name-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Bank se naam . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">8</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-info-account-number-entry">
-                                    <property name="placeholder-text">Rekeningnommer . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">3</property>
-                                      <property name="row">10</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-info-branch-code-entry">
-                                    <property name="placeholder-text">Tak se kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
@@ -757,12 +744,35 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-client-message-entry">
-                                    <property name="placeholder-text">Boodskap vir kliënt . . .</property>
+                                  <object class="GtkEntry" id="business-info-account-number-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Rekeningnommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
                                       <property name="row">11</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-info-branch-code-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Tak se kode . . .</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">10</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-info-client-message-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Boodskap vir kliënt . . .</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">12</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -777,7 +787,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">7</property>
+                                      <property name="row">8</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -787,7 +797,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">12</property>
+                                      <property name="row">13</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -809,6 +819,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-email-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -819,11 +830,23 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-area-code-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Area kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
                                       <property name="row">3</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkPasswordEntry" id="business-info-email-password-entry">
+                                    <property name="activates-default">True</property>
+                                    <property name="placeholder-text">E-pos wagwoord . . .</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">7</property>
                                     </layout>
                                   </object>
                                 </child>

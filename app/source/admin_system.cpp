@@ -37,7 +37,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->business_info_page.create(ui_builder) == false)
+                if (this->business_page.create(ui_builder) == false)
                 {
                         std::cerr << error::message_business << std::endl;
                         return;

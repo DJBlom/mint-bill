@@ -5,21 +5,21 @@
  *
  * NOTE:
  *******************************************************/
-#ifndef _BUSINESS_INFO_PAGE_H_
-#define _BUSINESS_INFO_PAGE_H_
+#ifndef _BUSINESS_PAGE_H_
+#define _BUSINESS_PAGE_H_
 #include <gui.h>
 #include <sql.h>
 #include <business_info.h>
 
 namespace gui {
-        class business_info_page : public interface::gui {
+        class business_page : public interface::gui {
                 public:
-                        business_info_page() = default;
-                        business_info_page(const business_info_page&) = delete;
-                        business_info_page(business_info_page&&) = delete;
-                        business_info_page& operator= (const business_info_page&) = delete;
-                        business_info_page& operator= (business_info_page&&) = delete;
-                        ~business_info_page() override;
+                        business_page() = default;
+                        business_page(const business_page&) = delete;
+                        business_page(business_page&&) = delete;
+                        business_page& operator= (const business_page&) = delete;
+                        business_page& operator= (business_page&&) = delete;
+                        ~business_page() override;
 
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 
