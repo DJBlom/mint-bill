@@ -17,38 +17,38 @@ namespace limit {
 
 data::column::column() {}
 
-data::column::column(const column& new_data)
-        : quantity{new_data.quantity}, description{new_data.description},
-          amount{new_data.amount}, flags{new_data.flags}, column_data{},
-          mask{new_data.mask} {}
+data::column::column(const column& _copy)
+        : quantity{_copy.quantity}, description{_copy.description},
+          amount{_copy.amount}, flags{_copy.flags}, column_data{},
+          mask{_copy.mask} {}
 
-data::column::column(column&& new_data)
-        : quantity{new_data.quantity}, description{new_data.description},
-          amount{new_data.amount}, flags{new_data.flags}, column_data{},
-          mask{new_data.mask}
+data::column::column(column&& _move)
+        : quantity{_move.quantity}, description{_move.description},
+          amount{_move.amount}, flags{_move.flags}, column_data{},
+          mask{_move.mask}
 {
-        new_data.set_quantity(0);
-        new_data.set_description("");
-        new_data.set_amount(0.0);
-        new_data.flags = 0;
-        new_data.mask = 0x7;
+        _move.set_quantity(0);
+        _move.set_description("");
+        _move.set_amount(0.0);
+        _move.flags = 0;
+        _move.mask = this->mask;
 }
 
-data::column& data::column::operator= (const column& new_data)
+data::column& data::column::operator= (const column& _copy)
 {
-        column temp{new_data};
+        column temp{_copy};
         std::swap(temp, *this);
 
         return *this;
 }
 
-data::column& data::column::operator= (column&& new_data)
+data::column& data::column::operator= (column&& _move)
 {
-        std::swap(quantity, new_data.quantity);
-        std::swap(description, new_data.description);
-        std::swap(amount, new_data.amount);
-        std::swap(flags, new_data.flags);
-        std::swap(mask, new_data.mask);
+        std::swap(quantity, _move.quantity);
+        std::swap(description, _move.description);
+        std::swap(amount, _move.amount);
+        std::swap(flags, _move.flags);
+        std::swap(mask, _move.mask);
 
         return *this;
 }
@@ -66,14 +66,14 @@ bool data::column::is_valid() const
         return is_valid;
 }
 
-void data::column::set_quantity(const unsigned int& quan)
+void data::column::set_quantity(const unsigned int& _quantity)
 {
-        std::string tmp{std::to_string(quan)};
+        std::string tmp{std::to_string(_quantity)};
         if (tmp.length() <= limit::MAX_QUANTITY)
         {
                 this->set_flag(FLAG::QUANTITY);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->quantity = quan;
+                this->quantity = _quantity;
         }
         else
         {
@@ -86,13 +86,13 @@ unsigned int data::column::get_quantity() const
         return this->quantity;
 }
 
-void data::column::set_description(const std::string& desc)
+void data::column::set_description(const std::string& _description)
 {
-        if (!desc.empty() && (desc.length() <= limit::MAX_DESCRIPTION))
+        if (!_description.empty() && (_description.length() <= limit::MAX_DESCRIPTION))
         {
                 this->set_flag(FLAG::DESCRIPTION);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->description = desc;
+                this->description = _description;
         }
         else
         {
@@ -105,16 +105,16 @@ std::string data::column::get_description() const
         return this->description;
 }
 
-void data::column::set_amount(const double& am)
+void data::column::set_amount(const double& _amount)
 {
-        std::ostringstream amss{std::to_string(am)};
-        amss << std::fixed << std::setprecision(2) << am;
+        std::ostringstream amss{std::to_string(_amount)};
+        amss << std::fixed << std::setprecision(2) << _amount;
         std::string tmp{amss.str()};
         if (tmp.length() <= limit::MAX_AMOUNT)
         {
                 this->set_flag(FLAG::AMOUNT);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->amount = am;
+                this->amount = _amount;
         }
         else
         {
@@ -129,7 +129,7 @@ double data::column::get_amount() const
 
 bool data::column::check_flags() const
 {
-        return ((this->flags & this->mask) == 0x7) ? true : false;
+        return ((this->flags & this->mask) == this->mask) ? true : false;
 }
 
 void data::column::set_flag(const int& bit)
