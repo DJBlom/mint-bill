@@ -6,8 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <column_data.h>
-#include <sstream>
-#include <iomanip>
+
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
@@ -135,11 +134,11 @@ bool data::column::check_flags() const
 void data::column::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->column_data);
-        this->flags |= static_cast<std::uint8_t>(BIT::SET << bit);
+        this->flags |= static_cast<mask_type>(BIT::SET << bit);
 }
 
 void data::column::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->column_data);
-        this->flags |= static_cast<std::uint8_t>(BIT::UNSET << bit);
+        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
 }

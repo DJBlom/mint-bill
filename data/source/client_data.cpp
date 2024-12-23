@@ -6,7 +6,6 @@
  * NOTE:
  *******************************************************/
 #include <client_data.h>
-#include <regex>
 
 
 namespace upper_bound {
@@ -238,11 +237,11 @@ bool data::client::check_flags() const
 void data::client::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->client_data);
-        this->flags |= static_cast<std::uint8_t>(BIT::SET << bit);
+        this->flags |= static_cast<mask_type>(BIT::SET << bit);
 }
 
 void data::client::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->client_data);
-        this->flags |= static_cast<std::uint8_t>(BIT::UNSET << bit);
+        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
 }

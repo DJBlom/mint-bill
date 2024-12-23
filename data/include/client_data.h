@@ -7,9 +7,10 @@
  *******************************************************/
 #ifndef _CLIENT_DATA_H_
 #define _CLIENT_DATA_H_
+#include <mutex>
+#include <regex>
 #include <string>
 #include <cstdint>
-#include <mutex>
 
 namespace data {
         struct client {
@@ -45,6 +46,8 @@ namespace data {
                         [[nodiscard]] bool check_flags() const;
 
                 private:
+                        using mask_type = std::uint8_t;
+
                         std::string business_name{""};
                         std::string business_address{""};
                         std::string business_area_code{""};
@@ -53,9 +56,9 @@ namespace data {
                         std::string email{""};
                         std::string vat_number{""};
                         std::string statement_schedule{""};
-                        std::uint8_t flags{0x0};
+                        mask_type flags{0x0};
                         std::mutex client_data{};
-                        std::uint8_t mask{0xFF};
+                        mask_type mask{0xFF};
                         enum FLAG {
                                 NAME = 0,
                                 ADDRESS,

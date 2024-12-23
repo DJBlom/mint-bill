@@ -6,7 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <business_data.h>
-#include <regex>
+
 
 namespace upper_bound {
         constexpr std::uint8_t MAX_ENTRY_LENGTH{50};
@@ -299,11 +299,11 @@ bool data::business::check_flags() const
 void data::business::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<std::uint16_t>(BIT::SET << bit);
+        this->flags |= static_cast<mask_type>(BIT::SET << bit);
 }
 
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<std::uint16_t>(BIT::UNSET << bit);
+        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
 }

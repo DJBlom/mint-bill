@@ -7,9 +7,10 @@
  *******************************************************/
 #ifndef _BUSINESS_DATA_H_
 #define _BUSINESS_DATA_H_
+#include <mutex>
+#include <regex>
 #include <string>
 #include <cstdint>
-#include <mutex>
 
 namespace data {
         struct business {
@@ -51,6 +52,8 @@ namespace data {
                         [[nodiscard]] bool check_flags() const;
 
                 private:
+                        using mask_type = std::uint16_t;
+
                         std::string name{""};
                         std::string address{""};
                         std::string area_code{""};
@@ -62,9 +65,9 @@ namespace data {
                         std::string account_number{""};
                         std::string client_message{""};
                         std::string password{""};
-                        std::uint16_t flags{0x0};
+                        mask_type flags{0x0};
                         std::mutex business_data{};
-                        std::uint16_t mask{0x7FF};
+                        mask_type mask{0x7FF};
                         enum FLAG {
                                 NAME = 0,
                                 ADDRESS,

@@ -7,10 +7,11 @@
  *******************************************************/
 #ifndef _INVOICE_DATA_H_
 #define _INVOICE_DATA_H_
+#include <mutex>
+#include <regex>
+#include <vector>
 #include <string>
 #include <cstdint>
-#include <mutex>
-#include <vector>
 #include <column_data.h>
 
 namespace data {
@@ -51,6 +52,8 @@ namespace data {
                         [[nodiscard]] bool check_flags() const;
 
                 private:
+                        using mask_type = std::uint16_t;
+
                         std::string business_name{""};
                         unsigned int invoice_number{0};
                         std::string invoice_date{""};
@@ -61,9 +64,9 @@ namespace data {
                         std::string grand_total{""};
                         std::vector<data::column> description_column{};
                         std::vector<data::column> material_column{};
-                        std::uint16_t flags{0x0};
+                        mask_type flags{0x0};
                         std::mutex invoice_data{};
-                        std::uint16_t mask{0x3FF};
+                        mask_type mask{0x3FF};
                         enum FLAG {
                                 NAME = 0,
                                 NUMBER,

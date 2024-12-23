@@ -7,9 +7,11 @@
  *******************************************************/
 #ifndef _COLUMN_DATA_H_
 #define _COLUMN_DATA_H_
-#include <string>
-#include <cstdint>
 #include <mutex>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <cstdint>
 
 namespace data {
         struct column {
@@ -35,12 +37,14 @@ namespace data {
                         [[nodiscard]] bool check_flags() const;
 
                 private:
+                        using mask_type = std::uint8_t;
+
                         unsigned int quantity{0};
                         std::string description{""};
                         double amount{0.0};
-                        std::uint8_t flags{0x0};
+                        mask_type flags{0x0};
                         std::mutex column_data{};
-                        std::uint8_t mask{0x7};
+                        mask_type mask{0x7};
 
                         enum FLAG {
                                 QUANTITY = 0,

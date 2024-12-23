@@ -22,58 +22,58 @@ data::invoice::~invoice()
 
 }
 
-data::invoice::invoice(const invoice& new_data)
-        : business_name{new_data.business_name}, invoice_number{new_data.invoice_number},
-          job_card_number{new_data.job_card_number}, order_number{new_data.order_number},
-          description_total{new_data.description_total}, material_total{new_data.material_total},
-          grand_total{new_data.grand_total}, description_column{new_data.description_column},
-          material_column{new_data.material_column}, flags{new_data.flags}, invoice_data{},
-          mask{new_data.mask}
+data::invoice::invoice(const invoice& _copy)
+        : business_name{_copy.business_name}, invoice_number{_copy.invoice_number},
+          job_card_number{_copy.job_card_number}, order_number{_copy.order_number},
+          description_total{_copy.description_total}, material_total{_copy.material_total},
+          grand_total{_copy.grand_total}, description_column{_copy.description_column},
+          material_column{_copy.material_column}, flags{_copy.flags}, invoice_data{},
+          mask{_copy.mask}
 {
 }
 
-data::invoice::invoice(invoice&& new_data)
-        : business_name{new_data.business_name}, invoice_number{new_data.invoice_number},
-          job_card_number{new_data.job_card_number}, order_number{new_data.order_number},
-          description_total{new_data.description_total}, material_total{new_data.material_total},
-          grand_total{new_data.grand_total}, description_column{new_data.description_column},
-          material_column{new_data.material_column}, flags{new_data.flags}, invoice_data{},
-          mask{new_data.mask}
+data::invoice::invoice(invoice&& _move)
+        : business_name{_move.business_name}, invoice_number{_move.invoice_number},
+          job_card_number{_move.job_card_number}, order_number{_move.order_number},
+          description_total{_move.description_total}, material_total{_move.material_total},
+          grand_total{_move.grand_total}, description_column{_move.description_column},
+          material_column{_move.material_column}, flags{_move.flags}, invoice_data{},
+          mask{_move.mask}
 {
-        new_data.business_name.clear();
-        new_data.invoice_number = 0;
-        new_data.job_card_number.clear();
-        new_data.order_number.clear();
-        new_data.description_total.clear();
-        new_data.material_total.clear();
-        new_data.grand_total.clear();
-        new_data.description_column.clear();
-        new_data.material_column.clear();
-        new_data.flags = 0;
-        new_data.mask = 0x7F;
+        _move.business_name.clear();
+        _move.invoice_number = 0;
+        _move.job_card_number.clear();
+        _move.order_number.clear();
+        _move.description_total.clear();
+        _move.material_total.clear();
+        _move.grand_total.clear();
+        _move.description_column.clear();
+        _move.material_column.clear();
+        _move.flags = 0;
+        _move.mask = this->mask;
 }
 
-data::invoice& data::invoice::operator= (const invoice& new_data)
+data::invoice& data::invoice::operator= (const invoice& _copy)
 {
-        invoice temp{new_data};
+        invoice temp{_copy};
         std::swap(temp, *this);
 
         return *this;
 }
 
-data::invoice& data::invoice::operator= (invoice&& new_data)
+data::invoice& data::invoice::operator= (invoice&& _move)
 {
-        std::swap(business_name, new_data.business_name);
-        std::swap(invoice_number, new_data.invoice_number);
-        std::swap(job_card_number, new_data.job_card_number);
-        std::swap(order_number, new_data.order_number);
-        std::swap(description_total, new_data.description_total);
-        std::swap(material_total, new_data.material_total);
-        std::swap(grand_total, new_data.grand_total);
-        std::swap(description_column, new_data.description_column);
-        std::swap(material_column, new_data.material_column);
-        std::swap(flags, new_data.flags);
-        std::swap(mask, new_data.mask);
+        std::swap(business_name, _move.business_name);
+        std::swap(invoice_number, _move.invoice_number);
+        std::swap(job_card_number, _move.job_card_number);
+        std::swap(order_number, _move.order_number);
+        std::swap(description_total, _move.description_total);
+        std::swap(material_total, _move.material_total);
+        std::swap(grand_total, _move.grand_total);
+        std::swap(description_column, _move.description_column);
+        std::swap(material_column, _move.material_column);
+        std::swap(flags, _move.flags);
+        std::swap(mask, _move.mask);
 
         return *this;
 }
@@ -89,13 +89,13 @@ bool data::invoice::is_valid() const
         return is_valid;
 }
 
-void data::invoice::set_business_name(const std::string& name)
+void data::invoice::set_business_name(const std::string& _name)
 {
-        if (!name.empty() && (name.length() <= upper_bound::string_length))
+        if (!_name.empty() && (_name.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->business_name = name;
+                this->business_name = _name;
         }
         else
         {
@@ -108,13 +108,13 @@ std::string data::invoice::get_business_name() const
         return this->business_name;
 }
 
-void data::invoice::set_invoice_number(const unsigned int& number)
+void data::invoice::set_invoice_number(const unsigned int& _number)
 {
-        if (number > 0)
+        if (_number > 0)
         {
                 set_flag(FLAG::NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->invoice_number = number;
+                this->invoice_number = _number;
         }
         else
         {
@@ -165,13 +165,13 @@ std::string data::invoice::get_job_card_number() const
         return this->job_card_number;
 }
 
-void data::invoice::set_order_number(const std::string& number)
+void data::invoice::set_order_number(const std::string& _number)
 {
-        if (!number.empty() && (number.length() <= upper_bound::string_length))
+        if (!_number.empty() && (_number.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::ORDER_NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->order_number = number;
+                this->order_number = _number;
         }
         else
         {
@@ -184,13 +184,13 @@ std::string data::invoice::get_order_number() const
         return this->order_number;
 }
 
-void data::invoice::set_description_total(const std::string& total)
+void data::invoice::set_description_total(const std::string& _total)
 {
-        if (!total.empty() && (total.length() <= upper_bound::string_length))
+        if (!_total.empty() && (_total.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::DESCRIPTION_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->description_total = total;
+                this->description_total = _total;
         }
         else
         {
@@ -203,13 +203,13 @@ std::string data::invoice::get_description_total() const
         return this->description_total;
 }
 
-void data::invoice::set_material_total(const std::string& total)
+void data::invoice::set_material_total(const std::string& _total)
 {
-        if (!total.empty() && (total.length() <= upper_bound::string_length))
+        if (!_total.empty() && (_total.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::MATERIAL_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->material_total = total;
+                this->material_total = _total;
         }
         else
         {
@@ -222,13 +222,13 @@ std::string data::invoice::get_material_total() const
         return this->material_total;
 }
 
-void data::invoice::set_grand_total(const std::string& total)
+void data::invoice::set_grand_total(const std::string& _total)
 {
-        if (!total.empty() && (total.length() <= upper_bound::string_length))
+        if (!_total.empty() && (_total.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::GRAND_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->grand_total = total;
+                this->grand_total = _total;
         }
         else
         {
@@ -241,13 +241,13 @@ std::string data::invoice::get_grand_total() const
         return this->grand_total;
 }
 
-void data::invoice::set_description_column(const std::vector<data::column>& col)
+void data::invoice::set_description_column(const std::vector<data::column>& _column)
 {
-        if (!col.empty())
+        if (!_column.empty())
         {
                 set_flag(FLAG::DESCRIPTION_COL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->description_column = std::move(col);
+                this->description_column = std::move(_column);
         }
         else
         {
@@ -260,13 +260,13 @@ std::vector<data::column> data::invoice::get_description_column() const
         return std::move(this->description_column);
 }
 
-void data::invoice::set_material_column(const std::vector<data::column>& col)
+void data::invoice::set_material_column(const std::vector<data::column>& _column)
 {
-        if (!col.empty())
+        if (!_column.empty())
         {
                 set_flag(FLAG::MATERIAL_COL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->material_column = std::move(col);
+                this->material_column = std::move(_column);
         }
         else
         {
@@ -281,17 +281,17 @@ std::vector<data::column> data::invoice::get_material_column() const
 
 bool data::invoice::check_flags() const
 {
-        return ((this->flags & this->mask) == 0x3FF) ? true : false;
+        return ((this->flags & this->mask) == this->mask) ? true : false;
 }
 
 void data::invoice::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->invoice_data);
-        this->flags |= static_cast<std::uint16_t>(BIT::SET << bit);
+        this->flags |= static_cast<mask_type>(BIT::SET << bit);
 }
 
 void data::invoice::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->invoice_data);
-        this->flags |= static_cast<std::uint16_t>(BIT::UNSET << bit);
+        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
 }
