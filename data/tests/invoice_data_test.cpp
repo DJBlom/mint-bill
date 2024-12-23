@@ -318,9 +318,9 @@ TEST(invoice_data_test, handle_failure_to_set_data)
         std::string card_number{""};
         std::string date{""};
         std::string name{""};
-        std::string description_total{"1234.00"};
-        std::string material_total{"1234.00"};
-        std::string grand_total{"1234.00"};
+        std::string description_total{""};
+        std::string material_total{""};
+        std::string grand_total{""};
         unsigned int number{0};
 
         invoice_data.set_business_name(name);
@@ -354,9 +354,9 @@ TEST(invoice_data_test, handle_data_limits)
         std::string card_number{limit};
         std::string date{limit};
         std::string name{limit};
-        std::string description_total{"1234.00"};
-        std::string material_total{"1234.00"};
-        std::string grand_total{"1234.00"};
+        std::string description_total{limit};
+        std::string material_total{limit};
+        std::string grand_total{limit};
         unsigned int number{1};
 
         invoice_data.set_business_name(name);
