@@ -11,6 +11,8 @@ TEST_DIR :=$(realpath .)
 TEST_TARGET := admin-system
 CPPUTEST_EXE_FLAGS :=-c
 CPPUTEST_CXXFLAGS :=-std=c++23 
+CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo)
+CPPUTEST_LDFLAGS := $(shell pkg-config --libs cairo)
 
 
 
@@ -22,6 +24,7 @@ SRC_DIRS :=\
 
 INCLUDE_DIRS :=\
 	$(CPPUTEST_HOME)/include\
+	$(PROJECT_DIR)/app/include\
 	$(PROJECT_DIR)/data/include\
 	$(PROJECT_DIR)/storage/include\
 	$(PROJECT_DIR)/storage/mocks/include\
