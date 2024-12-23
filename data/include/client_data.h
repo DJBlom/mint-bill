@@ -66,6 +66,11 @@ namespace data {
                                 VAT_NUMBER,
                                 STATMENT_SCHEDULE
                         };
+
+                        enum BIT {
+                                UNSET = 0,
+                                SET
+                        };
         };
 }
 #endif
