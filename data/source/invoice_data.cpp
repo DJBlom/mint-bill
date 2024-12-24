@@ -23,7 +23,7 @@ data::invoice::~invoice()
 }
 
 data::invoice::invoice(const invoice& _copy)
-        : business_name{_copy.business_name}, invoice_number{_copy.invoice_number},
+        : business_name{_copy.business_name}, invoice_number{_copy.invoice_number}, invoice_date{_copy.invoice_date},
           job_card_number{_copy.job_card_number}, order_number{_copy.order_number},
           description_total{_copy.description_total}, material_total{_copy.material_total},
           grand_total{_copy.grand_total}, description_column{_copy.description_column},
@@ -33,7 +33,7 @@ data::invoice::invoice(const invoice& _copy)
 }
 
 data::invoice::invoice(invoice&& _move)
-        : business_name{_move.business_name}, invoice_number{_move.invoice_number},
+        : business_name{_move.business_name}, invoice_number{_move.invoice_number}, invoice_date{_move.invoice_date},
           job_card_number{_move.job_card_number}, order_number{_move.order_number},
           description_total{_move.description_total}, material_total{_move.material_total},
           grand_total{_move.grand_total}, description_column{_move.description_column},
@@ -42,6 +42,7 @@ data::invoice::invoice(invoice&& _move)
 {
         _move.business_name.clear();
         _move.invoice_number = 0;
+        _move.invoice_date.clear();
         _move.job_card_number.clear();
         _move.order_number.clear();
         _move.description_total.clear();
@@ -65,6 +66,7 @@ data::invoice& data::invoice::operator= (invoice&& _move)
 {
         std::swap(business_name, _move.business_name);
         std::swap(invoice_number, _move.invoice_number);
+        std::swap(invoice_date, _move.invoice_date);
         std::swap(job_card_number, _move.job_card_number);
         std::swap(order_number, _move.order_number);
         std::swap(description_total, _move.description_total);
