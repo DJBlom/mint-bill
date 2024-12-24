@@ -127,13 +127,13 @@ unsigned int data::invoice::get_invoice_number() const
         return this->invoice_number;
 }
 
-void data::invoice::set_invoice_date(const std::string& date)
+void data::invoice::set_invoice_date(const std::string& _date)
 {
-        if (!date.empty() && (date.length() <= upper_bound::string_length))
+        if (!_date.empty() && (_date.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::DATE);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->invoice_date = date;
+                this->invoice_date = _date;
         }
         else
         {
@@ -146,13 +146,13 @@ std::string data::invoice::get_invoice_date() const
         return this->invoice_date;
 }
 
-void data::invoice::set_job_card_number(const std::string& card_number)
+void data::invoice::set_job_card_number(const std::string& _card_number)
 {
-        if (!card_number.empty() && (card_number.length() <= upper_bound::string_length))
+        if (!_card_number.empty() && (_card_number.length() <= upper_bound::string_length))
         {
                 set_flag(FLAG::JOB_CARD);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->job_card_number = card_number;
+                this->job_card_number = _card_number;
         }
         else
         {
