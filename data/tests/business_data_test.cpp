@@ -251,10 +251,10 @@ TEST(business_data_test, ensure_feature_copy_ability)
 
 TEST(business_data_test, ensure_data_move_ability)
 {
-        business_data.set_name("tme");
-        business_data.set_address("geelsterd 8");
+        business_data.set_name("T.M. Engineering");
+        business_data.set_address("Geelsterd 8");
         business_data.set_area_code("5432");
-        business_data.set_town("george");
+        business_data.set_town("George");
         business_data.set_cellphone("0832315944");
         business_data.set_email("odn@gmail.com");
         business_data.set_bank("Standard Bank");

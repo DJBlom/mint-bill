@@ -8,9 +8,13 @@
 #ifndef _PDF_H_
 #define _PDF_H_
 #include <string>
+#include <vector>
 #include <ostream>
+#include <sstream>
 #include <errors.h>
 #include <cairo/cairo.h>
+#include <client_data.h>
+#include <invoice_data.h>
 #include <business_data.h>
 #include <cairo/cairo-pdf.h>
 #include <pdf_invoice_data.h>
@@ -30,6 +34,17 @@ namespace feature {
                 private:
                         [[nodiscard]] bool add_header(const std::string&);
                         [[nodiscard]] bool add_business(const data::business&);
+                        [[nodiscard]] bool add_client(const data::client&);
+                        [[nodiscard]] bool add_invoice(const data::invoice&);
+                        [[nodiscard]] bool add_labor(const data::invoice&);
+                        [[nodiscard]] bool add_material(const data::invoice&);
+                        [[nodiscard]] bool add_items(const std::vector<data::column>&);
+                        [[nodiscard]] bool add_grand_total(const data::invoice&);
+                        [[nodiscard]] bool add_payment_method(const data::business&);
+                        [[nodiscard]] bool write_to_pdf_from_left(const std::string&, const double&);
+                        [[nodiscard]] bool write_to_pdf_in_center(const std::string&, const double&);
+                        [[nodiscard]] bool write_to_pdf_from_right(const std::string&, const double&);
+                        [[nodiscard]] bool draw_line();
                         [[nodiscard]] bool context_ok();
                         static cairo_status_t write_to_stream(void*, const unsigned char*, unsigned int);
 

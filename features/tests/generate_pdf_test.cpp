@@ -85,10 +85,10 @@ static bool generate_invoice_pdf(const std::string& _pdf_data, const std::string
 static data::business generate_business_data()
 {
         data::business expected;
-        expected.set_name("tme");
-        expected.set_address("geelsterd 8");
+        expected.set_name("T.M. Engineering");
+        expected.set_address("Geelsterd 8");
         expected.set_area_code("5432");
-        expected.set_town("george");
+        expected.set_town("George");
         expected.set_cellphone("0832315944");
         expected.set_email("odn@gmail.com");
         expected.set_bank("Standard Bank");
@@ -103,7 +103,7 @@ static data::business generate_business_data()
 static data::client generate_client_data()
 {
         data::client expected;
-        expected.set_business_name("TME");
+        expected.set_business_name("Client Business");
         expected.set_business_address("Geelsterd 8");
         expected.set_business_area_code("543543");
         expected.set_business_town_name("George");
