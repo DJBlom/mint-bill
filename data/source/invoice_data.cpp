@@ -9,7 +9,7 @@
 
 
 namespace upper_bound {
-        constexpr std::uint8_t string_length{50};
+        constexpr std::uint8_t string_length{20};
 }
 
 data::invoice::invoice()
