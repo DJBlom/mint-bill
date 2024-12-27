@@ -70,9 +70,9 @@ TEST(invoice_data_test, handle_the_invoice_number)
 {
         unsigned int expected{1};
         invoice_data.set_invoice_number(expected);
-        unsigned int result{invoice_data.get_invoice_number()};
+        std::string result{invoice_data.get_invoice_number()};
 
-        CHECK_EQUAL(expected, result);
+        CHECK_EQUAL(expected, std::stoul(result));
 }
 
 TEST(invoice_data_test, handle_the_invoice_date)

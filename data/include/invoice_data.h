@@ -28,7 +28,7 @@ namespace data {
                         virtual void set_business_name(const std::string&);
                         [[nodiscard]] std::string get_business_name() const;
                         virtual void set_invoice_number(const unsigned int&);
-                        [[nodiscard]] unsigned int get_invoice_number() const;
+                        [[nodiscard]] std::string get_invoice_number() const;
                         virtual void set_invoice_date(const std::string&);
                         [[nodiscard]] std::string get_invoice_date() const;
                         virtual void set_job_card_number(const std::string&);
@@ -55,7 +55,7 @@ namespace data {
                         using mask_type = std::uint16_t;
 
                         std::string business_name{""};
-                        unsigned int invoice_number{0};
+                        std::string invoice_number{""};
                         std::string invoice_date{""};
                         std::string job_card_number{""};
                         std::string order_number{""};

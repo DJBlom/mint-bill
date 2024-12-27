@@ -10,6 +10,7 @@
 
 namespace upper_bound {
         constexpr std::uint8_t string_length{20};
+        constexpr std::uint8_t invoice_number_length{8};
 }
 
 data::invoice::invoice()
@@ -41,7 +42,7 @@ data::invoice::invoice(invoice&& _move)
           mask{_move.mask}
 {
         _move.business_name.clear();
-        _move.invoice_number = 0;
+        _move.invoice_number.clear();
         _move.invoice_date.clear();
         _move.job_card_number.clear();
         _move.order_number.clear();
@@ -112,11 +113,12 @@ std::string data::invoice::get_business_name() const
 
 void data::invoice::set_invoice_number(const unsigned int& _number)
 {
-        if (_number > 0)
+        std::string _invoice_number{std::to_string(_number)};
+        if (!_invoice_number.empty() && _invoice_number.length() <= upper_bound::invoice_number_length)
         {
                 set_flag(FLAG::NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->invoice_number = _number;
+                this->invoice_number = _invoice_number;
         }
         else
         {
@@ -124,7 +126,7 @@ void data::invoice::set_invoice_number(const unsigned int& _number)
         }
 }
 
-unsigned int data::invoice::get_invoice_number() const
+std::string data::invoice::get_invoice_number() const
 {
         return this->invoice_number;
 }
