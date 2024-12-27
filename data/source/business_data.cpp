@@ -11,6 +11,7 @@
 namespace upper_bound {
         constexpr std::uint8_t MAX_ENTRY_LENGTH{50};
         constexpr std::uint8_t MESSAGE_LENGTH{100};
+        constexpr std::uint8_t PASSWORD_LENGTH{100};
 }
 
 data::business::business(const business& _copy)
@@ -274,7 +275,7 @@ std::string data::business::get_client_message() const
 
 void data::business::set_password(const std::string& _password)
 {
-        if (_password.length() <= upper_bound::MAX_ENTRY_LENGTH)
+        if (_password.length() <= upper_bound::PASSWORD_LENGTH)
         {
                 set_flag(FLAG::PASSWORD);
                 std::lock_guard<std::mutex> guard(this->business_data);

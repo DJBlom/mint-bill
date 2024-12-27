@@ -96,6 +96,7 @@
                                 <child>
                                   <object class="GtkEntry" id="new-invoice-job-card-entry">
                                     <property name="hexpand">True</property>
+                                    <property name="max-length">20</property>
                                     <property name="placeholder-text">Werk kaart . . .</property>
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
@@ -109,6 +110,7 @@
                                 <child>
                                   <object class="GtkEntry" id="new-invoice-order-number-entry">
                                     <property name="hexpand">True</property>
+                                    <property name="max-length">20</property>
                                     <property name="placeholder-text">Bestel nommer . . .</property>
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
@@ -231,6 +233,7 @@
                                     <property name="can-target">False</property>
                                     <property name="enable-undo">False</property>
                                     <property name="hexpand">True</property>
+                                    <property name="max-length">20</property>
                                     <property name="placeholder-text">Faktuur nommer . . .</property>
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
@@ -247,6 +250,7 @@
                                     <property name="can-target">False</property>
                                     <property name="enable-undo">False</property>
                                     <property name="hexpand">True</property>
+                                    <property name="max-length">20</property>
                                     <property name="placeholder-text">Datum . . .</property>
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
@@ -548,6 +552,7 @@
                                 <property name="valign">center</property>
                                 <child>
                                   <object class="GtkEntry" id="register-business-name-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Besigheid naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -558,6 +563,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-address-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Straat adres . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -569,6 +575,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-town-name-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Dorp se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -579,6 +586,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-cell-number-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Selfoon nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -589,6 +597,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-vat-number-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">BTW nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -625,6 +634,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-statement-schedule-entry">
+                                    <property name="max-length">3</property>
                                     <property name="placeholder-text">Staatskedule (Aantal dae elke maand),(dag van week) . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -635,6 +645,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-email-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -645,6 +656,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="register-area-code-entry">
+                                    <property name="max-length">50</property>
                                     <property name="placeholder-text">Gebied kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
@@ -767,7 +779,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="business-info-client-message-entry">
-                                    <property name="max-length">50</property>
+                                    <property name="max-length">100</property>
                                     <property name="placeholder-text">Boodskap vir kliënt . . .</property>
                                     <layout>
                                       <property name="column">0</property>
