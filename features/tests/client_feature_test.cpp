@@ -9,7 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
-#include <client_sql_mock.h>
+#include <sql.h>
 #include <client_data.h>
 #include <client_register.h>
 extern "C"
@@ -26,7 +26,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(client_feature_test)
 {
-        my_mock::client_sql mock_db{};
+        storage::sql db{};
         data::client client_data{};
         feature::client client_register{};
 	void setup()
@@ -49,13 +49,13 @@ TEST(client_feature_test, save_data_to_db)
         client_data.set_vat_number("425435");
         client_data.set_statement_schedule("4,4");
 
-        CHECK_EQUAL(true, client_register.save(client_data, mock_db));
+        CHECK_EQUAL(true, client_register.save(client_data, db));
 }
 
 TEST(client_feature_test, load_data_from_db)
 {
         data::client tmp_data{};
-        tmp_data = client_register.load("tme", mock_db);
+        tmp_data = client_register.load("tme", db);
 
         CHECK_EQUAL(true, tmp_data.is_valid());
 }
@@ -63,7 +63,7 @@ TEST(client_feature_test, load_data_from_db)
 TEST(client_feature_test, search_for_data_in_db)
 {
         data::client tmp_data{};
-        tmp_data = client_register.search("tme", mock_db);
+        tmp_data = client_register.search("tme", db);
 
         CHECK_EQUAL(true, tmp_data.is_valid());
 }
