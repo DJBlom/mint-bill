@@ -11,7 +11,7 @@
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
-        constexpr std::uint8_t MAX_AMOUNT{20};
+        constexpr std::uint8_t MAX_AMOUNT{14};
 }
 
 data::column::column() {}
