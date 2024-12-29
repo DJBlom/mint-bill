@@ -72,7 +72,7 @@ void data::column::set_quantity(const unsigned int& _quantity)
         {
                 this->set_flag(FLAG::QUANTITY);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->quantity = _quantity;
+                this->quantity = std::move(_quantity);
         }
         else
         {
@@ -91,7 +91,7 @@ void data::column::set_description(const std::string& _description)
         {
                 this->set_flag(FLAG::DESCRIPTION);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->description = _description;
+                this->description = std::move(_description);
         }
         else
         {
@@ -113,7 +113,7 @@ void data::column::set_amount(const double& _amount)
         {
                 this->set_flag(FLAG::AMOUNT);
                 std::lock_guard<std::mutex> guard(this->column_data);
-                this->amount = _amount;
+                this->amount = std::move(_amount);
         }
         else
         {
