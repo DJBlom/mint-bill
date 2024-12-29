@@ -7,12 +7,14 @@
  *******************************************************/
 #ifndef _PDF_H_
 #define _PDF_H_
+#include <mutex>
 #include <string>
 #include <vector>
 #include <ostream>
 #include <sstream>
 #include <errors.h>
 #include <slicer.h>
+#include <algorithm>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -43,11 +45,19 @@ namespace feature {
                         [[nodiscard]] bool add_item_description(const data::column&);
                         [[nodiscard]] bool add_grand_total(const data::invoice&);
                         [[nodiscard]] bool add_payment_method(const data::business&);
-                        [[nodiscard]] bool write_to_pdf_from_left(const std::string&, const double&);
+                        [[nodiscard]] bool write_to_pdf(const std::string&, const double&);
                         [[nodiscard]] bool write_to_pdf_in_center(const std::string&, const double&);
                         [[nodiscard]] bool write_to_pdf_from_right(const std::string&, const double&);
                         [[nodiscard]] bool draw_line();
                         [[nodiscard]] bool context_ok();
+                        void add_new_line();
+                        void add_new_section();
+                        void align_to_left_border();
+                        void align_to_right_border();
+                        void align_information_section();
+                        void align_to_top_border();
+                        void align_to_right(const cairo_text_extents_t&);
+                        void align_to_center(const cairo_text_extents_t&);
                         void adjust_height();
                         void adjust_payment_height();
                         static cairo_status_t write_to_stream(void*, const unsigned char*, unsigned int);
@@ -61,6 +71,7 @@ namespace feature {
                         cairo_t* context{nullptr};
                         std::ostringstream final_pdf{""};
                         utility::slicer slicer{};
+                        std::mutex pdf_mutex{};
         };
 }
 #endif

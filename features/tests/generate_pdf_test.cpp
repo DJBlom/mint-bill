@@ -26,10 +26,8 @@ static data::client generate_client_data();
 static data::invoice generate_invoice_data(const std::string&);
 
 /**********************************TEST LIST************************************
- * 1) Inovice PDFs are generated according to the requirements.
- * 2) Statement PDFs are generated according to the requirements.
- * 3) The feature should be copy or moveable.
- * 4) PDFs must be createable from different threads.
+ * 1) Inovice PDFs are generated according to the requirements. (Done)
+ * 2) PDFs must be createable from different threads. (Done)
  ******************************************************************************/
 TEST_GROUP(generate_pdf_test)
 {
