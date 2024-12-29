@@ -5,7 +5,6 @@
  *
  * NOTE:
  *******************************************************/
-#include <sstream>
 #include <slicer.h>
 
 
@@ -32,13 +31,17 @@ std::vector<std::string> utility::slicer::slice(const std::string& _data)
         }
 
         return sliced_data;
-}
+} //GCOVR_EXCL_LINE
 
-void utility::slicer::add_whats_left_over(std::vector<std::string>& _data)
+void utility::slicer::add_word_to_current_line()
 {
-        if (!this->current_line.empty()) {
-                _data.push_back(this->current_line);
+        std::lock_guard<std::mutex> guard(this->data_mutex);
+        if (!this->current_line.empty())
+        {
+                current_line += " ";
         }
+
+        this->current_line += this->word;
 }
 
 bool utility::slicer::word_does_not_exceed_max()
@@ -50,15 +53,9 @@ bool utility::slicer::word_does_not_exceed_max()
                          DECISION::NO : DECISION::YES) <= this->max);
 }
 
-void utility::slicer::add_word_to_current_line()
+void utility::slicer::add_whats_left_over(std::vector<std::string>& _data)
 {
-        std::lock_guard<std::mutex> guard(this->data_mutex);
-        if (!this->current_line.empty())
-        {
-                current_line += " ";
-        }
-
-        this->current_line += this->word;
+        _data.push_back(this->current_line);
 }
 
 void utility::slicer::add_new_current_line(std::vector<std::string>& _data)
