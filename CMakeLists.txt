@@ -111,6 +111,13 @@ if(BUILD_PROJECT)
             message(STATUS "Directory features, does not exist")
         endif()
 
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/utility)
+            add_subdirectory(${CMAKE_SOURCE_DIR}/utility)
+            target_link_libraries(${PROJECT_NAME} PRIVATE utility)
+        else()
+            message(STATUS "Directory utility, does not exist")
+        endif()
+
         if (EXISTS ${CMAKE_OBJDUMP})
                 add_custom_command(
                         TARGET ${PROJECT_NAME}

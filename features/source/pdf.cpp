@@ -6,7 +6,6 @@
  * NOTE:
  *******************************************************/
 #include <pdf.h>
-#include <iostream>
 
 
 namespace font_size {
@@ -17,13 +16,19 @@ namespace font_size {
 }
 
 namespace width {
+        constexpr double page_width{595.0};
         constexpr double left_border{20.0};
         constexpr double right_border{575.0};
         constexpr double header{350.0};
         constexpr double information{40.0};
+        constexpr double max_quantity{10.0};
+        constexpr double max_amount{10.0};
+        constexpr double left_item_description{left_border + max_quantity};
+        constexpr double right_item_description{right_border - max_amount};
 }
 
 namespace height {
+        constexpr double page_height{842.0};
         constexpr double top_border{35.0};
         constexpr double header{80.0};
         constexpr double text_offset{17.0};
@@ -100,6 +105,7 @@ std::string feature::pdf::generate(data::pdf_invoice& _data)
 
 bool feature::pdf::add_header(const std::string& _data)
 {
+        this->current_width = width::left_border;
         this->current_height += height::text_offset;
         cairo_set_font_size(this->context, font_size::header);
         cairo_text_extents_t extent;
@@ -189,8 +195,8 @@ bool feature::pdf::add_invoice(const data::invoice& _data)
                         return false;
 
                 this->current_height += height::text_offset;
-                std::string job_card{"Job Card:.... " + _data.get_job_card_number()};
-                if (write_to_pdf_from_left(job_card, font_size::information) == false)
+                std::string date{"Date:........ " + _data.get_invoice_date()};
+                if (write_to_pdf_from_left(date, font_size::information) == false)
                         return false;
 
                 this->current_height += height::text_offset;
@@ -199,8 +205,8 @@ bool feature::pdf::add_invoice(const data::invoice& _data)
                         return false;
 
                 this->current_height += height::text_offset;
-                std::string date{"Date:........ " + _data.get_invoice_date()};
-                if (write_to_pdf_from_left(date, font_size::information) == false)
+                std::string job_card{"Job Card:.... " + _data.get_job_card_number()};
+                if (write_to_pdf_from_left(job_card, font_size::information) == false)
                         return false;
         }
 
@@ -213,8 +219,8 @@ bool feature::pdf::add_labor(const data::invoice& _data)
         {
                 this->current_width = width::left_border;
                 this->current_height += height::space_offset;
-
                 this->current_height += height::text_offset;
+                adjust_height();
                 std::string header_quantity{"Quantity"};
                 if (write_to_pdf_from_left(header_quantity, font_size::prominent) == false)
                         return false;
@@ -231,6 +237,7 @@ bool feature::pdf::add_labor(const data::invoice& _data)
                         return false;
 
                 this->current_height += height::space_offset;
+                adjust_height();
                 std::string total{"Total: R " + _data.get_description_total()};
                 if (write_to_pdf_from_right(total, font_size::prominent) == false)
                         return false;
@@ -246,6 +253,7 @@ bool feature::pdf::add_material(const data::invoice& _data)
                 this->current_width = width::left_border;
                 this->current_height += height::space_offset;
                 this->current_height += height::text_offset;
+                adjust_height();
                 std::string header_quantity{"Quantity"};
                 if (write_to_pdf_from_left(header_quantity, font_size::prominent) == false)
                         return false;
@@ -262,6 +270,7 @@ bool feature::pdf::add_material(const data::invoice& _data)
                         return false;
 
                 this->current_height += height::space_offset;
+                adjust_height();
                 std::string total{"Total: R " + _data.get_material_total()};
                 if (write_to_pdf_from_right(total, font_size::prominent) == false)
                         return false;
@@ -277,10 +286,8 @@ bool feature::pdf::add_items(const std::vector<data::column>& _data)
         {
                 if (column.is_valid())
                 {
+                        this->current_width = width::left_border;
                         if (write_to_pdf_from_left(std::to_string(column.get_quantity()), font_size::information) == false)
-                                return false;
-
-                        if (write_to_pdf_in_center(column.get_description(), font_size::information) == false)
                                 return false;
 
                         std::ostringstream amount{""};
@@ -288,7 +295,36 @@ bool feature::pdf::add_items(const std::vector<data::column>& _data)
                         if (write_to_pdf_from_right("R " + amount.str() , font_size::information) == false)
                                 return false;
 
+                        if (add_item_description(column) == false)
+                                return false;
+
                         this->current_height += height::text_offset;
+                }
+        }
+
+        return true;
+}
+
+bool feature::pdf::add_item_description(const data::column& _data)
+{
+        if (_data.is_valid())
+        {
+                std::vector<std::string> sliced_data{this->slicer.slice(_data.get_description())};
+                if (sliced_data.size() >= 2)
+                {
+                        for (const auto& str : sliced_data)
+                        {
+                                if (write_to_pdf_in_center(str, font_size::information) == false)
+                                        return false;
+
+                                adjust_height();
+                                this->current_height += height::text_offset;
+                        }
+                }
+                else
+                {
+                        if (write_to_pdf_in_center(_data.get_description(), font_size::information) == false)
+                                return false;
                 }
         }
 
@@ -302,6 +338,7 @@ bool feature::pdf::add_grand_total(const data::invoice& _data)
                 this->current_width = width::right_border;
                 this->current_height += height::space_offset;
                 this->current_height += height::space_offset;
+                adjust_height();
                 std::string grand_total{"Grand Total: R " + _data.get_grand_total()};
                 if (write_to_pdf_from_right(grand_total, font_size::prominent) == false)
                         return false;
@@ -317,11 +354,12 @@ bool feature::pdf::add_payment_method(const data::business& _data)
                 this->current_width = width::left_border;
                 this->current_height += height::space_offset;
                 this->current_height += height::space_offset;
+                adjust_payment_height();
                 std::string method{"Payment Method"};
                 if (write_to_pdf_from_left(method, font_size::prominent) == false)
                         return false;
 
-                this->current_height += height::text_offset;
+                this->current_height += height::space_offset;
                 std::string bank{"Bank Name:..... " + _data.get_bank()};
                 if (write_to_pdf_from_left(bank, font_size::information) == false)
                         return false;
@@ -351,7 +389,6 @@ bool feature::pdf::write_to_pdf_from_left(const std::string& _data, const double
         cairo_set_font_size(this->context, _font_size);
         cairo_text_extents_t extent;
         cairo_text_extents(this->context, _data.c_str(), &extent);
-        this->current_width = width::left_border;
         cairo_move_to(this->context, this->current_width, this->current_height);
         cairo_show_text(this->context, _data.c_str());
 
@@ -396,6 +433,25 @@ bool feature::pdf::draw_line()
 bool feature::pdf::context_ok()
 {
         return (cairo_status(this->context) == CAIRO_STATUS_SUCCESS);
+}
+
+void feature::pdf::adjust_height()
+{
+        if (this->current_height >= (height::page_height - (height::top_border + 12)))
+        {
+                cairo_show_page(this->context);
+                this->current_height = (height::top_border + 10);
+        }
+}
+
+void feature::pdf::adjust_payment_height()
+{
+        double future_height{(height::space_offset * 5) + (height::text_offset * 2)};
+        if (future_height >= (height::page_height - (height::top_border + 12)))
+        {
+                cairo_show_page(this->context);
+                this->current_height = (height::top_border + 10);
+        }
 }
 
 cairo_status_t feature::pdf::write_to_stream(void* _closure, const unsigned char* _data, unsigned int _length)

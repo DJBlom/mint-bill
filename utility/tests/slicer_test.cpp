@@ -10,7 +10,6 @@
 
 
 #include <slicer.h>
-#include <iostream>
 extern "C"
 {
 

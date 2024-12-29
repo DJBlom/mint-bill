@@ -12,6 +12,7 @@
 #include <ostream>
 #include <sstream>
 #include <errors.h>
+#include <slicer.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -39,6 +40,7 @@ namespace feature {
                         [[nodiscard]] bool add_labor(const data::invoice&);
                         [[nodiscard]] bool add_material(const data::invoice&);
                         [[nodiscard]] bool add_items(const std::vector<data::column>&);
+                        [[nodiscard]] bool add_item_description(const data::column&);
                         [[nodiscard]] bool add_grand_total(const data::invoice&);
                         [[nodiscard]] bool add_payment_method(const data::business&);
                         [[nodiscard]] bool write_to_pdf_from_left(const std::string&, const double&);
@@ -46,6 +48,8 @@ namespace feature {
                         [[nodiscard]] bool write_to_pdf_from_right(const std::string&, const double&);
                         [[nodiscard]] bool draw_line();
                         [[nodiscard]] bool context_ok();
+                        void adjust_height();
+                        void adjust_payment_height();
                         static cairo_status_t write_to_stream(void*, const unsigned char*, unsigned int);
 
                 private:
@@ -56,6 +60,7 @@ namespace feature {
                         cairo_surface_t* surface{nullptr};
                         cairo_t* context{nullptr};
                         std::ostringstream final_pdf{""};
+                        utility::slicer slicer{};
         };
 }
 #endif

@@ -119,12 +119,14 @@ static data::invoice generate_invoice_data()
 {
         const int size{5};
         std::vector<data::column> vec{};
+        //std::string long_description{"Machining steel"};
+        std::string long_description{"Beneath the sky so vast and blue, Where whispers weave the morning dew, The trees stand tall, their shadows play, A dance of life, a soft ballet. The river hums a timeless tune, Reflecting light from sun to moon, It carries dreams to oceans deep, A secret world where hopes may sleep. The stars ignite the velvet night, Their spark, a beacon’s gentle light. Through every breath, through joy and strife, We live, we dream—the dance of life. Forever flows this fleeting glow. Test completed, good!"};
         for (unsigned int i = 0; i < size; ++i)
         {
                 data::column expected{};
                 expected.set_quantity(i);
-                expected.set_description("machining");
-                expected.set_amount(55 + i + .0);
+                expected.set_description(long_description);
+                expected.set_amount(5545675 + i + .0);
                 vec.push_back(expected);
         }
         std::string order_number{"order number 123"};

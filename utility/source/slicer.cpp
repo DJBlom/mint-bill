@@ -7,7 +7,6 @@
  *******************************************************/
 #include <sstream>
 #include <slicer.h>
-#include <iostream>
 
 
 std::vector<std::string> utility::slicer::slice(const std::string& _data)

@@ -18,6 +18,7 @@ CPPUTEST_LDFLAGS := $(shell pkg-config --libs cairo)
 
 SRC_DIRS :=\
 	$(PROJECT_DIR)/data/source\
+	$(PROJECT_DIR)/utility/source\
 	$(PROJECT_DIR)/storage/source\
 	$(PROJECT_DIR)/features/source\
 
@@ -26,6 +27,7 @@ INCLUDE_DIRS :=\
 	$(CPPUTEST_HOME)/include\
 	$(PROJECT_DIR)/app/include\
 	$(PROJECT_DIR)/data/include\
+	$(PROJECT_DIR)/utility/include\
 	$(PROJECT_DIR)/storage/include\
 	$(PROJECT_DIR)/storage/mocks/include\
 	$(PROJECT_DIR)/features/include\
@@ -35,11 +37,13 @@ INCLUDE_DIRS :=\
 TEST_SRC_DIRS :=\
 	$(TEST_DIR)\
 	$(PROJECT_DIR)/data/tests\
+	$(PROJECT_DIR)/utility/tests\
 	$(PROJECT_DIR)/storage/tests\
 	$(PROJECT_DIR)/features/tests\
 
 
 MOCKS_SRC_DIRS := \
+	$(PROJECT_DIR)/utility/mocks/source\
 	$(PROJECT_DIR)/storage/mocks/source\
 	$(PROJECT_DIR)/features/mocks/source\
 
