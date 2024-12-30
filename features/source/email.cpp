@@ -7,51 +7,63 @@
  *******************************************************/
 #include <email.h>
 #include <cstring>
+#include <stdio.h>
+#include <iostream>
 
 #define FROM_MAIL     "<dawidjblom@gmail.com>"
 #define TO_MAIL       "<dawidjblom@gmail.com>"
 #define CC_MAIL       "<dawidjblom@gmail.com>"
 
+static const char *headers_text[] = {
+  "Date: Mon, 29 Nov 2010 21:54:29 +1100\r\n"
+  "To: " TO_MAIL,
+  "From: " FROM_MAIL " (Example User)",
+  "Cc: " CC_MAIL " (Another example User)",
+  "Subject: Invoice",
+  NULL
+};
+
+static const char inline_text[] =
+  "This is the inline text message of the email.\r\n"
+  "\r\n"
+  "  It could be a lot of lines that would be displayed in an email\r\n"
+  "viewer that is not able to handle HTML.\r\n";
+
+static const char inline_html[] =
+  "<html><body>\r\n"
+  "<p>This is the inline <b>HTML</b> message of the email.</p>"
+  "<br />\r\n"
+  "<p>It could be a lot of HTML data that would be displayed by "
+  "email viewers able to handle HTML.</p>"
+  "</body></html>\r\n";
+
 bool feature::email::send(const std::string& msg)
 {
+        if (msg.empty())
+                return false;
+
         CURL *curl;
         CURLcode res = CURLE_OK;
-        struct curl_slist *recipients = NULL;
 
         curl = curl_easy_init();
         if(curl) {
-                /* Set username and password */
-                curl_easy_setopt(curl, CURLOPT_USERNAME, "user");
-                curl_easy_setopt(curl, CURLOPT_PASSWORD, "secret");
+                struct curl_slist *headers = NULL;
+                struct curl_slist *recipients = NULL;
+                struct curl_slist *slist = NULL;
+                curl_mime *mime;
+                curl_mime *alt;
+                curl_mimepart *part;
+                const char **cpp;
 
-                /* This is the URL for your mailserver. Note the use of port 587 here,
-                * instead of the normal SMTP port (25). Port 587 is commonly used for
-                * secure mail submission (see RFC 4403), but you should use whatever
-                * matches your server configuration. */
-                curl_easy_setopt(curl, CURLOPT_URL, "smtps://smtp.gmail.com:465");
-
-                /* In this example, we start with a plain text connection, and upgrade to
-                * Transport Layer Security (TLS) using the STARTTLS command. Be careful
-                * of using CURLUSESSL_TRY here, because if TLS upgrade fails, the
-                * transfer continues anyway - see the security discussion in the libcurl
-                * tutorial for more details. */
+                /* This is the URL for your mailserver */
+                curl_easy_setopt(curl, CURLOPT_USERNAME, "dawidjblom@gmail.com");
+                curl_easy_setopt(curl, CURLOPT_PASSWORD, "welj xpmv fzfi kmfj ");
+                curl_easy_setopt(curl, CURLOPT_URL, "smtp://smtp.gmail.com:587");
                 curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
-
-                /* If your server does not have a valid certificate, then you can disable
-                * part of the Transport Layer Security protection by setting the
-                * CURLOPT_SSL_VERIFYPEER and CURLOPT_SSL_VERIFYHOST options to 0 (false).
-                *   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-                *   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-                * That is, in general, a bad idea. It is still better than sending your
-                * authentication details in plain text though.  Instead, you should get
-                * the issuer certificate (or the host certificate if the certificate is
-                * self-signed) and add it to the set of certificates that are known to
-                * libcurl using CURLOPT_CAINFO and/or CURLOPT_CAPATH. See docs/SSLCERTS
-                * for more information. */
-                curl_easy_setopt(curl, CURLOPT_CAINFO, "/path/to/certificate.pem");
+                curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
                 /* Note that this option is not strictly required, omitting it results in
-                * libcurl sending the MAIL FROM command with empty sender data. All
+                * libcurl sending the MAIL FROM_MAIL command with empty sender data. All
                 * autoresponses should have an empty reverse-path, and should be directed
                 * to the address in the reverse-path which triggered them. Otherwise,
                 * they could cause an endless loop. See RFC 5321 Section 4.5.5 for more
@@ -66,18 +78,45 @@ bool feature::email::send(const std::string& msg)
                 recipients = curl_slist_append(recipients, CC_MAIL);
                 curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
 
-                /* We are using a callback function to specify the payload (the headers and
-                * body of the message). You could just use the CURLOPT_READDATA option to
-                * specify a FILE pointer to read from. */
-                std::string message{msg};
-                curl_easy_setopt(curl, CURLOPT_READDATA, &message);
-                curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+                /* allow one of the recipients to fail and still consider it okay */
+                curl_easy_setopt(curl, CURLOPT_MAIL_RCPT_ALLOWFAILS, 1L);
 
-                /* Since the traffic is encrypted, it is useful to turn on debug
-                * information within libcurl to see what is happening during the
-                * transfer.
-                */
-                curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+                /* Build and set the message header list. */
+                for(cpp = headers_text; *cpp; cpp++)
+                        headers = curl_slist_append(headers, *cpp);
+                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+                /* Build the mime message. */
+                mime = curl_mime_init(curl);
+
+                /* The inline part is an alternative proposing the html and the text
+                versions of the email. */
+                alt = curl_mime_init(curl);
+
+                /* HTML message. */
+                part = curl_mime_addpart(alt);
+                curl_mime_data(part, inline_html, CURL_ZERO_TERMINATED);
+                curl_mime_type(part, "text/html");
+
+                /* Text message. */
+                part = curl_mime_addpart(alt);
+                curl_mime_data(part, inline_text, CURL_ZERO_TERMINATED);
+
+                /* Create the inline part. */
+                part = curl_mime_addpart(mime);
+                curl_mime_subparts(part, alt);
+                curl_mime_type(part, "multipart/alternative");
+                slist = curl_slist_append(NULL, "Content-Disposition: inline");
+                curl_mime_headers(part, slist, 1);
+
+                /* Add the current source program as an attachment. */
+                part = curl_mime_addpart(mime);
+                std::string txt{"Poes\n\r"};
+                curl_mime_data(part, msg.c_str(), msg.length());
+                curl_mime_type(part, "application/pdf");
+                curl_mime_encoder(part, "base64");
+                curl_mime_filename(part, "Invoice.pdf");
+                curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
 
                 /* Send the message */
                 res = curl_easy_perform(curl);
@@ -87,12 +126,24 @@ bool feature::email::send(const std::string& msg)
                 fprintf(stderr, "curl_easy_perform() failed: %s\n",
                 curl_easy_strerror(res));
 
-                /* Free the list of recipients */
+                /* Free lists. */
                 curl_slist_free_all(recipients);
+                curl_slist_free_all(headers);
 
-                /* Always cleanup */
+                /* curl does not send the QUIT command until you call cleanup, so you
+                * should be able to reuse this connection for additional messages
+                * (setting CURLOPT_MAIL_FROM and CURLOPT_MAIL_RCPT as required, and
+                * calling curl_easy_perform() again. It may not be a good idea to keep
+                * the connection open for a long time though (more than a few minutes may
+                * result in the server timing out the connection), and you do want to
+                * clean up in the end.
+                */
                 curl_easy_cleanup(curl);
+
+                /* Free multipart message. */
+                curl_mime_free(mime);
         }
 
-        return !(bool)res;
+        std::cout << "Resutl!!!!!!!!!--- " << std::to_string(res) << std::endl;
+        return ~(int)res;
 }

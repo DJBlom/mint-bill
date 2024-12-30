@@ -11,8 +11,8 @@ TEST_DIR :=$(realpath .)
 TEST_TARGET := admin-system
 CPPUTEST_EXE_FLAGS :=-c
 CPPUTEST_CXXFLAGS :=-std=c++23 
-CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo)
-CPPUTEST_LDFLAGS := $(shell pkg-config --libs cairo)
+CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo) $(shell curl-config --cflags)
+CPPUTEST_LDFLAGS := $(shell pkg-config --libs cairo) $(shell curl-config --libs)
 
 
 
