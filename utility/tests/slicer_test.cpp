@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Contents: Generate PDF feature unit tests
+ * Contents: String slicer feature unit tests
  * Author: Dawid Blom
  * Date: December 23, 2024
  *
