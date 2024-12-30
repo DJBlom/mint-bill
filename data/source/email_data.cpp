@@ -72,7 +72,7 @@ void data::email::set_pdf(const std::string& _pdf)
 
 std::string data::email::get_pdf() const
 {
-        return this->pdf;
+        return std::move(this->pdf);
 }
 
 void data::email::set_client(const data::client& _client)
@@ -91,7 +91,7 @@ void data::email::set_client(const data::client& _client)
 
 data::client data::email::get_client() const
 {
-        return this->client;
+        return std::move(this->client);
 }
 
 void data::email::set_business(const data::business& _business)
@@ -110,7 +110,7 @@ void data::email::set_business(const data::business& _business)
 
 data::business data::email::get_business() const
 {
-        return this->business;
+        return std::move(this->business);
 }
 
 bool data::email::check_flags() const
