@@ -40,6 +40,7 @@ data::business::business(business&& _move)
         _move.branch_code.clear();
         _move.account_number.clear();
         _move.client_message.clear();
+        _move.password.clear();
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -64,6 +65,7 @@ data::business& data::business::operator= (business&& _move)
         std::swap(branch_code, _move.branch_code);
         std::swap(account_number, _move.account_number);
         std::swap(client_message, _move.client_message);
+        std::swap(password, _move.password);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
