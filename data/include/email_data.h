@@ -1,0 +1,60 @@
+/********************************************************
+ * Contents: Email data definition
+ * Author: Dawid J. Blom
+ * Date: December 30, 2024
+ *
+ * NOTE:
+ *******************************************************/
+#ifndef _EMAIL_DATA_H_
+#define _EMAIL_DATA_H_
+#include <mutex>
+#include <string>
+#include <cstdint>
+#include <client_data.h>
+#include <business_data.h>
+
+namespace data {
+        struct email {
+                public:
+                        email();
+                        email(const email&);
+                        email(email&&);
+                        email& operator= (const email&);
+                        email& operator= (email&&);
+                        virtual ~email();
+
+                        [[nodiscard]] virtual bool is_valid() const;
+                        virtual void set_pdf(const std::string&);
+                        [[nodiscard]] std::string get_pdf() const;
+                        virtual void set_client(const data::client&);
+                        [[nodiscard]] data::client get_client() const;
+                        virtual void set_business(const data::business&);
+                        [[nodiscard]] data::business get_business() const;
+
+                private:
+                        void set_flag(const int&);
+                        void clear_flag(const int&);
+                        [[nodiscard]] bool check_flags() const;
+
+                private:
+                        using mask_type = std::uint8_t;
+
+                        std::string pdf{""};
+                        data::client client{};
+                        data::business business{};
+                        mask_type flags{0x0};
+                        std::mutex email_data{};
+                        mask_type mask{0x7};
+                        enum FLAG {
+                                PDF = 0,
+                                CLIENT,
+                                BUSINESS
+                        };
+
+                        enum BIT {
+                                UNSET = 0,
+                                SET
+                        };
+        };
+}
+#endif
