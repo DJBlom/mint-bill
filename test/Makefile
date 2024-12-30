@@ -16,7 +16,7 @@ CPPUTEST_EXE_FLAGS :=-c
 #
 # NOTE: Ensure this line is commented when pushing code to the remote.
 # 
-CPPUTEST_EXE_FLAGS +=-xg "email_test"
+#CPPUTEST_EXE_FLAGS +=-xg "email_test"
 
 CPPUTEST_CXXFLAGS :=-std=c++23 
 CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo) $(shell curl-config --cflags)
@@ -40,6 +40,7 @@ INCLUDE_DIRS :=\
 	$(PROJECT_DIR)/storage/mocks/include\
 	$(PROJECT_DIR)/features/include\
 	$(PROJECT_DIR)/features/mocks/include\
+	$(PROJECT_DIR)/features/tests/include\
 
 
 TEST_SRC_DIRS :=\
@@ -48,6 +49,7 @@ TEST_SRC_DIRS :=\
 	$(PROJECT_DIR)/utility/tests\
 	$(PROJECT_DIR)/storage/tests\
 	$(PROJECT_DIR)/features/tests\
+	$(PROJECT_DIR)/features/tests/source\
 
 
 MOCKS_SRC_DIRS := \
