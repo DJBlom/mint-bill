@@ -30,6 +30,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
+                ${CMAKE_SOURCE_DIR}/utility/include
         )
 else ()
         message(STATUS "There are no files in, features/source.")

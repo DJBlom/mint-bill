@@ -16,6 +16,7 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(utility 
                 OBJECT
+                ${PROJECT_SOURCE_DIR}/source/file.cpp
                 ${PROJECT_SOURCE_DIR}/source/slicer.cpp
         )
 

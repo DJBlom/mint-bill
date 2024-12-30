@@ -9,10 +9,13 @@
 #include <cstring>
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 #define FROM_MAIL     "<dawidjblom@gmail.com>"
 #define TO_MAIL       "<dawidjblom@gmail.com>"
 #define CC_MAIL       "<dawidjblom@gmail.com>"
+
 
 static const char *headers_text[] = {
   "Date: Mon, 29 Nov 2010 21:54:29 +1100\r\n"
@@ -29,19 +32,19 @@ static const char inline_text[] =
   "  It could be a lot of lines that would be displayed in an email\r\n"
   "viewer that is not able to handle HTML.\r\n";
 
-static const char inline_html[] =
-  "<html><body>\r\n"
-  "<p>This is the inline <b>HTML</b> message of the email.</p>"
-  "<br />\r\n"
-  "<p>It could be a lot of HTML data that would be displayed by "
-  "email viewers able to handle HTML.</p>"
-  "</body></html>\r\n";
+
+feature::email::email()
+{
+
+}
+
+feature::email::~email()
+{
+
+}
 
 bool feature::email::send(const std::string& msg)
 {
-        if (msg.empty())
-                return false;
-
         CURL *curl;
         CURLcode res = CURLE_OK;
 
@@ -93,14 +96,20 @@ bool feature::email::send(const std::string& msg)
                 versions of the email. */
                 alt = curl_mime_init(curl);
 
-                /* HTML message. */
-                part = curl_mime_addpart(alt);
-                curl_mime_data(part, inline_html, CURL_ZERO_TERMINATED);
-                curl_mime_type(part, "text/html");
-
                 /* Text message. */
                 part = curl_mime_addpart(alt);
-                curl_mime_data(part, inline_text, CURL_ZERO_TERMINATED);
+                //utility::file text_file{"invoice.txt"};
+                utility::file text_file{"CMakeLists.txt"};
+                std::string text{text_file.read()};
+                curl_mime_data(part, text.c_str(), text.length());
+                curl_mime_type(part, "text/html");
+
+                /* HTML message. */
+                part = curl_mime_addpart(alt);
+                utility::file html_file{"invoice.html"};
+                std::string html{html_file.read()};
+                curl_mime_data(part, html.c_str(), html.length());
+                curl_mime_type(part, "text/html");
 
                 /* Create the inline part. */
                 part = curl_mime_addpart(mime);
@@ -111,7 +120,6 @@ bool feature::email::send(const std::string& msg)
 
                 /* Add the current source program as an attachment. */
                 part = curl_mime_addpart(mime);
-                std::string txt{"Poes\n\r"};
                 curl_mime_data(part, msg.c_str(), msg.length());
                 curl_mime_type(part, "application/pdf");
                 curl_mime_encoder(part, "base64");
