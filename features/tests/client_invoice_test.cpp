@@ -35,9 +35,9 @@ TEST_GROUP(client_invoice_test)
 	}
 };
 
-//TEST(client_invoice_test, load_data_from_a_db)
-//{
-//        data::invoice data{client_invoice.load("business name", db)};
-//
-//        CHECK_EQUAL(true, data.is_valid());
-//}
+TEST(client_invoice_test, load_data_from_a_db)
+{
+        data::invoice data{client_invoice.load("business name", db)};
+
+        CHECK_EQUAL(true, data.is_valid());
+}

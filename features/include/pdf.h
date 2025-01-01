@@ -13,13 +13,13 @@
 #include <ostream>
 #include <sstream>
 #include <errors.h>
-#include <slicer.h>
 #include <algorithm>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
 #include <business_data.h>
 #include <cairo/cairo-pdf.h>
+#include <boundary_slicer.h>
 #include <pdf_invoice_data.h>
 
 namespace feature {
@@ -70,7 +70,7 @@ namespace feature {
                         cairo_surface_t* surface{nullptr};
                         cairo_t* context{nullptr};
                         std::ostringstream final_pdf{""};
-                        utility::slicer slicer{};
+                        utility::boundary_slicer slicer{};
                         std::mutex pdf_mutex{};
         };
 }

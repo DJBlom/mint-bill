@@ -10,7 +10,9 @@
 #include <mutex>
 #include <regex>
 #include <string>
+#include <vector>
 #include <cstdint>
+#include <word_slicer.h>
 
 namespace data {
         struct client {
@@ -34,13 +36,14 @@ namespace data {
                         virtual void set_cellphone_number(const std::string&);
                         [[nodiscard]] std::string get_cellphone_number() const;
                         virtual void set_email(const std::string&);
-                        [[nodiscard]] std::string get_email() const;
+                        [[nodiscard]] std::vector<std::string> get_email() const;
                         virtual void set_vat_number(const std::string&);
                         [[nodiscard]] std::string get_vat_number() const;
                         virtual void set_statement_schedule(const std::string&);
                         [[nodiscard]] std::string get_statement_schedule() const;
 
                 private:
+                        [[nodiscard]] bool email_address_good(const std::vector<std::string>&);
                         void set_flag(const int&);
                         void clear_flag(const int&);
                         [[nodiscard]] bool check_flags() const;
@@ -53,7 +56,7 @@ namespace data {
                         std::string business_area_code{""};
                         std::string business_town_name{""};
                         std::string cellphone_number{""};
-                        std::string email{""};
+                        std::vector<std::string> emails{""};
                         std::string vat_number{""};
                         std::string statement_schedule{""};
                         mask_type flags{0x0};

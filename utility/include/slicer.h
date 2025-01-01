@@ -12,35 +12,12 @@
 #include <vector>
 #include <sstream>
 
-namespace utility {
+namespace interface {
         class slicer {
                 public:
-                        slicer() = default;
-                        explicit slicer(const std::string::size_type& _max) : max{_max} {}
-                        slicer(const slicer&) = delete;
-                        slicer(slicer&&) = delete;
-                        slicer& operator= (const slicer&) = delete;
-                        slicer& operator= (slicer&&) = delete;
                         virtual ~slicer() = default;
 
-                        [[nodiscard]] virtual std::vector<std::string> slice(const std::string&);
-
-                private:
-                        void add_word_to_current_line();
-                        [[nodiscard]] bool word_does_not_exceed_max();
-                        void add_whats_left_over(std::vector<std::string>&);
-                        void add_new_current_line(std::vector<std::string>&);
-
-                private:
-                        std::string word{""};
-                        std::mutex data_mutex{};
-                        std::string current_line{""};
-                        std::string::size_type max{40};
-
-                        enum DECISION {
-                                NO = 0,
-                                YES
-                        };
+                        [[nodiscard]] virtual std::vector<std::string> slice(const std::string&) = 0;
         };
 }
 #endif

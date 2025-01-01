@@ -39,12 +39,12 @@ data::business test::generate_business_data()
         expected.set_area_code("5432");
         expected.set_town("George");
         expected.set_cellphone("0832315944");
-        expected.set_email("odn@gmail.com");
+        expected.set_email("dmnsstmtest@gmail.com");
         expected.set_bank("Standard Bank");
         expected.set_branch_code("043232");
         expected.set_account_number("0932443824");
         expected.set_client_message("Thank you for your support");
-        expected.set_password("fdasfdsafdsf");
+        expected.set_password("bxwx eaku ndjj ltda");
 
         return expected;
 }
@@ -57,7 +57,7 @@ data::client test::generate_client_data()
         expected.set_business_area_code("543543");
         expected.set_business_town_name("George");
         expected.set_cellphone_number("0832315944");
-        expected.set_email("odn@gmail.com");
+        expected.set_email("dmnsstmtest@gmail.com");
         expected.set_vat_number("3241324321413");
         expected.set_statement_schedule("4,4");
 

@@ -113,6 +113,38 @@ data::business data::email::get_business() const
         return std::move(this->business);
 }
 
+void data::email::set_files(const std::vector<std::string>& _files)
+{
+        if (!_files.empty() && have_file_names(_files) == true)
+        {
+                set_flag(FLAG::FILES);
+                std::lock_guard<std::mutex> guard(this->email_data);
+                this->files = std::move(_files);
+        }
+        else
+        {
+                clear_flag(FLAG::FILES);
+        }
+}
+
+std::vector<std::string> data::email::get_files() const
+{
+        return this->files;
+}
+
+bool data::email::have_file_names(const std::vector<std::string>& _names)
+{
+        for (const auto& name : _names)
+        {
+                if (name.empty() == true)
+                {
+                        return false;
+                }
+        }
+
+        return true;
+}
+
 bool data::email::check_flags() const
 {
         return ((this->flags & this->mask) == this->mask) ? true : false;

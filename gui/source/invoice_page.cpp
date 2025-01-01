@@ -92,8 +92,8 @@ void gui::invoice_page::connect_email_button(const Glib::RefPtr<Gtk::Builder>& u
         if (email_button)
         {
                 email_button->signal_clicked().connect([this] () {
-                          if (this->email.send("Hello from the desktop application"))
-                                std::cout << "Email sent\n";
+                          //if (this->email.send("Hello from the desktop application"))
+                          //      std::cout << "Email sent\n";
                 });
         }
 }

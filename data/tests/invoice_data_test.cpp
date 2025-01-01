@@ -372,3 +372,29 @@ TEST(invoice_data_test, handle_data_limits)
 
         CHECK_EQUAL(false, invoice_data.is_valid());
 }
+
+TEST(invoice_data_test, handle_bad_data)
+{
+        std::vector<data::column> vec{};
+        std::string order_number{};
+        std::string card_number{};
+        std::string date{};
+        std::string name{};
+        std::string description_total{};
+        std::string material_total{};
+        std::string grand_total{};
+        unsigned int number{};
+
+        invoice_data.set_business_name(name);
+        invoice_data.set_invoice_number(number);
+        invoice_data.set_invoice_date(date);
+        invoice_data.set_job_card_number(card_number);
+        invoice_data.set_order_number(order_number);
+        invoice_data.set_description_total(description_total);
+        invoice_data.set_material_total(material_total);
+        invoice_data.set_grand_total(grand_total);
+        invoice_data.set_material_column(vec);
+        invoice_data.set_description_column(vec);
+
+        CHECK_EQUAL(false, invoice_data.is_valid());
+}

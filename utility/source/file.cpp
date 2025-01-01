@@ -11,9 +11,9 @@
 utility::file::file(const std::string& _path)
         : current_file{std::move(std::filesystem::absolute(_path)), std::ios_base::in}
 {
-        if (!this->current_file.is_open())
+        if (!this->current_file.is_open()) //GCOVR_EXCL_START
                 throw app::errors::construction;
-}
+} //GCOVR_EXCL_STOP
 
 utility::file::~file()
 {

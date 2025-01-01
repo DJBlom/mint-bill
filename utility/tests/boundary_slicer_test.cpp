@@ -9,7 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
-#include <slicer.h>
+#include <boundary_slicer.h>
 extern "C"
 {
 
@@ -55,9 +55,9 @@ static const std::string bad_description{"Beneath the sky so vast and blue, Wher
  *    previous white space. (Done)
  * 4) Ensure thread safety. (Done)
  ******************************************************************************/
-TEST_GROUP(slicer_test)
+TEST_GROUP(boundary_slicer_test)
 {
-        utility::slicer slicer{40};
+        utility::boundary_slicer slicer;
 	void setup()
 	{
 	}
@@ -67,7 +67,12 @@ TEST_GROUP(slicer_test)
 	}
 };
 
-TEST(slicer_test, slice_a_500_character_string)
+TEST(boundary_slicer_test, test_max_adjusting)
+{
+        utility::boundary_slicer tmp_slicer{500};
+}
+
+TEST(boundary_slicer_test, slice_a_500_character_string)
 {
         std::vector<std::string> result{slicer.slice(long_description)};
 
@@ -79,7 +84,7 @@ TEST(slicer_test, slice_a_500_character_string)
         }
 }
 
-TEST(slicer_test, slice_empty_data)
+TEST(boundary_slicer_test, slice_empty_data)
 {
         std::vector<std::string> result{slicer.slice("")};
 
@@ -91,7 +96,7 @@ TEST(slicer_test, slice_empty_data)
         }
 }
 
-TEST(slicer_test, empty_last_line_in_string)
+TEST(boundary_slicer_test, empty_last_line_in_string)
 {
         std::vector<std::string> result{slicer.slice(bad_description)};
 

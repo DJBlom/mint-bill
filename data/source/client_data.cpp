@@ -16,7 +16,7 @@ namespace upper_bound {
 data::client::client(const client& _copy)
         : business_name{_copy.business_name}, business_address{_copy.business_address},
           business_area_code{_copy.business_area_code}, business_town_name{_copy.business_town_name},
-          cellphone_number{_copy.cellphone_number}, email{_copy.email}, vat_number{_copy.vat_number},
+          cellphone_number{_copy.cellphone_number}, emails{_copy.emails}, vat_number{_copy.vat_number},
           statement_schedule{_copy.statement_schedule}, flags{_copy.flags}, client_data{}, mask{_copy.mask}
 {
 }
@@ -24,7 +24,7 @@ data::client::client(const client& _copy)
 data::client::client(client&& _move)
         : business_name{_move.business_name}, business_address{_move.business_address},
           business_area_code{_move.business_area_code}, business_town_name{_move.business_town_name},
-          cellphone_number{_move.cellphone_number}, email{_move.email}, vat_number{_move.vat_number},
+          cellphone_number{_move.cellphone_number}, emails{_move.emails}, vat_number{_move.vat_number},
           statement_schedule{_move.statement_schedule}, flags{_move.flags}, client_data{}, mask{_move.mask}
 {
         _move.business_name.clear();
@@ -32,7 +32,7 @@ data::client::client(client&& _move)
         _move.business_area_code.clear();
         _move.business_town_name.clear();
         _move.cellphone_number.clear();
-        _move.email.clear();
+        _move.emails.clear();
         _move.vat_number.clear();
         _move.statement_schedule.clear();
         _move.flags = 0;
@@ -54,7 +54,7 @@ data::client& data::client::operator= (client&& _move)
         std::swap(business_area_code, _move.business_area_code);
         std::swap(business_town_name, _move.business_town_name);
         std::swap(cellphone_number, _move.cellphone_number);
-        std::swap(email, _move.email);
+        std::swap(emails, _move.emails);
         std::swap(vat_number, _move.vat_number);
         std::swap(statement_schedule, _move.statement_schedule);
         std::swap(flags, _move.flags);
@@ -169,15 +169,15 @@ std::string data::client::get_cellphone_number() const
         return this->cellphone_number;
 }
 
-void data::client::set_email(const std::string& _email)
+void data::client::set_email(const std::string& _data)
 {
-        std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
-        bool email_format_correct{std::regex_search(_email, email_regex)};
-        if (email_format_correct && (_email.length() <= upper_bound::string_length))
+        utility::word_slicer slicer{};
+        std::vector<std::string> _emails{slicer.slice(_data)};
+        if (email_address_good(_emails) == true)
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->email = _email;
+                this->emails = std::move(_emails);
         }
         else
         {
@@ -185,9 +185,9 @@ void data::client::set_email(const std::string& _email)
         }
 }
 
-std::string data::client::get_email() const
+std::vector<std::string> data::client::get_email() const
 {
-        return this->email;
+        return this->emails;
 }
 
 void data::client::set_vat_number(const std::string& _vat_number)
@@ -211,8 +211,9 @@ std::string data::client::get_vat_number() const
 
 void data::client::set_statement_schedule(const std::string& _statement_schedule)
 {
-        if (!_statement_schedule.empty() && _statement_schedule.contains(",")
-                        && (_statement_schedule.length() == upper_bound::statement_format_length))
+        std::regex sched_regex(R"(^[1-4],[1-7]$)");
+        bool format_correct{std::regex_search(_statement_schedule, sched_regex)};
+        if (!_statement_schedule.empty() && format_correct)
         {
                 set_flag(FLAG::STATMENT_SCHEDULE);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -227,6 +228,21 @@ void data::client::set_statement_schedule(const std::string& _statement_schedule
 std::string data::client::get_statement_schedule() const
 {
         return this->statement_schedule;
+}
+
+bool data::client::email_address_good(const std::vector<std::string>& _emails)
+{
+        std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
+        for (const auto& email : _emails)
+        {
+                bool email_format_correct{std::regex_search(email, email_regex)};
+                if (!email_format_correct || !(email.length() <= upper_bound::string_length))
+                {
+                        return false;
+                }
+        }
+
+        return true;
 }
 
 bool data::client::check_flags() const

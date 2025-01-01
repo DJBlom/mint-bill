@@ -11,147 +11,153 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
-#define FROM_MAIL     "<dawidjblom@gmail.com>"
-#define TO_MAIL       "<dawidjblom@gmail.com>"
-#define CC_MAIL       "<dawidjblom@gmail.com>"
-
+#define FROM_MAIL     "<dmnsstmtest@gmail.com>"
+#define TO_MAIL       "<dmnsstmtest@gmail.com>"
+#define CC_MAIL       "<dmnsstmtest@gmail.com>"
 
 static const char *headers_text[] = {
-  "Date: Mon, 29 Nov 2010 21:54:29 +1100\r\n"
   "To: " TO_MAIL,
-  "From: " FROM_MAIL " (Example User)",
-  "Cc: " CC_MAIL " (Another example User)",
+  "From: " FROM_MAIL "",
+  "Cc: " CC_MAIL "",
   "Subject: Invoice",
   NULL
 };
 
-static const char inline_text[] =
-  "This is the inline text message of the email.\r\n"
-  "\r\n"
-  "  It could be a lot of lines that would be displayed in an email\r\n"
-  "viewer that is not able to handle HTML.\r\n";
-
-
 feature::email::email()
 {
+        this->curl = curl_easy_init();
+        if (!this->curl)
+                throw app::errors::construction;
 
+        this->mime = curl_mime_init(this->curl);
+        if (!this->mime)
+                throw app::errors::construction;
+
+        this->alt = curl_mime_init(this->curl);
+        if (!this->alt)
+                throw app::errors::construction;
 }
 
 feature::email::~email()
 {
-
+        curl_slist_free_all(this->headers);
+        curl_slist_free_all(this->recipients);
+        curl_mime_free(this->mime);
+        curl_easy_cleanup(this->curl);
 }
 
-bool feature::email::send(const std::string& msg)
+bool feature::email::send(const data::email& _data)
 {
-        CURL *curl;
-        CURLcode res = CURLE_OK;
+        if (!_data.is_valid())
+                return false;
 
-        curl = curl_easy_init();
-        if(curl) {
-                struct curl_slist *headers = NULL;
-                struct curl_slist *recipients = NULL;
-                struct curl_slist *slist = NULL;
-                curl_mime *mime;
-                curl_mime *alt;
-                curl_mimepart *part;
-                const char **cpp;
 
-                /* This is the URL for your mailserver */
-                curl_easy_setopt(curl, CURLOPT_USERNAME, "dawidjblom@gmail.com");
-                curl_easy_setopt(curl, CURLOPT_PASSWORD, "welj xpmv fzfi kmfj ");
-                curl_easy_setopt(curl, CURLOPT_URL, "smtp://smtp.gmail.com:587");
-                curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
-                curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        const char **cpp;
 
-                /* Note that this option is not strictly required, omitting it results in
-                * libcurl sending the MAIL FROM_MAIL command with empty sender data. All
-                * autoresponses should have an empty reverse-path, and should be directed
-                * to the address in the reverse-path which triggered them. Otherwise,
-                * they could cause an endless loop. See RFC 5321 Section 4.5.5 for more
-                * details.
-                */
-                curl_easy_setopt(curl, CURLOPT_MAIL_FROM, FROM_MAIL);
+        if (sender_setup(_data.get_business()) == false)
+                return false;
 
-                /* Add two recipients, in this particular case they correspond to the
-                * To: and Cc: addressees in the header, but they could be any kind of
-                * recipient. */
-                recipients = curl_slist_append(recipients, TO_MAIL);
-                recipients = curl_slist_append(recipients, CC_MAIL);
-                curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+        if (recipient_setup(_data.get_client()) == false)
+                return false;
 
-                /* allow one of the recipients to fail and still consider it okay */
-                curl_easy_setopt(curl, CURLOPT_MAIL_RCPT_ALLOWFAILS, 1L);
+        /* Note that this option is not strictly required, omitting it results in
+        * libcurl sending the MAIL FROM_MAIL command with empty sender data. All
+        * autoresponses should have an empty reverse-path, and should be directed
+        * to the address in the reverse-path which triggered them. Otherwise,
+        * they could cause an endless loop. See RFC 5321 Section 4.5.5 for more
+        * details.
+        */
+        //std::string from{business.get_email()};
 
-                /* Build and set the message header list. */
-                for(cpp = headers_text; *cpp; cpp++)
-                        headers = curl_slist_append(headers, *cpp);
-                curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        /* Add two recipients, in this particular case they correspond to the
+        * To: and Cc: addressees in the header, but they could be any kind of
+        * recipient. */
+        std::string pdf_data{_data.get_pdf()};
 
-                /* Build the mime message. */
-                mime = curl_mime_init(curl);
 
-                /* The inline part is an alternative proposing the html and the text
-                versions of the email. */
-                alt = curl_mime_init(curl);
+        /* allow one of the recipients to fail and still consider it okay */
+        //curl_easy_setopt(this->curl, CURLOPT_MAIL_RCPT_ALLOWFAILS, 1L);
 
-                /* Text message. */
-                part = curl_mime_addpart(alt);
-                //utility::file text_file{"invoice.txt"};
-                utility::file text_file{"CMakeLists.txt"};
-                std::string text{text_file.read()};
-                curl_mime_data(part, text.c_str(), text.length());
-                curl_mime_type(part, "text/html");
+        /* Build and set the message header list. */
+        for(cpp = headers_text; *cpp; cpp++)
+                headers = curl_slist_append(headers, *cpp);
+        curl_easy_setopt(this->curl, CURLOPT_HTTPHEADER, headers);
 
-                /* HTML message. */
-                part = curl_mime_addpart(alt);
-                utility::file html_file{"invoice.html"};
-                std::string html{html_file.read()};
-                curl_mime_data(part, html.c_str(), html.length());
-                curl_mime_type(part, "text/html");
+        /* Build the mime message. */
 
-                /* Create the inline part. */
-                part = curl_mime_addpart(mime);
-                curl_mime_subparts(part, alt);
-                curl_mime_type(part, "multipart/alternative");
-                slist = curl_slist_append(NULL, "Content-Disposition: inline");
-                curl_mime_headers(part, slist, 1);
+        /* The inline part is an alternative proposing the html and the text
+        versions of the email. */
 
-                /* Add the current source program as an attachment. */
-                part = curl_mime_addpart(mime);
-                curl_mime_data(part, msg.c_str(), msg.length());
-                curl_mime_type(part, "application/pdf");
-                curl_mime_encoder(part, "base64");
-                curl_mime_filename(part, "Invoice.pdf");
-                curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
+        /* Text message. */
+        curl_mimepart *part{curl_mime_addpart(alt)};
+        utility::file text_file{"test_file_data.txt"};
+        std::string text{text_file.read()};
+        curl_mime_data(part, text.c_str(), text.length());
+        curl_mime_type(part, "text/html");
 
-                /* Send the message */
-                res = curl_easy_perform(curl);
+        /* HTML message. */
+        part = curl_mime_addpart(alt);
+        utility::file html_file{"test_file_data.html"};
+        std::string html{html_file.read()};
+        curl_mime_data(part, html.c_str(), html.length());
+        curl_mime_type(part, "text/html");
 
-                /* Check for errors */
-                if(res != CURLE_OK)
-                fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
+        /* Create the inline part. */
+        part = curl_mime_addpart(mime);
+        curl_mime_subparts(part, alt);
+        curl_mime_type(part, "multipart/alternative");
+        slist = curl_slist_append(NULL, "Content-Disposition: inline");
+        curl_mime_headers(part, slist, 1);
 
-                /* Free lists. */
-                curl_slist_free_all(recipients);
-                curl_slist_free_all(headers);
+        /* Add the current source program as an attachment. */
+        part = curl_mime_addpart(mime);
+        curl_mime_data(part, pdf_data.c_str(), pdf_data.length());
+        curl_mime_type(part, "application/pdf");
+        curl_mime_encoder(part, "base64");
+        curl_mime_filename(part, "Invoice.pdf");
+        curl_easy_setopt(this->curl, CURLOPT_MIMEPOST, mime);
 
-                /* curl does not send the QUIT command until you call cleanup, so you
-                * should be able to reuse this connection for additional messages
-                * (setting CURLOPT_MAIL_FROM and CURLOPT_MAIL_RCPT as required, and
-                * calling curl_easy_perform() again. It may not be a good idea to keep
-                * the connection open for a long time though (more than a few minutes may
-                * result in the server timing out the connection), and you do want to
-                * clean up in the end.
-                */
-                curl_easy_cleanup(curl);
+        /* Check for errors */
+        if(CURLE_OK != curl_easy_perform(this->curl))
+                fprintf(stderr, "curl_easy_perform() failed\n");
 
-                /* Free multipart message. */
-                curl_mime_free(mime);
-        }
 
-        std::cout << "Resutl!!!!!!!!!--- " << std::to_string(res) << std::endl;
-        return ~(int)res;
+        return true;
+}
+
+bool feature::email::sender_setup(const data::business& _business)
+{
+        std::string username{_business.get_email()};
+        if (curl_easy_setopt(this->curl, CURLOPT_USERNAME, username.c_str()) != CURLE_OK)
+                return false;
+
+        std::string password{_business.get_password()};
+        if (curl_easy_setopt(this->curl, CURLOPT_PASSWORD, password.c_str()) != CURLE_OK)
+                return false;
+
+        if (curl_easy_setopt(this->curl, CURLOPT_URL, smtp_url.c_str()) != CURLE_OK)
+                return false;
+
+        if (curl_easy_setopt(this->curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL) != CURLE_OK)
+                return false;
+
+        if (curl_easy_setopt(this->curl, CURLOPT_MAIL_FROM, username.c_str()) != CURLE_OK)
+                return false;
+
+        return true;
+}
+
+bool feature::email::recipient_setup(const data::client& _client)
+{
+        std::vector<std::string> emails{_client.get_email()};
+        for (const auto& mail : emails)
+                curl_slist_append(this->recipients, mail.c_str());
+
+        //std::string cc{client.get_email()};
+        //recipients = curl_slist_append(recipients, cc.c_str());
+        curl_easy_setopt(this->curl, CURLOPT_MAIL_RCPT, this->recipients);
+
+        return true;
 }

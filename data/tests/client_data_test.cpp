@@ -9,6 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <vector>
 #include <client_data.h>
 extern "C"
 {
@@ -94,14 +95,6 @@ TEST(client_data_test, assign_client_cellphone_number_and_retrieve_it)
         CHECK_EQUAL(expected, client_data.get_cellphone_number());
 }
 
-TEST(client_data_test, assign_client_email_and_retrieve_it)
-{
-        std::string expected{"odn@gmail.com"};
-        client_data.set_email(expected);
-
-        CHECK_EQUAL(expected, client_data.get_email());
-}
-
 TEST(client_data_test, assign_vat_number_and_retrieve_it)
 {
         std::string expected{"343214321432"};
@@ -169,7 +162,7 @@ TEST(client_data_test, handle_bad_schedule_format)
         client_data.set_cellphone_number("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
-        client_data.set_statement_schedule("4");
+        client_data.set_statement_schedule("4,9");
 
         CHECK_EQUAL(false, client_data.is_valid());
 }

@@ -28,6 +28,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/include/
                 ${CURL_INCLUDE_DIR}
                 PUBLIC
+                ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/utility/include

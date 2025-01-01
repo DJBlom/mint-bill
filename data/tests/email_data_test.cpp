@@ -9,6 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <vector>
 #include <email_data.h>
 #include <client_data.h>
 #include <business_data.h>
@@ -64,8 +65,58 @@ TEST(email_data_test, handle_the_business_name)
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
         email.set_business(business);
+        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
+        email.set_files(files);
 
         CHECK_EQUAL(true, email.is_valid());
+}
+
+TEST(email_data_test, handle_bad_data)
+{
+        std::string pdf{""};
+        email.set_pdf(pdf);
+        data::client client{};
+        client.set_business_name("");
+        client.set_business_address("");
+        client.set_business_area_code("");
+        client.set_business_town_name("");
+        client.set_cellphone_number("");
+        client.set_email("");
+        client.set_vat_number("");
+        client.set_statement_schedule("");
+        email.set_client(client);
+
+        data::business business{};
+        business.set_name("");
+        business.set_address("");
+        business.set_area_code("");
+        business.set_town("");
+        business.set_cellphone("");
+        business.set_email("");
+        business.set_bank("");
+        business.set_branch_code("");
+        business.set_account_number("");
+        business.set_client_message("");
+        business.set_password("");
+        email.set_business(business);
+        std::vector<std::string> files{"", ""};
+        email.set_files(files);
+
+        CHECK_EQUAL(false, email.is_valid());
+}
+
+TEST(email_data_test, handle_no_data)
+{
+        std::string pdf{};
+        email.set_pdf(pdf);
+        data::client client{};
+        email.set_client(client);
+        data::business business{};
+        email.set_business(business);
+        std::vector<std::string> files{};
+        email.set_files(files);
+
+        CHECK_EQUAL(false, email.is_valid());
 }
 
 TEST(email_data_test, ensure_copyable)
@@ -96,6 +147,9 @@ TEST(email_data_test, ensure_copyable)
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
         email.set_business(business);
+
+        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
+        email.set_files(files);
         data::email tmp{};
         tmp = email;
 
@@ -131,6 +185,8 @@ TEST(email_data_test, ensure_copy_constructable)
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
         email.set_business(business);
+        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
+        email.set_files(files);
         data::email tmp{};
         tmp = email;
 
@@ -166,6 +222,8 @@ TEST(email_data_test, ensure_moveable)
         business.set_account_number("0932443824");
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
+        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
+        email.set_files(files);
         email.set_business(business);
         data::email tmp{email};
 
@@ -200,6 +258,8 @@ TEST(email_data_test, ensure_move_constructable)
         business.set_account_number("0932443824");
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
+        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
+        email.set_files(files);
         email.set_business(business);
         data::email tmp{std::move(email)};
 

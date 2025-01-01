@@ -8,6 +8,7 @@
 #ifndef _EMAIL_DATA_H_
 #define _EMAIL_DATA_H_
 #include <mutex>
+#include <vector>
 #include <string>
 #include <cstdint>
 #include <client_data.h>
@@ -30,8 +31,11 @@ namespace data {
                         [[nodiscard]] data::client get_client() const;
                         virtual void set_business(const data::business&);
                         [[nodiscard]] data::business get_business() const;
+                        virtual void set_files(const std::vector<std::string>&);
+                        [[nodiscard]] std::vector<std::string> get_files() const;
 
                 private:
+                        [[nodiscard]] bool have_file_names(const std::vector<std::string>&);
                         void set_flag(const int&);
                         void clear_flag(const int&);
                         [[nodiscard]] bool check_flags() const;
@@ -42,13 +46,15 @@ namespace data {
                         std::string pdf{""};
                         data::client client{};
                         data::business business{};
+                        std::vector<std::string> files{};
                         mask_type flags{0x0};
                         std::mutex email_data{};
-                        mask_type mask{0x7};
+                        mask_type mask{0xF};
                         enum FLAG {
                                 PDF = 0,
                                 CLIENT,
-                                BUSINESS
+                                BUSINESS,
+                                FILES
                         };
 
                         enum BIT {

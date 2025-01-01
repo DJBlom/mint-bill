@@ -63,6 +63,7 @@ if(BUILD_PROJECT)
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
+                ${CMAKE_SOURCE_DIR}/utility/include
                 ${GTKMM_INCLUDE_DIRS}
                 ${CURL_INCLUDE_DIR}
         )

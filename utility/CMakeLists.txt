@@ -8,7 +8,7 @@
 # the source and header files of the feautre sub branch.
 ############################################################################
 cmake_minimum_required(VERSION 3.25)
-project(target-utitlity VERSION 0.0.1 LANGUAGES CXX C)
+project(target-utility VERSION 0.0.1 LANGUAGES CXX C)
 
 
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
