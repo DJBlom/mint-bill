@@ -64,6 +64,21 @@ data::client test::generate_client_data()
         return expected;
 }
 
+data::client test::generate_client_data_multiple_emails()
+{
+        data::client expected;
+        expected.set_business_name("Client Business");
+        expected.set_business_address("Geelsterd 8");
+        expected.set_business_area_code("543543");
+        expected.set_business_town_name("George");
+        expected.set_cellphone_number("0832315944");
+        expected.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
+        expected.set_vat_number("3241324321413");
+        expected.set_statement_schedule("4,4");
+
+        return expected;
+}
+
 data::invoice test::generate_invoice_data(const std::string& _desc)
 {
         const int size{5};
