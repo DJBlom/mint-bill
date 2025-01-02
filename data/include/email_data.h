@@ -31,6 +31,8 @@ namespace data {
                         [[nodiscard]] data::client get_client() const;
                         virtual void set_business(const data::business&);
                         [[nodiscard]] data::business get_business() const;
+                        virtual void set_subject(const std::string&);
+                        [[nodiscard]] std::string get_subject() const;
                         virtual void set_files(const std::vector<std::string>&);
                         [[nodiscard]] std::vector<std::string> get_files() const;
 
@@ -46,14 +48,16 @@ namespace data {
                         std::string pdf{""};
                         data::client client{};
                         data::business business{};
+                        std::string subject{""};
                         std::vector<std::string> files{};
                         mask_type flags{0x0};
                         std::mutex email_data{};
-                        mask_type mask{0xF};
+                        mask_type mask{0x1F};
                         enum FLAG {
                                 PDF = 0,
                                 CLIENT,
                                 BUSINESS,
+                                SUBJECT,
                                 FILES
                         };
 
