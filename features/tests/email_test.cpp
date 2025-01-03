@@ -64,6 +64,31 @@ TEST(email_test, send_data_under_good_conditions)
         CHECK_EQUAL(true, email.send(data));
 }
 
+TEST(email_test, send_no_data)
+{
+        std::string short_description{""};
+        data::pdf_invoice pdf_data;
+
+        data::business business_data;
+        pdf_data.set_business(business_data);
+
+        data::client client_data;
+        pdf_data.set_client(client_data);
+
+        data::invoice invoice_data;
+        pdf_data.set_invoice(invoice_data);
+
+        feature::pdf pdf{};
+        std::string pdf_file_data;
+        data.set_pdf(pdf_file_data);
+        data.set_client(client_data);
+        data.set_business(business_data);
+        data.set_subject("");
+
+
+        CHECK_EQUAL(false, email.send(data));
+}
+
 //TEST(email_test, spam_email_to_ensure_data_integrity)
 //{
 //        std::string short_description{"Machining steel"};

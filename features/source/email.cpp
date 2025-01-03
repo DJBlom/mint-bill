@@ -44,9 +44,11 @@ bool feature::email::send(const data::email& _data)
                 {
                         return false;
                 }
+
+                return true;
         }
 
-        return true;
+        return false;
 }
 
 
@@ -92,9 +94,11 @@ bool smtp::client::connect(const data::business& _business)
                 {
                         return false;
                 }
+
+                return true;
         }
 
-        return true;
+        return false;
 }
 
 
@@ -112,6 +116,7 @@ smtp::header::~header() {}
 
 bool smtp::header::add(const data::email& _data)
 {
+        bool added{false};
         if (_data.is_valid())
         {
                 for (const auto& receiver : generate(_data))
@@ -119,13 +124,10 @@ bool smtp::header::add(const data::email& _data)
                         this->headers.reset(curl_slist_append(this->headers.release(), receiver.c_str()));
                 }
 
-                if (curl_easy_setopt(this->curl.get(), CURLOPT_HTTPHEADER, this->headers.get()) != CURLE_OK)
-                {
-                        return false;
-                }
+                added = !static_cast<bool> (curl_easy_setopt(this->curl.get(), CURLOPT_HTTPHEADER, this->headers.get()));
         }
 
-        return true;
+        return added;
 }
 
 [[nodiscard]] std::vector<std::string> smtp::header::generate(const data::email& _data)
@@ -152,7 +154,7 @@ std::string smtp::header::to_mail(const std::vector<std::string>& _emails)
         }
 
         return to;
-}
+} //GCOVR_EXCL_LINE
 
 std::string smtp::header::cc_mail(const std::vector<std::string>& _emails)
 {
@@ -166,7 +168,7 @@ std::string smtp::header::cc_mail(const std::vector<std::string>& _emails)
         }
 
         return cc;
-}
+} //GCOVR_EXCL_LINE
 
 /********************************************************
  * Contents: Recipients implementation
@@ -182,6 +184,7 @@ smtp::recipients::~recipients() {}
 
 bool smtp::recipients::add(const data::client& _data)
 {
+        bool added{false};
         if (_data.is_valid())
         {
                 for (const auto& _email : _data.get_email())
@@ -189,13 +192,10 @@ bool smtp::recipients::add(const data::client& _data)
                         this->receivers.reset(curl_slist_append(this->receivers.release(), _email.c_str()));
                 }
 
-                if (curl_easy_setopt(this->curl.get(), CURLOPT_MAIL_RCPT, this->receivers.get()) != CURLE_OK)
-                {
-                        return false;
-                }
+                added = !static_cast<bool> (curl_easy_setopt(this->curl.get(), CURLOPT_MAIL_RCPT, this->receivers.get()));
         }
 
-        return true;
+        return added;
 }
 
 
@@ -214,39 +214,38 @@ smtp::parts::~parts() {}
 
 bool smtp::parts::add(const data::email& _data)
 {
+        bool added{false};
         if (_data.is_valid())
         {
                 if (text_body() == false)
                 {
-                        return false;
+                        return added;
                 }
 
                 if (html_body() == false)
                 {
-                        return false;
+                        return added;
                 }
 
                 if (body() == false)
                 {
-                        return false;
+                        return added;
                 }
 
                 if (attachment(_data) == false)
                 {
-                        return false;
+                        return added;
                 }
 
-                if (curl_easy_setopt(this->curl.get(), CURLOPT_MIMEPOST, mime.get()) != CURLE_OK)
-                {
-                        return false;
-                }
+                added = !static_cast<bool> (curl_easy_setopt(this->curl.get(), CURLOPT_MIMEPOST, mime.get()));
         }
 
-        return true;
+        return added;
 }
 
 bool smtp::parts::text_body()
 {
+        bool success{false};
         part = curl_mime_addpart(alt.get());
         if (part)
         {
@@ -255,14 +254,15 @@ bool smtp::parts::text_body()
                 curl_mime_data(part, text.c_str(), text.length());
                 curl_mime_type(part, "text/html");
 
-                return true;
+                success = true;
         }
 
-        return false;
+        return success;
 }
 
 bool smtp::parts::html_body()
 {
+        bool success{false};
         part = curl_mime_addpart(alt.get());
         if (part)
         {
@@ -271,14 +271,15 @@ bool smtp::parts::html_body()
                 curl_mime_data(part, html.c_str(), html.length());
                 curl_mime_type(part, "text/html");
 
-                return true;
+                success = true;
         }
 
-        return false;
+        return success;
 }
 
 bool smtp::parts::body()
 {
+        bool success{false};
         part = curl_mime_addpart(mime.get());
         if (part)
         {
@@ -287,14 +288,15 @@ bool smtp::parts::body()
                 slist.reset(curl_slist_append(slist.release(), "Content-Disposition: inline"));
                 curl_mime_headers(part, slist.release(), 1);
 
-                return true;
+                success = true;
         }
 
-        return false;
+        return success;
 }
 
 bool smtp::parts::attachment(const data::email& _data)
 {
+        bool success{false};
         part = curl_mime_addpart(mime.get());
         if (part && _data.is_valid())
         {
@@ -305,8 +307,8 @@ bool smtp::parts::attachment(const data::email& _data)
                 curl_mime_encoder(part, "base64");
                 curl_mime_filename(part, attachment_name.c_str());
 
-                return true;
+                success = true;
         }
 
-        return false;
+        return success;
 }
