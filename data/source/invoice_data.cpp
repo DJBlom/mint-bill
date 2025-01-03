@@ -114,7 +114,7 @@ std::string data::invoice::get_business_name() const
 void data::invoice::set_invoice_number(const unsigned int& _number)
 {
         std::string _invoice_number{std::to_string(_number)};
-        if (!_invoice_number.empty() && _invoice_number.length() <= upper_bound::invoice_number_length)
+        if (_invoice_number.length() <= upper_bound::invoice_number_length)
         {
                 set_flag(FLAG::NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);

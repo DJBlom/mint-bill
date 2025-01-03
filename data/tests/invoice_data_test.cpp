@@ -321,7 +321,7 @@ TEST(invoice_data_test, handle_failure_to_set_data)
         std::string description_total{""};
         std::string material_total{""};
         std::string grand_total{""};
-        unsigned int number{0};
+        unsigned int number;
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -357,7 +357,7 @@ TEST(invoice_data_test, handle_data_limits)
         std::string description_total{limit};
         std::string material_total{limit};
         std::string grand_total{limit};
-        unsigned int number{1};
+        unsigned int number{123456789};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -383,7 +383,7 @@ TEST(invoice_data_test, handle_bad_data)
         std::string description_total{};
         std::string material_total{};
         std::string grand_total{};
-        unsigned int number{};
+        unsigned int number;
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
