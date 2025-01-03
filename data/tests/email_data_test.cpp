@@ -70,6 +70,40 @@ TEST(email_data_test, handle_the_business_name)
         CHECK_EQUAL(true, email.is_valid());
 }
 
+TEST(email_data_test, handle_limits)
+{
+        std::string pdf{"Some pdf dummy data"};
+        email.set_pdf(pdf);
+        data::client client{};
+        client.set_business_name("TME");
+        client.set_business_address("Geelsterd 8");
+        client.set_business_area_code("543543");
+        client.set_business_town_name("George");
+        client.set_cellphone_number("0832315944");
+        client.set_email("odn@gmail.com");
+        client.set_vat_number("3241324321413");
+        client.set_statement_schedule("4,4");
+        email.set_client(client);
+
+        data::business business{};
+        business.set_name("tme");
+        business.set_address("geelsterd 8");
+        business.set_area_code("5432");
+        business.set_town("george");
+        business.set_cellphone("0832315944");
+        business.set_email("odn@gmail.com");
+        business.set_bank("Standard Bank");
+        business.set_branch_code("043232");
+        business.set_account_number("0932443824");
+        business.set_client_message("Thank you for your support");
+        business.set_password("fadsfdsafadsf");
+        email.set_business(business);
+        std::string file_name{"invoicetkrlsjerkwerkrlijkrldsalkrklwijcklljrewsfjkl"};
+        email.set_subject(file_name);
+
+        CHECK_EQUAL(false, email.is_valid());
+}
+
 TEST(email_data_test, handle_bad_data)
 {
         std::string pdf{""};

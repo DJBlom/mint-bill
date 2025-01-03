@@ -185,3 +185,17 @@ TEST(invoice_column_test, handle_amount_data_limit)
 
         CHECK_EQUAL(expected, column.is_valid());
 }
+
+TEST(invoice_column_test, handle_no_data)
+{
+        bool expected{false};
+        unsigned int quantity;
+        std::string description{""};
+
+        double amount;
+        column.set_quantity(quantity);
+        column.set_description(description);
+        column.set_amount(amount);
+
+        CHECK_EQUAL(expected, column.is_valid());
+}
