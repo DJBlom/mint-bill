@@ -66,8 +66,6 @@ TEST(email_data_test, handle_the_business_name)
         business.set_password("fadsfdsafadsf");
         email.set_business(business);
         email.set_subject("Invoice");
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
-        email.set_files(files);
 
         CHECK_EQUAL(true, email.is_valid());
 }
@@ -101,8 +99,6 @@ TEST(email_data_test, handle_bad_data)
         business.set_password("");
         email.set_subject("");
         email.set_business(business);
-        std::vector<std::string> files{"", ""};
-        email.set_files(files);
 
         CHECK_EQUAL(false, email.is_valid());
 }
@@ -116,8 +112,6 @@ TEST(email_data_test, handle_no_data)
         data::business business{};
         email.set_business(business);
         email.set_subject("");
-        std::vector<std::string> files{};
-        email.set_files(files);
 
         CHECK_EQUAL(false, email.is_valid());
 }
@@ -152,8 +146,6 @@ TEST(email_data_test, ensure_copyable)
         email.set_business(business);
         email.set_subject("Invoice");
 
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
-        email.set_files(files);
         data::email tmp{};
         tmp = email;
 
@@ -190,8 +182,6 @@ TEST(email_data_test, ensure_copy_constructable)
         business.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
         email.set_business(business);
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
-        email.set_files(files);
         data::email tmp{};
         tmp = email;
 
@@ -228,8 +218,6 @@ TEST(email_data_test, ensure_moveable)
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
-        email.set_files(files);
         email.set_business(business);
         data::email tmp{email};
 
@@ -265,8 +253,6 @@ TEST(email_data_test, ensure_move_constructable)
         business.set_client_message("Thank you for your support");
         business.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
-        email.set_files(files);
         email.set_business(business);
         data::email tmp{std::move(email)};
 

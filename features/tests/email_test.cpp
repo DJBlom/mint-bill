@@ -54,13 +54,11 @@ TEST(email_test, send_data_under_good_conditions)
         pdf_data.set_invoice(invoice_data);
 
         feature::pdf pdf{};
-        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
         std::string pdf_file_data{pdf.generate(pdf_data)};
         data.set_pdf(pdf_file_data);
         data.set_client(client_data);
         data.set_business(business_data);
         data.set_subject("Invoice");
-        data.set_files(files);
 
 
         CHECK_EQUAL(true, email.send(data));
@@ -81,13 +79,11 @@ TEST(email_test, send_data_under_good_conditions)
 //        pdf_data.set_invoice(invoice_data);
 //
 //        feature::pdf pdf{};
-//        std::vector<std::string> files{"test_file_data.html", "test_file_data.txt"};
 //        std::string pdf_file_data{pdf.generate(pdf_data)};
 //        data.set_pdf(pdf_file_data);
 //        data.set_client(client_data);
 //        data.set_business(business_data);
 //        data.set_subject("Invoice");
-//        data.set_files(files);
 //
 //        CHECK_EQUAL(true, email.send(data));
 //}

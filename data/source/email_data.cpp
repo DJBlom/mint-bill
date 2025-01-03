@@ -16,21 +16,18 @@ data::email::email() {}
 
 data::email::email(const email& _copy)
         : pdf{_copy.pdf}, client{_copy.client}, business{_copy.business},
-          subject{_copy.subject}, files{_copy.files}, flags{_copy.flags},
-          email_data{}, mask{_copy.mask}
+          subject{_copy.subject}, flags{_copy.flags}, email_data{}, mask{_copy.mask}
 {
 }
 
 data::email::email(email&& _move)
         : pdf{_move.pdf}, client{_move.client}, business{_move.business},
-          subject{_move.subject}, files{_move.files}, flags{_move.flags},
-          email_data{}, mask{_move.mask}
+          subject{_move.subject}, flags{_move.flags}, email_data{}, mask{_move.mask}
 {
         _move.pdf.clear();
         _move.client = client;
         _move.business = business;
         _move.subject.clear();
-        _move.files.clear();
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -49,7 +46,6 @@ data::email& data::email::operator= (email&& _move)
         std::swap(client, _move.client);
         std::swap(business, _move.business);
         std::swap(subject, _move.subject);
-        std::swap(files, _move.files);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -143,38 +139,6 @@ void data::email::set_subject(const std::string& _subject)
 std::string data::email::get_subject() const
 {
         return std::move(this->subject);
-}
-
-void data::email::set_files(const std::vector<std::string>& _files)
-{
-        if (!_files.empty() && have_file_names(_files) == true)
-        {
-                set_flag(FLAG::FILES);
-                std::lock_guard<std::mutex> guard(this->email_data);
-                this->files = std::move(_files);
-        }
-        else
-        {
-                clear_flag(FLAG::FILES);
-        }
-}
-
-std::vector<std::string> data::email::get_files() const
-{
-        return std::move(this->files);
-}
-
-bool data::email::have_file_names(const std::vector<std::string>& _names)
-{
-        for (const auto& name : _names)
-        {
-                if (name.empty() == true)
-                {
-                        return false;
-                }
-        }
-
-        return true;
 }
 
 bool data::email::check_flags() const
