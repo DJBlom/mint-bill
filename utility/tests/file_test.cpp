@@ -139,7 +139,7 @@ TEST_GROUP(file_test)
 
 TEST(file_test, ensure_plain_text_files_can_be_read)
 {
-        utility::file file{"test_file_data.txt"};
+        utility::file file{"email.txt"};
         std::string result{file.read()};
 
         STRCMP_EQUAL(plain_text, result.c_str());
@@ -147,7 +147,7 @@ TEST(file_test, ensure_plain_text_files_can_be_read)
 
 TEST(file_test, ensure_html_files_can_be_read)
 {
-        utility::file file{"test_file_data.html"};
+        utility::file file{"email.html"};
         std::string result{file.read()};
 
         STRCMP_EQUAL(html, result.c_str());

@@ -6,158 +6,307 @@
  * NOTE:
  *******************************************************/
 #include <email.h>
-#include <cstring>
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <nlohmann/json.hpp>
 
-#define FROM_MAIL     "<dmnsstmtest@gmail.com>"
-#define TO_MAIL       "<dmnsstmtest@gmail.com>"
-#define CC_MAIL       "<dmnsstmtest@gmail.com>"
 
-static const char *headers_text[] = {
-  "To: " TO_MAIL,
-  "From: " FROM_MAIL "",
-  "Cc: " CC_MAIL "",
-  "Subject: Invoice",
-  NULL
-};
+feature::email::email() {}
 
-feature::email::email()
-{
-        this->curl = curl_easy_init();
-        if (!this->curl)
-                throw app::errors::construction;
-
-        this->mime = curl_mime_init(this->curl);
-        if (!this->mime)
-                throw app::errors::construction;
-
-        this->alt = curl_mime_init(this->curl);
-        if (!this->alt)
-                throw app::errors::construction;
-}
-
-feature::email::~email()
-{
-        curl_slist_free_all(this->headers);
-        curl_slist_free_all(this->recipients);
-        curl_mime_free(this->mime);
-        curl_easy_cleanup(this->curl);
-}
+feature::email::~email() {}
 
 bool feature::email::send(const data::email& _data)
 {
-        if (!_data.is_valid())
-                return false;
+        if (_data.is_valid())
+        {
+                smtp::client client{this->curl};
+                if (client.connect(_data.get_business()) == false)
+                {
+                        return false;
+                }
 
+                smtp::header header{this->curl};
+                if (header.add(_data) == false)
+                {
+                        return false;
+                }
 
-        const char **cpp;
+                smtp::recipients recipients{this->curl};
+                if (recipients.add(_data.get_client()) == false)
+                {
+                        return false;
+                }
 
-        if (sender_setup(_data.get_business()) == false)
-                return false;
+                smtp::parts parts{this->curl};
+                if (parts.add(_data) == false)
+                {
+                        return false;
+                }
 
-        if (recipient_setup(_data.get_client()) == false)
-                return false;
-
-        /* Note that this option is not strictly required, omitting it results in
-        * libcurl sending the MAIL FROM_MAIL command with empty sender data. All
-        * autoresponses should have an empty reverse-path, and should be directed
-        * to the address in the reverse-path which triggered them. Otherwise,
-        * they could cause an endless loop. See RFC 5321 Section 4.5.5 for more
-        * details.
-        */
-        //std::string from{business.get_email()};
-
-        /* Add two recipients, in this particular case they correspond to the
-        * To: and Cc: addressees in the header, but they could be any kind of
-        * recipient. */
-        std::string pdf_data{_data.get_pdf()};
-
-
-        /* allow one of the recipients to fail and still consider it okay */
-        //curl_easy_setopt(this->curl, CURLOPT_MAIL_RCPT_ALLOWFAILS, 1L);
-
-        /* Build and set the message header list. */
-        for(cpp = headers_text; *cpp; cpp++)
-                headers = curl_slist_append(headers, *cpp);
-        curl_easy_setopt(this->curl, CURLOPT_HTTPHEADER, headers);
-
-        /* Build the mime message. */
-
-        /* The inline part is an alternative proposing the html and the text
-        versions of the email. */
-
-        /* Text message. */
-        curl_mimepart *part{curl_mime_addpart(alt)};
-        utility::file text_file{"test_file_data.txt"};
-        std::string text{text_file.read()};
-        curl_mime_data(part, text.c_str(), text.length());
-        curl_mime_type(part, "text/html");
-
-        /* HTML message. */
-        part = curl_mime_addpart(alt);
-        utility::file html_file{"test_file_data.html"};
-        std::string html{html_file.read()};
-        curl_mime_data(part, html.c_str(), html.length());
-        curl_mime_type(part, "text/html");
-
-        /* Create the inline part. */
-        part = curl_mime_addpart(mime);
-        curl_mime_subparts(part, alt);
-        curl_mime_type(part, "multipart/alternative");
-        slist = curl_slist_append(NULL, "Content-Disposition: inline");
-        curl_mime_headers(part, slist, 1);
-
-        /* Add the current source program as an attachment. */
-        part = curl_mime_addpart(mime);
-        curl_mime_data(part, pdf_data.c_str(), pdf_data.length());
-        curl_mime_type(part, "application/pdf");
-        curl_mime_encoder(part, "base64");
-        curl_mime_filename(part, "Invoice.pdf");
-        curl_easy_setopt(this->curl, CURLOPT_MIMEPOST, mime);
-
-        /* Check for errors */
-        if(CURLE_OK != curl_easy_perform(this->curl))
-                fprintf(stderr, "curl_easy_perform() failed\n");
-
+                if(CURLE_OK != curl_easy_perform(this->curl.get()))
+                {
+                        return false;
+                }
+        }
 
         return true;
 }
 
-bool feature::email::sender_setup(const data::business& _business)
+
+/********************************************************
+ * Contents: SMTP::Clients implementation
+ * Author: Dawid J. Blom
+ * Date: January 1, 2025
+ *
+ * NOTE:
+ *******************************************************/
+smtp::client::client(const std::shared_ptr<CURL>& _curl)
+        : curl{_curl} {}
+
+smtp::client::~client() {}
+
+bool smtp::client::connect(const data::business& _business)
 {
-        std::string username{_business.get_email()};
-        if (curl_easy_setopt(this->curl, CURLOPT_USERNAME, username.c_str()) != CURLE_OK)
-                return false;
+        if (_business.is_valid())
+        {
+                std::string username{_business.get_email()};
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_USERNAME, username.c_str()) != CURLE_OK)
+                {
+                        return false;
+                }
 
-        std::string password{_business.get_password()};
-        if (curl_easy_setopt(this->curl, CURLOPT_PASSWORD, password.c_str()) != CURLE_OK)
-                return false;
+                std::string password{_business.get_password()};
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_PASSWORD, password.c_str()) != CURLE_OK)
+                {
+                        return false;
+                }
 
-        if (curl_easy_setopt(this->curl, CURLOPT_URL, smtp_url.c_str()) != CURLE_OK)
-                return false;
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_URL, this->smtp_url.c_str()) != CURLE_OK)
+                {
+                        return false;
+                }
 
-        if (curl_easy_setopt(this->curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL) != CURLE_OK)
-                return false;
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_USE_SSL, (long)CURLUSESSL_ALL) != CURLE_OK)
+                {
+                        return false;
+                }
 
-        if (curl_easy_setopt(this->curl, CURLOPT_MAIL_FROM, username.c_str()) != CURLE_OK)
-                return false;
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_MAIL_FROM, username.c_str()) != CURLE_OK)
+                {
+                        return false;
+                }
+        }
 
         return true;
 }
 
-bool feature::email::recipient_setup(const data::client& _client)
-{
-        std::vector<std::string> emails{_client.get_email()};
-        for (const auto& mail : emails)
-                curl_slist_append(this->recipients, mail.c_str());
 
-        //std::string cc{client.get_email()};
-        //recipients = curl_slist_append(recipients, cc.c_str());
-        curl_easy_setopt(this->curl, CURLOPT_MAIL_RCPT, this->recipients);
+/********************************************************
+ * Contents: SMTP::Header implementation
+ * Author: Dawid J. Blom
+ * Date: January 2, 2025
+ *
+ * NOTE:
+ *******************************************************/
+smtp::header::header(const std::shared_ptr<CURL>& _curl)
+        : curl{_curl} {}
+
+smtp::header::~header() {}
+
+bool smtp::header::add(const data::email& _data)
+{
+        if (_data.is_valid())
+        {
+                for (const auto& receiver : generate(_data))
+                {
+                        this->headers.reset(curl_slist_append(this->headers.release(), receiver.c_str()));
+                }
+
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_HTTPHEADER, this->headers.get()) != CURLE_OK)
+                {
+                        return false;
+                }
+        }
 
         return true;
+}
+
+[[nodiscard]] std::vector<std::string> smtp::header::generate(const data::email& _data)
+{
+        data::client client{_data.get_client()};
+        data::business business{_data.get_business()};
+        std::vector<std::string> emails{client.get_email()};
+        std::vector<std::string> info = {
+                "To: " + to_mail(emails),
+                "From: " + business.get_email(),
+                "Cc: " + cc_mail(emails),
+                "Subject: " + _data.get_subject()
+        };
+
+        return info;
+}
+
+std::string smtp::header::to_mail(const std::vector<std::string>& _emails)
+{
+        std::string to{""};
+        if (!_emails.empty())
+        {
+                to = std::move(_emails.front());
+        }
+
+        return to;
+}
+
+std::string smtp::header::cc_mail(const std::vector<std::string>& _emails)
+{
+        std::string cc{""};
+        if (!_emails.empty())
+        {
+                for (const auto& email : std::ranges::subrange(_emails.begin() + 1, _emails.end()))
+                {
+                        cc += (email + " ");
+                }
+        }
+
+        return cc;
+}
+
+/********************************************************
+ * Contents: Recipients implementation
+ * Author: Dawid J. Blom
+ * Date: January 1, 2025
+ *
+ * NOTE:
+ *******************************************************/
+smtp::recipients::recipients(const std::shared_ptr<CURL>& _curl)
+        : curl{_curl} {}
+
+smtp::recipients::~recipients() {}
+
+bool smtp::recipients::add(const data::client& _data)
+{
+        if (_data.is_valid())
+        {
+                for (const auto& _email : _data.get_email())
+                {
+                        this->receivers.reset(curl_slist_append(this->receivers.release(), _email.c_str()));
+                }
+
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_MAIL_RCPT, this->receivers.get()) != CURLE_OK)
+                {
+                        return false;
+                }
+        }
+
+        return true;
+}
+
+
+/********************************************************
+ * Contents: Parts implementation
+ * Author: Dawid J. Blom
+ * Date: January 1, 2025
+ *
+ * NOTE:
+ *******************************************************/
+smtp::parts::parts(const std::shared_ptr<CURL>& _curl)
+        : curl{_curl}, alt{curl_mime_init(curl.get()), &curl_mime_free},
+          mime{curl_mime_init(curl.get()), &curl_mime_free} {}
+
+smtp::parts::~parts() {}
+
+bool smtp::parts::add(const data::email& _data)
+{
+        if (_data.is_valid())
+        {
+                if (text_body() == false)
+                {
+                        return false;
+                }
+
+                if (html_body() == false)
+                {
+                        return false;
+                }
+
+                if (body() == false)
+                {
+                        return false;
+                }
+
+                if (attachment(_data) == false)
+                {
+                        return false;
+                }
+
+                if (curl_easy_setopt(this->curl.get(), CURLOPT_MIMEPOST, mime.get()) != CURLE_OK)
+                {
+                        return false;
+                }
+        }
+
+        return true;
+}
+
+bool smtp::parts::text_body()
+{
+        part = curl_mime_addpart(alt.get());
+        if (part)
+        {
+                utility::file text_file{"email.txt"};
+                std::string text{text_file.read()};
+                curl_mime_data(part, text.c_str(), text.length());
+                curl_mime_type(part, "text/html");
+
+                return true;
+        }
+
+        return false;
+}
+
+bool smtp::parts::html_body()
+{
+        part = curl_mime_addpart(alt.get());
+        if (part)
+        {
+                utility::file html_file{"email.html"};
+                std::string html{html_file.read()};
+                curl_mime_data(part, html.c_str(), html.length());
+                curl_mime_type(part, "text/html");
+
+                return true;
+        }
+
+        return false;
+}
+
+bool smtp::parts::body()
+{
+        part = curl_mime_addpart(mime.get());
+        if (part)
+        {
+                curl_mime_subparts(part, alt.release());
+                curl_mime_type(part, "multipart/alternative");
+                slist.reset(curl_slist_append(slist.release(), "Content-Disposition: inline"));
+                curl_mime_headers(part, slist.release(), 1);
+
+                return true;
+        }
+
+        return false;
+}
+
+bool smtp::parts::attachment(const data::email& _data)
+{
+        part = curl_mime_addpart(mime.get());
+        if (part && _data.is_valid())
+        {
+                std::string attachment{_data.get_subject() + ".pdf"};
+                std::string pdf_data{_data.get_pdf()};
+                curl_mime_data(part, pdf_data.c_str(), pdf_data.length());
+                curl_mime_type(part, "application/pdf");
+                curl_mime_encoder(part, "base64");
+                curl_mime_filename(part, attachment.c_str());
+
+                return true;
+        }
+
+        return false;
 }
