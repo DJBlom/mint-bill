@@ -298,12 +298,12 @@ bool smtp::parts::attachment(const data::email& _data)
         part = curl_mime_addpart(mime.get());
         if (part && _data.is_valid())
         {
-                std::string attachment{_data.get_subject() + ".pdf"};
+                std::string attachment_name{_data.get_subject() + ".pdf"};
                 std::string pdf_data{_data.get_pdf()};
                 curl_mime_data(part, pdf_data.c_str(), pdf_data.length());
                 curl_mime_type(part, "application/pdf");
                 curl_mime_encoder(part, "base64");
-                curl_mime_filename(part, attachment.c_str());
+                curl_mime_filename(part, attachment_name.c_str());
 
                 return true;
         }
