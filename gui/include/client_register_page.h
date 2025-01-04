@@ -31,7 +31,6 @@ namespace gui {
                         void connect_save_button();
                         void connect_save_alert();
                         void connect_wrong_info_alert();
-                        std::string collect_emails(const std::vector<std::string>&);
                         data::client extract_page_entries();
 
                 private:

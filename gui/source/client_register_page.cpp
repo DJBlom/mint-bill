@@ -157,14 +157,3 @@ data::client gui::client_register_page::extract_page_entries()
 
         return data;
 }
-
-std::string gui::client_register_page::collect_emails(const std::vector<std::string>& _emails)
-{
-        std::string emails{""};
-        for (const auto& email : _emails)
-        {
-                emails += email + " ";
-        }
-
-        return emails;
-}

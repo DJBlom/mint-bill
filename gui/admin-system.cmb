@@ -58,9 +58,8 @@
 	(1,137,"GtkColumnView","statement-column-view",134,None,None,None,1,None,None),
 	(1,141,"GtkEntry","business-info-email-entry",72,None,None,None,12,None,None),
 	(1,142,"GtkEntry","register-statement-schedule-entry",99,None,None,None,7,None,None),
-	(1,143,"GtkEntry","register-email-entry",99,None,None,None,8,None,None),
-	(1,144,"GtkEntry","register-area-code-entry",99,None,None,None,9,None,None),
-	(1,145,"GtkSearchEntry","register-search-entry",99,None,None,None,10,None,None),
+	(1,144,"GtkEntry","register-area-code-entry",99,None,None,None,8,None,None),
+	(1,145,"GtkSearchEntry","register-search-entry",99,None,None,None,9,None,None),
 	(1,146,"GtkEntry","new-invoice-number-entry",95,None,None,None,53,None,None),
 	(1,147,"GtkEntry","new-invoice-date-entry",95,None,None,None,55,None,None),
 	(1,151,"GtkButton","statement-save-button",134,None,None,None,2,None,None),
@@ -102,7 +101,8 @@
 	(1,287,"GtkAdjustment","new-invoice-description-column-view-hadjustment",284,None,None,None,2,None,None),
 	(1,288,"GtkMessageDialog","invoice-data-in-quantity-column-alert",None,None,None,None,10,None,None),
 	(1,289,"GtkMessageDialog","invoice-data-in-amount-column-alert",None,None,None,None,11,None,None),
-	(1,291,"GtkPasswordEntry","business-info-email-password-entry",72,None,None,None,15,None,None)
+	(1,291,"GtkPasswordEntry","business-info-email-password-entry",72,None,None,None,15,None,None),
+	(1,292,"GtkEntry","register-email-entry",99,None,None,None,10,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -255,7 +255,6 @@
 	(1,99,"GtkGrid","column-homogeneous","True",0,None,None,None,None,None,None,None,None),
 	(1,99,"GtkGrid","row-homogeneous","True",0,None,None,None,None,None,None,None,None),
 	(1,99,"GtkGrid","row-spacing","6",0,None,None,None,None,None,None,None,None),
-	(1,99,"GtkWidget","valign","center",None,None,None,None,None,None,None,None,None),
 	(1,100,"GtkEntry","max-length","50",None,None,None,None,None,None,None,None,None),
 	(1,100,"GtkEntry","placeholder-text","Besigheid naam . . .",None,None,None,None,None,None,None,None,None),
 	(1,101,"GtkEntry","max-length","50",None,None,None,None,None,None,None,None,None),
@@ -293,8 +292,6 @@
 	(1,141,"GtkEntry","placeholder-text","E-pos . . .",None,None,None,None,None,None,None,None,None),
 	(1,142,"GtkEntry","max-length","3",None,None,None,None,None,None,None,None,None),
 	(1,142,"GtkEntry","placeholder-text","Staatskedule (Aantal dae elke maand),(dag van week) . . .",None,None,None,None,None,None,None,None,None),
-	(1,143,"GtkEntry","max-length","1900",None,None,None,None,None,None,None,None,None),
-	(1,143,"GtkEntry","placeholder-text","E-pos . . .",0,None,None,None,None,None,None,None,None),
 	(1,144,"GtkEntry","max-length","50",None,None,None,None,None,None,None,None,None),
 	(1,144,"GtkEntry","placeholder-text","Gebied kode . . .",0,None,None,None,None,None,None,None,None),
 	(1,145,"GtkSearchEntry","placeholder-text","Soek vir besigheid . . .",None,None,None,None,None,None,None,None,None),
@@ -451,7 +448,9 @@
 	(1,289,"GtkMessageDialog","text","Hierdie kolom kan slegs syfers en punte bevat.",0,None,None,None,None,None,None,None,None),
 	(1,289,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,291,"GtkPasswordEntry","activates-default","True",None,None,None,None,None,None,None,None,None),
-	(1,291,"GtkPasswordEntry","placeholder-text","E-pos wagwoord . . .",None,None,None,None,None,None,None,None,None)
+	(1,291,"GtkPasswordEntry","placeholder-text","E-pos wagwoord . . .",None,None,None,None,None,None,None,None,None),
+	(1,292,"GtkEntry","max-length","50",None,None,None,None,None,None,None,None,None),
+	(1,292,"GtkEntry","placeholder-text","E-pos . . .",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),
@@ -553,12 +552,12 @@
 	(1,99,118,"GtkGridLayoutChild","row","0",0,None,None,None),
 	(1,99,142,"GtkGridLayoutChild","column-span","4",None,None,None,None),
 	(1,99,142,"GtkGridLayoutChild","row","9",None,None,None,None),
-	(1,99,143,"GtkGridLayoutChild","column-span","4",None,None,None,None),
-	(1,99,143,"GtkGridLayoutChild","row","7",None,None,None,None),
 	(1,99,144,"GtkGridLayoutChild","column-span","4",None,None,None,None),
 	(1,99,144,"GtkGridLayoutChild","row","4",None,None,None,None),
 	(1,99,145,"GtkGridLayoutChild","column-span","4",None,None,None,None),
 	(1,99,145,"GtkGridLayoutChild","row","1",None,None,None,None),
+	(1,99,292,"GtkGridLayoutChild","column-span","4",None,None,None,None),
+	(1,99,292,"GtkGridLayoutChild","row","7",None,None,None,None),
 	(1,134,136,"GtkGridLayoutChild","column-span","4",None,None,None,None),
 	(1,134,137,"GtkGridLayoutChild","column-span","4",None,None,None,None),
 	(1,134,137,"GtkGridLayoutChild","row","2",None,None,None,None),
