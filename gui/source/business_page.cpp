@@ -12,25 +12,26 @@ gui::business_page::~business_page()
 {
 }
 
-bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{false};
-        if (verify_ui_builder(ui_builder) == true)
+        if (verify_ui_builder(_ui_builder) == true)
         {
                 created = true;
-                update_business_info_with_db_data(ui_builder);
-                connect_save_button(ui_builder);
-                connect_save_alert(ui_builder);
-                connect_wrong_info_alert(ui_builder);
+                create_entries(_ui_builder);
+                update_business_info_with_db_data();
+                connect_save_button();
+                connect_save_alert();
+                connect_wrong_info_alert();
         }
 
         return created;
 }
 
-bool gui::business_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+bool gui::business_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool verified{false};
-        if (ui_builder)
+        if (_ui_builder)
         {
                 verified = true;
         }
@@ -38,48 +39,67 @@ bool gui::business_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& ui_
         return verified;
 }
 
-void gui::business_page::update_business_info_with_db_data(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        std::unique_ptr<Gtk::Entry> name{ui_builder->get_widget<Gtk::Entry>("business-info-name-entry")};
-        std::unique_ptr<Gtk::Entry> street_address{ui_builder->get_widget<Gtk::Entry>("business-info-address-entry")};
-        std::unique_ptr<Gtk::Entry> area_code{ui_builder->get_widget<Gtk::Entry>("business-info-area-code-entry")};
-        std::unique_ptr<Gtk::Entry> town_name{ui_builder->get_widget<Gtk::Entry>("business-info-town-name-entry")};
-        std::unique_ptr<Gtk::Entry> cellphone{ui_builder->get_widget<Gtk::Entry>("business-info-cell-number-entry")};
-        std::unique_ptr<Gtk::Entry> email{ui_builder->get_widget<Gtk::Entry>("business-info-email-entry")};
-        std::unique_ptr<Gtk::Entry> bank_name{ui_builder->get_widget<Gtk::Entry>("business-info-bank-name-entry")};
-        std::unique_ptr<Gtk::Entry> branch_code{ui_builder->get_widget<Gtk::Entry>("business-info-branch-code-entry")};
-        std::unique_ptr<Gtk::Entry> account_number{ui_builder->get_widget<Gtk::Entry>("business-info-account-number-entry")};
-        std::unique_ptr<Gtk::Entry> client_message{ui_builder->get_widget<Gtk::Entry>("business-info-client-message-entry")};
-
-        data::business data{business_info.load(sql)};
-        name->set_text(data.get_name());
-        street_address->set_text(data.get_address());
-        area_code->set_text(data.get_area_code());
-        town_name->set_text(data.get_town());
-        cellphone->set_text(data.get_cellphone());
-        email->set_text(data.get_email());
-        bank_name->set_text(data.get_bank());
-        branch_code->set_text(data.get_branch_code());
-        account_number->set_text(data.get_account_number());
-        client_message->set_text(data.get_client_message());
+        this->name = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-name-entry")};
+        this->street_address = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-address-entry")};
+        this->area_code = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-area-code-entry")};
+        this->town_name = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-town-name-entry")};
+        this->cellphone = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-cell-number-entry")};
+        this->email = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-email-entry")};
+        this->bank_name = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-bank-name-entry")};
+        this->branch_code = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-branch-code-entry")};
+        this->account_number = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-account-number-entry")};
+        this->client_message = std::unique_ptr<Gtk::Entry>{
+                _ui_builder->get_widget<Gtk::Entry>("business-info-client-message-entry")};
+        this->password = std::unique_ptr<Gtk::PasswordEntry>{
+                _ui_builder->get_widget<Gtk::PasswordEntry>("business-info-email-password-entry")};
+        this->save_button = std::unique_ptr<Gtk::Button>{
+                _ui_builder->get_widget<Gtk::Button>("business-info-save-button")};
+        this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
+        this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
 }
 
-void gui::business_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+void gui::business_page::update_business_info_with_db_data()
 {
-        Gtk::Button* save_button{ui_builder->get_widget<Gtk::Button>("business-info-save-button")};
+        data::business data{business_info.load(sql)};
+        this->name->set_text(data.get_name());
+        this->street_address->set_text(data.get_address());
+        this->area_code->set_text(data.get_area_code());
+        this->town_name->set_text(data.get_town());
+        this->cellphone->set_text(data.get_cellphone());
+        this->email->set_text(data.get_email());
+        this->bank_name->set_text(data.get_bank());
+        this->branch_code->set_text(data.get_branch_code());
+        this->account_number->set_text(data.get_account_number());
+        this->client_message->set_text(data.get_client_message());
+}
+
+void gui::business_page::connect_save_button()
+{
         if (save_button)
         {
-                save_button->signal_clicked().connect([ui_builder, this] () {
+                save_button->signal_clicked().connect([this] () {
                         this->save_alert_dialog->show();
                 });
         }
 }
 
-void gui::business_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+void gui::business_page::connect_save_alert()
 {
-        this->save_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert");
-        this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
-                data::business data = extract_page_entries(ui_builder);
+        this->save_alert_dialog->signal_response().connect([this] (int response) {
+                data::business data = extract_page_entries();
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
@@ -103,9 +123,8 @@ void gui::business_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui
         });
 }
 
-void gui::business_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+void gui::business_page::connect_wrong_info_alert()
 {
-        this->wrong_info_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert");
         this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
                 switch (response)
                 {
@@ -119,32 +138,20 @@ void gui::business_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builde
         });
 }
 
-data::business gui::business_page::extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+data::business gui::business_page::extract_page_entries()
 {
-        std::unique_ptr<Gtk::Entry> name{ui_builder->get_widget<Gtk::Entry>("business-info-name-entry")};
-        std::unique_ptr<Gtk::Entry> street_address{ui_builder->get_widget<Gtk::Entry>("business-info-address-entry")};
-        std::unique_ptr<Gtk::Entry> area_code{ui_builder->get_widget<Gtk::Entry>("business-info-area-code-entry")};
-        std::unique_ptr<Gtk::Entry> town_name{ui_builder->get_widget<Gtk::Entry>("business-info-town-name-entry")};
-        std::unique_ptr<Gtk::Entry> cellphone{ui_builder->get_widget<Gtk::Entry>("business-info-cell-number-entry")};
-        std::unique_ptr<Gtk::Entry> email{ui_builder->get_widget<Gtk::Entry>("business-info-email-entry")};
-        std::unique_ptr<Gtk::Entry> bank_name{ui_builder->get_widget<Gtk::Entry>("business-info-bank-name-entry")};
-        std::unique_ptr<Gtk::Entry> branch_code{ui_builder->get_widget<Gtk::Entry>("business-info-branch-code-entry")};
-        std::unique_ptr<Gtk::Entry> account_number{ui_builder->get_widget<Gtk::Entry>("business-info-account-number-entry")};
-        std::unique_ptr<Gtk::Entry> client_message{ui_builder->get_widget<Gtk::Entry>("business-info-client-message-entry")};
-        std::unique_ptr<Gtk::PasswordEntry> password{ui_builder->get_widget<Gtk::PasswordEntry>("business-info-email-password-entry")};
-
         data::business data{};
-        data.set_name(name->get_text());
-        data.set_address(street_address->get_text());
-        data.set_area_code(area_code->get_text());
-        data.set_town(town_name->get_text());
-        data.set_cellphone(cellphone->get_text());
-        data.set_email(email->get_text());
-        data.set_bank(bank_name->get_text());
-        data.set_branch_code(branch_code->get_text());
-        data.set_account_number(account_number->get_text());
-        data.set_client_message(client_message->get_text());
-        data.set_password(password->get_text());
+        data.set_name(this->name->get_text());
+        data.set_address(this->street_address->get_text());
+        data.set_area_code(this->area_code->get_text());
+        data.set_town(this->town_name->get_text());
+        data.set_cellphone(this->cellphone->get_text());
+        data.set_email(this->email->get_text());
+        data.set_bank(this->bank_name->get_text());
+        data.set_branch_code(this->branch_code->get_text());
+        data.set_account_number(this->account_number->get_text());
+        data.set_client_message(this->client_message->get_text());
+        data.set_password(this->password->get_text());
 
         return data;
 }
