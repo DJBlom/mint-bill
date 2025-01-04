@@ -6,7 +6,10 @@
  * NOTE:
  *******************************************************/
 #include <client_invoice.h>
+#include <pdf_invoice_data.h>
+#include <client_data.h>
 #include <iostream>
+#include <pdf.h>
 
 feature::invoice::~invoice() {}
 
@@ -32,7 +35,7 @@ data::invoice feature::invoice::load(const std::string& business_name, const int
                 std::string description_total{"1234.00"};
                 std::string material_total{"1234.00"};
                 std::string grand_total{"1234.00"};
-                unsigned int number{1};
+                std::string number{"1"};
 
                 data.set_business_name(name);
                 data.set_invoice_number(number);
@@ -91,4 +94,55 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
         }
 
         return data;
+}
+
+bool feature::invoice::send_email(const data::invoice& _data)
+{
+        bool sent{false};
+        if (_data.is_valid())
+        {
+                data::pdf_invoice pdf_invoice_data;
+                data::client client_data;
+                client_data.set_business_name("SKA");
+                client_data.set_business_address("Geelsterd 8");
+                client_data.set_business_area_code("543543");
+                client_data.set_business_town_name("George");
+                client_data.set_cellphone_number("0832315944");
+                client_data.set_email("dblom@trojantechnologies.com dawidjblom@gmail.com");
+                client_data.set_vat_number("3241324321413");
+                client_data.set_statement_schedule("4,4");
+                pdf_invoice_data.set_client(client_data);
+
+                pdf_invoice_data.set_invoice(_data);
+
+                data::business business_data;
+                business_data.set_name("T.M Engineering");
+                business_data.set_address("Geelsterd 8");
+                business_data.set_area_code("6625");
+                business_data.set_town("George");
+                business_data.set_cellphone("0832315944");
+                business_data.set_email("dmnsstmtest@gmail.com");
+                business_data.set_bank("Standard Bank");
+                business_data.set_branch_code("043232");
+                business_data.set_account_number("0932443824");
+                business_data.set_client_message("Thank you for your support!");
+                business_data.set_password("bxwx eaku ndjj ltda");
+                pdf_invoice_data.set_business(business_data);
+
+                feature::pdf pdf{};
+                std::string pdf_data{pdf.generate(pdf_invoice_data)};
+
+                data::email email_data{};
+                email_data.set_pdf(pdf_data);
+                email_data.set_client(client_data);
+                email_data.set_business(business_data);
+                email_data.set_subject("Invoice");
+                if (email_data.is_valid() == false)
+                        std::cout << "Email data is not valid\n";
+
+                sent = email.send(email_data);
+        }
+
+
+        return sent;
 }

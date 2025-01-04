@@ -17,7 +17,8 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(utility 
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/file.cpp
-                ${PROJECT_SOURCE_DIR}/source/slicer.cpp
+                ${PROJECT_SOURCE_DIR}/source/word_slicer.cpp
+                ${PROJECT_SOURCE_DIR}/source/boundary_slicer.cpp
         )
 
         target_include_directories(utility 

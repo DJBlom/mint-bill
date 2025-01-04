@@ -14,16 +14,19 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(data 
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/business_data.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_data.cpp
-                ${PROJECT_SOURCE_DIR}/source/invoice_data.cpp
-                ${PROJECT_SOURCE_DIR}/source/column_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/email_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/column_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/business_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/pdf_invoice_data.cpp
         )
 
         target_include_directories(data 
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
+                PUBLIC
+                ${CMAKE_SOURCE_DIR}/utility/include
         )
 else ()
         message(STATUS "There are no files in, data/source.")

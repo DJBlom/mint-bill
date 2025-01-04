@@ -34,8 +34,8 @@ namespace gui {
                 private:
                         storage::sql db{};
                         feature::client client_register{};
-                        Gtk::MessageDialog* wrong_info_alert_dialog{};
-                        Gtk::MessageDialog* save_alert_dialog{};
+                        std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
+                        std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };
 }
 #endif

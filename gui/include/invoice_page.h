@@ -43,25 +43,28 @@ namespace gui {
 
                 private:
                         [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_search(const Glib::RefPtr<Gtk::Builder>&);
+                        void create_entries(const Glib::RefPtr<Gtk::Builder>&);
+                        //void connect_search(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_search();
                         void connect_save_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_email_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_save_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_data_in_quantity_column_alert(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_data_in_amount_column_alert(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_grand_total_label(const Glib::RefPtr<Gtk::Builder>&);
 
                         void connect_description_view(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_description_add_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_description_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&, const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_description_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        //void connect_description_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_description_list_store();
                         void update_description_total(uint, uint, uint);
 
                         void connect_material_view(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_material_add_button(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&, const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_material_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        //void connect_material_list_store(const Glib::RefPtr<Gtk::Builder>&);
+                        void connect_material_list_store();
                         void update_material_total(uint, uint, uint);
 
                         void quantity_column(const std::shared_ptr<Gtk::ColumnView>&);
@@ -76,7 +79,8 @@ namespace gui {
                         double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
                         double compute_grand_total();
 
-                        [[nodiscard]] data::invoice extract_invoice_data(const Glib::RefPtr<Gtk::Builder>&);
+                        //[[nodiscard]] data::invoice extract_invoice_data(const Glib::RefPtr<Gtk::Builder>&);
+                        [[nodiscard]] data::invoice extract_invoice_data();
                         std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
 
                 private:
@@ -86,12 +90,22 @@ namespace gui {
                         std::unique_ptr<Gtk::MessageDialog> wrong_data_in_amount_column;
                         Glib::RefPtr<Gio::ListStore<column_entries>> description_store;
                         Glib::RefPtr<Gio::ListStore<column_entries>> material_store;
-                        std::unique_ptr<Gtk::Label> description_total;
-                        std::unique_ptr<Gtk::Label> material_total;
-                        std::unique_ptr<Gtk::Label> grand_total;
+                        std::unique_ptr<Gtk::Label> description_total_label;
+                        std::string description_total{""};
+                        std::unique_ptr<Gtk::Label> material_total_label;
+                        std::string material_total{""};
+                        std::unique_ptr<Gtk::Label> grand_total_label;
+                        std::string grand_total{""};
                         storage::sql db{};
                         feature::invoice client_invoice{};
                         feature::email email;
+
+                private:
+                        std::unique_ptr<Gtk::Entry> job_card{};
+                        std::unique_ptr<Gtk::Entry> order_number{};
+                        std::unique_ptr<Gtk::Entry> invoice_date{};
+                        std::unique_ptr<Gtk::Entry> invoice_number{};
+                        std::unique_ptr<Gtk::SearchEntry> search_entry{};
         };
 }
 #endif

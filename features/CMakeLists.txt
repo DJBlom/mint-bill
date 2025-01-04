@@ -17,10 +17,11 @@ if(${FILES_IN_DIR} GREATER 0)
         find_package(CURL REQUIRED)
         add_library(features 
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/business_info.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_register.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
+                ${PROJECT_SOURCE_DIR}/source/pdf.cpp
                 ${PROJECT_SOURCE_DIR}/source/email.cpp
+                ${PROJECT_SOURCE_DIR}/source/business_info.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_register.cpp
         )
 
         target_include_directories(features 

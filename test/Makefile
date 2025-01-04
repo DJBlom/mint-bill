@@ -16,7 +16,7 @@ CPPUTEST_EXE_FLAGS :=-c
 #
 # NOTE: Ensure this line is commented when pushing code to the remote.
 # 
-#CPPUTEST_EXE_FLAGS +=-xg "email_test"
+CPPUTEST_EXE_FLAGS +=-xg "email_test"
 
 CPPUTEST_CXXFLAGS :=-std=c++23 
 CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo) $(shell curl-config --cflags)

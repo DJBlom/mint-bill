@@ -40,7 +40,7 @@ bool gui::client_register_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builde
 
 void gui::client_register_page::connect_search(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        Gtk::SearchEntry* search_entry{ui_builder->get_widget<Gtk::SearchEntry>("register-search-entry")};
+        std::shared_ptr<Gtk::SearchEntry> search_entry{ui_builder->get_widget<Gtk::SearchEntry>("register-search-entry")};
         if (search_entry)
         {
                 search_entry->signal_search_changed().connect([search_entry, ui_builder, this] () {
@@ -52,7 +52,7 @@ void gui::client_register_page::connect_search(const Glib::RefPtr<Gtk::Builder>&
 
 void gui::client_register_page::connect_save_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        Gtk::Button* save_button{ui_builder->get_widget<Gtk::Button>("register-save-button")};
+        std::unique_ptr<Gtk::Button> save_button{ui_builder->get_widget<Gtk::Button>("register-save-button")};
         if (save_button)
         {
                 save_button->signal_clicked().connect([ui_builder, this] () {
@@ -63,14 +63,14 @@ void gui::client_register_page::connect_save_button(const Glib::RefPtr<Gtk::Buil
 
 data::client extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        Gtk::Entry* business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
-        Gtk::Entry* business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
-        Gtk::Entry* business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
-        Gtk::Entry* business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
-        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
-        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
-        Gtk::Entry* vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
-        Gtk::Entry* statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
+        std::unique_ptr<Gtk::Entry> business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
+        std::unique_ptr<Gtk::Entry> business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
+        std::unique_ptr<Gtk::Entry> business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
+        std::unique_ptr<Gtk::Entry> business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
+        std::unique_ptr<Gtk::Entry> cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
+        std::unique_ptr<Gtk::Entry> email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
+        std::unique_ptr<Gtk::Entry> vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
+        std::unique_ptr<Gtk::Entry> statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
 
         data::client data{};
         data.set_business_name(business_name->get_text());
@@ -87,7 +87,8 @@ data::client extract_page_entries(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 
 void gui::client_register_page::connect_save_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        this->save_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert");
+        this->save_alert_dialog =
+                std::unique_ptr<Gtk::MessageDialog>{ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert")};
         this->save_alert_dialog->signal_response().connect([ui_builder, this] (int response) {
                 data::client data = extract_page_entries(ui_builder);
                 switch(response)
@@ -115,7 +116,8 @@ void gui::client_register_page::connect_save_alert(const Glib::RefPtr<Gtk::Build
 
 void gui::client_register_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        this->wrong_info_alert_dialog = ui_builder->get_widget<Gtk::MessageDialog>("client-wrong-info-alert");
+        this->wrong_info_alert_dialog =
+                std::unique_ptr<Gtk::MessageDialog>{ui_builder->get_widget<Gtk::MessageDialog>("client-wrong-info-alert")};
         this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
                 switch (response)
                 {
@@ -131,21 +133,26 @@ void gui::client_register_page::connect_wrong_info_alert(const Glib::RefPtr<Gtk:
 
 void gui::client_register_page::display_on_ui(const data::client& data, const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
-        Gtk::Entry* business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
-        Gtk::Entry* business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
-        Gtk::Entry* business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
-        Gtk::Entry* business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
-        Gtk::Entry* cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
-        Gtk::Entry* email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
-        Gtk::Entry* vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
-        Gtk::Entry* statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
+        std::unique_ptr<Gtk::Entry> business_name{ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
+        std::unique_ptr<Gtk::Entry> business_street_address{ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
+        std::unique_ptr<Gtk::Entry> business_area_code{ui_builder->get_widget<Gtk::Entry>("register-area-code-entry")};
+        std::unique_ptr<Gtk::Entry> business_town_name{ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
+        std::unique_ptr<Gtk::Entry> cellphone{ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
+        std::unique_ptr<Gtk::Entry> email{ui_builder->get_widget<Gtk::Entry>("register-email-entry")};
+        std::unique_ptr<Gtk::Entry> vat_number{ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
+        std::unique_ptr<Gtk::Entry> statment_schedule{ui_builder->get_widget<Gtk::Entry>("register-statement-schedule-entry")};
 
         business_name->set_text(data.get_business_name());
         business_street_address->set_text(data.get_business_address());
         business_area_code->set_text(data.get_business_area_code());
         business_town_name->set_text(data.get_business_town_name());
         cellphone->set_text(data.get_cellphone_number());
-        email->set_text(data.get_email());
+
+        std::string emails{""};
+        for (const auto& email : data.get_email())
+                emails += email + " ";
+        email->set_text(emails);
+
         vat_number->set_text(data.get_vat_number());
         statment_schedule->set_text(data.get_statement_schedule());
 }
