@@ -22,8 +22,7 @@ namespace error {
 
 void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 {
-        Glib::RefPtr<Gtk::Builder> ui_builder;
-        ui_builder = Gtk::Builder::create();
+        Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
         if (this->verify_ui_file(ui_builder) == false)
         {
                 std::cerr << error::message_file << std::endl;

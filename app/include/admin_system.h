@@ -29,7 +29,7 @@ namespace app {
                         [[nodiscard]] bool verify_ui_file(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
-                        gui::main_window main_window;
+                        gui::main_window main_window{};
                         gui::business_page business_page{};
                         gui::client_register_page client_register_page{};
                         gui::invoice_page invoice_page{};
