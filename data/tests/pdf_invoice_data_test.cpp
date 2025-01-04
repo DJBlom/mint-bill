@@ -202,7 +202,7 @@ static data::invoice retrieve_invoice_data()
         }
         data::invoice expected;
         expected.set_business_name("Test Business");
-        expected.set_invoice_number(134);
+        expected.set_invoice_number("134");
         expected.set_invoice_date("2023-09-04");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");
@@ -229,7 +229,7 @@ static data::invoice retrieve_bad_invoice_data()
         }
         data::invoice expected;
         expected.set_business_name("");
-        expected.set_invoice_number(134);
+        expected.set_invoice_number("134");
         expected.set_invoice_date("2023-09-04");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");

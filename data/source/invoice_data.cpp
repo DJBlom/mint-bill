@@ -111,9 +111,8 @@ std::string data::invoice::get_business_name() const
         return std::move(this->business_name);
 }
 
-void data::invoice::set_invoice_number(const unsigned int& _number)
+void data::invoice::set_invoice_number(const std::string& _invoice_number)
 {
-        std::string _invoice_number{std::to_string(_number)};
         if (_invoice_number.length() <= upper_bound::invoice_number_length)
         {
                 set_flag(FLAG::NUMBER);

@@ -98,7 +98,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        unsigned int number{1};
+        std::string number{"1"};
 
         data::invoice expected;
         expected.set_business_name(name);

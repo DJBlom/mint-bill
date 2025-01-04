@@ -27,7 +27,7 @@ namespace data {
                         [[nodiscard]] virtual bool is_valid() const;
                         virtual void set_business_name(const std::string&);
                         [[nodiscard]] std::string get_business_name() const;
-                        virtual void set_invoice_number(const unsigned int&);
+                        virtual void set_invoice_number(const std::string&);
                         [[nodiscard]] std::string get_invoice_number() const;
                         virtual void set_invoice_date(const std::string&);
                         [[nodiscard]] std::string get_invoice_date() const;

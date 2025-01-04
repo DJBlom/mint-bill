@@ -38,12 +38,12 @@ extern "C"
  * 15) Ensure the data is copyable. (Done)
  * 16) Ensure the data is moveable. (Done)
  * 17) Ensure the data is thread safe. (Done)
- * 18) Assign the total description data.
- * 19) Retrieve the total description data.
- * 20) Assign the total material data.
- * 21) Retrieve the total material data.
- * 22) Assign the grand total data.
- * 23) Retrieve the grand total data.
+ * 18) Assign the total description data. (Done)
+ * 19) Retrieve the total description data. (Done)
+ * 20) Assign the total material data. (Done)
+ * 21) Retrieve the total material data. (Done)
+ * 22) Assign the grand total data. (Done)
+ * 23) Retrieve the grand total data. (Done)
  ******************************************************************************/
 TEST_GROUP(invoice_data_test)
 {
@@ -68,11 +68,11 @@ TEST(invoice_data_test, handle_the_business_name)
 
 TEST(invoice_data_test, handle_the_invoice_number)
 {
-        unsigned int expected{1};
+        std::string expected{"1"};
         invoice_data.set_invoice_number(expected);
         std::string result{invoice_data.get_invoice_number()};
 
-        CHECK_EQUAL(expected, std::stoul(result));
+        CHECK_EQUAL(expected, result);
 }
 
 TEST(invoice_data_test, handle_the_invoice_date)
@@ -184,7 +184,7 @@ TEST(invoice_data_test, handle_the_copy_of_the_data)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        unsigned int number{1};
+        std::string number{"1"};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -221,7 +221,7 @@ TEST(invoice_data_test, handle_the_move_of_the_data)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        unsigned int number{1};
+        std::string number{"1"};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -258,7 +258,7 @@ TEST(invoice_data_test, handle_copy_constructing_of_the_data)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        unsigned int number{1};
+        std::string number{"1"};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -294,7 +294,7 @@ TEST(invoice_data_test, handle_move_constructing_of_the_data)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        unsigned int number{1};
+        std::string number{"1"};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -321,7 +321,7 @@ TEST(invoice_data_test, handle_failure_to_set_data)
         std::string description_total{""};
         std::string material_total{""};
         std::string grand_total{""};
-        unsigned int number;
+        std::string number{""};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -357,7 +357,7 @@ TEST(invoice_data_test, handle_data_limits)
         std::string description_total{limit};
         std::string material_total{limit};
         std::string grand_total{limit};
-        unsigned int number{123456789};
+        std::string number{"123456789"};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
@@ -383,7 +383,7 @@ TEST(invoice_data_test, handle_bad_data)
         std::string description_total{};
         std::string material_total{};
         std::string grand_total{};
-        unsigned int number;
+        std::string number{};
 
         invoice_data.set_business_name(name);
         invoice_data.set_invoice_number(number);
