@@ -43,7 +43,7 @@ bool feature::client::save(const data::client& data, const interface::storage& s
                 std::cout << "Business Area Code: " << data.get_business_area_code() << std::endl;
                 std::cout << "Business Town: " << data.get_business_town_name() << std::endl;
                 std::cout << "Cellphone: " << data.get_cellphone_number() << std::endl;
-                //std::cout << "Email: " << data.get_email() << std::endl;
+                std::cout << "Email: " << data.get_email() << std::endl;
                 std::cout << "Vat Number: " << data.get_vat_number() << std::endl;
                 std::cout << "Statement Schedule: " << data.get_statement_schedule() << std::endl;
         }

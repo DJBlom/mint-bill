@@ -26,11 +26,12 @@ namespace gui {
                 private:
                         [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
-                        void display_on_ui(const data::client&);
                         void connect_search();
                         void connect_save_button();
                         void connect_save_alert();
                         void connect_wrong_info_alert();
+                        void clear_all_entries();
+                        void display_on_ui(const data::client&);
                         data::client extract_page_entries();
 
                 private:
