@@ -21,7 +21,6 @@ std::vector<std::string> utility::word_slicer::slice(const std::string& _data)
                 slice_data(_data);
         }
 
-
         return this->sliced_data;
 }
 

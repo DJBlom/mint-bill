@@ -134,34 +134,35 @@ bool smtp::header::add(const data::email& _data)
 {
         data::client client{_data.get_client()};
         data::business business{_data.get_business()};
-        std::vector<std::string> emails{client.get_email()};
         std::vector<std::string> info = {
-                "To: " + to_mail(emails),
+                "To: " + to_mail(client.get_email()),
                 "From: " + business.get_email(),
-                "Cc: " + cc_mail(emails),
+                "Cc: " + cc_mail(client.get_email()),
                 "Subject: " + _data.get_subject()
         };
 
         return info;
 }
 
-std::string smtp::header::to_mail(const std::vector<std::string>& _emails)
+std::string smtp::header::to_mail(const std::string& _emails)
 {
+        std::vector<std::string> sliced_emails{this->slicer.slice(_emails)};
         std::string to{""};
-        if (!_emails.empty())
+        if (!sliced_emails.empty())
         {
-                to = std::move(_emails.front());
+                to = std::move(sliced_emails.front());
         }
 
         return to;
 } //GCOVR_EXCL_LINE
 
-std::string smtp::header::cc_mail(const std::vector<std::string>& _emails)
+std::string smtp::header::cc_mail(const std::string& _emails)
 {
+        std::vector<std::string> sliced_emails{this->slicer.slice(_emails)};
         std::string cc{""};
-        if (!_emails.empty())
+        if (!sliced_emails.empty())
         {
-                for (const auto& email : std::ranges::subrange(_emails.begin() + 1, _emails.end()))
+                for (const auto& email : std::ranges::subrange(sliced_emails.begin() + 1, sliced_emails.end()))
                 {
                         cc += (email + " ");
                 }
@@ -169,6 +170,7 @@ std::string smtp::header::cc_mail(const std::vector<std::string>& _emails)
 
         return cc;
 } //GCOVR_EXCL_LINE
+
 
 /********************************************************
  * Contents: Recipients implementation
@@ -187,7 +189,9 @@ bool smtp::recipients::add(const data::client& _data)
         bool added{false};
         if (_data.is_valid())
         {
-                for (const auto& _email : _data.get_email())
+                utility::word_slicer slicer{};
+                std::vector<std::string> sliced_emails{slicer.slice(_data.get_email())};
+                for (const auto& _email : sliced_emails)
                 {
                         this->receivers.reset(curl_slist_append(this->receivers.release(), _email.c_str()));
                 }

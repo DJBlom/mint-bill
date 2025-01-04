@@ -14,6 +14,7 @@
 #include <curl/curl.h>
 #include <email_data.h>
 #include <client_data.h>
+#include <word_slicer.h>
 #include <business_data.h>
 
 namespace feature {
@@ -65,11 +66,12 @@ namespace smtp {
 
                 private:
                         [[nodiscard]] std::vector<std::string> generate(const data::email&);
-                        [[nodiscard]] std::string to_mail(const std::vector<std::string>&);
-                        [[nodiscard]] std::string cc_mail(const std::vector<std::string>&);
+                        [[nodiscard]] std::string to_mail(const std::string&);
+                        [[nodiscard]] std::string cc_mail(const std::string&);
 
                 private:
                         std::shared_ptr<CURL> curl;
+                        utility::word_slicer slicer{};
                         std::unique_ptr<struct curl_slist, decltype(&curl_slist_free_all)> headers{
                                 nullptr, curl_slist_free_all
                         };

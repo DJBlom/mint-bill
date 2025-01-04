@@ -266,7 +266,7 @@ TEST(client_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
         client_data.set_business_area_code(dummy_data);
         client_data.set_business_town_name(dummy_data);
         client_data.set_cellphone_number(dummy_data);
-        client_data.set_email("odn@gmail.com");
+        client_data.set_email("odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com");
         client_data.set_vat_number(dummy_data);
         client_data.set_statement_schedule("4,4");
 

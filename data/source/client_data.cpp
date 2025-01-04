@@ -169,11 +169,11 @@ std::string data::client::get_cellphone_number() const
         return std::move(this->cellphone_number);
 }
 
-void data::client::set_email(const std::string& _data)
+void data::client::set_email(const std::string& _emails)
 {
         utility::word_slicer slicer{};
-        std::vector<std::string> _emails{slicer.slice(_data)};
-        if (email_address_good(_emails) == true)
+        std::vector<std::string> sliced_emails{slicer.slice(_emails)};
+        if (email_address_good(sliced_emails) == true)
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->client_data);
@@ -185,7 +185,7 @@ void data::client::set_email(const std::string& _data)
         }
 }
 
-std::vector<std::string> data::client::get_email() const
+std::string data::client::get_email() const
 {
         return std::move(this->emails);
 }

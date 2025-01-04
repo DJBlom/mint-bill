@@ -36,7 +36,7 @@ namespace data {
                         virtual void set_cellphone_number(const std::string&);
                         [[nodiscard]] std::string get_cellphone_number() const;
                         virtual void set_email(const std::string&);
-                        [[nodiscard]] std::vector<std::string> get_email() const;
+                        [[nodiscard]] std::string get_email() const;
                         virtual void set_vat_number(const std::string&);
                         [[nodiscard]] std::string get_vat_number() const;
                         virtual void set_statement_schedule(const std::string&);
@@ -56,7 +56,7 @@ namespace data {
                         std::string business_area_code{""};
                         std::string business_town_name{""};
                         std::string cellphone_number{""};
-                        std::vector<std::string> emails{""};
+                        std::string emails{""};
                         std::string vat_number{""};
                         std::string statement_schedule{""};
                         mask_type flags{0x0};
