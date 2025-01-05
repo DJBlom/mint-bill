@@ -71,21 +71,6 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
 }
 
-void gui::business_page::update_business_info_with_db_data()
-{
-        data::business data{business_info.load(sql)};
-        this->name->set_text(data.get_name());
-        this->street_address->set_text(data.get_address());
-        this->area_code->set_text(data.get_area_code());
-        this->town_name->set_text(data.get_town());
-        this->cellphone->set_text(data.get_cellphone());
-        this->email->set_text(data.get_email());
-        this->bank_name->set_text(data.get_bank());
-        this->branch_code->set_text(data.get_branch_code());
-        this->account_number->set_text(data.get_account_number());
-        this->client_message->set_text(data.get_client_message());
-}
-
 void gui::business_page::connect_save_button()
 {
         if (save_button)
@@ -111,6 +96,7 @@ void gui::business_page::connect_save_alert()
                                 else
                                 {
                                         this->save_alert_dialog->hide();
+                                        clear_entries();
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
@@ -136,6 +122,26 @@ void gui::business_page::connect_wrong_info_alert()
                                 break;
                 }
         });
+}
+
+void gui::business_page::clear_entries()
+{
+        this->password->set_text("");
+}
+
+void gui::business_page::update_business_info_with_db_data()
+{
+        data::business data{business_info.load(sql)};
+        this->name->set_text(data.get_name());
+        this->street_address->set_text(data.get_address());
+        this->area_code->set_text(data.get_area_code());
+        this->town_name->set_text(data.get_town());
+        this->cellphone->set_text(data.get_cellphone());
+        this->email->set_text(data.get_email());
+        this->bank_name->set_text(data.get_bank());
+        this->branch_code->set_text(data.get_branch_code());
+        this->account_number->set_text(data.get_account_number());
+        this->client_message->set_text(data.get_client_message());
 }
 
 data::business gui::business_page::extract_page_entries()

@@ -104,6 +104,7 @@ void gui::client_register_page::connect_save_alert()
                                 else
                                 {
                                         this->save_alert_dialog->hide();
+                                        clear_all_entries();
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
@@ -129,6 +130,19 @@ void gui::client_register_page::connect_wrong_info_alert()
                                 break;
                 }
         });
+}
+
+void gui::client_register_page::clear_all_entries()
+{
+        this->search_entry->set_text("");
+        this->business_name->set_text("");
+        this->business_street_address->set_text("");
+        this->business_area_code->set_text("");
+        this->business_town_name->set_text("");
+        this->cellphone->set_text("");
+        this->email->set_text("");
+        this->vat_number->set_text("");
+        this->statment_schedule->set_text("");
 }
 
 void gui::client_register_page::display_on_ui(const data::client& _data)
