@@ -897,6 +897,7 @@
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Is u e-pos korrek ingevul?</property>
+    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -908,6 +909,7 @@
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
+    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -921,6 +923,7 @@
 3) - Is die staatskedule formaat korrek dag/maand, dag/week?
         Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag van 
         die week vir 4 keer 'n maand gegenereer gaan word.</property>
+    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -932,6 +935,7 @@
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
+    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -945,6 +949,7 @@
 
 3) - Is die arbeid en materiaal items 
         by gevoeg?</property>
+    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -956,6 +961,7 @@
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="text">Is u seker u wil die faktuur print?</property>
+    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -973,11 +979,24 @@
   <object class="GtkMessageDialog" id="invoice-data-in-quantity-column-alert">
     <property name="buttons">close</property>
     <property name="text">Hierdie kolom kan slegs syfers bevat.</property>
+    <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-data-in-amount-column-alert">
     <property name="buttons">close</property>
     <property name="text">Hierdie kolom kan slegs syfers en punte bevat.</property>
+    <property name="title">Informasie</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="invoice-email-no-internet-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">close</property>
+    <property name="deletable">False</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="text">Maak asseblief seker dat u internettoegang het.
+</property>
+    <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
   </object>
 </interface>
