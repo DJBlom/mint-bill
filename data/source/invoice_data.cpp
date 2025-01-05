@@ -9,6 +9,7 @@
 
 
 namespace upper_bound {
+        constexpr std::uint8_t name_length{50};
         constexpr std::uint8_t string_length{20};
         constexpr std::uint8_t invoice_number_length{8};
 }
@@ -94,7 +95,7 @@ bool data::invoice::is_valid() const
 
 void data::invoice::set_business_name(const std::string& _name)
 {
-        if (!_name.empty() && (_name.length() <= upper_bound::string_length))
+        if (!_name.empty() && (_name.length() <= upper_bound::name_length))
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
