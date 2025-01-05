@@ -90,7 +90,6 @@
 	(1,272,"GtkColumnView","new-invoice-material",271,None,None,None,0,None,None),
 	(1,273,"GtkButton","invoice-material-delete-button",95,None,None,None,62,None,None),
 	(1,274,"GtkScrolledWindow","known-invoice-scroll-bar",95,None,None,None,63,None,None),
-	(1,275,"GtkColumnView","known-invoice-view",274,None,None,None,0,None,None),
 	(1,277,"GtkAdjustment","new-invoice-material-column-view-adjustment",271,None,None,None,1,None,None),
 	(1,278,"GtkLabel","new-invoice-description-total-label",95,None,None,None,64,None,None),
 	(1,279,"GtkLabel","new-invoice-material-total-label",95,None,None,None,65,None,None),
@@ -103,7 +102,11 @@
 	(1,289,"GtkMessageDialog","invoice-data-in-amount-column-alert",None,None,None,None,11,None,None),
 	(1,291,"GtkPasswordEntry","business-info-email-password-entry",72,None,None,None,15,None,None),
 	(1,292,"GtkEntry","register-email-entry",99,None,None,None,10,None,None),
-	(1,293,"GtkMessageDialog","invoice-email-no-internet-alert",None,None,None,None,12,None,None)
+	(1,293,"GtkMessageDialog","invoice-email-no-internet-alert",None,None,None,None,12,None,None),
+	(1,294,"GtkListView","known_invoice-view",274,None,None,None,0,None,None),
+	(1,295,"GtkListItemFactory",None,294,None,None,None,0,None,None),
+	(1,296,"GtkSingleSelection",None,294,None,None,None,1,None,None),
+	(1,297,"GtkListItemFactory",None,294,None,None,None,2,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -421,7 +424,6 @@
 	(1,272,"GtkWidget","focus-on-click","False",None,None,None,None,None,None,None,None,None),
 	(1,273,"GtkButton","label","Verwyder",None,None,None,None,None,None,None,None,None),
 	(1,273,"GtkWidget","valign","center",None,None,None,None,None,None,None,None,None),
-	(1,274,"GtkScrolledWindow","child",None,None,None,None,None,275,None,None,None,None),
 	(1,274,"GtkScrolledWindow","kinetic-scrolling","False",None,None,None,None,None,None,None,None,None),
 	(1,278,"GtkLabel","label","Total: R 0.00",None,None,None,None,None,None,None,None,None),
 	(1,278,"GtkLabel","xalign","0.0",None,None,None,None,None,None,None,None,None),
@@ -468,7 +470,10 @@
 	(1,293,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,293,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,293,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
-	(1,293,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None)
+	(1,293,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
+	(1,294,"GtkListView","factory",None,None,None,None,None,295,None,None,None,None),
+	(1,294,"GtkListView","header-factory",None,None,None,None,None,297,None,None,None,None),
+	(1,294,"GtkListView","model",None,None,None,None,None,296,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),

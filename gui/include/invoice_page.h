@@ -30,6 +30,19 @@ namespace gui {
                         column_entries() {}
         };
 
+        struct invoice_entries : public Glib::Object {
+                public:
+                        data::invoice invoice{};
+
+                        static Glib::RefPtr<invoice_entries> create(const data::invoice& _invoice)
+                        {
+                                return Glib::make_refptr_for_instance<invoice_entries>(new invoice_entries(_invoice));
+                        }
+
+                protected:
+                        invoice_entries(const data::invoice& _invoice) : invoice{_invoice} {}
+        };
+
         class invoice_page : public interface::gui {
                 public:
                         invoice_page() = default;
@@ -65,14 +78,20 @@ namespace gui {
                         void connect_wrong_data_in_quantity_column_alert();
 
                 private: // View events
+                        void connect_invoice_view();
                         void connect_material_view();
                         void connect_description_view();
+                        void connect_invoice_list_store();
                         void connect_material_list_store();
                         void connect_description_list_store();
 
                 private: // helper
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+                        void invoices(const std::unique_ptr<Gtk::ListView>&);
+                        void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
+                        void invoice_teardown(const Glib::RefPtr<Gtk::ListItem>&);
+                        void bind_invoices(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_quantity(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_description(const Glib::RefPtr<Gtk::ListItem>&);
@@ -101,10 +120,14 @@ namespace gui {
                         std::unique_ptr<Gtk::SearchEntry> search_entry{};
 
                 private: // Member Views
+                        std::unique_ptr<Gtk::ListView> invoice_view{};
                         std::unique_ptr<Gtk::ColumnView> material_view{};
                         std::unique_ptr<Gtk::ColumnView> description_view{};
                         std::shared_ptr<Gtk::Adjustment> material_adjustment{};
                         std::shared_ptr<Gtk::Adjustment> description_adjustment{};
+                        std::shared_ptr<Gio::ListStore<invoice_entries>> invoice_store{};
+                        std::shared_ptr<Gio::ListStore<column_entries>> material_store{};
+                        std::shared_ptr<Gio::ListStore<column_entries>> description_store{};
 
                 private: // Member buttons
                         std::unique_ptr<Gtk::Button> save_button{};
@@ -118,8 +141,6 @@ namespace gui {
                         std::unique_ptr<Gtk::Label> grand_total_label{};
                         std::unique_ptr<Gtk::Label> material_total_label{};
                         std::unique_ptr<Gtk::Label> description_total_label{};
-                        std::shared_ptr<Gio::ListStore<column_entries>> material_store{};
-                        std::shared_ptr<Gio::ListStore<column_entries>> description_store{};
 
                 private: // Member Message dialogs
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};

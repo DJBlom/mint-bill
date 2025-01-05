@@ -36,6 +36,7 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_search();
                 connect_save_button();
                 connect_email_button();
+                connect_invoice_view();
                 connect_material_view();
                 connect_description_view();
                 connect_save_alert();
@@ -51,6 +52,8 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 
 void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
+        this->invoice_view = std::unique_ptr<Gtk::ListView>{
+                _ui_builder->get_widget<Gtk::ListView>("known_invoice-view")};
         this->description_view = std::unique_ptr<Gtk::ColumnView>{
                 _ui_builder->get_widget<Gtk::ColumnView>("new-invoice-description")};
         this->description_adjustment = std::shared_ptr<Gtk::Adjustment>{
@@ -118,8 +121,15 @@ void gui::invoice_page::connect_search()
         if (this->search_entry)
         {
                 search_entry->signal_search_changed().connect([this] () {
+                        this->invoice_store->remove_all();
                         this->invoice_number->set_text("1");
                         this->invoice_date->set_text("10-12-2024");
+                        std::vector<data::invoice> invoices{client_invoice.search(this->search_entry->get_text(), this->db)};
+                        for (const auto& invoice : invoices)
+                        {
+                                if (invoice.is_valid())
+                                        this->invoice_store->append(invoice_entries::create(invoice));
+                        }
                 });
         }
 }
@@ -143,6 +153,52 @@ void gui::invoice_page::connect_email_button()
                         this->email_confirmation->show();
                 });
         }
+}
+
+void gui::invoice_page::connect_invoice_view()
+{
+        this->invoice_store = std::shared_ptr<Gio::ListStore<invoice_entries>>{
+                Gio::ListStore<invoice_entries>::create()};
+        Glib::RefPtr<Gtk::MultiSelection> selection_model = Gtk::MultiSelection::create(this->invoice_store);
+        this->invoice_view->set_model(selection_model);
+        this->invoice_view->set_name("invoice_view");
+
+        invoices(this->invoice_view);
+}
+
+void gui::invoice_page::invoices(const std::unique_ptr<Gtk::ListView>& view)
+{
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
+        factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::invoice_setup)));
+        factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_page::bind_invoices));
+        factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::invoice_teardown)));
+        view->set_factory(factory);
+}
+
+void gui::invoice_page::invoice_setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+
+        _item->set_child(*Gtk::make_managed<Gtk::Label>("", Gtk::Align::CENTER));
+}
+
+void gui::invoice_page::invoice_teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        _item->unset_child();
+}
+
+void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        auto data = std::dynamic_pointer_cast<invoice_entries>(_item->get_item());
+        if (!data)
+                return;
+
+        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+        if (!label)
+                return;
+
+        data::invoice invoice{data->invoice};
+        std::string details{invoice.get_invoice_number() + " " + invoice.get_invoice_date() + " " + invoice.get_business_name()};
+        label->set_text(details);
 }
 
 void gui::invoice_page::connect_description_view()
