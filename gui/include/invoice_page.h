@@ -10,6 +10,7 @@
 #include <gui.h>
 #include <vector>
 #include <sql.h>
+#include <mutex>
 #include <invoice_data.h>
 #include <client_invoice.h>
 
@@ -40,7 +41,7 @@ namespace gui {
                         }
 
                 protected:
-                        invoice_entries(const data::invoice& _invoice) : invoice{_invoice} {}
+                        explicit invoice_entries(const data::invoice& _invoice) : invoice{_invoice} {}
         };
 
         class invoice_page : public interface::gui {
@@ -98,6 +99,7 @@ namespace gui {
                         void amount_column(const std::unique_ptr<Gtk::ColumnView>&);
                         void quantity_column(const std::unique_ptr<Gtk::ColumnView>&);
                         void description_column(const std::unique_ptr<Gtk::ColumnView>&);
+                        void selected_invoice(uint);
                         void update_material_total(uint, uint, uint);
                         void update_description_total(uint, uint, uint);
                         [[nodiscard]] double compute_grand_total();
@@ -110,7 +112,10 @@ namespace gui {
                         std::string grand_total{""};
                         std::string material_total{""};
                         std::string description_total{""};
+                        data::invoice current_invoice{};
+                        //int current_invoice{};
                         feature::invoice client_invoice{};
+                        //std::vector<data::invoice> saved_invoices;
 
                 private: // Member Entries
                         std::unique_ptr<Gtk::Entry> job_card{};
@@ -123,6 +128,7 @@ namespace gui {
                         std::unique_ptr<Gtk::ListView> invoice_view{};
                         std::unique_ptr<Gtk::ColumnView> material_view{};
                         std::unique_ptr<Gtk::ColumnView> description_view{};
+                        std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
                         std::shared_ptr<Gtk::Adjustment> material_adjustment{};
                         std::shared_ptr<Gtk::Adjustment> description_adjustment{};
                         std::shared_ptr<Gio::ListStore<invoice_entries>> invoice_store{};

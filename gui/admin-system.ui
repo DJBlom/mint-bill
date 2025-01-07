@@ -339,20 +339,21 @@
                                 </child>
                                 <child>
                                   <object class="GtkScrolledWindow" id="known-invoice-scroll-bar">
-                                    <property name="kinetic-scrolling">False</property>
-                                    <child>
-                                      <object class="GtkListView" id="known_invoice-view">
-                                        <property name="factory">
-                                          <object class="GtkListItemFactory"/>
-                                        </property>
-                                        <property name="header-factory">
-                                          <object class="GtkListItemFactory"/>
-                                        </property>
-                                        <property name="model">
-                                          <object class="GtkSingleSelection"/>
-                                        </property>
+                                    <property name="child">
+                                      <object class="GtkListView" id="known-invoice-view">
+                                        <property name="hexpand">True</property>
+                                        <property name="show-separators">True</property>
+                                        <property name="vexpand">True</property>
                                       </object>
-                                    </child>
+                                    </property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="focusable">False</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="kinetic-scrolling">False</property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="known-invoice-adjustment"/>
+                                    </property>
+                                    <property name="vexpand">True</property>
                                     <layout>
                                       <property name="column">7</property>
                                       <property name="column-span">2</property>
