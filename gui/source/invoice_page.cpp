@@ -20,6 +20,61 @@ namespace limit {
         constexpr std::uint16_t MAX_DESCRIPTION{500};
 }
 
+gui::email_sender::email_sender()
+{
+        this->dispatcher.connect(sigc::mem_fun(*this, &email_sender::email_sent));
+}
+
+gui::email_sender::~email_sender() {}
+
+bool gui::email_sender::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+        bool created{false};
+        if (_ui_builder)
+        {
+                created = true;
+                this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
+                        _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
+                connect_no_internet_alert();
+        }
+
+        return created;
+}
+void gui::email_sender::send_email(const data::invoice& _data)
+{
+        if (_data.is_valid())
+        {
+                std::thread([this, _data] () {
+                        bool success = client_invoice.send_email(_data);
+                        this->email_success = success;
+                        this->dispatcher.emit();
+                }).detach();
+        }
+}
+
+void gui::email_sender::email_sent()
+{
+        if (this->email_success == false)
+        {
+                this->email_no_internet->show();
+        }
+}
+
+void gui::email_sender::connect_no_internet_alert()
+{
+        this->email_no_internet->signal_response().connect([this] (int response) {
+                switch(response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->email_no_internet->hide();
+                                break;
+                        default:
+                                this->email_no_internet->hide();
+                                break;
+                }
+        });
+}
+
 gui::invoice_page::~invoice_page()
 {
 
@@ -31,6 +86,9 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         if (_ui_builder)
         {
                 created = true;
+                if (this->sender.create(_ui_builder) == false)
+                        return false;
+
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
@@ -43,7 +101,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_description_view();
                 connect_save_alert();
                 connect_email_alert();
-                connect_no_internet_alert();
                 connect_wrong_info_alert();
                 connect_wrong_data_in_amount_column_alert();
                 connect_wrong_data_in_quantity_column_alert();
@@ -100,8 +157,6 @@ void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-amount-column-alert")};
         this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
-        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
 }
 
 void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -171,23 +226,15 @@ void gui::invoice_page::connect_invoice_view()
         this->invoice_view->set_model(selection_model);
         this->invoice_view->set_name("invoice_view");
 
-        this->invoice_view->set_single_click_activate(true);
-        this->invoice_view->signal_activate().connect(
-                sigc::mem_fun(*this, &invoice_page::selected_invoice));
-
+        connect_invoice_list_store();
         invoices(this->invoice_view);
 }
 
-void gui::invoice_page::selected_invoice(uint position)
+void gui::invoice_page::connect_invoice_list_store()
 {
-    auto item = this->invoice_store->get_item(position);
-    auto data = std::dynamic_pointer_cast<invoice_entries>(item);
-    if (!data)
-        return;
-
-    // Do something with the data
-    this->email_button->set_sensitive(true);
-    this->current_invoice = data->invoice;
+        this->invoice_view->set_single_click_activate(true);
+        this->invoice_view->signal_activate().connect(
+                sigc::mem_fun(*this, &invoice_page::selected_invoice));
 }
 
 void gui::invoice_page::invoices(const std::unique_ptr<Gtk::ListView>& view)
@@ -201,7 +248,11 @@ void gui::invoice_page::invoices(const std::unique_ptr<Gtk::ListView>& view)
 
 void gui::invoice_page::invoice_setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        _item->set_child(*Gtk::make_managed<Gtk::Label>("", Gtk::Align::START));
+        auto label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
+        label->set_hexpand(true);
+        label->set_vexpand(false);
+        label->set_size_request(200, 35);
+        _item->set_child(*label);
 }
 
 void gui::invoice_page::invoice_teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
@@ -222,6 +273,17 @@ void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
         data::invoice invoice{data->invoice};
         std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
         label->set_text(details);
+}
+
+void gui::invoice_page::selected_invoice(uint position)
+{
+    auto item = this->invoice_store->get_item(position);
+    auto data = std::dynamic_pointer_cast<invoice_entries>(item);
+    if (!data)
+        return;
+
+    this->email_button->set_sensitive(true);
+    this->current_invoice = data->invoice;
 }
 
 void gui::invoice_page::connect_description_view()
@@ -403,45 +465,12 @@ void gui::invoice_page::connect_email_alert()
                 data::invoice data{this->current_invoice};
                 if (response == GTK_RESPONSE_YES)
                 {
-                                this->email_confirmation->hide();
-                                if (this->client_invoice.send_email(data) == false)
-                                {
-                                        this->email_no_internet->show();
-                                }
-                                else
-                                {
-                                        this->email_button->set_sensitive(false);
-                                }
-
-//                                if (this->client_invoice.send_email(this->current_invoice) == false)
-//                                {
-//                                        this->email_confirmation->hide();
-//                                        this->email_no_internet->show();
-//                                }
-//                                else
-//                                {
-//                                        this->email_confirmation->hide();
-//                                        this->email_button->set_sensitive(false);
-//                                }
+                        this->email_confirmation->hide();
+                        this->sender.send_email(data);
                 }
                 else
                 {
                         this->email_confirmation->hide();
-                }
-        });
-}
-
-void gui::invoice_page::connect_no_internet_alert()
-{
-        this->email_no_internet->signal_response().connect([this] (int response) {
-                switch(response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->email_no_internet->hide();
-                                break;
-                        default:
-                                this->email_no_internet->hide();
-                                break;
                 }
         });
 }

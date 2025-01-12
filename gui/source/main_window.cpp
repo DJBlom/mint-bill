@@ -15,6 +15,7 @@ bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, cons
         if (this->window)
         {
                 created = true;
+                setup_css();
                 this->window->signal_hide().connect([this] () { delete this->window; });
                 this->window->set_visible(true);
                 this->connect_exit_button(ui_builder);
@@ -94,4 +95,18 @@ void gui::main_window::min_clicked()
         {
                 return;
         }
+}
+
+void gui::main_window::setup_css()
+{
+                auto css_provider = Gtk::CssProvider::create();
+                css_provider->load_from_path("gui/admin_system.css");
+                auto display = Gdk::Display::get_default();
+                if (display) {
+                        Gtk::StyleContext::add_provider_for_display(
+                                display,
+                                css_provider,
+                                GTK_STYLE_PROVIDER_PRIORITY_USER
+                        );
+                }
 }

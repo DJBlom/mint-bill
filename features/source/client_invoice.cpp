@@ -132,21 +132,19 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
         return data;
 }
 
-//bool feature::invoice::send_email(const data::invoice& _data, std::function<void(bool)> callback)
-//void feature::invoice::send_email(const data::invoice& _data, std::function<void(bool)> callback)
 bool feature::invoice::send_email(const data::invoice& _data)
 {
-        bool sent{false};
+        std::future<bool> sent{};
         if (_data.is_valid())
         {
                 data::pdf_invoice pdf_invoice_data;
                 data::client client_data;
-                client_data.set_business_name("SKA");
+                client_data.set_business_name(_data.get_business_name());
                 client_data.set_business_address("Geelsterd 8");
                 client_data.set_business_area_code("543543");
                 client_data.set_business_town_name("George");
                 client_data.set_cellphone_number("0832315944");
-                client_data.set_email("dblom@trojantechnologies.com dawidjblom@gmail.com");
+                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
                 client_data.set_vat_number("3241324321413");
                 client_data.set_statement_schedule("4,4");
                 pdf_invoice_data.set_client(client_data);
@@ -177,29 +175,23 @@ bool feature::invoice::send_email(const data::invoice& _data)
                 email_data.set_subject("Invoice");
                 if (email_data.is_valid() == false)
                         std::cout << "Email data is not valid\n";
-                if (sending(email_data) == false)
-                        std::cout << "Ok, but let's see what happens ey!\n";
-                sent = true;
-        }
+                else
+                        sent = sending(email_data);
 
-        return sent;
-}
-
-bool feature::invoice::sending(const data::email& _data)
-{
-        std::future<bool> sent{};
-        if (_data.is_valid())
-        {
-                sent = std::move(std::async(std::launch::async, [this, _data]() {
-                                try {
-                                        // Perform the actual email sending logic here
-                                        return this->email.send(_data); // Returns true on success
-                                } catch (...) {
-                                        return false; // Handle exceptions and return failure
-                                }
-                        }));
-                sent.wait();
         }
 
         return sent.get();
+}
+
+std::future<bool> feature::invoice::sending(const data::email& _data)
+{
+       std::future<bool> sent{};
+        if (_data.is_valid())
+        {
+                sent = std::move(std::async(std::launch::async, [this, _data]() {
+                        return this->email.send(_data);
+                }));
+        }
+
+        return sent;
 }

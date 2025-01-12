@@ -25,7 +25,7 @@ namespace feature {
                         [[nodiscard]] bool send_email(const data::invoice&);
 
                 private:
-                        [[nodiscard]] bool sending(const data::email&);
+                        [[nodiscard]] std::future<bool> sending(const data::email&);
 
                 private:
                         feature::email email{};

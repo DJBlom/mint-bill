@@ -16,6 +16,29 @@
 
 
 namespace gui {
+        class email_sender : public interface::gui {
+                public:
+                        email_sender();
+                        email_sender(const email_sender&) = delete;
+                        email_sender(email_sender&&) = delete;
+                        email_sender& operator= (const email_sender&) = delete;
+                        email_sender& operator= (email_sender&&) = delete;
+                        ~email_sender() override;
+
+                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+                        void send_email(const data::invoice&);
+
+                private:
+                        void email_sent();
+                        void connect_no_internet_alert();
+
+                private:
+                        bool email_success{false};
+                        Glib::Dispatcher dispatcher{};
+                        feature::invoice client_invoice{};
+                        std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
+        };
+
         struct column_entries : public Glib::Object {
                 public:
                         unsigned int quantity{0};
@@ -73,7 +96,6 @@ namespace gui {
                 private: // Dialog events
                         void connect_save_alert();
                         void connect_email_alert();
-                        void connect_no_internet_alert();
                         void connect_wrong_info_alert();
                         void connect_wrong_data_in_amount_column_alert();
                         void connect_wrong_data_in_quantity_column_alert();
@@ -109,13 +131,12 @@ namespace gui {
 
                 private: // Member features
                         storage::sql db{};
+                        email_sender sender{};
                         std::string grand_total{""};
                         std::string material_total{""};
                         std::string description_total{""};
                         data::invoice current_invoice{};
-                        //int current_invoice{};
                         feature::invoice client_invoice{};
-                        //std::vector<data::invoice> saved_invoices;
 
                 private: // Member Entries
                         std::unique_ptr<Gtk::Entry> job_card{};
@@ -150,7 +171,6 @@ namespace gui {
 
                 private: // Member Message dialogs
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
-                        std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
                         std::unique_ptr<Gtk::MessageDialog> email_confirmation{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_data_in_amount_column{};

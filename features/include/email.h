@@ -110,10 +110,11 @@ namespace smtp {
                         [[nodiscard]] bool add(const data::email&);
 
                 private:
-                        [[nodiscard]] bool text_body();
-                        [[nodiscard]] bool html_body();
+                        [[nodiscard]] bool text_body(const data::email&);
+                        [[nodiscard]] bool html_body(const data::email&);
                         [[nodiscard]] bool body();
                         [[nodiscard]] bool attachment(const data::email&);
+                        [[nodiscard]] std::string update_dom(const std::string&, const std::string&, const std::string&);
 
                 private:
                         std::shared_ptr<CURL> curl;

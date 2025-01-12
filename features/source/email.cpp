@@ -221,12 +221,12 @@ bool smtp::parts::add(const data::email& _data)
         bool added{false};
         if (_data.is_valid())
         {
-                if (text_body() == false)
+                if (text_body(_data) == false)
                 {
                         return added;
                 }
 
-                if (html_body() == false)
+                if (html_body(_data) == false)
                 {
                         return added;
                 }
@@ -247,7 +247,7 @@ bool smtp::parts::add(const data::email& _data)
         return added;
 }
 
-bool smtp::parts::text_body()
+bool smtp::parts::text_body(const data::email& _data)
 {
         bool success{false};
         part = curl_mime_addpart(alt.get());
@@ -255,8 +255,17 @@ bool smtp::parts::text_body()
         {
                 utility::file text_file{"email.txt"};
                 std::string text{text_file.read()};
+
+                data::client client{_data.get_client()};
+                data::business business{_data.get_business()};
+                text = std::move(update_dom(text, "{{CLIENT_NAME}}", client.get_business_name()));
+                text = std::move(update_dom(text, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
+                text = std::move(update_dom(text, "{{BUSINESS_CELLPHONE}}", business.get_cellphone()));
+                text = std::move(update_dom(text, "{{BUSINESS_EMAIL}}", business.get_email()));
+                text = std::move(update_dom(text, "{{BUSINESS_NAME}}", business.get_name()));
+
                 curl_mime_data(part, text.c_str(), text.length());
-                curl_mime_type(part, "text/html");
+                curl_mime_type(part, "text/plain; charset=UTF-8");
 
                 success = true;
         }
@@ -264,7 +273,7 @@ bool smtp::parts::text_body()
         return success;
 }
 
-bool smtp::parts::html_body()
+bool smtp::parts::html_body(const data::email& _data)
 {
         bool success{false};
         part = curl_mime_addpart(alt.get());
@@ -272,6 +281,15 @@ bool smtp::parts::html_body()
         {
                 utility::file html_file{"email.html"};
                 std::string html{html_file.read()};
+
+                data::client client{_data.get_client()};
+                data::business business{_data.get_business()};
+                html = std::move(update_dom(html, "{{CLIENT_NAME}}", client.get_business_name()));
+                html = std::move(update_dom(html, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
+                html = std::move(update_dom(html, "{{BUSINESS_CELLPHONE}}", business.get_cellphone()));
+                html = std::move(update_dom(html, "{{BUSINESS_EMAIL}}", business.get_email()));
+                html = std::move(update_dom(html, "{{BUSINESS_NAME}}", business.get_name()));
+
                 curl_mime_data(part, html.c_str(), html.length());
                 curl_mime_type(part, "text/html");
 
@@ -315,4 +333,16 @@ bool smtp::parts::attachment(const data::email& _data)
         }
 
         return success;
+}
+
+std::string smtp::parts::update_dom(const std::string& buffer, const std::string& placeholder, const std::string& value)
+{
+        std::string result{buffer};
+        size_t pos = 0;
+        while ((pos = result.find(placeholder, pos)) != std::string::npos) {
+                result.replace(pos, placeholder.length(), value);
+                pos += value.length();
+        }
+
+        return result;
 }
