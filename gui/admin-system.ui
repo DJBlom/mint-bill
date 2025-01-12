@@ -14,7 +14,8 @@
         <property name="show-title-buttons">False</property>
         <property name="title-widget">
           <object class="GtkLabel" id="organization-name">
-            <property name="label">Temp</property>
+            <property name="css-name">app_label</property>
+            <property name="label">Business Name</property>
           </object>
         </property>
         <child type="end">

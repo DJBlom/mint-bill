@@ -69,6 +69,8 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
+        this->organization_label = std::unique_ptr<Gtk::Label>{
+                _ui_builder->get_widget<Gtk::Label>("organization-name")};
 }
 
 void gui::business_page::connect_save_button()
@@ -84,7 +86,7 @@ void gui::business_page::connect_save_button()
 void gui::business_page::connect_save_alert()
 {
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::business data = extract_page_entries();
+                data::business data{extract_page_entries()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
@@ -95,6 +97,7 @@ void gui::business_page::connect_save_alert()
                                 }
                                 else
                                 {
+                                        this->organization_label->set_text(data.get_name());
                                         this->save_alert_dialog->hide();
                                         clear_entries();
                                 }

@@ -36,6 +36,11 @@ namespace gui {
                 private:
                         storage::sql sql{};
                         feature::business business_info{};
+
+                private: // Label
+                        std::unique_ptr<Gtk::Label> organization_label{};
+
+                private: // Entries
                         std::unique_ptr<Gtk::Entry> name{};
                         std::unique_ptr<Gtk::Entry> street_address{};
                         std::unique_ptr<Gtk::Entry> area_code{};
@@ -48,6 +53,8 @@ namespace gui {
                         std::unique_ptr<Gtk::Entry> client_message{};
                         std::unique_ptr<Gtk::PasswordEntry> password{};
                         std::unique_ptr<Gtk::Button> save_button{};
+
+                private: // Dialogs
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };

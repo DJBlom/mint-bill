@@ -4,6 +4,12 @@
   <ui>
 	(1,None,"invoice-system.ui","admin-system.ui",None,None,None,None,None,None,None)
   </ui>
+  <css>
+	(1,"admin_system.css",None,1)
+  </css>
+  <css_ui>
+	(1,1)
+  </css_ui>
   <object>
 	(1,1,"GtkWindow","main-window",None,None,None,None,0,None,None),
 	(1,2,"GtkHeaderBar","nav-bar",1,None,None,None,0,None,None),
@@ -358,7 +364,8 @@
 	(1,255,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","title","Maak Seker Oor Die Volgende",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
-	(1,256,"GtkLabel","label","Temp",None,None,None,None,None,None,None,None,None),
+	(1,256,"GtkLabel","css-name","app_label",None,None,None,None,None,None,None,None,None),
+	(1,256,"GtkLabel","label","Business Name",None,None,None,None,None,None,None,None,None),
 	(1,257,"GtkAccessible","accessible-role","dialog",0,None,None,None,None,None,None,None,None),
 	(1,257,"GtkMessageDialog","buttons","yes-no",0,None,None,None,None,None,None,None,None),
 	(1,257,"GtkMessageDialog","message-type","question",0,None,None,None,None,None,None,None,None),
@@ -606,10 +613,13 @@
 	(1,1,"GtkWidget",2,2,None,1,None,None,None,None),
 	(1,254,"GtkDialog",2,2,None,1,None,None,None,None),
 	(1,254,"GtkDialog",2,3,None,1,None,None,None,None),
-	(1,254,"GtkDialog",2,5,None,4,None,None,None,None)
+	(1,254,"GtkDialog",2,5,None,4,None,None,None,None),
+	(1,58,"GtkWidget",2,2,None,1,None,None,None,None),
+	(1,58,"GtkLabel",2,2,None,1,None,None,None,None)
   </object_data>
   <object_data_arg>
 	(1,254,"GtkDialog",2,2,"response","2"),
-	(1,254,"GtkDialog",2,3,"response","1")
+	(1,254,"GtkDialog",2,3,"response","1"),
+	(1,58,"GtkLabel",2,2,"end","3")
   </object_data_arg>
 </cambalache-project>
