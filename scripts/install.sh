@@ -40,10 +40,10 @@ function run_install()
 function install_develop()
 {
         dnf_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf gtk4 gtk4-devel
-                      libcurl libcurl-devel json-devel flatpak)
+                      libcurl libcurl-devel json-devel flatpak poppler-cpp-devel)
         apt_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf libgtk-4-1 
                       libgtk-4-dev gtk-4-examples flatpak gnome-software-plugin-flatpak nlohmann-json3-dev
-                      Libcurl-dev libcurl)
+                      Libcurl-dev libcurl libpoppler-cpp-dev)
 
         DNF=$(which dnf)
         APT=$(which apt)
