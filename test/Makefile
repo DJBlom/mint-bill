@@ -14,13 +14,15 @@ CPPUTEST_EXE_FLAGS :=-c
 ########################################################################
 # Uncomment to exclude the email_test group from being tested.
 #
-# NOTE: Ensure this line is commented when pushing code to the remote.
+# NOTE: Ensure this line is uncommented when pushing code to the remote.
 # 
 CPPUTEST_EXE_FLAGS +=-xg "email_test"
 
 CPPUTEST_CXXFLAGS :=-std=c++23 
-CPPUTEST_CFLAGS := $(shell pkg-config -cflags cairo) $(shell curl-config --cflags)
-CPPUTEST_LDFLAGS := $(shell pkg-config --libs cairo) $(shell curl-config --libs)
+CPPUTEST_CFLAGS += $(shell pkg-config -cflags cairo gtkmm-4.0 poppler-cpp)
+CPPUTEST_CFLAGS += $(shell curl-config --cflags)
+CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairo gtkmm-4.0 poppler-cpp)
+CPPUTEST_LDFLAGS += $(shell curl-config --libs)
 
 
 

@@ -21,6 +21,7 @@
 #include <cairo/cairo-pdf.h>
 #include <boundary_slicer.h>
 #include <pdf_invoice_data.h>
+#include <poppler/cpp/poppler-document.h>
 
 namespace feature {
         class pdf {
@@ -33,6 +34,7 @@ namespace feature {
                         virtual ~pdf();
 
                         [[nodiscard]] virtual std::string generate(data::pdf_invoice&);
+                        [[nodiscard]] virtual std::unique_ptr<poppler::document> generate_for_print(data::pdf_invoice&);
 
                 private:
                         [[nodiscard]] bool add_header(const std::string&);

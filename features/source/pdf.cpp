@@ -103,6 +103,20 @@ std::string feature::pdf::generate(data::pdf_invoice& _data)
         return this->final_pdf.str();
 }
 
+std::unique_ptr<poppler::document> feature::pdf::generate_for_print(data::pdf_invoice& _data)
+{
+        std::unique_ptr<poppler::document> pdf_document{};
+        if (_data.is_valid())
+        {
+                std::string raw_pdf{this->generate(_data)};
+                pdf_document = std::unique_ptr<poppler::document> (poppler::document::load_from_raw_data(
+                                reinterpret_cast<const char*>(raw_pdf.data()),
+                                static_cast<int> (raw_pdf.size()), "", ""));
+        }
+
+        return pdf_document;
+}
+
 bool feature::pdf::add_header(const std::string& _data)
 {
         align_to_left_border();
