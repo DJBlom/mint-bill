@@ -60,7 +60,6 @@
                 <child>
                   <object class="GtkStack" id="business-stack">
                     <property name="hexpand">True</property>
-                    <property name="transition-type">over-left</property>
                     <property name="vexpand">True</property>
                     <child>
                       <object class="GtkStackPage" id="invoice-page">
@@ -933,8 +932,8 @@
 2) - Is u e-pos korrek ingevul?
 
 3) - Is die staatskedule formaat korrek dag/maand, dag/week?
-        Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag van 
-        die week vir 4 keer 'n maand gegenereer gaan word.</property>
+     Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag 
+     van die week vir 4 keer 'n maand gegenereer gaan word.</property>
     <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
@@ -1010,5 +1009,9 @@
 </property>
     <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="invoice-print-no-printer-alert">
+    <property name="buttons">close</property>
+    <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
   </object>
 </interface>

@@ -110,7 +110,8 @@
 	(1,292,"GtkEntry","register-email-entry",99,None,None,None,10,None,None),
 	(1,293,"GtkMessageDialog","invoice-email-no-internet-alert",None,None,None,None,12,None,None),
 	(1,295,"GtkAdjustment","known-invoice-adjustment",274,None,None,None,0,None,None),
-	(1,296,"GtkListView","known-invoice-view",274,None,None,None,1,None,None)
+	(1,296,"GtkListView","known-invoice-view",274,None,None,None,1,None,None),
+	(1,297,"GtkMessageDialog","invoice-print-no-printer-alert",None,None,None,None,13,None,None)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
@@ -139,7 +140,6 @@
 	(1,32,"GtkStackSidebar","stack","33",None,None,None,None,None,None,None,None,None),
 	(1,32,"GtkWidget","margin-bottom","20",None,None,None,None,None,None,None,None,None),
 	(1,32,"GtkWidget","margin-top","20",None,None,None,None,None,None,None,None,None),
-	(1,33,"GtkStack","transition-type","over-left",None,None,None,None,None,None,None,None,None),
 	(1,33,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,33,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,34,"GtkStackPage","child",None,None,None,None,None,38,None,None,None,None),
@@ -378,7 +378,7 @@
 	(1,257,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","buttons","close",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","message-type","warning",0,None,None,None,None,None,None,None,None),
-	(1,258,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?\n\n3) - Is die staatskedule formaat korrek dag/maand, dag/week?\n        Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag van \n        die week vir 4 keer 'n maand gegenereer gaan word.",0,None,None,None,None,None,None,None,None),
+	(1,258,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?\n\n3) - Is die staatskedule formaat korrek dag/maand, dag/week?\n     Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag \n     van die week vir 4 keer 'n maand gegenereer gaan word.",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
 	(1,258,"GtkWindow","title","Maak Seker Oor Die Volgende",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
@@ -484,7 +484,9 @@
 	(1,293,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,296,"GtkListView","show-separators","True",None,None,None,None,None,None,None,None,None),
 	(1,296,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
-	(1,296,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None)
+	(1,296,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
+	(1,297,"GtkMessageDialog","buttons","close",None,None,None,None,None,None,None,None,None),
+	(1,297,"GtkMessageDialog","text","Is u seker u het 'n printer gekoppel aan u rekenaar?",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),
