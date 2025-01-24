@@ -8,37 +8,17 @@
 #ifndef _INVOICE_PAGE_H_
 #define _INVOICE_PAGE_H_
 #include <gui.h>
-#include <vector>
 #include <sql.h>
 #include <mutex>
+#include <regex>
+#include <vector>
+#include <iomanip>
+#include <sstream>
 #include <invoice_data.h>
 #include <client_invoice.h>
-
+#include <known_invoices.h>
 
 namespace gui {
-        class email_sender : public interface::gui {
-                public:
-                        email_sender();
-                        email_sender(const email_sender&) = delete;
-                        email_sender(email_sender&&) = delete;
-                        email_sender& operator= (const email_sender&) = delete;
-                        email_sender& operator= (email_sender&&) = delete;
-                        ~email_sender() override;
-
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
-                        void send_email(const data::invoice&);
-
-                private:
-                        void email_sent();
-                        void connect_no_internet_alert();
-
-                private:
-                        bool email_success{false};
-                        Glib::Dispatcher dispatcher{};
-                        feature::invoice client_invoice{};
-                        std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
-        };
-
         struct column_entries : public Glib::Object {
                 public:
                         unsigned int quantity{0};
@@ -52,19 +32,6 @@ namespace gui {
 
                 protected:
                         column_entries() {}
-        };
-
-        struct invoice_entries : public Glib::Object {
-                public:
-                        data::invoice invoice{};
-
-                        static Glib::RefPtr<invoice_entries> create(const data::invoice& _invoice)
-                        {
-                                return Glib::make_refptr_for_instance<invoice_entries>(new invoice_entries(_invoice));
-                        }
-
-                protected:
-                        explicit invoice_entries(const data::invoice& _invoice) : invoice{_invoice} {}
         };
 
         class invoice_page : public interface::gui {
@@ -87,7 +54,6 @@ namespace gui {
                 private: // Button events
                         void connect_search();
                         void connect_save_button();
-                        void connect_email_button();
                         void connect_material_add_button();
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&);
                         void connect_description_add_button();
@@ -95,33 +61,27 @@ namespace gui {
 
                 private: // Dialog events
                         void connect_save_alert();
-                        void connect_email_alert();
                         void connect_wrong_info_alert();
                         void connect_wrong_data_in_amount_column_alert();
                         void connect_wrong_data_in_quantity_column_alert();
 
                 private: // View events
-                        void connect_invoice_view();
                         void connect_material_view();
                         void connect_description_view();
-                        void connect_invoice_list_store();
                         void connect_material_list_store();
                         void connect_description_list_store();
 
                 private: // helper
+                        void perform_search();
+                        void on_search_changed();
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
-                        void invoices(const std::unique_ptr<Gtk::ListView>&);
-                        void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
-                        void invoice_teardown(const Glib::RefPtr<Gtk::ListItem>&);
-                        void bind_invoices(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_quantity(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_description(const Glib::RefPtr<Gtk::ListItem>&);
                         void amount_column(const std::unique_ptr<Gtk::ColumnView>&);
                         void quantity_column(const std::unique_ptr<Gtk::ColumnView>&);
                         void description_column(const std::unique_ptr<Gtk::ColumnView>&);
-                        void selected_invoice(uint);
                         void update_material_total(uint, uint, uint);
                         void update_description_total(uint, uint, uint);
                         [[nodiscard]] double compute_grand_total();
@@ -131,7 +91,7 @@ namespace gui {
 
                 private: // Member features
                         storage::sql db{};
-                        email_sender sender{};
+                        layout::known_invoices known_invoices{};
                         std::string grand_total{""};
                         std::string material_total{""};
                         std::string description_total{""};
@@ -146,19 +106,15 @@ namespace gui {
                         std::unique_ptr<Gtk::SearchEntry> search_entry{};
 
                 private: // Member Views
-                        std::unique_ptr<Gtk::ListView> invoice_view{};
                         std::unique_ptr<Gtk::ColumnView> material_view{};
                         std::unique_ptr<Gtk::ColumnView> description_view{};
-                        std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
                         std::shared_ptr<Gtk::Adjustment> material_adjustment{};
                         std::shared_ptr<Gtk::Adjustment> description_adjustment{};
-                        std::shared_ptr<Gio::ListStore<invoice_entries>> invoice_store{};
                         std::shared_ptr<Gio::ListStore<column_entries>> material_store{};
                         std::shared_ptr<Gio::ListStore<column_entries>> description_store{};
 
                 private: // Member buttons
                         std::unique_ptr<Gtk::Button> save_button{};
-                        std::unique_ptr<Gtk::Button> email_button{};
                         std::unique_ptr<Gtk::Button> material_add_button{};
                         std::unique_ptr<Gtk::Button> material_delete_button{};
                         std::unique_ptr<Gtk::Button> description_add_button{};
@@ -171,7 +127,6 @@ namespace gui {
 
                 private: // Member Message dialogs
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
-                        std::unique_ptr<Gtk::MessageDialog> email_confirmation{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_data_in_amount_column{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_data_in_quantity_column{};

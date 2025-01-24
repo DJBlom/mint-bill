@@ -14,7 +14,6 @@ project(target-features VERSION 0.0.1 LANGUAGES CXX C)
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-        find_package(CURL REQUIRED)
         add_library(features 
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/pdf.cpp
@@ -28,6 +27,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 ${CURL_INCLUDE_DIR}
+                ${POPPLER_INCLUDE_DIRS}
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
