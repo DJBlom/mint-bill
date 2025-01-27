@@ -10,7 +10,7 @@ RUN dnf -y install \
     make cmake dh-autoreconf autoconf automake \
     binutils bison valgrind check gcovr gcc gcc-c++ \
     glibc-devel curl gtk4 gtk4-devel gtkmm4.0-devel \
-    libcurl libcurl-devel
+    libcurl libcurl-devel poppler-cpp-devel
 
 RUN dnf swap libcurl-minimal libcurl
 
