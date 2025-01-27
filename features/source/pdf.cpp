@@ -58,6 +58,31 @@ feature::pdf::~pdf()
         cairo_surface_destroy(this->surface);
 }
 
+std::string feature::pdf::generate_for_email(data::pdf_invoice& _data)
+{
+        std::string pdf_document{""};
+        if (_data.is_valid())
+        {
+                pdf_document = generate(_data);
+        }
+
+        return pdf_document;
+}
+
+std::unique_ptr<poppler::document> feature::pdf::generate_for_print(data::pdf_invoice& _data)
+{
+        std::unique_ptr<poppler::document> pdf_document{};
+        if (_data.is_valid())
+        {
+                std::string raw_pdf{this->generate_for_email(_data)};
+                pdf_document = std::unique_ptr<poppler::document> (poppler::document::load_from_raw_data(
+                                reinterpret_cast<const char*>(raw_pdf.data()),
+                                static_cast<int> (raw_pdf.size()), "", ""));
+        }
+
+        return pdf_document;
+}
+
 std::string feature::pdf::generate(data::pdf_invoice& _data)
 {
         if (_data.is_valid())
@@ -99,22 +124,7 @@ std::string feature::pdf::generate(data::pdf_invoice& _data)
                 cairo_surface_finish(this->surface);
         }
 
-
         return this->final_pdf.str();
-}
-
-std::unique_ptr<poppler::document> feature::pdf::generate_for_print(data::pdf_invoice& _data)
-{
-        std::unique_ptr<poppler::document> pdf_document{};
-        if (_data.is_valid())
-        {
-                std::string raw_pdf{this->generate(_data)};
-                pdf_document = std::unique_ptr<poppler::document> (poppler::document::load_from_raw_data(
-                                reinterpret_cast<const char*>(raw_pdf.data()),
-                                static_cast<int> (raw_pdf.size()), "", ""));
-        }
-
-        return pdf_document;
 }
 
 bool feature::pdf::add_header(const std::string& _data)

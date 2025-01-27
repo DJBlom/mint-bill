@@ -166,7 +166,7 @@ bool feature::invoice::send_email(const data::invoice& _data)
                 pdf_invoice_data.set_business(business_data);
 
                 feature::pdf pdf{};
-                std::string pdf_data{pdf.generate(pdf_invoice_data)};
+                std::string pdf_data{pdf.generate_for_email(pdf_invoice_data)};
 
                 data::email email_data{};
                 email_data.set_pdf(pdf_data);

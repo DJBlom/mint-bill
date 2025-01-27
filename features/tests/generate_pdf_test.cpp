@@ -48,7 +48,7 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_upper_bounds)
         pdf_data.set_client(client_data);
         data::invoice invoice_data{test::generate_invoice_data(long_description)};
         pdf_data.set_invoice(invoice_data);
-        std::string pdf_file_data{pdf.generate(pdf_data)};
+        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
 
         bool result{test::generate_invoice_pdf(pdf_file_data, "1")};
 
@@ -65,7 +65,7 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_lower_bounds)
         pdf_data.set_client(client_data);
         data::invoice invoice_data{test::generate_invoice_data(short_description)};
         pdf_data.set_invoice(invoice_data);
-        std::string pdf_file_data{pdf.generate(pdf_data)};
+        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
 
         bool result{test::generate_invoice_pdf(pdf_file_data, "2")};
 
@@ -82,7 +82,7 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_no_data)
         pdf_data.set_client(client_data);
         data::invoice invoice_data{};
         pdf_data.set_invoice(invoice_data);
-        std::string pdf_file_data{pdf.generate(pdf_data)};
+        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
 
         bool result{test::generate_invoice_pdf(pdf_file_data, "3")};
 
@@ -99,7 +99,7 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_printing)
         pdf_data.set_client(client_data);
         data::invoice invoice_data{test::generate_invoice_data(short_description)};
         pdf_data.set_invoice(invoice_data);
-        std::string pdf_file_data{pdf.generate(pdf_data)};
+        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
         std::unique_ptr<poppler::document> doc{pdf.generate_for_print(pdf_data)};
 
         if (doc)
