@@ -31,12 +31,14 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 
 if(BUILD_PROJECT)
         find_package(CURL REQUIRED)
         find_package(PkgConfig REQUIRED)
         pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
+        pkg_check_modules(CAIROMM REQUIRED cairomm-1.16)
         pkg_check_modules(POPPLER REQUIRED poppler-cpp)
 
         add_compile_options(
@@ -61,6 +63,7 @@ if(BUILD_PROJECT)
         target_include_directories(${PROJECT_NAME} PRIVATE
                 ${CURL_INCLUDE_DIR}
                 ${GTKMM_INCLUDE_DIRS}
+                ${CAIROMM_INCLUDE_DIRS}
                 ${POPPLER_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
@@ -80,12 +83,14 @@ if(BUILD_PROJECT)
                 PRIVATE 
                 ${CURL_LIBRARIES}
                 ${GTKMM_LIBRARIES} 
+                ${CAIROMM_LIBRARIES}
                 ${POPPLER_LIBRARIES}
         )
 
         target_link_directories(${PROJECT_NAME} 
                 PRIVATE 
                 ${GTKMM_LIBRARY_DIRS}
+                ${CAIROMM_LIBRARY_DIRS}
         )
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui)

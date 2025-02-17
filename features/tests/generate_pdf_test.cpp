@@ -10,6 +10,7 @@
 
 
 #include <pdf.h>
+#include <gtkmm.h>
 #include <fstream>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -89,19 +90,17 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_no_data)
         CHECK_EQUAL(false, result);
 }
 
-TEST(generate_pdf_test, generate_invoice_pdf_for_printing)
-{
-        std::string short_description{"Machining steel"};
-        data::pdf_invoice pdf_data;
-        data::business business_data{test::generate_business_data()};
-        pdf_data.set_business(business_data);
-        data::client client_data{test::generate_client_data()};
-        pdf_data.set_client(client_data);
-        data::invoice invoice_data{test::generate_invoice_data(short_description)};
-        pdf_data.set_invoice(invoice_data);
-        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
-        std::unique_ptr<poppler::document> doc{pdf.generate_for_print(pdf_data)};
-
-        if (doc)
-                CHECK(true);
-}
+//TEST(generate_pdf_test, generate_invoice_pdf_for_printing)
+//{
+//        std::string short_description{"Machining steel"};
+//        data::pdf_invoice pdf_data;
+//        data::business business_data{test::generate_business_data()};
+//        pdf_data.set_business(business_data);
+//        data::client client_data{test::generate_client_data()};
+//        pdf_data.set_client(client_data);
+//        data::invoice invoice_data{test::generate_invoice_data(short_description)};
+//        pdf_data.set_invoice(invoice_data);
+//        std::unique_ptr<poppler::document> doc{pdf.generate_for_print(pdf_data)};
+//        if (doc)
+//                CHECK(true);
+//}

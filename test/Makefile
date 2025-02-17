@@ -18,13 +18,12 @@ CPPUTEST_EXE_FLAGS :=-c
 # 
 CPPUTEST_EXE_FLAGS +=-xg "email_test"
 
-CPPUTEST_CXXFLAGS :=-std=c++23 
-CPPUTEST_CFLAGS += $(shell pkg-config -cflags cairo gtkmm-4.0 poppler-cpp)
-CPPUTEST_CFLAGS += $(shell curl-config --cflags)
-CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairo gtkmm-4.0 poppler-cpp)
+CPPUTEST_CXXFLAGS +=-std=c++23 
+CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)
+CPPUTEST_CFLAGS += $(shell pkg-config --cflags poppler-cpp) 
+CPPUTEST_CFLAGS += $(shell curl-config --cflags) 
+CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairomm-1.16 gtkmm-4.0 poppler-cpp)
 CPPUTEST_LDFLAGS += $(shell curl-config --libs)
-
-
 
 SRC_DIRS :=\
 	$(PROJECT_DIR)/data/source\
@@ -64,5 +63,6 @@ CPPUTEST_USE_EXTENSIONS := Y
 CPPUTEST_USE_GCOV := Y
 CPPUTEST_USE_VPATH := Y
 CPPUTEST_USE_STD_CPP_LIB := Y
+CPPUTEST_WARNINGFLAGS += -fno-elide-type 
 CPPUTEST_USE_MEM_LEAK_DETECTION := N
 -include $(CPPUTEST_HOME)/build/MakefileWorker.mk

@@ -898,6 +898,7 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
@@ -905,6 +906,7 @@
   <object class="GtkMessageDialog" id="business-wrong-info-alert">
     <property name="buttons">close</property>
     <property name="message-type">warning</property>
+    <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Is u e-pos korrek ingevul?</property>
@@ -919,6 +921,7 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
     <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
@@ -927,6 +930,7 @@
   <object class="GtkMessageDialog" id="client-wrong-info-alert">
     <property name="buttons">close</property>
     <property name="message-type">warning</property>
+    <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Is u e-pos korrek ingevul?
@@ -945,6 +949,7 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
     <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
@@ -953,6 +958,7 @@
   <object class="GtkMessageDialog" id="invoice-wrong-info-alert">
     <property name="buttons">close</property>
     <property name="message-type">warning</property>
+    <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Soek vir die besigheid vir wie die 
@@ -971,6 +977,7 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u wil die faktuur print?</property>
     <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
@@ -983,18 +990,21 @@
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u wil die faktuur e-pos?</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-data-in-quantity-column-alert">
     <property name="buttons">close</property>
+    <property name="modal">True</property>
     <property name="text">Hierdie kolom kan slegs syfers bevat.</property>
     <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-data-in-amount-column-alert">
     <property name="buttons">close</property>
+    <property name="modal">True</property>
     <property name="text">Hierdie kolom kan slegs syfers en punte bevat.</property>
     <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
@@ -1005,6 +1015,7 @@
     <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
     <property name="hide-on-close">True</property>
+    <property name="modal">True</property>
     <property name="text">Maak asseblief seker dat u internettoegang het.
 </property>
     <property name="title">Informasie</property>
@@ -1012,6 +1023,8 @@
   </object>
   <object class="GtkMessageDialog" id="invoice-print-no-printer-alert">
     <property name="buttons">close</property>
+    <property name="modal">True</property>
     <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
+    <property name="transient-for">main-window</property>
   </object>
 </interface>

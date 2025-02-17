@@ -22,6 +22,7 @@ if(${FILES_IN_DIR} GREATER 0)
         target_include_directories(invoice_page
                 PRIVATE
                 ${GTKMM_INCLUDE_DIRS}
+                ${CAIROMM_INCLUDE_DIRS}
                 ${PROJECT_SOURCE_DIR}/include/
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include

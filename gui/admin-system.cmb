@@ -5,7 +5,7 @@
 	(1,None,"invoice-system.ui","admin-system.ui",None,None,None,None,None,None,None)
   </ui>
   <css>
-	(1,"admin_system.css",None,1)
+	(1,"admin-system.css",None,1)
   </css>
   <css_ui>
 	(1,1)
@@ -356,12 +356,14 @@
 	(1,254,"GtkWindow","deletable","False",None,None,None,None,None,None,None,None,None),
 	(1,254,"GtkWindow","destroy-with-parent","True",None,None,None,None,None,None,None,None,None),
 	(1,254,"GtkWindow","hide-on-close","True",None,None,None,None,None,None,None,None,None),
+	(1,254,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,254,"GtkWindow","title","Waarskuwing",None,None,None,None,None,None,None,None,None),
 	(1,254,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkMessageDialog","buttons","close",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkMessageDialog","message-type","warning",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
+	(1,255,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","title","Maak Seker Oor Die Volgende",None,None,None,None,None,None,None,None,None),
 	(1,255,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
 	(1,256,"GtkLabel","css-name","app_label",None,None,None,None,None,None,None,None,None),
@@ -374,12 +376,14 @@
 	(1,257,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,257,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,257,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,257,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,257,"GtkWindow","title","Waarskuwing",0,None,None,None,None,None,None,None,None),
 	(1,257,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","buttons","close",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","message-type","warning",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Is u e-pos korrek ingevul?\n\n3) - Is die staatskedule formaat korrek dag/maand, dag/week?\n     Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag \n     van die week vir 4 keer 'n maand gegenereer gaan word.",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
+	(1,258,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,258,"GtkWindow","title","Maak Seker Oor Die Volgende",0,None,None,None,None,None,None,None,None),
 	(1,258,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,260,"GtkSearchEntry","placeholder-text","Soek vir besigheid . . .",None,None,None,None,None,None,None,None,None),
@@ -393,12 +397,14 @@
 	(1,261,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,261,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,261,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,261,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,261,"GtkWindow","title","Waarskuwing",0,None,None,None,None,None,None,None,None),
 	(1,261,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,262,"GtkMessageDialog","buttons","close",0,None,None,None,None,None,None,None,None),
 	(1,262,"GtkMessageDialog","message-type","warning",0,None,None,None,None,None,None,None,None),
 	(1,262,"GtkMessageDialog","text","1) - Is alle inskrywingsvelde ingevul?\n\n2) - Soek vir die besigheid vir wie die \n        faktuur gegenereer moet word.\n\n3) - Is die arbeid en materiaal items \n        by gevoeg?",0,None,None,None,None,None,None,None,None),
 	(1,262,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
+	(1,262,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,262,"GtkWindow","title","Maak Seker Oor Die Volgende",0,None,None,None,None,None,None,None,None),
 	(1,262,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,265,"GtkAccessible","accessible-role","dialog",0,None,None,None,None,None,None,None,None),
@@ -409,6 +415,7 @@
 	(1,265,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,265,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,265,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,265,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,265,"GtkWindow","title","Waarskuwing",0,None,None,None,None,None,None,None,None),
 	(1,265,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,267,"GtkAccessible","accessible-role","dialog",0,None,None,None,None,None,None,None,None),
@@ -419,6 +426,7 @@
 	(1,267,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,267,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,267,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,267,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,267,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,270,"GtkButton","label","Verwyder",None,None,None,None,None,None,None,None,None),
 	(1,270,"GtkWidget","valign","center",None,None,None,None,None,None,None,None,None),
@@ -465,10 +473,12 @@
 	(1,288,"GtkMessageDialog","buttons","close",None,None,None,None,None,None,None,None,None),
 	(1,288,"GtkMessageDialog","text","Hierdie kolom kan slegs syfers bevat.",None,None,None,None,None,None,None,None,None),
 	(1,288,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
+	(1,288,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,288,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None),
 	(1,289,"GtkMessageDialog","buttons","close",0,None,None,None,None,None,None,None,None),
 	(1,289,"GtkMessageDialog","text","Hierdie kolom kan slegs syfers en punte bevat.",0,None,None,None,None,None,None,None,None),
 	(1,289,"GtkMessageDialog","title","Informasie",None,None,None,None,None,None,None,None,None),
+	(1,289,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,289,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,291,"GtkPasswordEntry","activates-default","True",None,None,None,None,None,None,None,None,None),
 	(1,291,"GtkPasswordEntry","placeholder-text","E-pos wagwoord . . .",None,None,None,None,None,None,None,None,None),
@@ -481,12 +491,15 @@
 	(1,293,"GtkWindow","deletable","False",0,None,None,None,None,None,None,None,None),
 	(1,293,"GtkWindow","destroy-with-parent","True",0,None,None,None,None,None,None,None,None),
 	(1,293,"GtkWindow","hide-on-close","True",0,None,None,None,None,None,None,None,None),
+	(1,293,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
 	(1,293,"GtkWindow","transient-for","1",0,None,None,None,None,None,None,None,None),
 	(1,296,"GtkListView","show-separators","True",None,None,None,None,None,None,None,None,None),
 	(1,296,"GtkWidget","hexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,296,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,297,"GtkMessageDialog","buttons","close",None,None,None,None,None,None,None,None,None),
-	(1,297,"GtkMessageDialog","text","Is u seker u het 'n printer gekoppel aan u rekenaar?",None,None,None,None,None,None,None,None,None)
+	(1,297,"GtkMessageDialog","text","Is u seker u het 'n printer gekoppel aan u rekenaar?",None,None,None,None,None,None,None,None,None),
+	(1,297,"GtkWindow","modal","True",None,None,None,None,None,None,None,None,None),
+	(1,297,"GtkWindow","transient-for","1",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,72,73,"GtkGridLayoutChild","column","0",0,None,None,None),

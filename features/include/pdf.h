@@ -9,6 +9,7 @@
 #define _PDF_H_
 #include <mutex>
 #include <string>
+#include <gtkmm.h>
 #include <vector>
 #include <ostream>
 #include <sstream>
@@ -18,7 +19,7 @@
 #include <client_data.h>
 #include <invoice_data.h>
 #include <business_data.h>
-#include <cairo/cairo-pdf.h>
+#include <cairomm/cairomm.h>
 #include <boundary_slicer.h>
 #include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-document.h>
@@ -34,7 +35,10 @@ namespace feature {
                         virtual ~pdf();
 
                         [[nodiscard]] virtual std::string generate_for_email(data::pdf_invoice&);
-                        [[nodiscard]] virtual std::unique_ptr<poppler::document> generate_for_print(data::pdf_invoice&);
+                        //[[nodiscard]] virtual std::unique_ptr<poppler::document> generate_for_print(data::pdf_invoice&);
+                        [[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(data::pdf_invoice&);
+                        //[[nodiscard]] poppler::byte_array generate_for_print(data::pdf_invoice&);
+                        //[[nodiscard]] std::unique_ptr<poppler::byte_array> generate_for_print(data::pdf_invoice&);
 
                 private:
                         [[nodiscard]] std::string generate(data::pdf_invoice&);
@@ -59,20 +63,27 @@ namespace feature {
                         void align_to_right_border();
                         void align_information_section();
                         void align_to_top_border();
-                        void align_to_right(const cairo_text_extents_t&);
-                        void align_to_center(const cairo_text_extents_t&);
+                        void align_to_right(const Cairo::TextExtents&);
+//                        void align_to_right(const cairo_text_extents_t&);
+                        void align_to_center(const Cairo::TextExtents&);
+//                        void align_to_center(const cairo_text_extents_t&);
                         void adjust_height();
                         void adjust_payment_height();
-                        static cairo_status_t write_to_stream(void*, const unsigned char*, unsigned int);
+
+                        static Cairo::ErrorStatus write_to_stream(const unsigned char*, unsigned int);
+//                        static cairo_status_t write_to_stream(void*, const unsigned char*, unsigned int);
 
                 private:
                         const double width{595.0};
                         const double height{842.0};
                         double current_width{0.0};
                         double current_height{0.0};
-                        cairo_surface_t* surface{nullptr};
-                        cairo_t* context{nullptr};
-                        std::ostringstream final_pdf{""};
+                        Cairo::RefPtr<Cairo::PdfSurface> surface{};
+                        Cairo::RefPtr<Cairo::Context> context{};
+                        static std::ostringstream final_pdf;
+//                        cairo_surface_t* surface{nullptr};
+//                        cairo_t* context{nullptr};
+//                        std::ostringstream final_pdf;
                         utility::boundary_slicer slicer{};
                         std::mutex pdf_mutex{};
         };

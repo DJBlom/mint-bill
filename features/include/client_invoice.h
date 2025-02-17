@@ -7,10 +7,12 @@
  *******************************************************/
 #ifndef _CLIENT_INVOICE_H_
 #define _CLIENT_INVOICE_H_
+#include <future>
+#include <thread>
 #include <email.h>
 #include <invoice.h>
-#include <thread>
-#include <future>
+#include <pdf_invoice_data.h>
+#include <poppler/cpp/poppler-document.h>
 
 namespace feature {
         class invoice: public interface::invoice {
@@ -20,9 +22,12 @@ namespace feature {
                         [[nodiscard]] virtual data::invoice load(const std::string&, const interface::storage&) override;
                         [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&) override;
                         [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&) override;
-                        //[[nodiscard]] virtual bool send_email(const data::invoice&);
-                        //virtual void send_email(const data::invoice& _data, std::function<void(bool)>);
                         [[nodiscard]] bool send_email(const data::invoice&);
+                        //[[nodiscard]] std::unique_ptr<poppler::document> create_pdf_to_print(const data::invoice&);
+                        //[[nodiscard]] std::shared_ptr<poppler::document> create_pdf_to_print(const data::invoice&);
+                        [[nodiscard]] data::pdf_invoice create_pdf_to_print(const data::invoice&);
+                        //[[nodiscard]] poppler::document create_pdf_to_print(const data::invoice&);
+                        //[[nodiscard]] poppler::byte_array create_pdf_to_print(const data::invoice&);
 
                 private:
                         [[nodiscard]] std::future<bool> sending(const data::email&);

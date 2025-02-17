@@ -27,7 +27,9 @@ if(${FILES_IN_DIR} GREATER 0)
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 ${CURL_INCLUDE_DIR}
+                ${GTKMM_INCLUDE_DIRS}
                 ${POPPLER_INCLUDE_DIRS}
+                ${CAIROMM_INCLUDE_DIRS}
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
