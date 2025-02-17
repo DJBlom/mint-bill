@@ -182,12 +182,8 @@ bool feature::invoice::send_email(const data::invoice& _data)
         return sent.get();
 }
 
-//std::unique_ptr<poppler::document> feature::invoice::create_pdf_to_print(const data::invoice& _data)
-//std::shared_ptr<poppler::document> feature::invoice::create_pdf_to_print(const data::invoice& _data)
 data::pdf_invoice feature::invoice::create_pdf_to_print(const data::invoice& _data)
 {
-//        std::shared_ptr<poppler::document> document{};
-//        std::unique_ptr<poppler::document> document{};
         data::pdf_invoice pdf_invoice_data{};
         if (_data.is_valid() == true)
         {
@@ -217,9 +213,6 @@ data::pdf_invoice feature::invoice::create_pdf_to_print(const data::invoice& _da
                 business_data.set_client_message("Thank you for your support!");
                 business_data.set_password("bxwx eaku ndjj ltda");
                 pdf_invoice_data.set_business(business_data);
-
-        //        feature::pdf pdf{};
-        //        document = std::move(pdf.generate_for_print(pdf_invoice_data));
         }
 
         return pdf_invoice_data;

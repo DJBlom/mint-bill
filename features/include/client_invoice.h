@@ -23,11 +23,7 @@ namespace feature {
                         [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&) override;
                         [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&) override;
                         [[nodiscard]] bool send_email(const data::invoice&);
-                        //[[nodiscard]] std::unique_ptr<poppler::document> create_pdf_to_print(const data::invoice&);
-                        //[[nodiscard]] std::shared_ptr<poppler::document> create_pdf_to_print(const data::invoice&);
                         [[nodiscard]] data::pdf_invoice create_pdf_to_print(const data::invoice&);
-                        //[[nodiscard]] poppler::document create_pdf_to_print(const data::invoice&);
-                        //[[nodiscard]] poppler::byte_array create_pdf_to_print(const data::invoice&);
 
                 private:
                         [[nodiscard]] std::future<bool> sending(const data::email&);
