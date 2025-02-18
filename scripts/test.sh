@@ -51,16 +51,19 @@ function static_code_analysis()
              --platform=unix32 unix64 win32A win32W win64 \
              --suppress=missingIncludeSystem \
              --suppress=checkersReport \
+             --check-level=exhaustive \
              -I $prj_dir/app/include \
              -I $prj_dir/gui/include \
              -I $prj_dir/data/include \
              -I $prj_dir/storage/include \
              -I $prj_dir/features/include \
+             -I $prj_dir/gui/invoice_page/include \
              $prj_dir/app/source \
              $prj_dir/gui/source \
              $prj_dir/data/source \
              $prj_dir/storage/source \
-             $prj_dir/features/source 
+             $prj_dir/features/source \
+             $prj_dir/gui/invoice_page/source 
 }
 
 function code_coverage()

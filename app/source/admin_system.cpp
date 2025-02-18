@@ -15,14 +15,14 @@ namespace error {
         const std::string message_main_window{"Error: failed to create the main window."};
         const std::string message_business{"Error: failed to create the business page."};
         const std::string message_client{"Error: failed to create the client registration page."};
+        const std::string message_invoice{"Error: failed to create the invoice page."};
 }
 
 
 
 void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 {
-        Glib::RefPtr<Gtk::Builder> ui_builder;
-        ui_builder = Gtk::Builder::create();
+        Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
         if (this->verify_ui_file(ui_builder) == false)
         {
                 std::cerr << error::message_file << std::endl;
@@ -36,7 +36,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->business_info_page.create(ui_builder) == false)
+                if (this->business_page.create(ui_builder) == false)
                 {
                         std::cerr << error::message_business << std::endl;
                         return;
@@ -45,6 +45,12 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                 if (this->client_register_page.create(ui_builder) == false)
                 {
                         std::cerr << error::message_client << std::endl;
+                        return;
+                }
+
+                if (this->invoice_page.create(ui_builder) == false)
+                {
+                        std::cerr << error::message_invoice << std::endl;
                         return;
                 }
         }

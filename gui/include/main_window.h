@@ -28,6 +28,7 @@ namespace gui {
                         void exit_clicked();
                         void min_clicked();
                         void max_clicked();
+                        void setup_css();
 
                 private:
                         Gtk::Window* window{nullptr};

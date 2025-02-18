@@ -752,7 +752,7 @@ See the Notes!</val>
 </reflist>
 </presentation>
 <text>
-<val>The main window shall open up with a default screen size of 680 x 940
+<val>The main window shall open up with a default screen size of 680 x 1024
 
 See the Notes!</val>
 </text>
@@ -1912,11 +1912,11 @@ The order number shall be of string type.</val>
 
 The list of items shall contain 3 columns in each list.
 
-The first column shall have the header "Hoeveelheid".
+The first column shall have the header "Quantity".
 
-The second column shall have the header "Materiaal Wat Gebruik Is".
+The second column shall have the header "Description".
 
-The third column shall have the header "Prys"</val>
+The third column shall have the header "Amount"</val>
 </text>
 </Requirement>
 <RequirementItem id="af7b2bbc-9f8e-11ef-a975-59cb4ab0743f">
@@ -2084,16 +2084,16 @@ The total label shall display the sum of the Price column.</val>
 
 The list of items shall contain 3 columns in each list.
 
-The first column shall have the header "Hoeveelheid".
+The first column shall have the header "Quantity".
 
-The second column shall have the header "Materiaal Wat Gebruik Is".
+The second column shall have the header "Description".
 
-The third column shall have the header "Prys".</val>
+The third column shall have the header "Amount".</val>
 </text>
 </Requirement>
 <RequirementItem id="c9103270-9f8f-11ef-b111-59cb4ab0743f">
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, -25.11317515098317, 2749.1375589333575)</val>
+<val>(1.0, 0.0, 0.0, 1.0, -25.11317515098317, 2746.6959286631145)</val>
 </matrix>
 <top-left>
 <val>(-114.17355925764991, -8.35555872261466)</val>
@@ -2246,7 +2246,7 @@ The third column shall have the header "Prys".</val>
 <val>(1.0, 0.0, 0.0, 1.0, -351.35675696510555, 3004.6353624390017)</val>
 </matrix>
 <points>
-<val>[(0.6390253307860689, 12.32827441180143), (212.07002255647245, -216.31991087185952)]</val>
+<val>[(0.6390253307860689, 12.32827441180143), (212.07002255647245, -218.7615411421025)]</val>
 </points>
 <head-connection>
 <ref refid="e72378a1-9f91-11ef-bb8e-59cb4ab0743f"/>
@@ -2285,7 +2285,7 @@ The third column shall have the header "Prys".</val>
 <val>(1.0, 0.0, 0.0, 1.0, 318.7701207754824, 1920.0175272694464)</val>
 </matrix>
 <points>
-<val>[(-194.88329592646556, 852.6561215854904), (324.27877443471834, -1222.0332720594292)]</val>
+<val>[(-194.88329592646556, 850.2144913152474), (324.27877443471834, -1222.0332720594292)]</val>
 </points>
 <head-connection>
 <ref refid="c9103270-9f8f-11ef-b111-59cb4ab0743f"/>
@@ -2365,7 +2365,7 @@ The total shall be the sum of the Price column.</val>
 <val>(1.0, 0.0, 0.0, 1.0, -410.9195607992036, 3271.644253725386)</val>
 </matrix>
 <points>
-<val>[(0.34498375096575273, 2.2909739527653983), (271.63282639057053, -263.04073862071755)]</val>
+<val>[(0.34498375096575273, 2.2909739527653983), (271.63282639057053, -265.4823688909605)]</val>
 </points>
 <head-connection>
 <ref refid="23628e92-9f92-11ef-9c7d-59cb4ab0743f"/>

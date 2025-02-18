@@ -31,12 +31,7 @@ TEST_GROUP(sql_test)
 	}
 };
 
-TEST(sql_test, insert)
+TEST(sql_test, is_open)
 {
-        CHECK_EQUAL(true, sql.insert());
-}
-
-TEST(sql_test, update)
-{
-        CHECK_EQUAL(true, sql.update());
+        CHECK_EQUAL(true, sql.is_open());
 }

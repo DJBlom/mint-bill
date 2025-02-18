@@ -16,18 +16,21 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(gui
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/main_window.cpp
-                ${PROJECT_SOURCE_DIR}/source/business_info_page.cpp
+                ${PROJECT_SOURCE_DIR}/source/business_page.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register_page.cpp
         )
 
         target_include_directories(gui
                 PRIVATE
-                ${PROJECT_SOURCE_DIR}/include/
                 ${GTKMM_INCLUDE_DIRS}
+                ${PROJECT_SOURCE_DIR}/include/
                 PUBLIC
+                ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
+                ${CMAKE_SOURCE_DIR}/utility/include
+                ${PROJECT_SOURCE_DIR}/invoice_page/include
         )
 else ()
         message(STATUS "There are no files in, gui/source.")

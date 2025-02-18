@@ -9,8 +9,9 @@
 #define _ADMIN_SYSTEM_H_
 #include <gtkmm.h>
 #include <main_window.h>
-#include <business_info_page.h>
+#include <business_page.h>
 #include <client_register_page.h>
+#include <invoice_page.h>
 
 namespace app {
         class admin_system {
@@ -28,9 +29,10 @@ namespace app {
                         [[nodiscard]] bool verify_ui_file(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
-                        gui::main_window main_window;
-                        gui::business_info_page business_info_page{};
+                        gui::main_window main_window{};
+                        gui::business_page business_page{};
                         gui::client_register_page client_register_page{};
+                        gui::invoice_page invoice_page{};
         };
 }
 #endif

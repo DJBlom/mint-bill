@@ -7,9 +7,12 @@
  *******************************************************/
 #ifndef _CLIENT_DATA_H_
 #define _CLIENT_DATA_H_
-#include <string>
-#include <cstdint>
 #include <mutex>
+#include <regex>
+#include <string>
+#include <vector>
+#include <cstdint>
+#include <word_slicer.h>
 
 namespace data {
         struct client {
@@ -40,22 +43,25 @@ namespace data {
                         [[nodiscard]] std::string get_statement_schedule() const;
 
                 private:
+                        [[nodiscard]] bool email_address_good(const std::vector<std::string>&);
                         void set_flag(const int&);
                         void clear_flag(const int&);
                         [[nodiscard]] bool check_flags() const;
 
                 private:
+                        using mask_type = std::uint8_t;
+
                         std::string business_name{""};
                         std::string business_address{""};
                         std::string business_area_code{""};
                         std::string business_town_name{""};
                         std::string cellphone_number{""};
-                        std::string email{""};
+                        std::string emails{""};
                         std::string vat_number{""};
                         std::string statement_schedule{""};
-                        std::uint8_t flags{0x0};
+                        mask_type flags{0x0};
                         std::mutex client_data{};
-                        std::uint8_t mask{0xFF};
+                        mask_type mask{0xFF};
                         enum FLAG {
                                 NAME = 0,
                                 ADDRESS,
@@ -65,6 +71,11 @@ namespace data {
                                 EMAIL,
                                 VAT_NUMBER,
                                 STATMENT_SCHEDULE
+                        };
+
+                        enum BIT {
+                                UNSET = 0,
+                                SET
                         };
         };
 }

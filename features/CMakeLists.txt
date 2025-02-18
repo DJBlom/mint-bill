@@ -16,16 +16,25 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(features 
                 OBJECT
+                ${PROJECT_SOURCE_DIR}/source/pdf.cpp
+                ${PROJECT_SOURCE_DIR}/source/email.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_info.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
         )
 
         target_include_directories(features 
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
+                ${CURL_INCLUDE_DIR}
+                ${GTKMM_INCLUDE_DIRS}
+                ${POPPLER_INCLUDE_DIRS}
+                ${CAIROMM_INCLUDE_DIRS}
                 PUBLIC
+                ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
+                ${CMAKE_SOURCE_DIR}/utility/include
         )
 else ()
         message(STATUS "There are no files in, features/source.")

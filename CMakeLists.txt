@@ -31,11 +31,15 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 
 if(BUILD_PROJECT)
+        find_package(CURL REQUIRED)
         find_package(PkgConfig REQUIRED)
         pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
+        pkg_check_modules(CAIROMM REQUIRED cairomm-1.16)
+        pkg_check_modules(POPPLER REQUIRED poppler-cpp)
 
         add_compile_options(
                 -Wall
@@ -57,12 +61,17 @@ if(BUILD_PROJECT)
         )
 
         target_include_directories(${PROJECT_NAME} PRIVATE
+                ${CURL_INCLUDE_DIR}
+                ${GTKMM_INCLUDE_DIRS}
+                ${CAIROMM_INCLUDE_DIRS}
+                ${POPPLER_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
-                ${GTKMM_INCLUDE_DIRS}
+                ${CMAKE_SOURCE_DIR}/utility/include
+                ${CMAKE_SOURCE_DIR}/gui/invoice_page/include
         )
 
         target_link_options(${PROJECT_NAME} PRIVATE
@@ -70,35 +79,60 @@ if(BUILD_PROJECT)
                 LINKER:-lrt
         )
 
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARIES})
-        target_link_directories(${PROJECT_NAME} PRIVATE ${GTKMM_LIBRARY_DIRS})
+        target_link_libraries(${PROJECT_NAME} 
+                PRIVATE 
+                ${CURL_LIBRARIES}
+                ${GTKMM_LIBRARIES} 
+                ${CAIROMM_LIBRARIES}
+                ${POPPLER_LIBRARIES}
+        )
+
+        target_link_directories(${PROJECT_NAME} 
+                PRIVATE 
+                ${GTKMM_LIBRARY_DIRS}
+                ${CAIROMM_LIBRARY_DIRS}
+        )
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui)
-            add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
-            target_link_libraries(${PROJECT_NAME} PRIVATE gui)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/gui)
+                target_link_libraries(${PROJECT_NAME} PRIVATE gui)
         else()
-            message(STATUS "Directory gui, does not exist")
+                message(STATUS "Directory gui, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui/invoice_page)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/gui/invoice_page)
+                target_link_libraries(${PROJECT_NAME} PRIVATE invoice_page)
+        else()
+                message(STATUS "Directory gui/invoice_page, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
-            add_subdirectory(${CMAKE_SOURCE_DIR}/data)
-            target_link_libraries(${PROJECT_NAME} PRIVATE data)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/data)
+                target_link_libraries(${PROJECT_NAME} PRIVATE data)
         else()
-            message(STATUS "Directory data, does not exist")
+                message(STATUS "Directory data, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/storage)
-            add_subdirectory(${CMAKE_SOURCE_DIR}/storage)
-            target_link_libraries(${PROJECT_NAME} PRIVATE storage)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/storage)
+                target_link_libraries(${PROJECT_NAME} PRIVATE storage)
         else()
-            message(STATUS "Directory storage, does not exist")
+                message(STATUS "Directory storage, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
-            add_subdirectory(${CMAKE_SOURCE_DIR}/features)
-            target_link_libraries(${PROJECT_NAME} PRIVATE features)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/features)
+                target_link_libraries(${PROJECT_NAME} PRIVATE features ${POPPLER_LIBRARIES})
         else()
-            message(STATUS "Directory features, does not exist")
+                message(STATUS "Directory features, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/utility)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/utility)
+                target_link_libraries(${PROJECT_NAME} PRIVATE utility)
+        else()
+                message(STATUS "Directory utility, does not exist")
         endif()
 
         if (EXISTS ${CMAKE_OBJDUMP})

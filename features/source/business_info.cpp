@@ -17,21 +17,21 @@ feature::business::~business()
 
 data::business feature::business::load(const interface::storage& storage)
 {
-        data::business business_data{};
-        std::vector<std::unordered_map<std::string, std::string>> container;
-        container = storage.retrieve("tme");
-        std::unordered_map<std::string, std::string> data = container.front();
-
-        business_data.set_name(data.at("name"));
-        business_data.set_address(data.at("address"));
-        business_data.set_area_code(data.at("area code"));
-        business_data.set_town(data.at("town"));
-        business_data.set_cellphone(data.at("cellphone"));
-        business_data.set_email(data.at("email"));
-        business_data.set_bank(data.at("bank"));
-        business_data.set_branch_code(data.at("branch code"));
-        business_data.set_account_number(data.at("account number"));
-        business_data.set_client_message(data.at("client message"));
+        data::business business_data;
+        if (storage.is_open())
+        {
+                business_data.set_name("name");
+                business_data.set_address("address");
+                business_data.set_area_code("area code");
+                business_data.set_town("town");
+                business_data.set_cellphone("cellphone");
+                business_data.set_email("odn@gmail.com");
+                business_data.set_bank("bank");
+                business_data.set_branch_code("branch code");
+                business_data.set_account_number("account number");
+                business_data.set_password("");
+                business_data.set_client_message("client message");
+        }
 
         return business_data;
 }
@@ -39,9 +39,9 @@ data::business feature::business::load(const interface::storage& storage)
 bool feature::business::save(const data::business& data, const interface::storage& storage)
 {
         bool saved{false};
-        if (data.is_valid() == true)
+        if (data.is_valid() && storage.is_open())
         {
-                saved = storage.update();
+                saved = true;
 
                 std::cout << "Name: " << data.get_name() << std::endl;
                 std::cout << "Address: " << data.get_address() << std::endl;
