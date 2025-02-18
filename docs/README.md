@@ -19,8 +19,8 @@
 > ## CURL
 > - libcurl API documentation: `https://curl.se/libcurl/c/`    
 > 
-> ## CAIRO    
-> - Cairo Graphics API documentation: `https://www.cairographics.org/documentation/`     
+> ## CAIROMM-1.16
+> - Cairo Graphics API documentation: `https://www.cairographics.org/documentation/cairomm/reference/annotated.html`     
 > 
 > ## POPPLER
 > - Poppler PDF AP docuemntation: `https://poppler.freedesktop.org/api/cpp/annotated.html`
