@@ -13,6 +13,7 @@
 #include <vector>
 #include <thread>
 #include <client_invoice.h>
+#include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-page.h>
 #include <poppler/cpp/poppler-image.h>
 #include <poppler/cpp/poppler-document.h>
@@ -55,7 +56,10 @@ namespace layout {
                         void email_sent();
 
                 private: // Print
+                        void setup_page();
+                        void setup_print_operation();
                         void print_invoice(const data::invoice&);
+                        void connect_printer();
                         void connect_print_alert();
                         void connect_print_button();
                         void connect_no_printer_alert();
@@ -82,13 +86,14 @@ namespace layout {
                         Glib::Dispatcher email_dispatcher{};
                         data::invoice current_invoice{};
                         feature::invoice client_invoice{};
-                        //std::unique_ptr<poppler::document> document{};
                         std::shared_ptr<poppler::document> document{};
 
                 private:
                         std::unique_ptr<Gtk::Button> email_button{};
                         std::unique_ptr<Gtk::Button> print_button{};
                         std::unique_ptr<Gtk::ListView> invoice_view{};
+                        Glib::RefPtr<Gtk::PageSetup> page_setup{};
+                        Glib::RefPtr<Gtk::PrintOperation> print_operation{};
                         std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
                         std::unique_ptr<Gtk::MessageDialog> print_no_printer{};
                         std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
