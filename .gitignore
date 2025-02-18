@@ -11,5 +11,8 @@ test/lib
 test/coverage
 test/admin-system
 
+# Doxygen
+docs/doxydoc
+
 # Vim .swp files
 *.swp
