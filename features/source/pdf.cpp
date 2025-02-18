@@ -37,15 +37,11 @@ namespace height {
 
 std::ostringstream feature::pdf::final_pdf{""};
 
-feature::pdf::pdf()
-{
-} //GCOVR_EXCL_STOP
+feature::pdf::pdf() {}
 
-feature::pdf::~pdf()
-{
-}
+feature::pdf::~pdf() {}
 
-std::string feature::pdf::generate_for_email(data::pdf_invoice& _data)
+std::string feature::pdf::generate_for_email(const data::pdf_invoice& _data)
 {
         std::string pdf_document{""};
         if (_data.is_valid())
@@ -56,7 +52,7 @@ std::string feature::pdf::generate_for_email(data::pdf_invoice& _data)
         return pdf_document;
 }
 
-std::shared_ptr<poppler::document> feature::pdf::generate_for_print(data::pdf_invoice& _data)
+std::shared_ptr<poppler::document> feature::pdf::generate_for_print(const data::pdf_invoice& _data)
 {
         std::shared_ptr<poppler::document> pdf_document{};
         if (_data.is_valid())
@@ -75,7 +71,7 @@ std::shared_ptr<poppler::document> feature::pdf::generate_for_print(data::pdf_in
         return pdf_document;
 }
 
-std::string feature::pdf::generate(data::pdf_invoice& _data)
+std::string feature::pdf::generate(const data::pdf_invoice& _data)
 {
         pdf::final_pdf.clear();
         pdf::final_pdf.flush();

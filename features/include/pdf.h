@@ -33,11 +33,11 @@ namespace feature {
                         pdf& operator = (pdf&&) = delete;
                         virtual ~pdf();
 
-                        [[nodiscard]] virtual std::string generate_for_email(data::pdf_invoice&);
-                        [[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(data::pdf_invoice&);
+                        [[nodiscard]] virtual std::string generate_for_email(const data::pdf_invoice&);
+                        [[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const data::pdf_invoice&);
 
                 private:
-                        [[nodiscard]] std::string generate(data::pdf_invoice&);
+                        [[nodiscard]] std::string generate(const data::pdf_invoice&);
                         [[nodiscard]] bool add_header(const std::string&);
                         [[nodiscard]] bool add_business(const data::business&);
                         [[nodiscard]] bool add_client(const data::client&);
