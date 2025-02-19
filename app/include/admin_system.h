@@ -9,9 +9,10 @@
 #define _ADMIN_SYSTEM_H_
 #include <gtkmm.h>
 #include <main_window.h>
-#include <business_page.h>
-#include <client_register_page.h>
 #include <invoice_page.h>
+#include <business_page.h>
+#include <statement_page.h>
+#include <client_register_page.h>
 
 namespace app {
         class admin_system {
@@ -33,6 +34,7 @@ namespace app {
                         gui::business_page business_page{};
                         gui::client_register_page client_register_page{};
                         gui::invoice_page invoice_page{};
+                        gui::statement_page statement_page{};
         };
 }
 #endif
