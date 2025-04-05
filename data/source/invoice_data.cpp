@@ -297,5 +297,5 @@ void data::invoice::set_flag(const int& bit)
 void data::invoice::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->invoice_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags |= static_cast<mask_type>(BIT::CLEAR << bit);
 }

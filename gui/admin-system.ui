@@ -5,7 +5,7 @@
   <requires lib="gtk" version="4.14"/>
   <object class="GtkWindow" id="main-window">
     <property name="default-height">680</property>
-    <property name="default-width">1024</property>
+    <property name="default-width">1248</property>
     <property name="destroy-with-parent">True</property>
     <property name="icon-name">application-x-executable</property>
     <property name="title">Administrasie</property>

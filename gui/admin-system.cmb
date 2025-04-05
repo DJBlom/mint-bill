@@ -115,7 +115,7 @@
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","680",None,None,None,None,None,None,None,None,None),
-	(1,1,"GtkWindow","default-width","1024",None,None,None,None,None,None,None,None,None),
+	(1,1,"GtkWindow","default-width","1248",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkWindow","destroy-with-parent","True",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkWindow","icon-name","application-x-executable",None,None,None,None,None,None,None,None,None),
 	(1,1,"GtkWindow","title","Administrasie",None,None,None,None,None,None,None,None,None),
