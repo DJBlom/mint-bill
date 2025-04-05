@@ -128,7 +128,7 @@ double data::column::get_amount() const
 
 bool data::column::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::column::set_flag(const int& bit)
@@ -140,5 +140,5 @@ void data::column::set_flag(const int& bit)
 void data::column::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->column_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

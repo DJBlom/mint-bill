@@ -285,7 +285,7 @@ std::vector<data::column> data::invoice::get_material_column() const
 
 bool data::invoice::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::invoice::set_flag(const int& bit)
@@ -297,5 +297,5 @@ void data::invoice::set_flag(const int& bit)
 void data::invoice::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->invoice_data);
-        this->flags |= static_cast<mask_type>(BIT::CLEAR << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

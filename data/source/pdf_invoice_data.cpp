@@ -120,7 +120,7 @@ data::business data::pdf_invoice::get_business() const
 
 bool data::pdf_invoice::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::pdf_invoice::set_flag(const int& bit)
@@ -132,5 +132,5 @@ void data::pdf_invoice::set_flag(const int& bit)
 void data::pdf_invoice::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->data_mutex);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

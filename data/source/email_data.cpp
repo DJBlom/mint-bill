@@ -143,7 +143,7 @@ std::string data::email::get_subject() const
 
 bool data::email::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::email::set_flag(const int& bit)
@@ -155,5 +155,5 @@ void data::email::set_flag(const int& bit)
 void data::email::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->email_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

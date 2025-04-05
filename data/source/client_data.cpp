@@ -247,7 +247,7 @@ bool data::client::email_address_good(const std::vector<std::string>& _emails)
 
 bool data::client::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::client::set_flag(const int& bit)
@@ -259,5 +259,5 @@ void data::client::set_flag(const int& bit)
 void data::client::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->client_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

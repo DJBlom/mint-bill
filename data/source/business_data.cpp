@@ -296,7 +296,7 @@ std::string data::business::get_password() const
 
 bool data::business::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::business::set_flag(const int& bit)
@@ -308,5 +308,5 @@ void data::business::set_flag(const int& bit)
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

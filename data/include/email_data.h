@@ -58,7 +58,7 @@ namespace data {
                         };
 
                         enum BIT {
-                                UNSET = 0,
+                                CLEAR = 0,
                                 SET
                         };
         };
