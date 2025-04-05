@@ -39,8 +39,7 @@ namespace feature {
                 private:
                         [[nodiscard]] std::string generate(const data::pdf_invoice&);
                         [[nodiscard]] bool add_header(const std::string&);
-                        [[nodiscard]] bool add_business(const data::business&);
-                        [[nodiscard]] bool add_client(const data::client&);
+                        [[nodiscard]] bool add_information(const data::pdf_invoice&);
                         [[nodiscard]] bool add_invoice(const data::invoice&);
                         [[nodiscard]] bool add_labor(const data::invoice&);
                         [[nodiscard]] bool add_material(const data::invoice&);
@@ -51,6 +50,7 @@ namespace feature {
                         [[nodiscard]] bool write_to_pdf(const std::string&, const double&);
                         [[nodiscard]] bool write_to_pdf_in_center(const std::string&, const double&);
                         [[nodiscard]] bool write_to_pdf_from_right(const std::string&, const double&);
+                        [[nodiscard]] bool write_to_pdf_from_right_information(const std::string&, const double&);
                         [[nodiscard]] bool draw_line();
                         [[nodiscard]] bool context_ok();
                         void add_new_line();
@@ -60,6 +60,7 @@ namespace feature {
                         void align_information_section();
                         void align_to_top_border();
                         void align_to_right(const Cairo::TextExtents&);
+                        void align_to_right_information(const Cairo::TextExtents&);
                         void align_to_center(const Cairo::TextExtents&);
                         void adjust_height();
                         void adjust_payment_height();
