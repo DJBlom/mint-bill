@@ -19,7 +19,8 @@ namespace width {
         constexpr double left_border{20.0};
         constexpr double right_border{575.0};
         constexpr double header{350.0};
-        constexpr double information{40.0};
+        constexpr double information_left{40.0};
+        constexpr double information_right{page_width - 40.0};
         constexpr double max_quantity{10.0};
         constexpr double max_amount{10.0};
         constexpr double left_item_description{left_border + max_quantity};
@@ -90,10 +91,7 @@ std::string feature::pdf::generate(const data::pdf_invoice& _data)
                 if (add_header("Invoice") == false)
                         return "";
 
-                if (add_business(_data.get_business()) == false)
-                        return "";
-
-                if (add_client(_data.get_client()) == false)
+                if (add_information(_data) == false)
                         return "";
 
                 if (add_invoice(_data.get_invoice()) == false)
@@ -129,6 +127,7 @@ std::string feature::pdf::generate(const data::pdf_invoice& _data)
 
 bool feature::pdf::add_header(const std::string& _data)
 {
+        align_to_top_border();
         align_to_left_border();
         add_new_line();
         this->context->set_font_size(font_size::header);
@@ -140,58 +139,53 @@ bool feature::pdf::add_header(const std::string& _data)
         return this->context_ok();
 }
 
-bool feature::pdf::add_business(const data::business& _data)
+bool feature::pdf::add_information(const data::pdf_invoice& _data)
 {
-        align_information_section();
-        align_to_top_border();
-        std::string name{_data.get_name()};
-        if (write_to_pdf(name, font_size::information) == false)
-                return false;
-
-        add_new_line();
-        std::string address{_data.get_address()};
-        if (write_to_pdf(address, font_size::information) == false)
-                return false;
-
-        add_new_line();
-        std::string town{_data.get_town() + ", " + _data.get_area_code()};
-        if (write_to_pdf(town, font_size::information) == false)
-                return false;
-
-        add_new_line();
-        std::string cellphone{_data.get_cellphone()};
-        if (write_to_pdf(cellphone, font_size::information) == false)
-                return false;
-
-        add_new_line();
-        std::string email{_data.get_email()};
-        if (write_to_pdf(email, font_size::information) == false)
-                return false;
-
-        return true;
-}
-
-bool feature::pdf::add_client(const data::client& _data)
-{
+        data::business business{_data.get_business()};
+        data::client client{_data.get_client()};
         align_information_section();
         add_new_section();
-        std::string name{_data.get_business_name()};
-        if (write_to_pdf(name, font_size::information) == false)
+        std::string client_business_name{client.get_business_name()};
+        if (write_to_pdf(client_business_name, font_size::information) == false)
                 return false;
 
-        add_new_line();
-        std::string address{_data.get_business_address()};
-        if (write_to_pdf(address, font_size::information) == false)
+        std::string name{business.get_name()};
+        if (write_to_pdf_from_right_information(name, font_size::information) == false)
                 return false;
 
+        align_information_section();
         add_new_line();
-        std::string town{_data.get_business_town_name() + ", " + _data.get_business_area_code()};
-        if (write_to_pdf(town, font_size::information) == false)
+        std::string client_business_address{client.get_business_address()};
+        if (write_to_pdf(client_business_address, font_size::information) == false)
                 return false;
 
+        std::string address{business.get_address()};
+        if (write_to_pdf_from_right_information(address, font_size::information) == false)
+                return false;
+
+        align_information_section();
         add_new_line();
-        std::string vat_number{"VAT #: " + _data.get_vat_number()};
+        std::string client_business_town{client.get_business_town_name() + ", " + client.get_business_area_code()};
+        if (write_to_pdf(client_business_town, font_size::information) == false)
+                return false;
+
+        std::string town{business.get_town() + ", " + business.get_area_code()};
+        if (write_to_pdf_from_right_information(town, font_size::information) == false)
+                return false;
+
+        align_information_section();
+        add_new_line();
+        std::string vat_number{"VAT #: " + client.get_vat_number()};
         if (write_to_pdf(vat_number, font_size::information) == false)
+                return false;
+
+        std::string cellphone{business.get_cellphone()};
+        if (write_to_pdf_from_right_information(cellphone, font_size::information) == false)
+                return false;
+
+        add_new_line();
+        std::string email{business.get_email()};
+        if (write_to_pdf_from_right_information(email, font_size::information) == false)
                 return false;
 
         return true;
@@ -389,6 +383,18 @@ bool feature::pdf::write_to_pdf(const std::string& _data, const double& _font_si
         return this->context_ok();
 }
 
+bool feature::pdf::write_to_pdf_in_center(const std::string& _data, const double& _font_size)
+{
+        this->context->set_font_size(_font_size);
+        Cairo::TextExtents extent;
+        this->context->get_text_extents(_data.c_str(), extent);
+        align_to_center(extent);
+        this->context->move_to(this->current_width, this->current_height);
+        this->context->show_text(_data.c_str());
+
+        return this->context_ok();
+}
+
 bool feature::pdf::write_to_pdf_from_right(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
@@ -401,12 +407,12 @@ bool feature::pdf::write_to_pdf_from_right(const std::string& _data, const doubl
         return this->context_ok();
 }
 
-bool feature::pdf::write_to_pdf_in_center(const std::string& _data, const double& _font_size)
+bool feature::pdf::write_to_pdf_from_right_information(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
         Cairo::TextExtents extent;
         this->context->get_text_extents(_data.c_str(), extent);
-        align_to_center(extent);
+        align_to_right_information(extent);
         this->context->move_to(this->current_width, this->current_height);
         this->context->show_text(_data.c_str());
 
@@ -457,7 +463,7 @@ void feature::pdf::align_to_right_border()
 void feature::pdf::align_information_section()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
-        this->current_width = width::information;
+        this->current_width = width::information_left;
 }
 
 void feature::pdf::align_to_top_border()
@@ -469,6 +475,11 @@ void feature::pdf::align_to_top_border()
 void feature::pdf::align_to_right(const Cairo::TextExtents& _extent)
 {
         this->current_width = (width::right_border - (_extent.width + _extent.x_bearing));
+}
+
+void feature::pdf::align_to_right_information(const Cairo::TextExtents& _extent)
+{
+        this->current_width = (width::information_right - (_extent.width + _extent.x_bearing));
 }
 
 void feature::pdf::align_to_center(const cairo_text_extents_t& _extent)
