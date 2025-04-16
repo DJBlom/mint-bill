@@ -80,15 +80,15 @@ namespace gui {
 //                private:
 //                        std::unique_ptr<Gtk::Button> email_button{};
 //                        std::unique_ptr<Gtk::Button> print_button{};
-//                        std::unique_ptr<Gtk::ListView> invoice_view{};
+//                        std::unique_ptr<Gtk::ListView> statement_view{};
 //                        Glib::RefPtr<Gtk::PageSetup> page_setup{};
 //                        Glib::RefPtr<Gtk::PrintOperation> print_operation{};
-//                        std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
+//                        std::shared_ptr<Gtk::Adjustment> statment_adjustment{};
 //                        std::unique_ptr<Gtk::MessageDialog> print_no_printer{};
 //                        std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
 //                        std::unique_ptr<Gtk::MessageDialog> print_confirmation{};
 //                        std::unique_ptr<Gtk::MessageDialog> email_confirmation{};
-//                        std::shared_ptr<Gio::ListStore<statement_entries>> invoice_store{};
+//                        std::shared_ptr<Gio::ListStore<statement_entries>> statement_store{};
         };
 }
 #endif

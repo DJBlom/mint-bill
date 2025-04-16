@@ -23,9 +23,9 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 
 //void layout::statement_page::create_ui(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 //{
-//        this->invoice_view = std::unique_ptr<Gtk::ListView>{
+//        this->statement_view = std::unique_ptr<Gtk::ListView>{
 //                _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
-//        this->invoices_adjustment = std::shared_ptr<Gtk::Adjustment>{
+//        this->statements_adjustment = std::shared_ptr<Gtk::Adjustment>{
 //                _ui_builder->get_object<Gtk::Adjustment>("known-invoice-adjustment")};
 //        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
 //                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
