@@ -12,6 +12,7 @@
 #include <pdf.h>
 #include <vector>
 #include <thread>
+#include <invoice_data.h>
 #include <client_invoice.h>
 #include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-page.h>
@@ -44,6 +45,7 @@ namespace layout {
 
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
                         virtual void populate(const std::string&);
+                        virtual void add(const data::invoice&);
 
                 private:
                         void create_ui(const Glib::RefPtr<Gtk::Builder>&);

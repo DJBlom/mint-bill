@@ -290,6 +290,7 @@ void gui::invoice_page::connect_save_alert()
                                 }
                                 else
                                 {
+                                        this->known_invoices.add(data);
                                         this->save_alert_dialog->hide();
                                         this->description_store->remove_all();
                                         this->material_store->remove_all();

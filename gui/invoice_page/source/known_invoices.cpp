@@ -50,13 +50,13 @@ void layout::known_invoices::send_email(const data::invoice& _data)
         }
 }
 
-void layout::known_invoices::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_nr)
+void layout::known_invoices::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& _context, int _page_nr)
 {
-        if (!this->document || page_nr >= this->document->pages()) {
+        if (!this->document || _page_nr >= this->document->pages()) {
                 return;
         }
 
-        auto page = this->document->create_page(page_nr);
+        auto page = this->document->create_page(_page_nr);
         poppler::page_renderer renderer;
 
         double dpi_x = 190;
@@ -74,10 +74,10 @@ void layout::known_invoices::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>&
                 image.width(), image.height(),
                 image.bytes_per_row());
 
-        double sx = context->get_width() / image.width();
-        double sy = context->get_height() / image.height();
+        double sx = _context->get_width() / image.width();
+        double sy = _context->get_height() / image.height();
         double scale_factor = std::min(sx, sy);
-        auto cr = context->get_cairo_context();
+        auto cr = _context->get_cairo_context();
         cr->save();
         cr->scale(scale_factor, scale_factor);
         cr->set_source(cairo_surface, 0, 0);
@@ -139,23 +139,23 @@ void layout::known_invoices::print_invoice(const data::invoice& _data)
         }
 }
 
-void layout::known_invoices::on_printoperation_done(Gtk::PrintOperation::Result result,
-  const Glib::RefPtr<Gtk::PrintOperation>& op)
+void layout::known_invoices::on_printoperation_done(Gtk::PrintOperation::Result _result,
+  const Glib::RefPtr<Gtk::PrintOperation>& _op)
 {
-        if (result == Gtk::PrintOperation::Result::ERROR)
+        if (_result == Gtk::PrintOperation::Result::ERROR)
         {
                 std::cerr << "Printing failed." << std::endl;
         }
-        else if (result == Gtk::PrintOperation::Result::CANCEL)
+        else if (_result == Gtk::PrintOperation::Result::CANCEL)
         {
                 std::cout << "Printing was cancelled." << std::endl;
         }
-        else if (result == Gtk::PrintOperation::Result::IN_PROGRESS)
+        else if (_result == Gtk::PrintOperation::Result::IN_PROGRESS)
         {
                 std::cout << "Printing was cancelled." << std::endl;
         }
 
-        std::string has_printer{op->get_print_settings()->get_printer()};
+        std::string has_printer{_op->get_print_settings()->get_printer()};
         if (has_printer.empty())
         {
                 this->print_success = false;
@@ -168,11 +168,23 @@ void layout::known_invoices::populate(const std::string& _business_name)
         if (_business_name.empty())
         {
                 this->email_button->set_sensitive(false);
+                this->print_button->set_sensitive(false);
         }
         else
         {
                 std::vector<data::invoice> db_invoices{client_invoice.search(_business_name, this->db)};
                 populate_list_store(db_invoices);
+        }
+}
+
+void layout::known_invoices::add(const data::invoice& _invoice)
+{
+        if (_invoice.is_valid() == false)
+        {
+        }
+        else
+        {
+                this->invoice_store->append(invoice_entries::create(_invoice));
         }
 }
 
