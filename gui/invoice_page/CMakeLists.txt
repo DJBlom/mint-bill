@@ -16,7 +16,6 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(invoice_page
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/invoice_page.cpp
-                ${PROJECT_SOURCE_DIR}/source/known_invoices.cpp
         )
 
         target_include_directories(invoice_page
