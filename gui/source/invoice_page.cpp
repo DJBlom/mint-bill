@@ -799,6 +799,9 @@ void gui::invoice_page::add(const data::invoice& _invoice)
         else
         {
                 this->invoice_store->append(invoice_entries::create(_invoice));
+                Glib::signal_timeout().connect_once([this]() {
+                        this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
+                }, 30);
         }
 }
 
@@ -969,9 +972,6 @@ void gui::invoice_page::populate_list_store(const std::vector<data::invoice>& _i
                 if (invoice.is_valid())
                 {
                         this->invoice_store->append(invoice_entries::create(invoice));
-                }
-                else
-                {
                         Glib::signal_timeout().connect_once([this]() {
                                 this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
                         }, 30);

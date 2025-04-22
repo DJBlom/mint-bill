@@ -100,13 +100,6 @@ if(BUILD_PROJECT)
                 message(STATUS "Directory gui, does not exist")
         endif()
 
-        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui/invoice_page)
-                add_subdirectory(${CMAKE_SOURCE_DIR}/gui/invoice_page)
-                target_link_libraries(${PROJECT_NAME} PRIVATE invoice_page)
-        else()
-                message(STATUS "Directory gui/invoice_page, does not exist")
-        endif()
-
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)
                 add_subdirectory(${CMAKE_SOURCE_DIR}/data)
                 target_link_libraries(${PROJECT_NAME} PRIVATE data)
