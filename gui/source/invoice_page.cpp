@@ -31,23 +31,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         if (_ui_builder)
         {
                 created = true;
-// Integration Starts
-               // if (this->known_invoices.create(_ui_builder) == false)
-               //         return false;
-                create_ui(_ui_builder);
-                setup_page();
-                setup_print_operation();
-                connect_printer();
-                connect_email_alert();
-                connect_email_button();
-                connect_print_alert();
-                connect_print_button();
-                connect_invoice_view();
-                connect_no_printer_alert();
-                connect_no_internet_alert();
-// Integration Ends
-
-
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
@@ -60,6 +43,16 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_wrong_info_alert();
                 connect_wrong_data_in_amount_column_alert();
                 connect_wrong_data_in_quantity_column_alert();
+                setup_page();
+                setup_print_operation();
+                connect_printer();
+                connect_email_alert();
+                connect_email_button();
+                connect_print_alert();
+                connect_print_button();
+                connect_invoice_view();
+                connect_no_printer_alert();
+                connect_no_internet_alert();
         }
 
         return created;
@@ -116,6 +109,10 @@ void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_build
                 _ui_builder->get_widget<Gtk::ColumnView>("new-invoice-material")};
         this->material_adjustment = std::shared_ptr<Gtk::Adjustment>{
                 _ui_builder->get_object<Gtk::Adjustment>("new-invoice-material-column-view-adjustment")};
+        this->invoice_view = std::unique_ptr<Gtk::ListView>{
+                _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
+        this->invoices_adjustment = std::shared_ptr<Gtk::Adjustment>{
+                _ui_builder->get_object<Gtk::Adjustment>("known-invoice-adjustment")};
 }
 
 void gui::invoice_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -148,6 +145,14 @@ void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-quantity-column-alert")};
         this->wrong_data_in_amount_column = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-amount-column-alert")};
+        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
+        this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
+        this->print_confirmation = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-alert")};
+        this->print_no_printer = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-no-printer-alert")};
 }
 
 void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -162,13 +167,16 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Button>("invoice-material-delete-button")};
         this->description_delete_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-delete-button")};
+        this->print_button = std::unique_ptr<Gtk::Button>{
+                _ui_builder->get_widget<Gtk::Button>("known-invoice-print-button")};
+        this->email_button = std::unique_ptr<Gtk::Button>{
+                _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
 }
 
 void gui::invoice_page::perform_search() {
         std::string business_name{this->search_entry->get_text()};
-        populate(business_name);
-//        this->known_invoices.populate(business_name);
-        this->invoice_number->set_text("1");
+        this->populate(business_name);
+        this->invoice_number->set_text("51");
         this->invoice_date->set_text("10-12-2024");
 }
 
@@ -258,17 +266,14 @@ void gui::invoice_page::update_description_total(uint position, uint removed, ui
         std::ostringstream doss{""};
         doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
         this->description_total_label->set_text("Total: R " + doss.str());
-        this->description_total = doss.str();
 
         std::ostringstream moss{""};
         moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
         this->material_total_label->set_text("Total: R " + moss.str());
-        this->material_total = moss.str();
 
         std::ostringstream goss{""};
         goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
         this->grand_total_label->set_text("Grand Total: R " + goss.str());
-        this->grand_total = goss.str();
 }
 
 void gui::invoice_page::connect_material_view()
@@ -330,23 +335,20 @@ void gui::invoice_page::update_material_total(uint position, uint removed, uint 
         std::ostringstream doss{""};
         doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
         this->description_total_label->set_text("Total: R " + doss.str());
-        this->description_total = doss.str();
 
         std::ostringstream moss{""};
         moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
         this->material_total_label->set_text("Total: R " + moss.str());
-        this->material_total = moss.str();
 
         std::ostringstream goss{""};
         goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
         this->grand_total_label->set_text("Grand Total: R " + goss.str());
-        this->grand_total = goss.str();
 }
 
 void gui::invoice_page::connect_save_alert()
 {
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::invoice data{extract_invoice_data()};
+                data::invoice data{this->extract_invoice_data()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
@@ -357,8 +359,7 @@ void gui::invoice_page::connect_save_alert()
                                 }
                                 else
                                 {
-                                        add(data);
-//                                        this->known_invoices.add(data);
+                                        this->add(data);
                                         this->save_alert_dialog->hide();
                                         this->description_store->remove_all();
                                         this->material_store->remove_all();
@@ -536,17 +537,20 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
                                 std::ostringstream doss{""};
                                 doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
                                 this->description_total_label->set_text("Total: R " + doss.str());
+                                this->description_total = doss.str();
                         }
                         else
                         {
                                 std::ostringstream moss{""};
                                 moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
                                 this->material_total_label->set_text("Total: R " + moss.str());
+                                this->material_total = moss.str();
                         }
 
                         std::ostringstream goss{""};
                         goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
                         this->grand_total_label->set_text("Grand Total: R " + goss.str());
+                        this->grand_total = goss.str();
                 }
                 else
                 {
@@ -629,28 +633,6 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
 
 
 // Integration Starts
-
-//bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-//{
-//        bool created{false};
-//        if (_ui_builder)
-//        {
-//                created = true;
-//                create_ui(_ui_builder);
-//                setup_page();
-//                setup_print_operation();
-//                connect_printer();
-//                connect_email_alert();
-//                connect_email_button();
-//                connect_print_alert();
-//                connect_print_button();
-//                connect_invoice_view();
-//                connect_no_printer_alert();
-//                connect_no_internet_alert();
-//        }
-//
-//        return created;
-//}
 
 void gui::invoice_page::send_email(const data::invoice& _data)
 {
@@ -793,36 +775,13 @@ void gui::invoice_page::populate(const std::string& _business_name)
 
 void gui::invoice_page::add(const data::invoice& _invoice)
 {
-        if (_invoice.is_valid() == false)
-        {
-        }
-        else
+        if (_invoice.is_valid())
         {
                 this->invoice_store->append(invoice_entries::create(_invoice));
                 Glib::signal_timeout().connect_once([this]() {
                         this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
                 }, 30);
         }
-}
-
-void gui::invoice_page::create_ui(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-{
-        this->invoice_view = std::unique_ptr<Gtk::ListView>{
-                _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
-        this->invoices_adjustment = std::shared_ptr<Gtk::Adjustment>{
-                _ui_builder->get_object<Gtk::Adjustment>("known-invoice-adjustment")};
-        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
-        this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
-        this->email_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
-        this->print_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-alert")};
-        this->print_no_printer = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-no-printer-alert")};
-        this->print_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("known-invoice-print-button")};
 }
 
 void gui::invoice_page::connect_email_alert()

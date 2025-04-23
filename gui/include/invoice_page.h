@@ -102,7 +102,6 @@ namespace gui {
 
 // Integration starts
                 private: // Email events
-                        void create_ui(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_email_alert();
                         void connect_email_button();
                         void connect_no_internet_alert();
