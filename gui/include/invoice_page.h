@@ -84,7 +84,6 @@ namespace gui {
                         ~invoice_page() override;
 
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
-                        //void edit_selected_invoice(const data::invoice&);
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);
@@ -123,14 +122,14 @@ namespace gui {
                 private: // Invoice
                         void populate(const std::string&);
                         void add(const data::invoice&);
+                        void edit_selected_invoice(const data::invoice&);
                         void connect_invoice_view();
-                        void connect_invoice_list_store();
                         void invoices(const std::unique_ptr<Gtk::ListView>&);
                         void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_invoices(const Glib::RefPtr<Gtk::ListItem>&);
                         void invoice_teardown(const Glib::RefPtr<Gtk::ListItem>&);
                         void populate_list_store(const std::vector<data::invoice>&);
-                        void selected_invoice(uint);
+                        void selected_invoice(uint, uint);
 
                 private:
 //                        storage::sql db{};
@@ -175,7 +174,7 @@ namespace gui {
                         void connect_description_view();
                         void connect_material_list_store();
                         void connect_description_list_store();
-                        void render_known_invoice();
+                        void edit_known_invoice(uint);
 
                 private: // helper
                         void perform_search();
