@@ -499,25 +499,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkColumnView" id="statement-invoices-column-view">
-                                    <property name="header-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <property name="model">
-                                      <object class="GtkMultiSelection"/>
-                                    </property>
-                                    <property name="row-factory">
-                                      <object class="GtkListItemFactory"/>
-                                    </property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">7</property>
-                                      <property name="row-span">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkLabel" id="statement-label">
                                     <property name="halign">start</property>
                                     <property name="label">Staat</property>
@@ -534,6 +515,26 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="row">6</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListView">
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">4</property>
+                                      <property name="row">7</property>
+                                      <property name="row-span">9</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListView">
+                                    <layout>
+                                      <property name="column">2</property>
+                                      <property name="column-span">1</property>
+                                      <property name="row">9</property>
+                                      <property name="row-span">1</property>
                                     </layout>
                                   </object>
                                 </child>

@@ -63,6 +63,7 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
                 std::cout << "Order number: " << data.get_order_number() << std::endl;
 
 
+                std::cout << "Description!!!!!!!!!!!!!!!!\n";
                 std::vector<data::column> description_data = data.get_description_column();
                 for (const auto& column : description_data)
                 {
@@ -71,6 +72,7 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
                         std::cout << "Amount: " << column.get_amount() << std::endl;
                 }
 
+                std::cout << "Material!!!!!!!!!!!!!!!!!!!\n";
                 std::vector<data::column> material_data = data.get_material_column();
                 for (const auto& column : material_data)
                 {
@@ -78,6 +80,10 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
                         std::cout << "Description: " << column.get_description() << std::endl;
                         std::cout << "Amount: " << column.get_amount() << std::endl;
                 }
+
+                std::cout << "Description Total: " << data.get_description_total() << std::endl;
+                std::cout << "Material Total: " << data.get_material_total() << std::endl;
+                std::cout << "Grand Total: " << data.get_grand_total() << std::endl;
 
                 updated = true;
         }

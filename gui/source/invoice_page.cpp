@@ -6,11 +6,18 @@
  * NOTE:
  **********************************************************/
 #include <invoice_page.h>
+#include <iostream>
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint8_t MAX_AMOUNT{15};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
+}
+
+gui::invoice_page::invoice_page()
+{
+        this->email_dispatcher.connect(sigc::mem_fun(*this, &invoice_page::email_sent));
+        this->print_dispatcher.connect(sigc::mem_fun(*this, &invoice_page::printed));
 }
 
 gui::invoice_page::~invoice_page()
@@ -24,9 +31,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         if (_ui_builder)
         {
                 created = true;
-                if (this->known_invoices.create(_ui_builder) == false)
-                        return false;
-
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
@@ -39,9 +43,26 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_wrong_info_alert();
                 connect_wrong_data_in_amount_column_alert();
                 connect_wrong_data_in_quantity_column_alert();
+                setup_page();
+                setup_print_operation();
+                connect_printer();
+                connect_email_alert();
+                connect_email_button();
+                connect_print_alert();
+                connect_print_button();
+                connect_invoice_view();
+                connect_no_printer_alert();
+                connect_no_internet_alert();
         }
 
         return created;
+}
+
+void gui::invoice_page::edit_selected_invoice(const data::invoice& _invoice)
+{
+        if (_invoice.is_valid() == true)
+        {
+        }
 }
 
 void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -54,6 +75,10 @@ void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_build
                 _ui_builder->get_widget<Gtk::ColumnView>("new-invoice-material")};
         this->material_adjustment = std::shared_ptr<Gtk::Adjustment>{
                 _ui_builder->get_object<Gtk::Adjustment>("new-invoice-material-column-view-adjustment")};
+        this->invoice_view = std::unique_ptr<Gtk::ListView>{
+                _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
+        this->invoices_adjustment = std::shared_ptr<Gtk::Adjustment>{
+                _ui_builder->get_object<Gtk::Adjustment>("known-invoice-adjustment")};
 }
 
 void gui::invoice_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -86,6 +111,14 @@ void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-quantity-column-alert")};
         this->wrong_data_in_amount_column = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-amount-column-alert")};
+        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
+        this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
+        this->print_confirmation = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-alert")};
+        this->print_no_printer = std::unique_ptr<Gtk::MessageDialog>{
+                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-no-printer-alert")};
 }
 
 void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -100,12 +133,16 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Button>("invoice-material-delete-button")};
         this->description_delete_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-delete-button")};
+        this->print_button = std::unique_ptr<Gtk::Button>{
+                _ui_builder->get_widget<Gtk::Button>("known-invoice-print-button")};
+        this->email_button = std::unique_ptr<Gtk::Button>{
+                _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
 }
 
 void gui::invoice_page::perform_search() {
         std::string business_name{this->search_entry->get_text()};
-        this->known_invoices.populate(business_name);
-        this->invoice_number->set_text("1");
+        this->populate(business_name);
+        this->invoice_number->set_text("51");
         this->invoice_date->set_text("10-12-2024");
 }
 
@@ -180,6 +217,57 @@ void gui::invoice_page::connect_description_list_store()
 {
         this->description_store->signal_items_changed().connect(
                         sigc::mem_fun(*this, &invoice_page::update_description_total));
+}
+
+void gui::invoice_page::edit_known_invoice(uint position)
+{
+        auto item = this->invoice_store->get_item(position);
+        if (!item)
+                return;
+
+        auto data = std::dynamic_pointer_cast<invoice_entries>(item);
+        if (!data)
+                return;
+
+        data::invoice invoice{data->invoice};
+        if (invoice.is_valid())
+        {
+                this->invoice_number->set_text(invoice.get_invoice_number());
+                this->invoice_date->set_text(invoice.get_invoice_date());
+                this->job_card->set_text(invoice.get_job_card_number());
+                this->order_number->set_text(invoice.get_order_number());
+
+                for (auto& column : invoice.get_description_column())
+                {
+                        if (column.is_valid())
+                        {
+                                this->description_store->append(column_entries::create(
+                                                        column.get_quantity(),
+                                                        column.get_description(),
+                                                        column.get_amount()));
+                                Glib::signal_timeout().connect_once([this]() {
+                                        this->description_adjustment->set_value(this->description_adjustment->get_upper());
+                                }, 30);
+                        }
+                }
+                this->description_total_label->set_text("Total: R " + invoice.get_description_total());
+
+                for (auto& column : invoice.get_material_column())
+                {
+                        if (column.is_valid())
+                        {
+                                this->material_store->append(column_entries::create(
+                                                        column.get_quantity(),
+                                                        column.get_description(),
+                                                        column.get_amount()));
+                                Glib::signal_timeout().connect_once([this]() {
+                                        this->material_adjustment->set_value(this->material_adjustment->get_upper());
+                                }, 30);
+                        }
+                }
+                this->material_total_label->set_text("Total: R " + invoice.get_material_total());
+                this->grand_total_label->set_text("Grand Total: R " + invoice.get_grand_total());
+        }
 }
 
 void gui::invoice_page::update_description_total(uint position, uint removed, uint added)
@@ -279,7 +367,7 @@ void gui::invoice_page::update_material_total(uint position, uint removed, uint 
 void gui::invoice_page::connect_save_alert()
 {
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::invoice data{extract_invoice_data()};
+                data::invoice data{this->extract_invoice_data()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
@@ -290,7 +378,7 @@ void gui::invoice_page::connect_save_alert()
                                 }
                                 else
                                 {
-                                        this->known_invoices.add(data);
+                                        this->add(data);
                                         this->save_alert_dialog->hide();
                                         this->description_store->remove_all();
                                         this->material_store->remove_all();
@@ -405,6 +493,7 @@ void gui::invoice_page::bind_quantity(const Glib::RefPtr<Gtk::ListItem>& list_it
                 return;
 
         entry->set_max_length(limit::MAX_QUANTITY);
+        entry->set_text(std::to_string(columns->quantity));
         entry->signal_changed().connect([entry, columns, this] () {
                 std::string text{entry->get_text()};
                 if (text.empty())
@@ -436,6 +525,7 @@ void gui::invoice_page::bind_description(const Glib::RefPtr<Gtk::ListItem>& list
                 return;
 
         entry->set_max_length(limit::MAX_DESCRIPTION);
+        entry->set_text(columns->description);
         entry->signal_changed().connect([entry, columns, this] () {
                columns->description = entry->get_text();
         });
@@ -452,6 +542,7 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
                 return;
 
         entry->set_max_length(limit::MAX_AMOUNT);
+        entry->set_text(std::to_string(columns->amount));
         entry->signal_changed().connect([entry, columns, this] () {
                 std::string text{entry->get_text()};
                 if (text.empty())
@@ -468,17 +559,22 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
                                 std::ostringstream doss{""};
                                 doss << std::fixed << std::setprecision(2) << compute_total(this->description_store);
                                 this->description_total_label->set_text("Total: R " + doss.str());
+                                this->description_total = doss.str();
                         }
-                        else
+
+                        if (ancestor->get_name() == "material_view")
                         {
                                 std::ostringstream moss{""};
                                 moss << std::fixed << std::setprecision(2) << compute_total(this->material_store);
                                 this->material_total_label->set_text("Total: R " + moss.str());
+                                this->material_total = moss.str();
+                                std::cout << "Material totoal\n";
                         }
 
                         std::ostringstream goss{""};
                         goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
                         this->grand_total_label->set_text("Grand Total: R " + goss.str());
+                        this->grand_total = goss.str();
                 }
                 else
                 {
@@ -515,8 +611,7 @@ double gui::invoice_page::compute_grand_total()
 data::invoice gui::invoice_page::extract_invoice_data()
 {
         data::invoice data{};
-        //data.set_business_name(this->search_entry->get_text());
-        data.set_business_name("SKA");
+        data.set_business_name(this->search_entry->get_text());
         data.set_invoice_number(this->invoice_number->get_text());
         data.set_invoice_date(this->invoice_date->get_text());
         data.set_job_card_number(this->job_card->get_text());
@@ -550,3 +645,368 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
 
         return columns;
 }
+
+
+
+
+
+
+
+
+
+
+
+// Integration Starts
+
+void gui::invoice_page::send_email(const data::invoice& _data)
+{
+        if (_data.is_valid())
+        {
+                std::thread([this, _data] () {
+                        bool success = client_invoice.send_email(_data);
+                        this->email_success = success;
+                        this->email_dispatcher.emit();
+                }).detach();
+        }
+}
+
+void gui::invoice_page::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& _context, int _page_nr)
+{
+        if (!this->document || _page_nr >= this->document->pages()) {
+                return;
+        }
+
+        auto page = this->document->create_page(_page_nr);
+        poppler::page_renderer renderer;
+
+        double dpi_x = 190;
+        double dpi_y = 290;
+        const double target_dpi = std::max(dpi_x, dpi_y);
+        auto image = renderer.render_page(page, target_dpi, target_dpi);
+        if (image.is_valid() == false)
+                return;
+
+        renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
+        renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
+
+        auto cairo_surface = Cairo::ImageSurface::create(
+                reinterpret_cast<unsigned char*> (image.data()), Cairo::Surface::Format::ARGB32,
+                image.width(), image.height(),
+                image.bytes_per_row());
+
+        double sx = _context->get_width() / image.width();
+        double sy = _context->get_height() / image.height();
+        double scale_factor = std::min(sx, sy);
+        auto cr = _context->get_cairo_context();
+        cr->save();
+        cr->scale(scale_factor, scale_factor);
+        cr->set_source(cairo_surface, 0, 0);
+        cr->paint();
+        cr->restore();
+}
+
+void gui::invoice_page::setup_page()
+{
+        this->page_setup = Gtk::PageSetup::create();
+        if (page_setup)
+        {
+                this->page_setup->set_orientation(Gtk::PageOrientation::PORTRAIT);
+                this->page_setup->set_paper_size(Gtk::PaperSize(Gtk::PAPER_NAME_A4));
+                this->page_setup->set_top_margin(0, Gtk::Unit::POINTS);
+                this->page_setup->set_bottom_margin(0, Gtk::Unit::POINTS);
+                this->page_setup->set_left_margin(0, Gtk::Unit::POINTS);
+                this->page_setup->set_right_margin(0, Gtk::Unit::POINTS);
+        }
+}
+
+void gui::invoice_page::setup_print_operation()
+{
+        this->print_operation = Gtk::PrintOperation::create();
+        if (print_operation)
+        {
+                this->print_operation->set_default_page_setup(this->page_setup);
+                this->print_operation->set_unit(Gtk::Unit::POINTS);
+                this->print_operation->set_has_selection(false);
+                this->print_operation->set_job_name("Invoice");
+                this->print_operation->set_use_full_page(true);
+                this->print_operation->set_show_progress(true);
+                this->print_operation->set_allow_async(true);
+        }
+}
+
+void gui::invoice_page::connect_printer()
+{
+        print_operation->signal_draw_page().connect(
+                sigc::mem_fun(*this, &invoice_page::on_draw_page));
+        print_operation->signal_done().connect(sigc::bind(
+                sigc::mem_fun(*this, &invoice_page::on_printoperation_done), this->print_operation));
+}
+
+void gui::invoice_page::print_invoice(const data::invoice& _data)
+{
+        if (_data.is_valid())
+        {
+                std::thread([this, _data] () {
+                        data::pdf_invoice pdf_data{client_invoice.create_pdf_to_print(_data)};
+                        this->document = std::move(this->pdf.generate_for_print(pdf_data));
+                        if (this->document)
+                        {
+                                this->print_operation->set_n_pages(this->document->pages());
+                                this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
+                        }
+                        this->print_dispatcher.emit();
+                }).detach();
+        }
+}
+
+void gui::invoice_page::on_printoperation_done(Gtk::PrintOperation::Result _result,
+  const Glib::RefPtr<Gtk::PrintOperation>& _op)
+{
+        if (_result == Gtk::PrintOperation::Result::ERROR)
+        {
+                std::cerr << "Printing failed." << std::endl;
+        }
+        else if (_result == Gtk::PrintOperation::Result::CANCEL)
+        {
+                std::cout << "Printing was cancelled." << std::endl;
+        }
+        else if (_result == Gtk::PrintOperation::Result::IN_PROGRESS)
+        {
+                std::cout << "Printing was cancelled." << std::endl;
+        }
+
+        std::string has_printer{_op->get_print_settings()->get_printer()};
+        if (has_printer.empty())
+        {
+                this->print_success = false;
+        }
+}
+
+void gui::invoice_page::populate(const std::string& _business_name)
+{
+        this->invoice_store->remove_all();
+        if (_business_name.empty())
+        {
+                this->email_button->set_sensitive(false);
+                this->print_button->set_sensitive(false);
+        }
+        else
+        {
+                std::vector<data::invoice> db_invoices{client_invoice.search(_business_name, this->db)};
+                populate_list_store(db_invoices);
+        }
+}
+
+void gui::invoice_page::add(const data::invoice& _invoice)
+{
+        if (_invoice.is_valid())
+        {
+                this->invoice_store->append(invoice_entries::create(_invoice));
+                Glib::signal_timeout().connect_once([this]() {
+                        this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
+                }, 30);
+        }
+}
+
+void gui::invoice_page::connect_email_alert()
+{
+        this->email_confirmation->signal_response().connect([this] (int response) {
+                data::invoice data{this->current_invoice};
+                if (response == GTK_RESPONSE_YES)
+                {
+                        this->email_confirmation->hide();
+                        this->send_email(data);
+                }
+                else
+                {
+                        this->email_confirmation->hide();
+                }
+        });
+}
+
+void gui::invoice_page::connect_email_button()
+{
+        if (this->email_button)
+        {
+                this->email_button->set_sensitive(false);
+                this->email_button->signal_clicked().connect([this] () {
+                        this->email_confirmation->show();
+                });
+        }
+}
+
+void gui::invoice_page::connect_print_alert()
+{
+        this->print_confirmation->signal_response().connect([this] (int response) {
+                if (response == GTK_RESPONSE_YES)
+                {
+                        this->print_confirmation->hide();
+                        print_invoice(this->current_invoice);
+                }
+                else
+                {
+                        this->print_confirmation->hide();
+                }
+        });
+}
+
+void gui::invoice_page::connect_print_button()
+{
+        if (this->print_button)
+        {
+                this->print_button->set_sensitive(false);
+                this->print_button->signal_clicked().connect([this] () {
+                        this->print_confirmation->show();
+                });
+        }
+}
+
+void gui::invoice_page::connect_invoice_view()
+{
+        this->invoice_store = std::shared_ptr<Gio::ListStore<invoice_entries>>{
+                Gio::ListStore<invoice_entries>::create()};
+        if (!this->invoice_store)
+                return;
+        if (!this->invoice_view)
+                return;
+        Glib::RefPtr<Gtk::MultiSelection> selection_model = Gtk::MultiSelection::create(this->invoice_store);
+        if (!selection_model)
+                return;
+
+        this->invoice_view->set_name("invoice_view");
+        this->invoice_view->set_model(selection_model);
+        this->invoice_view->set_single_click_activate(false);
+        this->invoice_view->signal_activate().connect(
+                sigc::mem_fun(*this, &invoice_page::edit_known_invoice));
+
+        selection_model->signal_selection_changed().connect(
+                        sigc::mem_fun(*this, &invoice_page::selected_invoice));
+
+        invoices(this->invoice_view);
+}
+
+void gui::invoice_page::connect_no_internet_alert()
+{
+        this->email_no_internet->signal_response().connect([this] (int response) {
+                switch(response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->email_no_internet->hide();
+                                break;
+                        default:
+                                this->email_no_internet->hide();
+                                break;
+                }
+        });
+}
+
+void gui::invoice_page::connect_no_printer_alert()
+{
+        this->print_no_printer->signal_response().connect([this] (int response) {
+                switch(response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->print_no_printer->hide();
+                                break;
+                        default:
+                                this->print_no_printer->hide();
+                                break;
+                }
+        });
+}
+
+void gui::invoice_page::invoices(const std::unique_ptr<Gtk::ListView>& view)
+{
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
+        factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::invoice_setup)));
+        factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_page::bind_invoices));
+        factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::invoice_teardown)));
+        view->set_factory(factory);
+}
+
+void gui::invoice_page::invoice_setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        auto label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::START);
+        label->set_hexpand(true);
+        label->set_vexpand(false);
+        label->set_size_request(200, 35);
+        _item->set_child(*label);
+}
+
+void gui::invoice_page::invoice_teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        _item->unset_child();
+}
+
+void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        auto data = std::dynamic_pointer_cast<invoice_entries>(_item->get_item());
+        if (!data)
+                return;
+
+        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+        if (!label)
+                return;
+
+        data::invoice invoice{data->invoice};
+        std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+        label->set_text(details);
+}
+
+void gui::invoice_page::populate_list_store(const std::vector<data::invoice>& _invoices)
+{
+        for (const auto& invoice : _invoices)
+        {
+                if (invoice.is_valid())
+                {
+                        this->invoice_store->append(invoice_entries::create(invoice));
+                        Glib::signal_timeout().connect_once([this]() {
+                                this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
+                        }, 30);
+                }
+        }
+}
+
+void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
+{
+        ++_position;
+        ++_items_selected;
+
+        Glib::RefPtr<Gtk::SelectionModel> selection_model = this->invoice_view->get_model();
+        if (selection_model)
+        {
+                Glib::RefPtr<const Gtk::Bitset> items_list{selection_model->get_selection()};
+                for (guint item : *items_list)
+                {
+                        auto data = this->invoice_store->get_item(item);
+                        if (!data)
+                                return;
+                        auto invoice = std::dynamic_pointer_cast<invoice_entries>(data);
+                        if (!invoice)
+                                return;
+
+                        this->current_invoice = invoice->invoice;
+                        std::cout << "Invoice number: " << this->current_invoice.get_invoice_number() << std::endl;
+                }
+
+                this->email_button->set_sensitive(true);
+                this->print_button->set_sensitive(true);
+        }
+}
+
+void gui::invoice_page::email_sent()
+{
+        if (this->email_success == false)
+        {
+                this->email_no_internet->show();
+        }
+}
+
+void gui::invoice_page::printed()
+{
+        if (this->print_success == false)
+        {
+                this->print_no_printer->show();
+        }
+}
+// Integration Ends
