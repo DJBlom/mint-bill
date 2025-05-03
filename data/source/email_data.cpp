@@ -15,16 +15,16 @@ namespace limits {
 data::email::email() {}
 
 data::email::email(const email& _copy)
-        : pdf{_copy.pdf}, client{_copy.client}, business{_copy.business},
+        : attachments{_copy.attachments}, client{_copy.client}, business{_copy.business},
           subject{_copy.subject}, flags{_copy.flags}, email_data{}, mask{_copy.mask}
 {
 }
 
 data::email::email(email&& _move)
-        : pdf{_move.pdf}, client{_move.client}, business{_move.business},
+        : attachments{_move.attachments}, client{_move.client}, business{_move.business},
           subject{_move.subject}, flags{_move.flags}, email_data{}, mask{_move.mask}
 {
-        _move.pdf.clear();
+        _move.attachments.clear();
         _move.client = client;
         _move.business = business;
         _move.subject.clear();
@@ -42,7 +42,7 @@ data::email& data::email::operator= (const email& _copy)
 
 data::email& data::email::operator= (email&& _move)
 {
-        std::swap(pdf, _move.pdf);
+        std::swap(attachments, _move.attachments);
         std::swap(client, _move.client);
         std::swap(business, _move.business);
         std::swap(subject, _move.subject);
@@ -65,13 +65,13 @@ bool data::email::is_valid() const
         return is_valid;
 }
 
-void data::email::set_pdf(const std::string& _pdf)
+void data::email::set_attachments(const std::vector<std::string>& _attachments)
 {
-        if (!_pdf.empty())
+        if (!_attachments.empty())
         {
                 set_flag(FLAG::PDF);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->pdf = std::move(_pdf);
+                this->attachments = std::move(_attachments);
         }
         else
         {
@@ -79,9 +79,9 @@ void data::email::set_pdf(const std::string& _pdf)
         }
 }
 
-std::string data::email::get_pdf() const
+std::vector<std::string> data::email::get_attachments() const
 {
-        return std::move(this->pdf);
+        return std::move(this->attachments);
 }
 
 void data::email::set_client(const data::client& _client)
