@@ -319,16 +319,19 @@ bool smtp::parts::body()
 bool smtp::parts::attachment(const data::email& _data)
 {
         bool success{false};
-        if (part && _data.is_valid())
+        if (_data.is_valid())
         {
                 for (const std::string& attachment : _data.get_attachments())
                 {
                         part = curl_mime_addpart(mime.get());
-                        std::string attachment_name{_data.get_subject() + ".pdf"};
-                        curl_mime_data(part, attachment.c_str(), attachment.length());
-                        curl_mime_type(part, "application/pdf");
-                        curl_mime_encoder(part, "base64");
-                        curl_mime_filename(part, attachment_name.c_str());
+                        if (part)
+                        {
+                                std::string attachment_name{_data.get_subject() + ".pdf"};
+                                curl_mime_data(part, attachment.c_str(), attachment.length());
+                                curl_mime_type(part, "application/pdf");
+                                curl_mime_encoder(part, "base64");
+                                curl_mime_filename(part, attachment_name.c_str());
+                        }
                 }
                 success = true;
         }

@@ -103,9 +103,10 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
                         std::vector<data::column> vec{};
                         for (unsigned int j = 0; j < size; ++j)
                         {
+                                std::string description{"Machining"};
                                 data::column expected{};
                                 expected.set_quantity(j);
-                                expected.set_description("machining");
+                                expected.set_description(description);
                                 expected.set_amount(55 + j + .0);
                                 vec.push_back(expected);
                         }
@@ -137,41 +138,48 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
         return data;
 }
 
-bool feature::invoice::send_email(const data::invoice& _data)
+bool feature::invoice::send_email(const std::vector<data::invoice>& _data)
 {
         std::future<bool> sent{};
-        if (_data.is_valid())
+        if (!_data.empty())
         {
-                data::pdf_invoice pdf_invoice_data{};
-                data::client client_data{};
-                client_data.set_business_name(_data.get_business_name());
-                client_data.set_business_address("Geelsterd 8");
-                client_data.set_business_area_code("543543");
-                client_data.set_business_town_name("George");
-                client_data.set_cellphone_number("0832315944");
-                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
-                client_data.set_vat_number("3241324321413");
-                client_data.set_statement_schedule("4,4");
-                pdf_invoice_data.set_client(client_data);
-
-                pdf_invoice_data.set_invoice(_data);
-
-                data::business business_data;
-                business_data.set_name("T.M Engineering");
-                business_data.set_address("Geelsterd 8");
-                business_data.set_area_code("6625");
-                business_data.set_town("George");
-                business_data.set_cellphone("0832315944");
-                business_data.set_email("dmnsstmtest@gmail.com");
-                business_data.set_bank("Standard Bank");
-                business_data.set_branch_code("043232");
-                business_data.set_account_number("0932443824");
-                business_data.set_client_message("Thank you for your support!");
-                business_data.set_password("bxwx eaku ndjj ltda");
-                pdf_invoice_data.set_business(business_data);
-
                 feature::pdf pdf{};
-                std::vector<std::string> pdf_data{pdf.generate_for_email(pdf_invoice_data)};
+                data::client client_data{};
+                data::business business_data{};
+                std::vector<std::string> pdf_data{};
+                data::pdf_invoice pdf_invoice_data{};
+                for (const data::invoice& invoice : _data)
+                {
+                        if (invoice.is_valid())
+                        {
+                                client_data.set_business_name(invoice.get_business_name());
+                                client_data.set_business_address("Geelsterd 8");
+                                client_data.set_business_area_code("543543");
+                                client_data.set_business_town_name("George");
+                                client_data.set_cellphone_number("0832315944");
+                                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
+                                client_data.set_vat_number("3241324321413");
+                                client_data.set_statement_schedule("4,4");
+                                pdf_invoice_data.set_client(client_data);
+
+                                pdf_invoice_data.set_invoice(invoice);
+
+                                business_data.set_name("T.M Engineering");
+                                business_data.set_address("Geelsterd 8");
+                                business_data.set_area_code("6625");
+                                business_data.set_town("George");
+                                business_data.set_cellphone("0832315944");
+                                business_data.set_email("dmnsstmtest@gmail.com");
+                                business_data.set_bank("Standard Bank");
+                                business_data.set_branch_code("043232");
+                                business_data.set_account_number("0932443824");
+                                business_data.set_client_message("Thank you for your support!");
+                                business_data.set_password("bxwx eaku ndjj ltda");
+                                pdf_invoice_data.set_business(business_data);
+
+                                pdf_data.push_back(pdf.generate_for_email(pdf_invoice_data));
+                        }
+                }
 
                 data::email email_data{};
                 email_data.set_attachments(pdf_data);
@@ -188,40 +196,50 @@ bool feature::invoice::send_email(const data::invoice& _data)
         return sent.get();
 }
 
-data::pdf_invoice feature::invoice::create_pdf_to_print(const data::invoice& _data)
+std::vector<data::pdf_invoice> feature::invoice::create_pdf_to_print(const std::vector<data::invoice>& _data)
 {
-        data::pdf_invoice pdf_invoice_data{};
-        if (_data.is_valid() == true)
+        std::vector<data::pdf_invoice> pdf_invoices;
+        if (!_data.empty())
         {
-                data::client client_data;
-                client_data.set_business_name(_data.get_business_name());
-                client_data.set_business_address("Geelsterd 8");
-                client_data.set_business_area_code("543543");
-                client_data.set_business_town_name("George");
-                client_data.set_cellphone_number("0832315944");
-                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
-                client_data.set_vat_number("3241324321413");
-                client_data.set_statement_schedule("4,4");
-                pdf_invoice_data.set_client(client_data);
+                feature::pdf pdf{};
+                data::client client_data{};
+                data::business business_data{};
+                data::pdf_invoice pdf_invoice_data{};
+                for (const data::invoice& invoice : _data)
+                {
+                        if (invoice.is_valid())
+                        {
+                                client_data.set_business_name(invoice.get_business_name());
+                                client_data.set_business_address("Geelsterd 8");
+                                client_data.set_business_area_code("543543");
+                                client_data.set_business_town_name("George");
+                                client_data.set_cellphone_number("0832315944");
+                                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
+                                client_data.set_vat_number("3241324321413");
+                                client_data.set_statement_schedule("4,4");
+                                pdf_invoice_data.set_client(client_data);
 
-                pdf_invoice_data.set_invoice(_data);
+                                pdf_invoice_data.set_invoice(invoice);
 
-                data::business business_data;
-                business_data.set_name("T.M Engineering");
-                business_data.set_address("Geelsterd 8");
-                business_data.set_area_code("6625");
-                business_data.set_town("George");
-                business_data.set_cellphone("0832315944");
-                business_data.set_email("dmnsstmtest@gmail.com");
-                business_data.set_bank("Standard Bank");
-                business_data.set_branch_code("043232");
-                business_data.set_account_number("0932443824");
-                business_data.set_client_message("Thank you for your support!");
-                business_data.set_password("bxwx eaku ndjj ltda");
-                pdf_invoice_data.set_business(business_data);
+                                business_data.set_name("T.M Engineering");
+                                business_data.set_address("Geelsterd 8");
+                                business_data.set_area_code("6625");
+                                business_data.set_town("George");
+                                business_data.set_cellphone("0832315944");
+                                business_data.set_email("dmnsstmtest@gmail.com");
+                                business_data.set_bank("Standard Bank");
+                                business_data.set_branch_code("043232");
+                                business_data.set_account_number("0932443824");
+                                business_data.set_client_message("Thank you for your support!");
+                                business_data.set_password("bxwx eaku ndjj ltda");
+                                pdf_invoice_data.set_business(business_data);
+
+                                pdf_invoices.push_back(pdf_invoice_data);
+                        }
+                }
         }
 
-        return pdf_invoice_data;
+        return pdf_invoices;
 }
 
 std::future<bool> feature::invoice::sending(const data::email& _data)

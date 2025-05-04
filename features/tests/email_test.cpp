@@ -8,6 +8,7 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
+#include <iostream>
 
 #include <pdf.h>
 #include <email.h>
@@ -66,7 +67,6 @@ TEST(email_test, send_data_under_good_conditions)
 
 TEST(email_test, send_multiple_attachments)
 {
-        std::string short_description{"Machining steel"};
         data::pdf_invoice pdf_data;
 
         data::business business_data{test::generate_business_data()};
@@ -75,14 +75,15 @@ TEST(email_test, send_multiple_attachments)
         data::client client_data{test::generate_client_data()};
         pdf_data.set_client(client_data);
 
-        data::invoice invoice_data{test::generate_invoice_data(short_description)};
-        pdf_data.set_invoice(invoice_data);
-
-        feature::pdf pdf{};
-        std::vector<std::string> invoice_attachments{};
+        std::vector<std::string> invoice_attachments{3};
         for (int i = 0; i < 3; ++i)
         {
+                feature::pdf pdf{};
+                std::string short_description{"Machining steel "};
+                data::invoice invoice_data{test::generate_invoice_data(short_description, i)};
+                pdf_data.set_invoice(invoice_data);
                 std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
+                test::generate_invoice_pdf(pdf_file_data, std::to_string(i));
                 invoice_attachments.push_back(pdf_file_data);
         }
 

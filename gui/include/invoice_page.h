@@ -75,7 +75,6 @@ namespace gui {
 
         class invoice_page : public interface::gui {
                 public:
-                        //invoice_page() = default;
                         invoice_page();
                         invoice_page(const invoice_page&) = delete;
                         invoice_page(invoice_page&&) = delete;
@@ -104,13 +103,13 @@ namespace gui {
                         void connect_email_alert();
                         void connect_email_button();
                         void connect_no_internet_alert();
-                        void send_email(const data::invoice&);
+                        void send_email(const std::vector<data::invoice>&);
                         void email_sent();
 
                 private: // Print
                         void setup_page();
                         void setup_print_operation();
-                        void print_invoice(const data::invoice&);
+                        void print_invoice(const std::vector<data::invoice>&);
                         void connect_printer();
                         void connect_print_alert();
                         void connect_print_button();
@@ -189,6 +188,8 @@ namespace gui {
                         void description_column(const std::unique_ptr<Gtk::ColumnView>&);
                         void update_material_total(uint, uint, uint);
                         void update_description_total(uint, uint, uint);
+                        void populate_description_store(const data::invoice&);
+                        void populate_material_store(const data::invoice&);
                         [[nodiscard]] double compute_grand_total();
                         [[nodiscard]] data::invoice extract_invoice_data();
                         [[nodiscard]] double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
@@ -200,7 +201,8 @@ namespace gui {
                         std::string grand_total{""};
                         std::string material_total{""};
                         std::string description_total{""};
-                        data::invoice current_invoice{};
+                        data::invoice invoice_edit{};
+                        std::vector<data::invoice> invoices_selected{};
                         feature::invoice client_invoice{};
 
                 private: // Member Entries

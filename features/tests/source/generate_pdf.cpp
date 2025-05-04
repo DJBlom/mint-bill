@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <generate_pdf.h>
+#include <iostream>
 
 
 bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string& _suffix)
@@ -83,11 +84,12 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
 {
         const int size{5};
         std::vector<data::column> vec{};
+        std::string description{_desc};
         for (unsigned int i = 0; i < size; ++i)
         {
                 data::column expected{};
                 expected.set_quantity(i);
-                expected.set_description(_desc);
+                expected.set_description(description);
                 expected.set_amount(5545675 + i + .0);
                 vec.push_back(expected);
         }
@@ -103,6 +105,41 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         data::invoice expected;
         expected.set_business_name(name);
         expected.set_invoice_number(number);
+        expected.set_invoice_date(date);
+        expected.set_job_card_number(card_number);
+        expected.set_order_number(order_number);
+        expected.set_description_total(description_total);
+        expected.set_material_total(material_total);
+        expected.set_grand_total(grand_total);
+        expected.set_material_column(vec);
+        expected.set_description_column(vec);
+
+        return expected;
+}
+
+data::invoice test::generate_invoice_data(const std::string& _desc, const int& num)
+{
+        const int size{5};
+        std::vector<data::column> vec{};
+        for (unsigned int i = 0; i < size; ++i)
+        {
+                data::column expected{};
+                expected.set_quantity(i);
+                expected.set_description(_desc);
+                expected.set_amount(5545675 + i + .0);
+                vec.push_back(expected);
+        }
+        std::string order_number{"order number 123"};
+        std::string card_number{"24/md"};
+        std::string date{"2023-09-04"};
+        std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
+
+        data::invoice expected;
+        expected.set_business_name(name);
+        expected.set_invoice_number(std::to_string(num));
         expected.set_invoice_date(date);
         expected.set_job_card_number(card_number);
         expected.set_order_number(order_number);

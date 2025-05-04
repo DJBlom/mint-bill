@@ -236,37 +236,11 @@ void gui::invoice_page::edit_known_invoice(uint position)
                 this->invoice_date->set_text(invoice.get_invoice_date());
                 this->job_card->set_text(invoice.get_job_card_number());
                 this->order_number->set_text(invoice.get_order_number());
-
-                for (auto& column : invoice.get_description_column())
-                {
-                        if (column.is_valid())
-                        {
-                                this->description_store->append(column_entries::create(
-                                                        column.get_quantity(),
-                                                        column.get_description(),
-                                                        column.get_amount()));
-                                Glib::signal_timeout().connect_once([this]() {
-                                        this->description_adjustment->set_value(this->description_adjustment->get_upper());
-                                }, 30);
-                        }
-                }
                 this->description_total_label->set_text("Total: R " + invoice.get_description_total());
-
-                for (auto& column : invoice.get_material_column())
-                {
-                        if (column.is_valid())
-                        {
-                                this->material_store->append(column_entries::create(
-                                                        column.get_quantity(),
-                                                        column.get_description(),
-                                                        column.get_amount()));
-                                Glib::signal_timeout().connect_once([this]() {
-                                        this->material_adjustment->set_value(this->material_adjustment->get_upper());
-                                }, 30);
-                        }
-                }
                 this->material_total_label->set_text("Total: R " + invoice.get_material_total());
                 this->grand_total_label->set_text("Grand Total: R " + invoice.get_grand_total());
+                populate_description_store(invoice);
+                populate_material_store(invoice);
         }
 }
 
@@ -658,9 +632,9 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
 
 // Integration Starts
 
-void gui::invoice_page::send_email(const data::invoice& _data)
+void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
 {
-        if (_data.is_valid())
+        if (!_data.empty())
         {
                 std::thread([this, _data] () {
                         bool success = client_invoice.send_email(_data);
@@ -742,13 +716,13 @@ void gui::invoice_page::connect_printer()
                 sigc::mem_fun(*this, &invoice_page::on_printoperation_done), this->print_operation));
 }
 
-void gui::invoice_page::print_invoice(const data::invoice& _data)
+void gui::invoice_page::print_invoice(const std::vector<data::invoice>& _data)
 {
-        if (_data.is_valid())
+        if (!_data.empty())
         {
-                std::thread([this, _data] () {
-                        data::pdf_invoice pdf_data{client_invoice.create_pdf_to_print(_data)};
-                        this->document = std::move(this->pdf.generate_for_print(pdf_data));
+                std::vector<data::pdf_invoice> pdf_data{client_invoice.create_pdf_to_print(_data)};
+                this->document = std::move(this->pdf.generate_for_print(pdf_data[0]));
+                std::thread([this] () {
                         if (this->document)
                         {
                                 this->print_operation->set_n_pages(this->document->pages());
@@ -811,11 +785,11 @@ void gui::invoice_page::add(const data::invoice& _invoice)
 void gui::invoice_page::connect_email_alert()
 {
         this->email_confirmation->signal_response().connect([this] (int response) {
-                data::invoice data{this->current_invoice};
+                std::vector<data::invoice> data{this->invoices_selected};
                 if (response == GTK_RESPONSE_YES)
                 {
                         this->email_confirmation->hide();
-                        this->send_email(data);
+                        this->send_email(this->invoices_selected);
                 }
                 else
                 {
@@ -841,7 +815,7 @@ void gui::invoice_page::connect_print_alert()
                 if (response == GTK_RESPONSE_YES)
                 {
                         this->print_confirmation->hide();
-                        print_invoice(this->current_invoice);
+                        print_invoice(this->invoices_selected);
                 }
                 else
                 {
@@ -967,11 +941,14 @@ void gui::invoice_page::populate_list_store(const std::vector<data::invoice>& _i
         }
 }
 
+int times{0};
 void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
 {
         ++_position;
         ++_items_selected;
+        ++times;
 
+        this->invoices_selected.clear();
         Glib::RefPtr<Gtk::SelectionModel> selection_model = this->invoice_view->get_model();
         if (selection_model)
         {
@@ -985,10 +962,14 @@ void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
                         if (!invoice)
                                 return;
 
-                        this->current_invoice = invoice->invoice;
-                        std::cout << "Invoice number: " << this->current_invoice.get_invoice_number() << std::endl;
+                        data::invoice temp{invoice->invoice};
+                        this->invoices_selected.push_back(invoice->invoice);
+                        std::cout << "Invoice number: " << temp.get_invoice_number() << std::endl;
+                        std::cout << "Size of vector: " << std::to_string(this->invoices_selected.size()) << std::endl;
+                        //std::cout << "Number of times I am running: " << std::to_string(times) << std::endl;
                 }
 
+                std::cout << "end\n";
                 this->email_button->set_sensitive(true);
                 this->print_button->set_sensitive(true);
         }
@@ -1010,3 +991,39 @@ void gui::invoice_page::printed()
         }
 }
 // Integration Ends
+
+
+
+void gui::invoice_page::populate_description_store(const data::invoice& _invoice)
+{
+        for (const data::column& column : _invoice.get_description_column())
+        {
+                if (column.is_valid())
+                {
+                        this->description_store->append(column_entries::create(
+                                                column.get_quantity(),
+                                                column.get_description(),
+                                                column.get_amount()));
+                        Glib::signal_timeout().connect_once([this]() {
+                                this->description_adjustment->set_value(this->description_adjustment->get_upper());
+                        }, 30);
+                }
+        }
+}
+
+void gui::invoice_page::populate_material_store(const data::invoice& _invoice)
+{
+        for (const data::column& column : _invoice.get_description_column())
+        {
+                if (column.is_valid())
+                {
+                        this->material_store->append(column_entries::create(
+                                                column.get_quantity(),
+                                                column.get_description(),
+                                                column.get_amount()));
+                        Glib::signal_timeout().connect_once([this]() {
+                                this->material_adjustment->set_value(this->material_adjustment->get_upper());
+                        }, 30);
+                }
+        }
+}

@@ -65,17 +65,20 @@ TEST(client_invoice_test, send_invoice_to_client)
         std::string grand_total{"1234.00"};
         std::string number{"1"};
 
-        data::invoice data{};
-        data.set_business_name(name);
-        data.set_invoice_number(number);
-        data.set_invoice_date(date);
-        data.set_job_card_number(card_number);
-        data.set_order_number(order_number);
-        data.set_description_total(description_total);
-        data.set_material_total(material_total);
-        data.set_grand_total(grand_total);
-        data.set_material_column(vec);
-        data.set_description_column(vec);
+        std::vector<data::invoice> data{};
+        for (auto& invoice : data)
+        {
+                invoice.set_business_name(name);
+                invoice.set_invoice_number(number);
+                invoice.set_invoice_date(date);
+                invoice.set_job_card_number(card_number);
+                invoice.set_order_number(order_number);
+                invoice.set_description_total(description_total);
+                invoice.set_material_total(material_total);
+                invoice.set_grand_total(grand_total);
+                invoice.set_material_column(vec);
+                invoice.set_description_column(vec);
+        }
 
         CHECK_EQUAL(true, client_invoice.send_email(data));
 }

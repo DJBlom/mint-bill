@@ -64,7 +64,6 @@ namespace feature {
                         void align_to_center(const Cairo::TextExtents&);
                         void adjust_height();
                         void adjust_payment_height();
-                        static Cairo::ErrorStatus write_to_stream(const unsigned char*, unsigned int);
 
                 private:
                         const double width{595.0};
@@ -73,7 +72,6 @@ namespace feature {
                         double current_height{0.0};
                         Cairo::RefPtr<Cairo::PdfSurface> surface{};
                         Cairo::RefPtr<Cairo::Context> context{};
-                        static std::ostringstream final_pdf;
                         utility::boundary_slicer slicer{};
                         std::mutex pdf_mutex{};
         };
