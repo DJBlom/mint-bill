@@ -44,8 +44,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_wrong_data_in_amount_column_alert();
                 connect_wrong_data_in_quantity_column_alert();
                 setup_page();
-                setup_print_operation();
-                connect_printer();
                 connect_email_alert();
                 connect_email_button();
                 connect_print_alert();
@@ -56,13 +54,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         }
 
         return created;
-}
-
-void gui::invoice_page::edit_selected_invoice(const data::invoice& _invoice)
-{
-        if (_invoice.is_valid() == true)
-        {
-        }
 }
 
 void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -443,6 +434,7 @@ void gui::invoice_page::amount_column(const std::unique_ptr<Gtk::ColumnView>& vi
         factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::teardown)));
         Glib::RefPtr<Gtk::ColumnViewColumn> column = Gtk::ColumnViewColumn::create("Amount", factory);
         column->set_expand(false);
+        column->set_expand(false);
         view->append_column(column);
 }
 
@@ -620,18 +612,6 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
         return columns;
 }
 
-
-
-
-
-
-
-
-
-
-
-// Integration Starts
-
 void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
 {
         if (!_data.empty())
@@ -646,37 +626,49 @@ void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
 
 void gui::invoice_page::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& _context, int _page_nr)
 {
-        if (!this->document || _page_nr >= this->document->pages()) {
-                return;
+        for (const auto& range : this->page_ranges)
+        {
+                if (_page_nr >= range.start_page && _page_nr < range.start_page + range.page_count)
+                {
+                        std::shared_ptr<poppler::document> document{this->documents_to_print[range.document_index]};
+                        if (!document)
+                                return;
+
+                        int local_page = _page_nr - range.start_page;
+
+                        auto page = document->create_page(local_page);
+                        if (!page)
+                                return;
+
+                        poppler::page_renderer renderer;
+                        renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
+                        renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
+
+                        double dpi_x = 190;
+                        double dpi_y = 290;
+                        const double target_dpi = std::max(dpi_x, dpi_y);
+
+                        auto image = renderer.render_page(page, target_dpi, target_dpi);
+                        if (!image.is_valid())
+                                return;
+
+                        auto cairo_surface = Cairo::ImageSurface::create(
+                                        reinterpret_cast<unsigned char*> (image.data()), Cairo::Surface::Format::ARGB32,
+                                        image.width(), image.height(),
+                                        image.bytes_per_row());
+
+                        double sx = _context->get_width() / image.width();
+                        double sy = _context->get_height() / image.height();
+                        double scale_factor = std::min(sx, sy);
+                        auto cr = _context->get_cairo_context();
+                        cr->save();
+                        cr->scale(scale_factor, scale_factor);
+                        cr->set_source(cairo_surface, 0, 0);
+                        cr->paint();
+                        cr->restore();
+                        return;
+                }
         }
-
-        auto page = this->document->create_page(_page_nr);
-        poppler::page_renderer renderer;
-
-        double dpi_x = 190;
-        double dpi_y = 290;
-        const double target_dpi = std::max(dpi_x, dpi_y);
-        auto image = renderer.render_page(page, target_dpi, target_dpi);
-        if (image.is_valid() == false)
-                return;
-
-        renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
-        renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
-
-        auto cairo_surface = Cairo::ImageSurface::create(
-                reinterpret_cast<unsigned char*> (image.data()), Cairo::Surface::Format::ARGB32,
-                image.width(), image.height(),
-                image.bytes_per_row());
-
-        double sx = _context->get_width() / image.width();
-        double sy = _context->get_height() / image.height();
-        double scale_factor = std::min(sx, sy);
-        auto cr = _context->get_cairo_context();
-        cr->save();
-        cr->scale(scale_factor, scale_factor);
-        cr->set_source(cairo_surface, 0, 0);
-        cr->paint();
-        cr->restore();
 }
 
 void gui::invoice_page::setup_page()
@@ -693,43 +685,62 @@ void gui::invoice_page::setup_page()
         }
 }
 
-void gui::invoice_page::setup_print_operation()
+void gui::invoice_page::compute_number_of_pages(const std::vector<data::invoice>& _data)
 {
-        this->print_operation = Gtk::PrintOperation::create();
-        if (print_operation)
+        if (!_data.empty())
         {
-                this->print_operation->set_default_page_setup(this->page_setup);
-                this->print_operation->set_unit(Gtk::Unit::POINTS);
-                this->print_operation->set_has_selection(false);
-                this->print_operation->set_job_name("Invoice");
-                this->print_operation->set_use_full_page(true);
-                this->print_operation->set_show_progress(true);
-                this->print_operation->set_allow_async(true);
-        }
-}
+                std::size_t index{0};
+                this->number_of_pages = 0;
+                this->page_ranges.clear();
+                this->documents_to_print.clear();
+                std::vector<data::pdf_invoice> invoices_to_print{client_invoice.create_pdf_to_print(_data)};
+                for (const data::pdf_invoice& invoice_to_print : invoices_to_print)
+                {
+                        std::shared_ptr<poppler::document> doc{this->pdf.generate_for_print(invoice_to_print)};
+                        if (!doc)
+                                continue;
 
-void gui::invoice_page::connect_printer()
-{
-        print_operation->signal_draw_page().connect(
-                sigc::mem_fun(*this, &invoice_page::on_draw_page));
-        print_operation->signal_done().connect(sigc::bind(
-                sigc::mem_fun(*this, &invoice_page::on_printoperation_done), this->print_operation));
+                        int page_count = doc->pages();
+                        this->documents_to_print.push_back(doc);
+
+                        this->page_ranges.push_back(page_range{this->number_of_pages, page_count, index});
+                        this->number_of_pages += page_count;
+                        ++index;
+                }
+        }
 }
 
 void gui::invoice_page::print_invoice(const std::vector<data::invoice>& _data)
 {
         if (!_data.empty())
         {
-                std::vector<data::pdf_invoice> pdf_data{client_invoice.create_pdf_to_print(_data)};
-                this->document = std::move(this->pdf.generate_for_print(pdf_data[0]));
-                std::thread([this] () {
-                        if (this->document)
-                        {
-                                this->print_operation->set_n_pages(this->document->pages());
-                                this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
-                        }
-                        this->print_dispatcher.emit();
-                }).detach();
+                Glib::RefPtr<Gtk::PrintOperation> print_operation{Gtk::PrintOperation::create()};
+                {
+                        // Log message here.
+                }
+                else
+                {
+                        print_operation->set_default_page_setup(this->page_setup);
+                        print_operation->set_unit(Gtk::Unit::POINTS);
+                        print_operation->set_has_selection(false);
+                        print_operation->set_job_name("Invoice");
+                        print_operation->set_use_full_page(true);
+                        print_operation->set_show_progress(true);
+                        print_operation->set_allow_async(true);
+                        print_operation->signal_draw_page().connect(
+                                sigc::mem_fun(*this, &invoice_page::on_draw_page));
+                        print_operation->signal_done().connect(sigc::bind(
+                                sigc::mem_fun(*this, &invoice_page::on_printoperation_done), print_operation));
+                        compute_number_of_pages(_data);
+                        std::thread([&] () {
+                                if (this->number_of_pages > 0)
+                                {
+                                        print_operation->set_n_pages(this->number_of_pages);
+                                        print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
+                                }
+                                this->print_dispatcher.emit();
+                        }).detach();
+                }
         }
 }
 
@@ -824,17 +835,6 @@ void gui::invoice_page::connect_print_alert()
         });
 }
 
-void gui::invoice_page::connect_print_button()
-{
-        if (this->print_button)
-        {
-                this->print_button->set_sensitive(false);
-                this->print_button->signal_clicked().connect([this] () {
-                        this->print_confirmation->show();
-                });
-        }
-}
-
 void gui::invoice_page::connect_invoice_view()
 {
         this->invoice_store = std::shared_ptr<Gio::ListStore<invoice_entries>>{
@@ -872,6 +872,17 @@ void gui::invoice_page::connect_no_internet_alert()
                                 break;
                 }
         });
+}
+
+void gui::invoice_page::connect_print_button()
+{
+        if (this->print_button)
+        {
+                this->print_button->set_sensitive(false);
+                this->print_button->signal_clicked().connect([this] () {
+                        this->print_confirmation->show();
+                });
+        }
 }
 
 void gui::invoice_page::connect_no_printer_alert()
@@ -964,12 +975,7 @@ void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
 
                         data::invoice temp{invoice->invoice};
                         this->invoices_selected.push_back(invoice->invoice);
-                        std::cout << "Invoice number: " << temp.get_invoice_number() << std::endl;
-                        std::cout << "Size of vector: " << std::to_string(this->invoices_selected.size()) << std::endl;
-                        //std::cout << "Number of times I am running: " << std::to_string(times) << std::endl;
                 }
-
-                std::cout << "end\n";
                 this->email_button->set_sensitive(true);
                 this->print_button->set_sensitive(true);
         }
@@ -990,9 +996,6 @@ void gui::invoice_page::printed()
                 this->print_no_printer->show();
         }
 }
-// Integration Ends
-
-
 
 void gui::invoice_page::populate_description_store(const data::invoice& _invoice)
 {

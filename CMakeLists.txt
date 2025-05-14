@@ -17,6 +17,7 @@ option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
 
+
 if(BUILD_PROJECT_FOR_DEPLOY)
     project(${CMAKE_PROJECT_NAME}${CMAKE_PROJECT_VERSION}${CMAKE_EXECUTABLE_SUFFIX} LANGUAGES CXX C ASM)
     message("Building the project with a version tag")
@@ -33,7 +34,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-
 if(BUILD_PROJECT)
         find_package(CURL REQUIRED)
         find_package(PkgConfig REQUIRED)
@@ -45,7 +45,12 @@ if(BUILD_PROJECT)
                 -Wall
                 -Werror
                 -Wextra
+                -Wunused
+                -Wpedantic
                 -Wconversion
+                -Wuninitialized
+                -Wredundant-move
+                -Wenum-conversion
                 $<$<CONFIG:DEBUG>:-g3>
                 $<$<CONFIG:DEBUG>:-Og>
         )
@@ -126,6 +131,43 @@ if(BUILD_PROJECT)
                 target_link_libraries(${PROJECT_NAME} PRIVATE utility)
         else()
                 message(STATUS "Directory utility, does not exist")
+        endif()
+        if (UNIT_TESTS)
+                include(CTest)
+                enable_testing()
+                set(TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}")
+                set(CMAKE_TESTDRIVER_EXTRA_INCLUDES "")
+                set(CMAKE_TESTDRIVER_ARGVC_FUNCTION "")
+                set(CMAKE_TESTDRIVER_BEFORE_TESTMAIN "")
+                set(CMAKE_TESTDRIVER_AFTER_TESTMAIN "")
+
+                set (TestsToRun
+                        gui/tests/view_test.cpp
+                        utility/tests/test.cpp
+                        storage/tests/test.cpp
+                        storage/tests/verification.cpp
+                )
+
+                create_test_sourcelist (Tests CommonCxxTests.cxx ${TestsToRun})
+                add_executable(CommonCxxTests ${Tests})
+                set_target_properties(CommonCxxTests PROPERTIES
+                        RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT_DIR}
+                )
+                
+                # Add all tests, telling CTest the *exact path* to the binary
+                foreach(test ${TestsToRun})
+                        get_filename_component(TName ${test} NAME_WE)
+                        get_filename_component(TDir ${test} DIRECTORY)
+                        if (TDir)
+                                set(FullTestName "${TDir}/${TName}")
+                        else()
+                                set(FullTestName "${TName}")
+                        endif()
+
+                        add_test(NAME ${FullTestName} COMMAND ${TEST_OUTPUT_DIR}/CommonCxxTests ${FullTestName})
+                endforeach()
+        else()
+                message("Don't know what to do (test)")
         endif()
 
         if (EXISTS ${CMAKE_OBJDUMP})

@@ -7,6 +7,16 @@
 ############################################################################
 #!/bin/bash
 
+readonly PROJECT_VERSION_NUM=0.0.1
+readonly PROJECT_VERSION_PREFIX=-v
+readonly BIN_SUFFIX=
+readonly CMAKE=cmake
+readonly BUILD_TYPE="Debug"
+readonly BUILD_DIR=build
+readonly PROJECT_NAME=$(basename `pwd`)
+readonly BIN_DIR=$BUILD_DIR/${PROJECT_NAME}
+readonly SUPPORTED_BUILD_TYPES=("host" "deploy")
+
 readonly TEST_DIR=$(pwd)/test
 readonly TEST_TYPES=("sca" "coverage" "unit" "show")
 
@@ -102,6 +112,13 @@ function code_coverage()
 
 function unit_test()
 {
+        mkdir -p $BIN_DIR
+        $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
+                -DCMAKE_PROJECT_NAME=$PROJECT_NAME  \
+                -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
+                -DUNIT_TESTS=ON
+        $CMAKE --build $BIN_DIR
+
 	local prj_dir=$(pwd)
         make -C $TEST_DIR -s
         make -C $TEST_DIR -s clean
