@@ -715,6 +715,7 @@ void gui::invoice_page::print_invoice(const std::vector<data::invoice>& _data)
         if (!_data.empty())
         {
                 Glib::RefPtr<Gtk::PrintOperation> print_operation{Gtk::PrintOperation::create()};
+                if (!print_operation)
                 {
                         // Log message here.
                 }

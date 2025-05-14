@@ -118,6 +118,7 @@ function unit_test()
                 -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
                 -DUNIT_TESTS=ON
         $CMAKE --build $BIN_DIR
+        ctest --test-dir $BIN_DIR
 
 	local prj_dir=$(pwd)
         make -C $TEST_DIR -s
