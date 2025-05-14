@@ -22,8 +22,8 @@ namespace feature {
                         [[nodiscard]] virtual data::invoice load(const std::string&, const interface::storage&) override;
                         [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&) override;
                         [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&) override;
-                        [[nodiscard]] bool send_email(const data::invoice&);
-                        [[nodiscard]] data::pdf_invoice create_pdf_to_print(const data::invoice&);
+                        [[nodiscard]] bool send_email(const std::vector<data::invoice>&);
+                        [[nodiscard]] std::vector<data::pdf_invoice> create_pdf_to_print(const std::vector<data::invoice>&);
 
                 private:
                         [[nodiscard]] std::future<bool> sending(const data::email&);

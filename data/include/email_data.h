@@ -25,8 +25,8 @@ namespace data {
                         virtual ~email();
 
                         [[nodiscard]] virtual bool is_valid() const;
-                        virtual void set_pdf(const std::string&);
-                        [[nodiscard]] std::string get_pdf() const;
+                        virtual void set_attachments(const std::vector<std::string>&);
+                        [[nodiscard]] std::vector<std::string> get_attachments() const;
                         virtual void set_client(const data::client&);
                         [[nodiscard]] data::client get_client() const;
                         virtual void set_business(const data::business&);
@@ -43,7 +43,7 @@ namespace data {
                 private:
                         using mask_type = std::uint8_t;
 
-                        std::string pdf{""};
+                        std::vector<std::string> attachments{""};
                         data::client client{};
                         data::business business{};
                         std::string subject{""};

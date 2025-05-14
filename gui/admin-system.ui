@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.94.1 -->
+<!-- Created with Cambalache 0.96.0 -->
 <interface>
   <!-- interface-name invoice-system.ui -->
   <requires lib="gtk" version="4.14"/>
@@ -14,7 +14,7 @@
         <property name="show-title-buttons">False</property>
         <property name="title-widget">
           <object class="GtkLabel" id="organization-name">
-            <property name="css-name">app_label</property>
+            <property name="css-name">app-label</property>
             <property name="label">Business Name</property>
           </object>
         </property>
@@ -273,6 +273,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="invoice-description-delete-button">
+                                    <property name="css-name">outlined-button</property>
                                     <property name="label">Verwyder</property>
                                     <property name="valign">center</property>
                                     <layout>
@@ -911,7 +912,6 @@
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Is u e-pos korrek ingevul?</property>
-    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -924,7 +924,6 @@
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
-    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -939,7 +938,6 @@
 3) - Is die staatskedule formaat korrek dag/maand, dag/week?
      Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag 
      van die week vir 4 keer 'n maand gegenereer gaan word.</property>
-    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -952,7 +950,6 @@
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
-    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -967,7 +964,6 @@
 
 3) - Is die arbeid en materiaal items 
         by gevoeg?</property>
-    <property name="title">Informasie</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
@@ -980,7 +976,6 @@
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die faktuur print?</property>
-    <property name="title">Waarskuwing</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>

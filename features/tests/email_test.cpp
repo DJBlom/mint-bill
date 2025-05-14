@@ -8,6 +8,7 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
+#include <iostream>
 
 #include <pdf.h>
 #include <email.h>
@@ -54,8 +55,39 @@ TEST(email_test, send_data_under_good_conditions)
         pdf_data.set_invoice(invoice_data);
 
         feature::pdf pdf{};
-        std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
-        data.set_pdf(pdf_file_data);
+        std::vector<std::string> pdf_file_data{pdf.generate_for_email(pdf_data)};
+        data.set_attachments(pdf_file_data);
+        data.set_client(client_data);
+        data.set_business(business_data);
+        data.set_subject("Invoice");
+
+
+        CHECK_EQUAL(true, email.send(data));
+}
+
+TEST(email_test, send_multiple_attachments)
+{
+        data::pdf_invoice pdf_data;
+
+        data::business business_data{test::generate_business_data()};
+        pdf_data.set_business(business_data);
+
+        data::client client_data{test::generate_client_data()};
+        pdf_data.set_client(client_data);
+
+        std::vector<std::string> invoice_attachments{3};
+        for (int i = 0; i < 3; ++i)
+        {
+                feature::pdf pdf{};
+                std::string short_description{"Machining steel "};
+                data::invoice invoice_data{test::generate_invoice_data(short_description, i)};
+                pdf_data.set_invoice(invoice_data);
+                std::string pdf_file_data{pdf.generate_for_email(pdf_data)};
+                test::generate_invoice_pdf(pdf_file_data, std::to_string(i));
+                invoice_attachments.push_back(pdf_file_data);
+        }
+
+        data.set_attachments(invoice_attachments);
         data.set_client(client_data);
         data.set_business(business_data);
         data.set_subject("Invoice");
@@ -79,8 +111,8 @@ TEST(email_test, send_no_data)
         pdf_data.set_invoice(invoice_data);
 
         feature::pdf pdf{};
-        std::string pdf_file_data;
-        data.set_pdf(pdf_file_data);
+        std::vector<std::string> invoice_attachments;
+        data.set_attachments(invoice_attachments);
         data.set_client(client_data);
         data.set_business(business_data);
         data.set_subject("");

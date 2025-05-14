@@ -12,6 +12,7 @@
 
 namespace error {
         const std::string message_file{"Error: failed to load the ui file."};
+        const std::string message_dark_theme{"Error: failed to set dark theme for application."};
         const std::string message_main_window{"Error: failed to create the main window."};
         const std::string message_business{"Error: failed to create the business page."};
         const std::string message_client{"Error: failed to create the client registration page."};
@@ -31,6 +32,17 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
         }
         else
         {
+                Glib::RefPtr<Gtk::Settings> system_settings = Gtk::Settings::get_default();
+                if (!system_settings)
+                {
+                        std::cerr << error::message_dark_theme << std::endl;
+                        return;
+                }
+                else
+                {
+                        system_settings->property_gtk_application_prefer_dark_theme() = true;
+                }
+
                 if (this->main_window.create(ui_builder, app) == false)
                 {
                         std::cerr << error::message_main_window << std::endl;

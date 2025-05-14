@@ -36,7 +36,6 @@ namespace height {
         constexpr double space_offset{20.0};
 }
 
-std::ostringstream feature::pdf::final_pdf{""};
 
 feature::pdf::pdf() {}
 
@@ -74,13 +73,17 @@ std::shared_ptr<poppler::document> feature::pdf::generate_for_print(const data::
 
 std::string feature::pdf::generate(const data::pdf_invoice& _data)
 {
-        pdf::final_pdf.clear();
-        pdf::final_pdf.flush();
+        std::ostringstream final_pdf{};
         if (_data.is_valid())
         {
-                this->surface = Cairo::PdfSurface::create_for_stream(&pdf::write_to_stream, this->width, this->height);
-                if (!surface)
-                        return "";
+                this->surface = Cairo::PdfSurface::create_for_stream(
+                        [&, this](const unsigned char* data, unsigned int length) -> cairo_status_t {
+                                final_pdf.write(reinterpret_cast<const char*>(data), length);
+                                return final_pdf.fail() ? CAIRO_STATUS_WRITE_ERROR : CAIRO_STATUS_SUCCESS;
+                        },
+                        this->width, this->height
+                );
+
 
                 this->context = Cairo::Context::create(this->surface);
                 if (!this->context)
@@ -122,7 +125,7 @@ std::string feature::pdf::generate(const data::pdf_invoice& _data)
                 this->surface->finish();
         }
 
-        return pdf::final_pdf.str();
+        return final_pdf.str();
 }
 
 bool feature::pdf::add_header(const std::string& _data)
@@ -504,13 +507,4 @@ void feature::pdf::adjust_payment_height()
                 this->context->show_page();
                 align_to_top_border();
         }
-}
-
-Cairo::ErrorStatus feature::pdf::write_to_stream(const unsigned char* _data, unsigned int _length)
-{
-        pdf::final_pdf.write(reinterpret_cast<const char*>(_data), _length);
-        if (pdf::final_pdf.fail())
-                return CAIRO_STATUS_WRITE_ERROR;
-
-        return CAIRO_STATUS_SUCCESS;
 }
