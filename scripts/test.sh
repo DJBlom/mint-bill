@@ -7,15 +7,13 @@
 ############################################################################
 #!/bin/bash
 
-readonly PROJECT_VERSION_NUM=0.0.1
-readonly PROJECT_VERSION_PREFIX=-v
-readonly BIN_SUFFIX=
-readonly CMAKE=cmake
-readonly BUILD_TYPE="Debug"
-readonly BUILD_DIR=build
-readonly PROJECT_NAME=$(basename `pwd`)
-readonly BIN_DIR=$BUILD_DIR/${PROJECT_NAME}
-readonly SUPPORTED_BUILD_TYPES=("host" "deploy")
+BIN_SUFFIX=""
+CMAKE=cmake
+BUILD_TYPE="Debug"
+BUILD_DIR=build
+PROJECT_NAME=$(basename `pwd`)
+BIN_DIR=$BUILD_DIR/${PROJECT_NAME}
+SUPPORTED_BUILD_TYPES=("host" "deploy")
 
 readonly TEST_DIR=$(pwd)/test
 readonly TEST_TYPES=("sca" "coverage" "unit" "show")
