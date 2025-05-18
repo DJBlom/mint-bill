@@ -5,9 +5,9 @@
  *
  * NOTE:
  *******************************************************/
-#include <client_register_page.h>
+#include <syslog.h>
 #include <client_data.h>
-#include <iostream>
+#include <client_register_page.h>
 
 gui::client_register_page::~client_register_page()
 {
@@ -16,7 +16,13 @@ gui::client_register_page::~client_register_page()
 bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{false};
-        if (verify_ui_builder(_ui_builder) == true)
+        if (verify_ui_builder(_ui_builder) == false)
+        {
+                syslog(LOG_CRIT, "Failed to verify the UI builder - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return created;
+        }
+        else
         {
                 created = true;
                 create_entries(_ui_builder);
@@ -70,20 +76,34 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
 
 void gui::client_register_page::connect_search()
 {
-        if (this->search_entry)
+        if (!this->search_entry)
+        {
+                syslog(LOG_CRIT, "The search entry is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
         {
                 this->search_entry->signal_search_changed().connect([this] () {
-                                data::client data = client_register.search(this->search_entry->get_text(), this->db);
-                                display_on_ui(data);
+                        syslog(LOG_INFO, "User is searching - "
+                                         "filename %s, line number %d", __FILE__, __LINE__);
+                        data::client data = client_register.search(this->search_entry->get_text(), this->db);
+                        display_on_ui(data);
                 });
         }
 }
 
 void gui::client_register_page::connect_save_button()
 {
-        if (save_button)
+        if (!this->save_button)
         {
-                save_button->signal_clicked().connect([this] () {
+                syslog(LOG_CRIT, "The save button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->save_button->signal_clicked().connect([this] () {
                         this->save_alert_dialog->show();
                 });
         }
@@ -91,45 +111,67 @@ void gui::client_register_page::connect_save_button()
 
 void gui::client_register_page::connect_save_alert()
 {
-        this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::client data = extract_page_entries();
-                switch(response)
-                {
-                        case GTK_RESPONSE_YES:
-                                if (this->client_register.save(data, this->db) == false)
-                                {
+        if (!this->save_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The save button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->save_alert_dialog->signal_response().connect([this] (int response) {
+                        data::client data = extract_page_entries();
+                        switch(response)
+                        {
+                                case GTK_RESPONSE_YES:
+                                        syslog(LOG_INFO, "User chose to save the client information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
+                                        if (this->client_register.save(data, this->db) == false)
+                                        {
+                                                this->save_alert_dialog->hide();
+                                                this->wrong_info_alert_dialog->show();
+                                        }
+                                        else
+                                        {
+                                                this->save_alert_dialog->hide();
+                                                clear_all_entries();
+                                        }
+                                        break;
+                                case GTK_RESPONSE_NO:
+                                        syslog(LOG_INFO, "User chose not to save the client information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
-                                        this->wrong_info_alert_dialog->show();
-                                }
-                                else
-                                {
+                                        break;
+                                default:
                                         this->save_alert_dialog->hide();
-                                        clear_all_entries();
-                                }
-                                break;
-                        case GTK_RESPONSE_NO:
-                                this->save_alert_dialog->hide();
-                                break;
-                        default:
-                                this->save_alert_dialog->hide();
-                                break;
-                }
-        });
+                                        break;
+                        }
+                });
+        }
 }
 
 void gui::client_register_page::connect_wrong_info_alert()
 {
-        this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
-                switch (response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                        default:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                }
-        });
+        if (!this->wrong_info_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The wrong info alert dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
+                        switch (response)
+                        {
+                                case GTK_RESPONSE_CLOSE:
+                                        this->wrong_info_alert_dialog->hide();
+                                        break;
+                                default:
+                                        this->wrong_info_alert_dialog->hide();
+                                        break;
+                        }
+                });
+        }
 }
 
 void gui::client_register_page::clear_all_entries()

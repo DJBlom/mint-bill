@@ -5,17 +5,24 @@
  *
  * NOTE:
  **********************************************************/
+#include <syslog.h>
 #include <business_page.h>
-
 
 gui::business_page::~business_page()
 {
+
 }
 
 bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{false};
-        if (verify_ui_builder(_ui_builder) == true)
+        if (verify_ui_builder(_ui_builder) == false)
+        {
+                syslog(LOG_CRIT, "Failed to verify the UI builder - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return created;
+        }
+        else
         {
                 created = true;
                 create_entries(_ui_builder);
@@ -75,9 +82,17 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
 
 void gui::business_page::connect_save_button()
 {
-        if (save_button)
+        if (!this->save_button)
         {
-                save_button->signal_clicked().connect([this] () {
+                syslog(LOG_CRIT, "The save button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->save_button->signal_clicked().connect([this] () {
+                        syslog(LOG_INFO, "User clicked the save button - "
+                                         "filename %s, line number %d", __FILE__, __LINE__);
                         this->save_alert_dialog->show();
                 });
         }
@@ -85,46 +100,71 @@ void gui::business_page::connect_save_button()
 
 void gui::business_page::connect_save_alert()
 {
-        this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::business data{extract_page_entries()};
-                switch(response)
-                {
-                        case GTK_RESPONSE_YES:
-                                if (this->business_info.save(data, this->sql) == false)
-                                {
+        if (!this->save_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The save alert dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->save_alert_dialog->signal_response().connect([this] (int response) {
+                        data::business data{extract_page_entries()};
+                        switch(response)
+                        {
+                                case GTK_RESPONSE_YES:
+                                        syslog(LOG_INFO, "User chose to save the business information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
+                                        if (this->business_info.save(data, this->sql) == false)
+                                        {
+                                                syslog(LOG_CRIT, "Failed to save the business information - "
+                                                                 "filename %s, line number %d", __FILE__, __LINE__);
+                                                this->save_alert_dialog->hide();
+                                                this->wrong_info_alert_dialog->show();
+                                        }
+                                        else
+                                        {
+                                                this->organization_label->set_text(data.get_name());
+                                                this->save_alert_dialog->hide();
+                                                clear_entries();
+                                        }
+                                        break;
+                                case GTK_RESPONSE_NO:
+                                        syslog(LOG_INFO, "User chose not to save the business information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
-                                        this->wrong_info_alert_dialog->show();
-                                }
-                                else
-                                {
-                                        this->organization_label->set_text(data.get_name());
+                                        break;
+                                default:
                                         this->save_alert_dialog->hide();
-                                        clear_entries();
-                                }
-                                break;
-                        case GTK_RESPONSE_NO:
-                                this->save_alert_dialog->hide();
-                                break;
-                        default:
-                                this->save_alert_dialog->hide();
-                                break;
-                }
-        });
+                                        break;
+                        }
+                });
+
+        }
 }
 
 void gui::business_page::connect_wrong_info_alert()
 {
-        this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
-                switch (response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                        default:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                }
-        });
+        if (!this->wrong_info_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The wrong info alert is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
+                        switch (response)
+                        {
+                                case GTK_RESPONSE_CLOSE:
+                                        this->wrong_info_alert_dialog->hide();
+                                        break;
+                                default:
+                                        this->wrong_info_alert_dialog->hide();
+                                        break;
+                        }
+                });
+        }
 }
 
 void gui::business_page::clear_entries()

@@ -31,7 +31,10 @@ namespace gui {
                         void setup_css();
 
                 private:
-                        Gtk::Window* window{nullptr};
+                        std::unique_ptr<Gtk::Window> window{};
+                        std::unique_ptr<Gtk::Button> max_button{};
+                        std::unique_ptr<Gtk::Button> min_button{};
+                        std::unique_ptr<Gtk::Button> exit_button{};
         };
 }
 #endif
