@@ -98,12 +98,13 @@ void gui::main_window::max_clicked()
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else if ((this->window) && (this->window->is_maximized() == true))
+
+        if (this->window->is_maximized() == true)
         {
                 syslog(LOG_INFO, "User clicked the maximized button");
                 this->window->unmaximize();
         }
-        else if ((this->window) && (this->window->is_maximized() == false))
+        else if (this->window->is_maximized() == false)
         {
                 syslog(LOG_INFO, "User clicked the maximized button");
                 this->window->maximize();

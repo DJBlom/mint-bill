@@ -279,6 +279,7 @@ void gui::invoice_page::edit_known_invoice(uint position)
 
         syslog(LOG_INFO, "User is editing an invoice - "
                          "filename %s, line number %d", __FILE__, __LINE__);
+
         this->invoice_number->set_text(invoice.get_invoice_number());
         this->invoice_date->set_text(invoice.get_invoice_date());
         this->job_card->set_text(invoice.get_job_card_number());
@@ -1407,13 +1408,14 @@ void gui::invoice_page::printed()
 
 void gui::invoice_page::populate_description_store(const data::invoice& _invoice)
 {
-        if (!_invoice.is_valid())
+        if (_invoice.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The invoice data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
+        this->description_store->remove_all();
         for (const data::column& column : _invoice.get_description_column())
         {
                 if (column.is_valid())
@@ -1431,13 +1433,14 @@ void gui::invoice_page::populate_description_store(const data::invoice& _invoice
 
 void gui::invoice_page::populate_material_store(const data::invoice& _invoice)
 {
-        if (!_invoice.is_valid())
+        if (_invoice.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The invoice data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
+        this->material_store->remove_all();
         for (const data::column& column : _invoice.get_description_column())
         {
                 if (column.is_valid())

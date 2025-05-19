@@ -65,13 +65,11 @@ function static_code_analysis()
              -I $prj_dir/data/include \
              -I $prj_dir/storage/include \
              -I $prj_dir/features/include \
-             -I $prj_dir/gui/invoice_page/include \
              $prj_dir/app/source \
              $prj_dir/gui/source \
              $prj_dir/data/source \
              $prj_dir/storage/source \
-             $prj_dir/features/source \
-             $prj_dir/gui/invoice_page/source 
+             $prj_dir/features/source 
 }
 
 function code_coverage()
