@@ -24,7 +24,6 @@ namespace gui {
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 
                 private:
-                        [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_search();
                         void connect_save_button();

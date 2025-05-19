@@ -40,12 +40,10 @@ void gui::main_window::connect_exit_button(const Glib::RefPtr<Gtk::Builder>& ui_
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->exit_button->signal_clicked().connect([this] () {
-                        this->exit_clicked();
-                });
-        }
+
+        this->exit_button->signal_clicked().connect([this] () {
+                this->exit_clicked();
+        });
 }
 
 void gui::main_window::connect_max_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
@@ -57,12 +55,10 @@ void gui::main_window::connect_max_button(const Glib::RefPtr<Gtk::Builder>& ui_b
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->max_button->signal_clicked().connect([this] () {
-                        this->max_clicked();
-                });
-        }
+
+        this->max_button->signal_clicked().connect([this] () {
+                this->max_clicked();
+        });
 }
 
 void gui::main_window::connect_min_button(const Glib::RefPtr<Gtk::Builder>& ui_builder)
@@ -74,12 +70,10 @@ void gui::main_window::connect_min_button(const Glib::RefPtr<Gtk::Builder>& ui_b
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->min_button->signal_clicked().connect([this] () {
-                        this->min_clicked();
-                });
-        }
+
+        this->min_button->signal_clicked().connect([this] () {
+                this->min_clicked();
+        });
 }
 
 void gui::main_window::exit_clicked()
@@ -90,12 +84,10 @@ void gui::main_window::exit_clicked()
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                syslog(LOG_INFO, "User clicked the exit button");
-                syslog(LOG_INFO, "Shutting down...");
-                this->window->close();
-        }
+
+        syslog(LOG_INFO, "User clicked the exit button");
+        syslog(LOG_INFO, "Shutting down...");
+        this->window->close();
 }
 
 void gui::main_window::max_clicked()
@@ -126,11 +118,9 @@ void gui::main_window::min_clicked()
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                syslog(LOG_INFO, "User clicked the minimize button");
-                this->window->minimize();
-        }
+
+        syslog(LOG_INFO, "User clicked the minimize button");
+        this->window->minimize();
 }
 
 void gui::main_window::setup_css()
@@ -144,12 +134,10 @@ void gui::main_window::setup_css()
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                Gtk::StyleContext::add_provider_for_display(
-                        display,
-                        css_provider,
-                        GTK_STYLE_PROVIDER_PRIORITY_USER
-                );
-        }
+
+        Gtk::StyleContext::add_provider_for_display(
+                display,
+                css_provider,
+                GTK_STYLE_PROVIDER_PRIORITY_USER
+        );
 }

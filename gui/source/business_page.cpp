@@ -16,9 +16,9 @@ gui::business_page::~business_page()
 bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{false};
-        if (verify_ui_builder(_ui_builder) == false)
+        if (!_ui_builder)
         {
-                syslog(LOG_CRIT, "Failed to verify the UI builder - "
+                syslog(LOG_CRIT, "The _ui_builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return created;
         }
@@ -33,17 +33,6 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         }
 
         return created;
-}
-
-bool gui::business_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-{
-        bool verified{false};
-        if (_ui_builder)
-        {
-                verified = true;
-        }
-
-        return verified;
 }
 
 void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -84,87 +73,80 @@ void gui::business_page::connect_save_button()
 {
         if (!this->save_button)
         {
-                syslog(LOG_CRIT, "The save button is not valid - "
+                syslog(LOG_CRIT, "The save_button is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->save_button->signal_clicked().connect([this] () {
-                        syslog(LOG_INFO, "User clicked the save button - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                        this->save_alert_dialog->show();
-                });
-        }
+
+        this->save_button->signal_clicked().connect([this] () {
+                syslog(LOG_INFO, "User clicked the save button - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                this->save_alert_dialog->show();
+        });
 }
 
 void gui::business_page::connect_save_alert()
 {
         if (!this->save_alert_dialog)
         {
-                syslog(LOG_CRIT, "The save alert dialog is not valid - "
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->save_alert_dialog->signal_response().connect([this] (int response) {
-                        data::business data{extract_page_entries()};
-                        switch(response)
-                        {
-                                case GTK_RESPONSE_YES:
-                                        syslog(LOG_INFO, "User chose to save the business information - "
-                                                         "filename %s, line number %d", __FILE__, __LINE__);
-                                        if (this->business_info.save(data, this->sql) == false)
-                                        {
-                                                syslog(LOG_CRIT, "Failed to save the business information - "
-                                                                 "filename %s, line number %d", __FILE__, __LINE__);
-                                                this->save_alert_dialog->hide();
-                                                this->wrong_info_alert_dialog->show();
-                                        }
-                                        else
-                                        {
-                                                this->organization_label->set_text(data.get_name());
-                                                this->save_alert_dialog->hide();
-                                                clear_entries();
-                                        }
-                                        break;
-                                case GTK_RESPONSE_NO:
-                                        syslog(LOG_INFO, "User chose not to save the business information - "
-                                                         "filename %s, line number %d", __FILE__, __LINE__);
-                                        this->save_alert_dialog->hide();
-                                        break;
-                                default:
-                                        this->save_alert_dialog->hide();
-                                        break;
-                        }
-                });
 
-        }
+        this->save_alert_dialog->signal_response().connect([this] (int response) {
+                data::business data{extract_page_entries()};
+                switch(response)
+                {
+                        case GTK_RESPONSE_YES:
+                                syslog(LOG_INFO, "User chose to save the business information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
+                                if (this->business_info.save(data, this->sql) == false)
+                                {
+                                        syslog(LOG_CRIT, "Failed to save the business information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
+                                        this->save_alert_dialog->hide();
+                                        this->wrong_info_alert_dialog->show();
+                                }
+                                else
+                                {
+                                        this->organization_label->set_text(data.get_name());
+                                        this->save_alert_dialog->hide();
+                                        clear_entries();
+                                }
+                                break;
+                        case GTK_RESPONSE_NO:
+                                syslog(LOG_INFO, "User chose not to save the business information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
+                                this->save_alert_dialog->hide();
+                                break;
+                        default:
+                                this->save_alert_dialog->hide();
+                                break;
+                }
+        });
 }
 
 void gui::business_page::connect_wrong_info_alert()
 {
         if (!this->wrong_info_alert_dialog)
         {
-                syslog(LOG_CRIT, "The wrong info alert is not valid - "
+                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
-        else
-        {
-                this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
-                        switch (response)
-                        {
-                                case GTK_RESPONSE_CLOSE:
-                                        this->wrong_info_alert_dialog->hide();
-                                        break;
-                                default:
-                                        this->wrong_info_alert_dialog->hide();
-                                        break;
-                        }
-                });
-        }
+
+        this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
+                switch (response)
+                {
+                        case GTK_RESPONSE_CLOSE:
+                                this->wrong_info_alert_dialog->hide();
+                                break;
+                        default:
+                                this->wrong_info_alert_dialog->hide();
+                                break;
+                }
+        });
 }
 
 void gui::business_page::clear_entries()
@@ -175,6 +157,13 @@ void gui::business_page::clear_entries()
 void gui::business_page::update_business_info_with_db_data()
 {
         data::business data{business_info.load(sql)};
+        if (data.is_valid() == false)
+        {
+                syslog(LOG_CRIT, "The business data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->name->set_text(data.get_name());
         this->street_address->set_text(data.get_address());
         this->area_code->set_text(data.get_area_code());
