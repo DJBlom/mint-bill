@@ -11,7 +11,7 @@
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
-        constexpr std::uint8_t MAX_AMOUNT{10};
+        constexpr std::uint8_t MAX_AMOUNT{15};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
 }
 
@@ -436,7 +436,7 @@ void gui::invoice_page::connect_save_alert()
                                 }
                                 else
                                 {
-                                        this->add(data);
+                                        this->add(data); // This line needs to be replaced by a load from the DB.
                                         this->save_alert_dialog->hide();
                                         this->description_store->remove_all();
                                         this->material_store->remove_all();
@@ -748,13 +748,16 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
         }
 
         std::ostringstream amount_precision{""};
+        amount_precision.imbue(std::locale::classic());
         amount_precision << std::fixed << std::setprecision(2) << columns->amount;
         entry->set_max_length(limit::MAX_AMOUNT);
         entry->set_text(amount_precision.str());
         entry->signal_changed().connect([entry, columns, this] () {
                 std::string text{entry->get_text()};
                 if (text.empty())
+                {
                         text = "0";
+                }
 
                 std::regex double_regex(R"(^-?([0-9]+(\.[0-9]*)?|\.[0-9]+)$)");
                 bool correct_format{std::regex_search(text, double_regex)};

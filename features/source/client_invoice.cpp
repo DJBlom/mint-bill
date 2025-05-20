@@ -107,7 +107,7 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
                                 data::column expected{};
                                 expected.set_quantity(j);
                                 expected.set_description(description);
-                                expected.set_amount(55 + j + .0);
+                                expected.set_amount(5234567 + j + .0);
                                 vec.push_back(expected);
                         }
 
