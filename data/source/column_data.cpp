@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <column_data.h>
+#include <iostream>
 
 
 namespace limit {
@@ -106,7 +107,8 @@ std::string data::column::get_description() const
 
 void data::column::set_amount(const double& _amount)
 {
-        std::ostringstream amss{std::to_string(_amount)};
+        std::ostringstream amss{};
+        amss.imbue(std::locale::classic());
         amss << std::fixed << std::setprecision(2) << _amount;
         std::string tmp{amss.str()};
         if (tmp.length() <= limit::MAX_AMOUNT)
