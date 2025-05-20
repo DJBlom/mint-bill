@@ -27,8 +27,10 @@ namespace utility {
                         [[nodiscard]] virtual std::vector<std::string> slice(const std::string&) override;
 
                 private:
-                        void add_word_to_current_line();
                         [[nodiscard]] bool word_does_not_exceed_max();
+                        [[nodiscard]] bool word_does_exceed_max();
+                        void add_word_to_current_line();
+                        void handle_large_word(std::vector<std::string>&);
                         void add_whats_left_over(std::vector<std::string>&);
                         void add_new_current_line(std::vector<std::string>&);
 
