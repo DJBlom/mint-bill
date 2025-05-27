@@ -11,14 +11,32 @@ gui::statement_page::~statement_page() {}
 
 bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
         if (_ui_builder)
         {
-                created = true;
+                if (this->save_button.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->save_dialog.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->save_dialog.connect() == false)
+                {
+                        return false;
+                }
+
+                if (this->save_button.connect(this->save_dialog) == false)
+                {
+                        return false;
+                }
+
 //                create_ui(_ui_builder);
         }
 
-        return created;
+        return true;
 }
 
 //void layout::statement_page::create_ui(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
