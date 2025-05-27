@@ -3,7 +3,7 @@
 # Author: Dawid Blom
 # Date: September 15, 2023
 #
-# NOTE: 
+# NOTE:
 ############################################################################
 #!/bin/bash
 
@@ -69,7 +69,7 @@ function static_code_analysis()
              $prj_dir/gui/source \
              $prj_dir/data/source \
              $prj_dir/storage/source \
-             $prj_dir/features/source 
+             $prj_dir/features/source
 }
 
 function code_coverage()
@@ -108,14 +108,6 @@ function code_coverage()
 
 function unit_test()
 {
-        mkdir -p $BIN_DIR
-        $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-                -DCMAKE_PROJECT_NAME=$PROJECT_NAME  \
-                -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
-                -DUNIT_TESTS=ON
-        $CMAKE --build $BIN_DIR
-        ctest --test-dir $BIN_DIR
-
 	local prj_dir=$(pwd)
         make -C $TEST_DIR -s
         make -C $TEST_DIR -s clean
