@@ -25,9 +25,10 @@ namespace app {
                         ~admin_system() = default;
 
                         void start(const Glib::RefPtr<Gtk::Application>&);
+                        [[nodiscard]] bool load_ui_file(const Glib::RefPtr<Gtk::Builder>&);
 
-                private:
-                        [[nodiscard]] bool verify_ui_file(const Glib::RefPtr<Gtk::Builder>&);
+//                private:
+//                        [[nodiscard]] bool verify_ui_file(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
                         gui::main_window main_window{};

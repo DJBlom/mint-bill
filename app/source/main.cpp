@@ -9,9 +9,6 @@
 #include <admin_system.h>
 
 
-
-
-
 int main(int argc, char** argv)
 {
         app::admin_system admin_system;

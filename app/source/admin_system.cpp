@@ -6,14 +6,19 @@
  * NOTE:
  *******************************************************/
 #include <syslog.h>
+#include <main_window.h>
 #include <admin_system.h>
+#include <invoice_page.h>
+#include <business_page.h>
+#include <statement_page.h>
+#include <client_register_page.h>
 
 
 void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 {
         Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
         syslog(LOG_INFO, "Starting...");
-        if (this->verify_ui_file(ui_builder) == false)
+        if (this->load_ui_file(ui_builder) == false)
         {
                 syslog(LOG_CRIT, "Failed to load the UI file - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
@@ -24,7 +29,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                 Glib::RefPtr<Gtk::Settings> system_settings = Gtk::Settings::get_default();
                 if (!system_settings)
                 {
-                        syslog(LOG_CRIT, "Failed to set the dark theme for the application - "
+                        syslog(LOG_CRIT, "Failed to get the default system settings - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
@@ -70,7 +75,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
         }
 }
 
-bool app::admin_system::verify_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+bool app::admin_system::load_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         bool verified{false};
         try
