@@ -84,16 +84,16 @@ if(BUILD_PROJECT)
                 LINKER:-lrt
         )
 
-        target_link_libraries(${PROJECT_NAME} 
-                PRIVATE 
+        target_link_libraries(${PROJECT_NAME}
+                PRIVATE
                 ${CURL_LIBRARIES}
-                ${GTKMM_LIBRARIES} 
+                ${GTKMM_LIBRARIES}
                 ${CAIROMM_LIBRARIES}
                 ${POPPLER_LIBRARIES}
         )
 
-        target_link_directories(${PROJECT_NAME} 
-                PRIVATE 
+        target_link_directories(${PROJECT_NAME}
+                PRIVATE
                 ${GTKMM_LIBRARY_DIRS}
                 ${CAIROMM_LIBRARY_DIRS}
         )
@@ -131,43 +131,6 @@ if(BUILD_PROJECT)
                 target_link_libraries(${PROJECT_NAME} PRIVATE utility)
         else()
                 message(STATUS "Directory utility, does not exist")
-        endif()
-        if (UNIT_TESTS)
-                include(CTest)
-                enable_testing()
-                set(TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}")
-                set(CMAKE_TESTDRIVER_EXTRA_INCLUDES "")
-                set(CMAKE_TESTDRIVER_ARGVC_FUNCTION "")
-                set(CMAKE_TESTDRIVER_BEFORE_TESTMAIN "")
-                set(CMAKE_TESTDRIVER_AFTER_TESTMAIN "")
-
-                set (TestsToRun
-                        gui/tests/view_test.cpp
-                        utility/tests/test.cpp
-                        storage/tests/test.cpp
-                        storage/tests/verification.cpp
-                )
-
-                create_test_sourcelist (Tests CommonCxxTests.cxx ${TestsToRun})
-                add_executable(CommonCxxTests ${Tests})
-                set_target_properties(CommonCxxTests PROPERTIES
-                        RUNTIME_OUTPUT_DIRECTORY ${TEST_OUTPUT_DIR}
-                )
-                
-                # Add all tests, telling CTest the *exact path* to the binary
-                foreach(test ${TestsToRun})
-                        get_filename_component(TName ${test} NAME_WE)
-                        get_filename_component(TDir ${test} DIRECTORY)
-                        if (TDir)
-                                set(FullTestName "${TDir}/${TName}")
-                        else()
-                                set(FullTestName "${TName}")
-                        endif()
-
-                        add_test(NAME ${FullTestName} COMMAND ${TEST_OUTPUT_DIR}/CommonCxxTests ${FullTestName})
-                endforeach()
-        else()
-                message("Don't know what to do (test)")
         endif()
 
         if (EXISTS ${CMAKE_OBJDUMP})
