@@ -10,11 +10,11 @@
 #include <gtkmm.h>
 
 namespace interface {
-        class gui {
-                public:
-                        virtual ~gui() = default;
+class gui {
+public:
+        virtual ~gui() = default;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-        };
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+};
 }
 #endif
