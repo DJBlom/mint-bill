@@ -12,6 +12,7 @@
 #include <business_info.h>
 
 namespace gui {
+        //GCOVR_EXCL_START
         class business_page : public interface::gui {
                 public:
                         business_page() = default;
@@ -57,5 +58,7 @@ namespace gui {
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };
+
+        //GCOVR_EXCL_STOP
 }
 #endif

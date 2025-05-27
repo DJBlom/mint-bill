@@ -10,6 +10,7 @@
 #include <gtkmm.h>
 
 namespace gui {
+        //GCOVR_EXCL_START
         class main_window {
                 public:
                         main_window() = default;
@@ -36,5 +37,7 @@ namespace gui {
                         std::unique_ptr<Gtk::Button> min_button{};
                         std::unique_ptr<Gtk::Button> exit_button{};
         };
+
+        //GCOVR_EXCL_STOP
 }
 #endif

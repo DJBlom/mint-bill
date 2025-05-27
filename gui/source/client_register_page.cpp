@@ -9,6 +9,7 @@
 #include <client_data.h>
 #include <client_register_page.h>
 
+//GCOVR_EXCL_START
 gui::client_register_page::~client_register_page()
 {
 }
@@ -194,3 +195,5 @@ data::client gui::client_register_page::extract_page_entries()
 
         return data;
 }
+
+//GCOVR_EXCL_STOP

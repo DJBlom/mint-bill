@@ -26,6 +26,7 @@
 #include <poppler/cpp/poppler-page-renderer.h>
 
 namespace gui {
+        //GCOVR_EXCL_START
         struct column_entries : public Glib::Object {
                 public:
                         unsigned int quantity{0};
@@ -233,5 +234,7 @@ namespace gui {
                         std::unique_ptr<Gtk::MessageDialog> email_confirmation{};
                         std::shared_ptr<Gio::ListStore<invoice_entries>> invoice_store{};
         };
+
+        //GCOVR_EXCL_STOP
 }
 #endif

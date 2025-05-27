@@ -12,6 +12,7 @@
 #include <client_register.h>
 
 namespace gui {
+        //GCOVR_EXCL_START
         class client_register_page : public interface::gui {
                 public:
                         client_register_page() = default;
@@ -52,5 +53,7 @@ namespace gui {
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };
+
+        //GCOVR_EXCL_STOP
 }
 #endif

@@ -9,6 +9,7 @@
 #include <invoice_page.h>
 #include <iostream>
 
+//GCOVR_EXCL_START
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint8_t MAX_AMOUNT{15};
@@ -1458,3 +1459,5 @@ void gui::invoice_page::populate_material_store(const data::invoice& _invoice)
                 }
         }
 }
+
+//GCOVR_EXCL_STOP

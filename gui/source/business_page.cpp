@@ -7,7 +7,7 @@
  **********************************************************/
 #include <syslog.h>
 #include <business_page.h>
-
+//GCOVR_EXCL_START
 gui::business_page::~business_page()
 {
 
@@ -193,3 +193,4 @@ data::business gui::business_page::extract_page_entries()
 
         return data;
 }
+//GCOVR_EXCL_STOP

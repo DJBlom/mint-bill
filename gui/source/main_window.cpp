@@ -8,6 +8,7 @@
 #include <syslog.h>
 #include <main_window.h>
 
+//GCOVR_EXCL_START
 bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, const Glib::RefPtr<Gtk::Application>& app)
 {
         bool created{false};
@@ -142,3 +143,5 @@ void gui::main_window::setup_css()
                 GTK_STYLE_PROVIDER_PRIORITY_USER
         );
 }
+
+//GCOVR_EXCL_STOP
