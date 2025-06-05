@@ -13,18 +13,6 @@
 
 
 namespace gui {
-//        struct statement_entries : public Glib::Object {
-//                public:
-//                        data::statement statement{};
-//
-//                        static Glib::RefPtr<statement_entries> create(const data::statement& _statement)
-//                        {
-//                                return Glib::make_refptr_for_instance<satement_entries>(new statement_entries(_statement));
-//                        }
-//
-//                protected:
-//                        explicit statement_entries(const data::statement& _statement) : statement{_statement} {}
-//        };
 
 class statement_page : public interface::gui {
 public:
@@ -43,6 +31,10 @@ private:
 private:
         part::button save_button{"statement-save-button"};
         part::dialog save_dialog{"statement-save-button-alert"};
+        part::button print_button{"statement-print-button"};
+        part::dialog print_dialog{"statement-print-alert"};
+        part::button email_button{"statement-email-button"};
+        part::dialog email_dialog{"statement-email-alert"};
 
         //                private: // Email
         //                        void send_email(const data::invoice&);

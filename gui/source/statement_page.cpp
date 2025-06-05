@@ -13,6 +13,7 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         if (_ui_builder)
         {
+                // save
                 if (this->save_button.create(_ui_builder) == false)
                 {
                         return false;
@@ -32,6 +33,52 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 {
                         return false;
                 }
+
+                // print
+                if (this->print_button.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->print_dialog.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->print_dialog.connect() == false)
+                {
+                        return false;
+                }
+
+                if (this->print_button.connect(this->print_dialog) == false)
+                {
+                        return false;
+                }
+
+                this->print_button.disable();
+
+                // email
+                if (this->email_button.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->email_dialog.create(_ui_builder) == false)
+                {
+                        return false;
+                }
+
+                if (this->email_dialog.connect() == false)
+                {
+                        return false;
+                }
+
+                if (this->email_button.connect(this->email_dialog) == false)
+                {
+                        return false;
+                }
+
+                this->email_button.disable();
 
 //                create_ui(_ui_builder);
         }

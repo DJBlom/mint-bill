@@ -9,7 +9,7 @@
 PROJECT_DIR :=$(realpath ..)
 TEST_DIR :=$(realpath .)
 TEST_TARGET := admin-system
-CPPUTEST_EXE_FLAGS :=-c
+CPPUTEST_EXE_FLAGS +=-c -v
 
 ########################################################################
 # Uncomment to exclude the email_test group from being tested.

@@ -11,6 +11,7 @@
 
 
 #include <gtkmm.h>
+#include <iostream>
 #include <statement_page.h>
 extern "C"
 {
@@ -21,7 +22,12 @@ extern "C"
 
 
 /**********************************GUI PART DIALOG TEST LIST*******************
- * 1)
+ * 1) create the dialog. (Done)
+ * 2) connect the signal handler of the dialog. (Done)
+ * 3) show the dialog. (Done)
+ * 4) ensure that the system does not crash if we connect the dialog
+ *    before it was created. (Done)
+ * 5) verify that the dialog is valid before using it. (Done)
  ******************************************************************************/
 TEST_GROUP(gui_part_dialog)
 {
@@ -41,28 +47,28 @@ TEST_GROUP(gui_part_dialog)
 	}
 };
 
-TEST(gui_part_dialog, create_dialog)
+TEST(gui_part_dialog, dialog_create)
 {
         CHECK_EQUAL(true, gui_dialog.create(builder));
 }
 
-TEST(gui_part_dialog, check_if_the_dialog_is_valid)
+TEST(gui_part_dialog, dialog_is_valid)
 {
         CHECK_EQUAL(true, gui_dialog.is_not_valid());
 }
 
-TEST(gui_part_dialog, connect_dialog_event_handler_successfully)
+TEST(gui_part_dialog, dialog_connect_successfully)
 {
         CHECK_EQUAL(true, gui_dialog.create(builder));
         CHECK_EQUAL(true, gui_dialog.connect());
 }
 
-TEST(gui_part_dialog, connect_dialog_event_handler_unsuccessfully)
+TEST(gui_part_dialog, dialog_connect_unsuccessfully)
 {
         CHECK_EQUAL(false, gui_dialog.connect());
 }
 
-TEST(gui_part_dialog, show_the_dialog)
+TEST(gui_part_dialog, dialog_show)
 {
         CHECK_EQUAL(true, gui_dialog.create(builder));
         CHECK_EQUAL(true, gui_dialog.connect());
@@ -76,7 +82,9 @@ TEST(gui_part_dialog, show_the_dialog)
 
 
 /**********************************GUI PART BUTTON TEST LIST*******************
- * 1)
+ * 1) create the button. (Done)
+ * 2) connect the button. (Done)
+ * 3) disable and enable the button. (Done)
  ******************************************************************************/
 TEST_GROUP(gui_part_button)
 {
@@ -97,19 +105,19 @@ TEST_GROUP(gui_part_button)
 	}
 };
 
-TEST(gui_part_button, create_button)
+TEST(gui_part_button, button_create)
 {
         CHECK_EQUAL(true, gui_button.create(builder));
 }
 
-TEST(gui_part_button, connect_button_event_handler)
+TEST(gui_part_button, button_connect)
 {
         CHECK_EQUAL(true, dialog.create(builder));
         CHECK_EQUAL(true, gui_button.create(builder));
         CHECK_EQUAL(true, gui_button.connect(dialog));
 }
 
-TEST(gui_part_button, disable_the_button)
+TEST(gui_part_button, button_disable)
 {
         CHECK_EQUAL(true, dialog.create(builder));
         CHECK_EQUAL(true, gui_button.create(builder));
@@ -117,10 +125,132 @@ TEST(gui_part_button, disable_the_button)
         gui_button.disable();
 }
 
-TEST(gui_part_button, enable_the_button)
+TEST(gui_part_button, button_enable)
 {
         CHECK_EQUAL(true, dialog.create(builder));
         CHECK_EQUAL(true, gui_button.create(builder));
         CHECK_EQUAL(true, gui_button.connect(dialog));
         gui_button.enable();
+}
+
+
+
+
+
+
+
+
+/**********************************GUI PART COLUMN_VIEW TEST LIST**************
+ * 1) create the column view. (Done)
+ * 2) connect the column view.
+ * 3) extract data from the column view.
+ * 4) populate the column view.
+ * 5) clear the column view.
+ * 6) ensure the column view is valid. (Done)
+ ******************************************************************************/
+TEST_GROUP(gui_part_column_view)
+{
+//        gui::part::column_operation operation{};
+        Glib::RefPtr<Gtk::Builder> builder;
+        Glib::RefPtr<Gtk::Application> app;
+        gui::part::column_view gui_column_view{"statement-column-view"};
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+	}
+
+	void teardown()
+	{
+                app.reset();
+	}
+};
+
+TEST(gui_part_column_view, column_view_create)
+{
+        CHECK_EQUAL(true, gui_column_view.create(builder));
+}
+
+//TEST(gui_part_column_view, column_view_is_valid)
+//{
+//        CHECK_EQUAL(true, gui_column_view.is_not_valid());
+//}
+//
+//TEST(gui_part_column_view, column_view_connect)
+//{
+//        CHECK_EQUAL(true, gui_column_view.add_column(operation));
+//}
+
+
+
+
+
+
+
+
+/*************************GUI PART COLUMN INVOICE NUMBER TEST LIST*************
+ * 1) The column invoice number should have a name.
+ * 2) The column invoice number should have the ability to
+ *    retrieve the name.
+ * 3) The column invoice number should have the ability to
+ *    retrieve the value.
+ * 4) The column invoice number should be created.
+ * 5) The column invoice number should be destroyed.
+ * 6) The column invoice number should be set.
+ ******************************************************************************/
+TEST_GROUP(statement_column_invoice_number)
+{
+        std::string title{"test"};
+        Glib::RefPtr<Gtk::Builder> builder;
+        Glib::RefPtr<Gtk::Application> app;
+        std::unique_ptr<Gtk::ColumnView> view{};
+        Glib::RefPtr<Gtk::SelectionModel> selection{};
+        gui::part::statement::columns::invoice_number invoice_number{title};
+        Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store;
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+                view = std::unique_ptr<Gtk::ColumnView>{
+                        builder->get_widget<Gtk::ColumnView>("statement-column-view")};
+                store = Gio::ListStore<gui::part::statement::columns::entries>::create();
+                store->append(gui::part::statement::columns::entries::create("invoice number",
+                                                                    "2025-06-14",
+                                                                    "435kdsagf",
+                                                                    "payed",
+                                                                    "R 12345.00"));
+                selection = Gtk::SingleSelection::create(store);
+                view->set_model(selection);
+        }
+
+	void teardown()
+	{
+                app.reset();
+	}
+};
+
+TEST(statement_column_invoice_number, retrieve_the_column)
+{
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
+        view->append_column(column);
+        std::string result{column->get_title()};
+
+        CHECK_EQUAL(title, result);
+}
+
+TEST(statement_column_invoice_number, retrieve_value)
+{
+        store->append(gui::part::statement::columns::entries::create("INV-200",
+                                                            "2025-06-14",
+                                                            "435kdsagf",
+                                                            "payed",
+                                                            "R 12345.00"));
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
+        view->append_column(column);
+        std::string result{invoice_number.retrieve_value()};
+        std::string expected{"INV-200"};
+
+        CHECK_EQUAL(expected, result);
 }

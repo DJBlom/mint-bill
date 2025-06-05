@@ -443,19 +443,6 @@
                                 <property name="valign">center</property>
                                 <property name="vexpand">True</property>
                                 <child>
-                                  <object class="GtkColumnView" id="statement-column-view">
-                                    <property name="model">
-                                      <object class="GtkSingleSelection"/>
-                                    </property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">1</property>
-                                      <property name="row-span">6</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkButton" id="statement-save-button">
                                     <property name="css-name">save-button</property>
                                     <property name="hexpand">True</property>
@@ -518,7 +505,35 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkListView" id="statement-invoice-view">
+                                  <object class="GtkScrolledWindow" id="statement-scroll-window-column-view">
+                                    <property name="child">
+                                      <object class="GtkColumnView" id="statement-column-view"/>
+                                    </property>
+                                    <property name="hadjustment">
+                                      <object class="GtkAdjustment" id="statement-column-view-hadjustment"/>
+                                    </property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="statement-column-view-vadjustment"/>
+                                    </property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">4</property>
+                                      <property name="row">1</property>
+                                      <property name="row-span">6</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="statement-scroll-window-list-view">
+                                    <property name="child">
+                                      <object class="GtkListView" id="statement-list-view"/>
+                                    </property>
+                                    <property name="hadjustment">
+                                      <object class="GtkAdjustment" id="statement-list-view-hadjustment"/>
+                                    </property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="statement-list-view-vadjustment"/>
+                                    </property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
@@ -1023,12 +1038,54 @@
     <property name="text">Is u seker u wil die inligting stoor?</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id=":wstatement-save-wrong-info-alert">
+  <object class="GtkMessageDialog" id="statement-save-wrong-info-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-print-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="deletable">False</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="message-type">question</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u wil die faktuur print?</property>
+    <property name="title">Waarskuwing</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-email-no-internet-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">close</property>
+    <property name="deletable">False</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="modal">True</property>
+    <property name="text">Maak asseblief seker dat u internettoegang het.
+</property>
+    <property name="title">Informasie</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-print-no-printer-alert">
+    <property name="buttons">close</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-email-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="deletable">False</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="hide-on-close">True</property>
+    <property name="message-type">question</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u wil die faktuur e-pos?</property>
+    <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
 </interface>

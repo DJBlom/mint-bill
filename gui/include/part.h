@@ -2,7 +2,32 @@
 #ifndef _PART_H_
 #define _PART_H_
 #include <gtkmm.h>
+
 namespace interface {
+//class view {
+//public:
+//        virtual ~view() = default;
+//
+//        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+//        [[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
+//};
+//
+//class view {
+//public:
+//        virtual ~view() = default;
+//
+//        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+//        [[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
+//};
+
+class item {
+public:
+        virtual ~item() = default;
+
+        [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const = 0;
+        [[nodiscard]] virtual std::string retrieve_value() const = 0;
+};
+
 class dialog {
 public:
         virtual ~dialog() = default;
