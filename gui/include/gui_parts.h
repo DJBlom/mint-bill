@@ -3,7 +3,7 @@
 #define _GUI_PART_H_
 #include <part.h>
 #include <syslog.h>
-#include <client_statement.h>
+//#include <client_statement.h>
 
 namespace gui {
 namespace part {

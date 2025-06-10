@@ -84,13 +84,7 @@ data::invoice& data::invoice::operator= (invoice&& _move)
 
 bool data::invoice::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::invoice::set_business_name(const std::string& _name)

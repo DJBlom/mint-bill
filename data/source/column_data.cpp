@@ -57,13 +57,7 @@ data::column::~column() {}
 
 bool data::column::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::column::set_quantity(const unsigned int& _quantity)

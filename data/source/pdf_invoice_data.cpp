@@ -52,13 +52,7 @@ data::pdf_invoice& data::pdf_invoice::operator= (pdf_invoice&& _move)
 
 bool data::pdf_invoice::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::pdf_invoice::set_client(const data::client& _client)

@@ -58,16 +58,9 @@ data::statement_column& data::statement_column::operator= (statement_column&& _m
         return *this;
 }
 
-bool data::statement_column::is_valid()
+bool data::statement_column::is_valid() const
 {
-        bool is_valid{false};
-        if (check_flags() == true)
-        {
-                std::lock_guard<std::mutex> guard(this->data_mutex);
-                is_valid = true;
-        }
-
-        return is_valid;
+	return check_flags();
 }
 
 void data::statement_column::set_invoice_number(const std::string& _invoice_number)
@@ -84,7 +77,7 @@ void data::statement_column::set_invoice_number(const std::string& _invoice_numb
         }
 }
 
-std::string data::statement_column::get_invoice_number()
+std::string data::statement_column::get_invoice_number() const
 {
         return std::move(this->invoice_number);
 }
@@ -103,7 +96,7 @@ void data::statement_column::set_date(const std::string& _date)
         }
 }
 
-std::string data::statement_column::get_date()
+std::string data::statement_column::get_date() const
 {
         return std::move(this->date);
 }
@@ -122,7 +115,7 @@ void data::statement_column::set_order_number(const std::string& _order_number)
         }
 }
 
-std::string data::statement_column::get_order_number()
+std::string data::statement_column::get_order_number() const
 {
         return std::move(this->order_number);
 }
@@ -141,7 +134,7 @@ void data::statement_column::set_paid_status(const std::string& _paid_status)
         }
 }
 
-std::string data::statement_column::get_paid_status()
+std::string data::statement_column::get_paid_status() const
 {
         return std::move(this->paid_status);
 }
@@ -160,12 +153,12 @@ void data::statement_column::set_price(const std::string& _price)
         }
 }
 
-std::string data::statement_column::get_price()
+std::string data::statement_column::get_price() const
 {
         return std::move(this->price);
 }
 
-bool data::statement_column::check_flags()
+bool data::statement_column::check_flags() const
 {
         return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }

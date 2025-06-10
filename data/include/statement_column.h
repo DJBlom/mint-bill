@@ -21,20 +21,20 @@ public:
         statement_column& operator= (statement_column&&);
         virtual ~statement_column() = default;
 
-        [[nodiscard]] virtual bool is_valid();
+        [[nodiscard]] virtual bool is_valid() const;
         virtual void set_invoice_number(const std::string&);
-        [[nodiscard]] virtual std::string get_invoice_number();
+        [[nodiscard]] virtual std::string get_invoice_number() const;
         virtual void set_date(const std::string&);
-        [[nodiscard]] virtual std::string get_date();
+        [[nodiscard]] virtual std::string get_date() const;
         virtual void set_order_number(const std::string&);
-        [[nodiscard]] virtual std::string get_order_number();
+        [[nodiscard]] virtual std::string get_order_number() const;
         virtual void set_paid_status(const std::string&);
-        [[nodiscard]] virtual std::string get_paid_status();
+        [[nodiscard]] virtual std::string get_paid_status() const;
         virtual void set_price(const std::string&);
-        [[nodiscard]] virtual std::string get_price();
+        [[nodiscard]] virtual std::string get_price() const;
 
 private:
-        bool check_flags();
+        [[nodiscard]] bool check_flags() const;
         void set_flag(const int&);
         void clear_flag(const int&);
 

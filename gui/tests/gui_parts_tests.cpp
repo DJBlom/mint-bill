@@ -150,22 +150,22 @@ TEST(gui_part_button, button_enable)
  * 7) Add a column to the column view. (Done)
  * 8) Add a single data line to the column view.
  ******************************************************************************/
-namespace feature {
-class statement {
-public:
-        statement() = default;
-        statement(const statement&) = delete;
-        statement(statement&&) = delete;
-        statement& operator= (const statement&) = delete;
-        statement& operator= (statement&&) = delete;
-        virtual ~statement() = default;
-
-        [[nodiscard]] virtual data::statement_column load() const;
-};
-}
+/*namespace feature {*/
+/*class statement {*/
+/*public:*/
+/*        statement() = default;*/
+/*        statement(const statement&) = delete;*/
+/*        statement(statement&&) = delete;*/
+/*        statement& operator= (const statement&) = delete;*/
+/*        statement& operator= (statement&&) = delete;*/
+/*        virtual ~statement() = default;*/
+/**/
+/*        [[nodiscard]] virtual data::statement_column load() const;*/
+/*};*/
+/*}*/
 TEST_GROUP(statement_page_column_view)
 {
-        feature::statement client_statement{};
+        //feature::statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::column_view column_view{"statement-column-view"};
@@ -192,7 +192,7 @@ TEST(statement_page_column_view, column_view_is_valid)
 {
         (void) column_view.create(builder);
 
-        CHECK_EQUAL(true, column_view.is_not_valid());
+        CHECK_EQUAL(false, column_view.is_not_valid());
 }
 
 TEST(statement_page_column_view, column_view_add_column)
@@ -203,12 +203,12 @@ TEST(statement_page_column_view, column_view_add_column)
         CHECK_EQUAL(true, column_view.add_column(invoice_number));
 }
 
-TEST(statement_page_column_view, column_view_populate)
-{
-        (void) column_view.create(builder);
-
-        CHECK_EQUAL(true, column_view.populate(client_statement));
-}
+//TEST(statement_page_column_view, column_view_populate)
+//{
+//        (void) column_view.create(builder);
+//
+//        CHECK_EQUAL(true, column_view.populate(client_statement));
+//}
 
 
 

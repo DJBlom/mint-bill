@@ -74,13 +74,7 @@ data::business& data::business::operator= (business&& _move)
 
 bool data::business::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::business::set_name(const std::string& _name)

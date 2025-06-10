@@ -56,13 +56,7 @@ data::email::~email(){}
 
 bool data::email::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::email::set_attachments(const std::vector<std::string>& _attachments)
