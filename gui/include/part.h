@@ -11,21 +11,25 @@ namespace interface {
 //        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
 //        [[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
 //};
-//
-//class view {
-//public:
-//        virtual ~view() = default;
-//
-//        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-//        [[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
-//};
+
 
 class item {
 public:
         virtual ~item() = default;
 
+        [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const = 0;
         [[nodiscard]] virtual std::string retrieve_value() const = 0;
+};
+
+class view {
+public:
+        virtual ~view() = default;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+        [[nodiscard]] virtual bool is_not_valid() const = 0;
+        [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
+        [[nodiscard]] virtual bool populate() = 0;
 };
 
 class dialog {

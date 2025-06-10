@@ -13,6 +13,7 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <statement_page.h>
+#include <statement_column.h>
 extern "C"
 {
 
@@ -141,19 +142,34 @@ TEST(gui_part_button, button_enable)
 
 
 /**********************************GUI PART COLUMN_VIEW TEST LIST**************
- * 1) create the column view. (Done)
- * 2) connect the column view.
- * 3) extract data from the column view.
- * 4) populate the column view.
- * 5) clear the column view.
- * 6) ensure the column view is valid. (Done)
+ * 1) Create the column view. (Done)
+ * 3) Extract data from the column view.
+ * 4) Populate the column view.
+ * 5) Clear the column view.
+ * 6) Ensure the column view is valid. (Done)
+ * 7) Add a column to the column view. (Done)
+ * 8) Add a single data line to the column view.
  ******************************************************************************/
-TEST_GROUP(gui_part_column_view)
+namespace feature {
+class statement {
+public:
+        statement() = default;
+        statement(const statement&) = delete;
+        statement(statement&&) = delete;
+        statement& operator= (const statement&) = delete;
+        statement& operator= (statement&&) = delete;
+        virtual ~statement() = default;
+
+        [[nodiscard]] virtual data::statement_column load() const;
+};
+}
+TEST_GROUP(statement_page_column_view)
 {
-//        gui::part::column_operation operation{};
-        Glib::RefPtr<Gtk::Builder> builder;
-        Glib::RefPtr<Gtk::Application> app;
-        gui::part::column_view gui_column_view{"statement-column-view"};
+        feature::statement client_statement{};
+        Glib::RefPtr<Gtk::Builder> builder{};
+        Glib::RefPtr<Gtk::Application> app{};
+        gui::part::statement::column_view column_view{"statement-column-view"};
+        gui::part::statement::columns::invoice_number invoice_number{"invoice number"};
 	void setup()
 	{
                 app = Gtk::Application::create("org.testing");
@@ -167,47 +183,55 @@ TEST_GROUP(gui_part_column_view)
 	}
 };
 
-TEST(gui_part_column_view, column_view_create)
+TEST(statement_page_column_view, column_view_create)
 {
-        CHECK_EQUAL(true, gui_column_view.create(builder));
+        CHECK_EQUAL(true, column_view.create(builder));
 }
 
-//TEST(gui_part_column_view, column_view_is_valid)
-//{
-//        CHECK_EQUAL(true, gui_column_view.is_not_valid());
-//}
-//
-//TEST(gui_part_column_view, column_view_connect)
-//{
-//        CHECK_EQUAL(true, gui_column_view.add_column(operation));
-//}
+TEST(statement_page_column_view, column_view_is_valid)
+{
+        (void) column_view.create(builder);
 
+        CHECK_EQUAL(true, column_view.is_not_valid());
+}
 
+TEST(statement_page_column_view, column_view_add_column)
+{
+        (void) column_view.create(builder);
+        (void) column_view.is_not_valid();
 
+        CHECK_EQUAL(true, column_view.add_column(invoice_number));
+}
+
+TEST(statement_page_column_view, column_view_populate)
+{
+        (void) column_view.create(builder);
+
+        CHECK_EQUAL(true, column_view.populate(client_statement));
+}
 
 
 
 
 
 /*************************GUI PART COLUMN INVOICE NUMBER TEST LIST*************
- * 1) The column invoice number should have a name.
- * 2) The column invoice number should have the ability to
- *    retrieve the name.
+ * 1) The column invoice number should have a name. (Done)
  * 3) The column invoice number should have the ability to
- *    retrieve the value.
- * 4) The column invoice number should be created.
- * 5) The column invoice number should be destroyed.
- * 6) The column invoice number should be set.
- ******************************************************************************/
+ *    retrieve the value. (Done)
+ * 4) The column invoice number should be created. (Done)
+ * 5) The column invoice number should be destroyed. (Done)
+ * 6) The column invoice number should be set. (Done)
+ * 7) The column must have the ability to verify it's validity. (Done)
+  ******************************************************************************/
 TEST_GROUP(statement_column_invoice_number)
 {
         std::string title{"test"};
-        Glib::RefPtr<Gtk::Builder> builder;
-        Glib::RefPtr<Gtk::Application> app;
+        Glib::RefPtr<Gtk::Builder> builder{};
+        Glib::RefPtr<Gtk::Application> app{};
         std::unique_ptr<Gtk::ColumnView> view{};
         Glib::RefPtr<Gtk::SelectionModel> selection{};
         gui::part::statement::columns::invoice_number invoice_number{title};
-        Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store;
+        Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store{};
 	void setup()
 	{
                 app = Gtk::Application::create("org.testing");
@@ -217,10 +241,10 @@ TEST_GROUP(statement_column_invoice_number)
                         builder->get_widget<Gtk::ColumnView>("statement-column-view")};
                 store = Gio::ListStore<gui::part::statement::columns::entries>::create();
                 store->append(gui::part::statement::columns::entries::create("invoice number",
-                                                                    "2025-06-14",
-                                                                    "435kdsagf",
-                                                                    "payed",
-                                                                    "R 12345.00"));
+                                                                             "2025-06-14",
+                                                                             "435kdsagf",
+                                                                             "payed",
+                                                                             "R 12345.00"));
                 selection = Gtk::SingleSelection::create(store);
                 view->set_model(selection);
         }
@@ -230,6 +254,11 @@ TEST_GROUP(statement_column_invoice_number)
                 app.reset();
 	}
 };
+
+TEST(statement_column_invoice_number, check_if_the_column_is_valid_after_creation)
+{
+        CHECK_EQUAL(false, invoice_number.is_not_valid());
+}
 
 TEST(statement_column_invoice_number, retrieve_the_column)
 {
@@ -243,10 +272,10 @@ TEST(statement_column_invoice_number, retrieve_the_column)
 TEST(statement_column_invoice_number, retrieve_value)
 {
         store->append(gui::part::statement::columns::entries::create("INV-200",
-                                                            "2025-06-14",
-                                                            "435kdsagf",
-                                                            "payed",
-                                                            "R 12345.00"));
+                                                                     "2025-06-14",
+                                                                     "435kdsagf",
+                                                                     "payed",
+                                                                     "R 12345.00"));
         Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
         view->append_column(column);
         std::string result{invoice_number.retrieve_value()};

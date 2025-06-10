@@ -3,6 +3,29 @@
 
 
 
+
+/***************************************************************************
+ * Column Entries
+ **************************************************************************/
+Glib::RefPtr<gui::part::statement::columns::entries>
+gui::part::statement::columns::entries::create()
+{
+        return Glib::make_refptr_for_instance<entries>(new entries());
+}
+
+Glib::RefPtr<gui::part::statement::columns::entries>
+gui::part::statement::columns::entries::create(const std::string& _invoice_number,
+                                               const std::string& _date,
+                                               const std::string& _order_number,
+                                               const std::string& _paid_status,
+                                               const std::string& _price)
+{
+        return Glib::make_refptr_for_instance<entries>(new entries(
+                _invoice_number, _date, _order_number, _paid_status, _price));
+}
+
+
+
 /***************************************************************************
  * Column Item
  **************************************************************************/
@@ -32,6 +55,11 @@ gui::part::statement::columns::invoice_number::invoice_number(const std::string&
 }
 
 gui::part::statement::columns::invoice_number::~invoice_number() {}
+
+bool gui::part::statement::columns::invoice_number::is_not_valid() const
+{
+        return !(this->column || this->factory);
+}
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::invoice_number::retrieve_item() const
 {
@@ -108,14 +136,14 @@ void gui::part::statement::columns::invoice_number::teardown(const Glib::RefPtr<
 /***************************************************************************
  * Column View
  **************************************************************************/
-gui::part::column_view::column_view(const std::string& _name) : name{_name}
+gui::part::statement::column_view::column_view(const std::string& _name) : name{_name}
 {
         name.shrink_to_fit();
 }
 
-gui::part::column_view::~column_view() {}
+gui::part::statement::column_view::~column_view() {}
 
-bool gui::part::column_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::part::statement::column_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool success{false};
         if (!_ui_builder)
@@ -132,7 +160,7 @@ bool gui::part::column_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builde
                 Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
                 if (!this->view && !this->store && !model)
                 {
-                        syslog(LOG_CRIT, "The view, store, and model are not valid - "
+                        syslog(LOG_CRIT, "The view, store, or model are not valid - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                 }
                 else
@@ -145,48 +173,32 @@ bool gui::part::column_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builde
         return success;
 }
 
-bool gui::part::column_view::is_not_valid() const
+bool gui::part::statement::column_view::is_not_valid() const
 {
-        return !(this->view && this->store);
+        return !(this->view || this->store);
 }
 
-bool gui::part::column_view::add_column(const interface::item& _item)
+bool gui::part::statement::column_view::add_column(const interface::item& _item)
 {
-        bool added{true};
-
-        this->view->append_column(_item.retrieve_item());
+        bool added{false};
+        if (_item.is_not_valid())
+        {
+                syslog(LOG_CRIT, "The item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+        }
+        else
+        {
+                this->view->append_column(_item.retrieve_item());
+                added = true;
+        }
 
         return added;
-
-//        this->description_store = std::shared_ptr<Gio::ListStore<column_entries>>{
-//                Gio::ListStore<column_entries>::create()};
-//        if (!this->description_store)
-//        {
-//                syslog(LOG_CRIT, "The description_store is not valid - "
-//                                 "filename %s, line number %d", __FILE__, __LINE__);
-//                return;
-//        }
-//
-//        Glib::RefPtr<Gtk::MultiSelection> selection_model = Gtk::MultiSelection::create(this->description_store);
-//        if (!selection_model)
-//        {
-//                syslog(LOG_CRIT, "The description selection_model is not valid - "
-//                                 "filename %s, line number %d", __FILE__, __LINE__);
-//                return;
-//        }
-//
-//        this->description_view->set_model(selection_model);
-//        this->description_view->set_name("description_view");
-//
-//        connect_description_add_button();
-//        connect_description_delete_button(selection_model);
-//        connect_description_list_store();
-//
-//        quantity_column(this->description_view);
-//        description_column(this->description_view);
-//        amount_column(this->description_view);
 }
 
+bool gui::part::statement::column_view::populate()
+{
+        return true;
+}
 
 
 

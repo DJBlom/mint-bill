@@ -3,38 +3,23 @@
 #define _GUI_PART_H_
 #include <part.h>
 #include <syslog.h>
+#include <client_statement.h>
 
 namespace gui {
 namespace part {
-
-
 namespace statement {
 namespace columns {
 struct entries : public Glib::Object {
 public:
-        std::string invoice_number{""};
-        std::string date{""};
-        std::string order_number{""};
-        std::string paid_status{""};
-        std::string price{""};
-
-        static Glib::RefPtr<entries> create()
-        {
-                return Glib::make_refptr_for_instance<entries>(new entries());
-        }
-
+        static Glib::RefPtr<entries> create();
         static Glib::RefPtr<entries> create(const std::string& _invoice_number,
-                                                   const std::string& _date,
-                                                   const std::string& _order_number,
-                                                   const std::string& _paid_status,
-                                                   const std::string& _price)
-        {
-                return Glib::make_refptr_for_instance<entries>(new entries(
-                        _invoice_number, _date, _order_number, _paid_status, _price));
-        }
+                                            const std::string& _date,
+                                            const std::string& _order_number,
+                                            const std::string& _paid_status,
+                                            const std::string& _price);
 
 protected:
-        entries() {}
+        entries() = default;
         explicit entries(const std::string& _invoice_number,
                                 const std::string& _date,
                                 const std::string& _order_number,
@@ -45,11 +30,18 @@ protected:
                   order_number{_order_number},
                   paid_status{_paid_status},
                   price{_price} {}
+
+public:
+        std::string invoice_number{""};
+        std::string date{""};
+        std::string order_number{""};
+        std::string paid_status{""};
+        std::string price{""};
 };
 
 class invoice_number : public interface::item {
 public:
-        //invoice_number() = default;
+        invoice_number() = delete;
         explicit invoice_number(const std::string&);
         invoice_number(const invoice_number&) = delete;
         invoice_number(invoice_number&&) = delete;
@@ -57,6 +49,7 @@ public:
         invoice_number& operator= (invoice_number&&) = delete;
         virtual ~invoice_number() override;
 
+        [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
         [[nodiscard]] virtual std::string retrieve_value() const override;
 private:
@@ -70,9 +63,8 @@ private:
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
 }
-}
 
-class column_view {
+class column_view : public interface::view {
 public:
         column_view() = delete;
         explicit column_view(const std::string&);
@@ -85,12 +77,15 @@ public:
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&);
         [[nodiscard]] virtual bool is_not_valid() const;
         [[nodiscard]] virtual bool add_column(const interface::item&);
+        [[nodiscard]] virtual bool populate();
 
 private:
         std::string name{""};
         std::unique_ptr<Gtk::ColumnView> view{};
         std::shared_ptr<Gio::ListStore<statement::columns::entries>> store{};
 };
+}
+
 
 class dialog : public interface::dialog {
 public:
