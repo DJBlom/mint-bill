@@ -9,6 +9,7 @@ build
 test/objs
 test/lib
 test/coverage
+test/*.pdf
 test/admin-system
 
 # Doxygen
