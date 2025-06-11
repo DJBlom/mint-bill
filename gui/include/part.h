@@ -2,6 +2,7 @@
 #ifndef _PART_H_
 #define _PART_H_
 #include <gtkmm.h>
+#include <interfaces.h>
 
 namespace interface {
 //class view {
@@ -29,7 +30,7 @@ public:
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
-        [[nodiscard]] virtual bool populate() = 0;
+        [[nodiscard]] virtual bool populate(const interface::feature&) = 0;
 };
 
 class dialog {

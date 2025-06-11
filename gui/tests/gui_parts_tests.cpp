@@ -14,6 +14,7 @@
 #include <iostream>
 #include <statement_page.h>
 #include <statement_data.h>
+#include <client_statement.h>
 extern "C"
 {
 
@@ -165,7 +166,6 @@ TEST(gui_part_button, button_enable)
 /*}*/
 TEST_GROUP(statement_page_column_view)
 {
-        //feature::statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::column_view column_view{"statement-column-view"};
@@ -203,12 +203,13 @@ TEST(statement_page_column_view, column_view_add_column)
         CHECK_EQUAL(true, column_view.add_column(invoice_number));
 }
 
-//TEST(statement_page_column_view, column_view_populate)
-//{
-//        (void) column_view.create(builder);
-//
-//        CHECK_EQUAL(true, column_view.populate(client_statement));
-//}
+TEST(statement_page_column_view, column_view_populate)
+{
+        feature::client_statement client_statement{};
+        (void) column_view.create(builder);
+
+        CHECK_EQUAL(true, column_view.populate(client_statement));
+}
 
 
 
@@ -223,14 +224,23 @@ TEST(statement_page_column_view, column_view_add_column)
  * 6) The column invoice number should be set. (Done)
  * 7) The column must have the ability to verify it's validity. (Done)
   ******************************************************************************/
-TEST_GROUP(statement_data_invoice_number_test)
+TEST_GROUP(statement_columns_test)
 {
-        std::string title{"test"};
+	std::string invoice_number{"INV-200"};
+	std::string date{"2025-06-14"};
+	std::string order_number{"MD-4"};
+	std::string paid_status{"paid"};
+	std::string price{"R1234.00"};
+	std::string date_title{"date"};
+	std::string order_number_title{"date"};
+        std::string invoice_number_title{"invoice number"};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         std::unique_ptr<Gtk::ColumnView> view{};
         Glib::RefPtr<Gtk::SelectionModel> selection{};
-        gui::part::statement::columns::invoice_number invoice_number{title};
+        gui::part::statement::columns::date date_column{date_title};
+        gui::part::statement::columns::order_number order_number_column{order_number_title};
+        gui::part::statement::columns::invoice_number invoice_number_column{invoice_number_title};
         Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store{};
 	void setup()
 	{
@@ -240,11 +250,11 @@ TEST_GROUP(statement_data_invoice_number_test)
                 view = std::unique_ptr<Gtk::ColumnView>{
                         builder->get_widget<Gtk::ColumnView>("statement-column-view")};
                 store = Gio::ListStore<gui::part::statement::columns::entries>::create();
-                store->append(gui::part::statement::columns::entries::create("invoice number",
-                                                                             "2025-06-14",
-                                                                             "435kdsagf",
-                                                                             "payed",
-                                                                             "R 12345.00"));
+                store->append(gui::part::statement::columns::entries::create(invoice_number,
+                                                                             date,
+                                                                             order_number,
+                                                                             paid_status,
+                                                                             price));
                 selection = Gtk::SingleSelection::create(store);
                 view->set_model(selection);
         }
@@ -255,31 +265,34 @@ TEST_GROUP(statement_data_invoice_number_test)
 	}
 };
 
-TEST(statement_data_invoice_number_test, check_if_the_column_is_valid_after_creation)
+TEST(statement_columns_test, check_if_the_column_is_valid_after_creation)
 {
-        CHECK_EQUAL(false, invoice_number.is_not_valid());
+        CHECK_EQUAL(false, invoice_number_column.is_not_valid());
+        CHECK_EQUAL(false, date_column.is_not_valid());
 }
 
-TEST(statement_data_invoice_number_test, retrieve_the_column)
+TEST(statement_columns_test, retrieve_the_column)
 {
-        Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
-        view->append_column(column);
-        std::string result{column->get_title()};
+        Glib::RefPtr<Gtk::ColumnViewColumn> invoice_number_column_temp{invoice_number_column.retrieve_item()};
+        Glib::RefPtr<Gtk::ColumnViewColumn> date_column_temp{date_column.retrieve_item()};
+        view->append_column(invoice_number_column.retrieve_item());
+        view->append_column(date_column.retrieve_item());
+        std::string result_invoice_number_column{invoice_number_column_temp->get_title()};
+        std::string result_date_column{date_column_temp->get_title()};
 
-        CHECK_EQUAL(title, result);
+        CHECK_EQUAL(invoice_number_title, result_invoice_number_column);
+        CHECK_EQUAL(date_title, result_date_column);
 }
 
-TEST(statement_data_invoice_number_test, retrieve_value)
+TEST(statement_columns_test, retrieve_value)
 {
-        store->append(gui::part::statement::columns::entries::create("INV-200",
-                                                                     "2025-06-14",
-                                                                     "435kdsagf",
-                                                                     "payed",
-                                                                     "R 12345.00"));
-        Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
-        view->append_column(column);
-        std::string result{invoice_number.retrieve_value()};
-        std::string expected{"INV-200"};
+        Glib::RefPtr<Gtk::ColumnViewColumn> invoice_number_column_temp{invoice_number_column.retrieve_item()};
+        Glib::RefPtr<Gtk::ColumnViewColumn> date_column_temp{date_column.retrieve_item()};
+        view->append_column(invoice_number_column.retrieve_item());
+        view->append_column(date_column.retrieve_item());
+        std::string expected_invoice_number_column{invoice_number};
+        std::string expected_date_column{date};
 
-        CHECK_EQUAL(expected, result);
+        CHECK_EQUAL(expected_invoice_number_column, invoice_number_column.retrieve_value());
+        CHECK_EQUAL(expected_date_column, date_column.retrieve_value());
 }

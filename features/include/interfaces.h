@@ -9,16 +9,13 @@
 #define _INTERFACES_H_
 #include <any>
 #include <string>
-#include <storage.h>
 
 namespace interface {
 class feature {
 public:
 	virtual ~feature() = default;
 
-	[[nodiscard]] virtual std::any load(const std::string&, const interface::storage&) = 0;
-	[[nodiscard]] virtual bool save(const std::any&, const interface::storage&) = 0;
-	[[nodiscard]] virtual std::any search(const std::string&, const interface::storage&) = 0;
+	[[nodiscard]] virtual std::any load(const std::string&) const = 0;
 };
 }
 #endif

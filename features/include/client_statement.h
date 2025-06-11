@@ -19,9 +19,7 @@ public:
 	client_statement& operator= (client_statement&&) = default;
 	virtual ~client_statement() override;
 
-	[[nodiscard]] virtual std::any load(const std::string&, const interface::storage&) override;
-	[[nodiscard]] virtual bool save(const std::any&, const interface::storage&) override;
-	[[nodiscard]] virtual std::any search(const std::string&, const interface::storage&) override;
+	[[nodiscard]] virtual std::any load(const std::string&) const override;
 };
 }
 #endif

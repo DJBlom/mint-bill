@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <statement_page.h>
+#include <client_statement.h>
 
 gui::statement_page::~statement_page() {}
 
@@ -80,28 +81,19 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 
                 this->email_button.disable();
 
-//                create_ui(_ui_builder);
+		if (this->statement_view.create(_ui_builder) == false)
+		{
+			return false;
+		}
+
+		part::statement::columns::invoice_number invoice_number{"invoice number"};
+		(void) this->statement_view.add_column(invoice_number);
+		feature::client_statement client_statement{};
+		if (this->statement_view.is_not_valid())
+			return false;
+		/*else*/
+		/*	(void) this->statement_view.populate(client_statement);*/
         }
 
         return true;
 }
-
-//void layout::statement_page::create_ui(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-//{
-//        this->statement_view = std::unique_ptr<Gtk::ListView>{
-//                _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
-//        this->statements_adjustment = std::shared_ptr<Gtk::Adjustment>{
-//                _ui_builder->get_object<Gtk::Adjustment>("known-invoice-adjustment")};
-//        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
-//                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
-//        this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-//                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
-//        this->email_button = std::unique_ptr<Gtk::Button>{
-//                _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
-//        this->print_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-//                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-alert")};
-//        this->print_no_printer = std::unique_ptr<Gtk::MessageDialog>{
-//                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-no-printer-alert")};
-//        this->print_button = std::unique_ptr<Gtk::Button>{
-//                _ui_builder->get_widget<Gtk::Button>("known-invoice-print-button")};
-//}

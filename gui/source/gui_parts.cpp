@@ -1,5 +1,8 @@
+
+#include <sql.h>
 #include <errors.h>
 #include <gui_parts.h>
+#include <statement_data.h>
 
 
 
@@ -87,7 +90,6 @@ void gui::part::statement::columns::invoice_number::setup(const Glib::RefPtr<Gtk
 
 void gui::part::statement::columns::invoice_number::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        bool success{false};
         if (!_item)
         {
                 syslog(LOG_CRIT, "The list_item is not valid - "
@@ -120,6 +122,212 @@ void gui::part::statement::columns::invoice_number::bind(const Glib::RefPtr<Gtk:
 }
 
 void gui::part::statement::columns::invoice_number::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->unset_child();
+        }
+}
+
+gui::part::statement::columns::date::date(const std::string& _title)
+{
+        this->factory = Gtk::SignalListItemFactory::create();
+        if (!this->factory)
+        {
+                syslog(LOG_CRIT, "The factory is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                throw app::errors::construction;
+        }
+
+        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+        if (!this->column)
+        {
+                syslog(LOG_CRIT, "The column is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                throw app::errors::construction;
+        }
+
+        this->column->set_expand(false);
+        this->column->set_expand(false);
+        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &date::setup)));
+        this->factory->signal_bind().connect(sigc::mem_fun(*this, &date::bind));
+        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &date::teardown)));
+}
+
+gui::part::statement::columns::date::~date() {}
+
+bool gui::part::statement::columns::date::is_not_valid() const
+{
+        return !(this->column || this->factory);
+}
+
+Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::date::retrieve_item() const
+{
+        return this->column;
+}
+
+std::string gui::part::statement::columns::date::retrieve_value() const
+{
+        return this->value;
+}
+
+void gui::part::statement::columns::date::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->set_child(*Gtk::make_managed<Gtk::Label>("", Gtk::Align::FILL));
+        }
+}
+
+void gui::part::statement::columns::date::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+        if (!col)
+        {
+                syslog(LOG_CRIT, "The column is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+        if (!label)
+        {
+                syslog(LOG_CRIT, "The label is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+                syslog(LOG_CRIT, "The label is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+
+        this->value.clear();
+        this->value = col->date;
+        this->value.shrink_to_fit();
+        label->set_text(col->date);
+}
+
+void gui::part::statement::columns::date::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->unset_child();
+        }
+}
+
+gui::part::statement::columns::order_number::order_number(const std::string& _title)
+{
+        this->factory = Gtk::SignalListItemFactory::create();
+        if (!this->factory)
+        {
+                syslog(LOG_CRIT, "The factory is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                throw app::errors::construction;
+        }
+
+        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+        if (!this->column)
+        {
+                syslog(LOG_CRIT, "The column is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                throw app::errors::construction;
+        }
+
+        this->column->set_expand(false);
+        this->column->set_expand(false);
+        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &order_number::setup)));
+        this->factory->signal_bind().connect(sigc::mem_fun(*this, &order_number::bind));
+        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &order_number::teardown)));
+}
+
+gui::part::statement::columns::order_number::~order_number() {}
+
+bool gui::part::statement::columns::order_number::is_not_valid() const
+{
+        return !(this->column || this->factory);
+}
+
+Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::order_number::retrieve_item() const
+{
+        return this->column;
+}
+
+std::string gui::part::statement::columns::order_number::retrieve_value() const
+{
+        return this->value;
+}
+
+void gui::part::statement::columns::order_number::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->set_child(*Gtk::make_managed<Gtk::Label>("", Gtk::Align::FILL));
+        }
+}
+
+void gui::part::statement::columns::order_number::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+        if (!col)
+        {
+                syslog(LOG_CRIT, "The column is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+        if (!label)
+        {
+                syslog(LOG_CRIT, "The label is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+                syslog(LOG_CRIT, "The label is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+
+        this->value.clear();
+        this->value = col->order_number;
+        this->value.shrink_to_fit();
+        label->set_text(col->order_number);
+}
+
+void gui::part::statement::columns::order_number::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
         if (!_item)
         {
@@ -195,9 +403,29 @@ bool gui::part::statement::column_view::add_column(const interface::item& _item)
         return added;
 }
 
-bool gui::part::statement::column_view::populate()
+bool gui::part::statement::column_view::populate(const interface::feature& _feature)
 {
-        return true;
+	bool success{true};
+	data::statement data{std::any_cast<data::statement>(_feature.load("test_business"))};
+	if (data.is_valid() == false)
+	{
+		success = false;
+	}
+	else
+	{
+		this->store->append(statement::columns::entries::create(
+			data.get_invoice_number(),
+			data.get_date(),
+			data.get_order_number(),
+			data.get_paid_status(),
+			data.get_price()
+		));
+		Glib::signal_timeout().connect_once([this]() {
+			this->adjustment->set_value(this->adjustment->get_upper());
+		}, 30);
+	}
+
+        return success;
 }
 
 

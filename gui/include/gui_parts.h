@@ -3,7 +3,6 @@
 #define _GUI_PART_H_
 #include <part.h>
 #include <syslog.h>
-//#include <client_statement.h>
 
 namespace gui {
 namespace part {
@@ -62,6 +61,54 @@ private:
         Glib::RefPtr<Gtk::ColumnViewColumn> column{};
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
+
+class date : public interface::item {
+public:
+        date() = delete;
+        explicit date(const std::string&);
+        date(const date&) = delete;
+        date(date&&) = delete;
+        date& operator= (const date&) = delete;
+        date& operator= (date&&) = delete;
+        virtual ~date() override;
+
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
+        [[nodiscard]] virtual std::string retrieve_value() const override;
+private:
+        void setup(const Glib::RefPtr<Gtk::ListItem>&);
+        void bind(const Glib::RefPtr<Gtk::ListItem>&);
+        void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string value{""};
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{};
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
+};
+
+class order_number : public interface::item {
+public:
+        order_number() = delete;
+        explicit order_number(const std::string&);
+        order_number(const order_number&) = delete;
+        order_number(order_number&&) = delete;
+        order_number& operator= (const order_number&) = delete;
+        order_number& operator= (order_number&&) = delete;
+        virtual ~order_number() override;
+
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
+        [[nodiscard]] virtual std::string retrieve_value() const override;
+private:
+        void setup(const Glib::RefPtr<Gtk::ListItem>&);
+        void bind(const Glib::RefPtr<Gtk::ListItem>&);
+        void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string value{""};
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{};
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
+};
 }
 
 class column_view : public interface::view {
@@ -74,14 +121,15 @@ public:
         column_view& operator= (column_view&&) = delete;
         virtual ~column_view();
 
-        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&);
-        [[nodiscard]] virtual bool is_not_valid() const;
-        [[nodiscard]] virtual bool add_column(const interface::item&);
-        [[nodiscard]] virtual bool populate();
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual bool add_column(const interface::item&) override;
+        [[nodiscard]] virtual bool populate(const interface::feature&) override;
 
 private:
         std::string name{""};
         std::unique_ptr<Gtk::ColumnView> view{};
+	std::shared_ptr<Gtk::Adjustment> adjustment{};
         std::shared_ptr<Gio::ListStore<statement::columns::entries>> store{};
 };
 }
