@@ -1,13 +1,15 @@
 /********************************************************
- * Contents: Statement data definition
+ * Contents: Statement column decleration
  * Author: Dawid J. Blom
- * Date: February 19, 2025
+ * Date: April 4, 2025
  *
  * NOTE:
  *******************************************************/
 #ifndef _STATEMENT_DATA_H_
 #define _STATEMENT_DATA_H_
-#include <statement_column.h>
+#include <mutex>
+#include <string>
+#include <cstdint>
 
 namespace data {
 struct statement {
@@ -19,11 +21,47 @@ public:
         statement& operator= (statement&&);
         virtual ~statement() = default;
 
-	virtual void set_columns(const data::statement_column&);
-	[[nodiscard]] virtual data::statement_column get_columns() const;
+        [[nodiscard]] virtual bool is_valid() const;
+        virtual void set_invoice_number(const std::string&);
+        [[nodiscard]] virtual std::string get_invoice_number() const;
+        virtual void set_date(const std::string&);
+        [[nodiscard]] virtual std::string get_date() const;
+        virtual void set_order_number(const std::string&);
+        [[nodiscard]] virtual std::string get_order_number() const;
+        virtual void set_paid_status(const std::string&);
+        [[nodiscard]] virtual std::string get_paid_status() const;
+        virtual void set_price(const std::string&);
+        [[nodiscard]] virtual std::string get_price() const;
 
 private:
-	data::statement_column columns{};
+        [[nodiscard]] bool check_flags() const;
+        void set_flag(const int&);
+        void clear_flag(const int&);
+
+private:
+        using mask_type = std::uint8_t;
+
+        std::string invoice_number{""};
+        std::string date{""};
+        std::string order_number{""};
+        std::string paid_status{""};
+        std::string price{""};
+        mask_type flags{0x0};
+        std::mutex data_mutex{};
+        mask_type mask{0x1F};
+
+        enum FLAG {
+                INVOICE_NUMBER = 0,
+                DATE,
+                ORDER_NUMBER,
+                PAID_STATUS,
+                PRICE
+        };
+
+        enum BIT {
+                CLEAR = 0,
+                SET
+        };
 };
 }
 #endif

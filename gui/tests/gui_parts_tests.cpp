@@ -13,7 +13,7 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <statement_page.h>
-#include <statement_column.h>
+#include <statement_data.h>
 extern "C"
 {
 
