@@ -223,7 +223,7 @@ TEST(statement_page_column_view, column_view_add_column)
  * 6) The column invoice number should be set. (Done)
  * 7) The column must have the ability to verify it's validity. (Done)
   ******************************************************************************/
-TEST_GROUP(statement_column_invoice_number)
+TEST_GROUP(statement_data_invoice_number_test)
 {
         std::string title{"test"};
         Glib::RefPtr<Gtk::Builder> builder{};
@@ -255,12 +255,12 @@ TEST_GROUP(statement_column_invoice_number)
 	}
 };
 
-TEST(statement_column_invoice_number, check_if_the_column_is_valid_after_creation)
+TEST(statement_data_invoice_number_test, check_if_the_column_is_valid_after_creation)
 {
         CHECK_EQUAL(false, invoice_number.is_not_valid());
 }
 
-TEST(statement_column_invoice_number, retrieve_the_column)
+TEST(statement_data_invoice_number_test, retrieve_the_column)
 {
         Glib::RefPtr<Gtk::ColumnViewColumn> column{invoice_number.retrieve_item()};
         view->append_column(column);
@@ -269,7 +269,7 @@ TEST(statement_column_invoice_number, retrieve_the_column)
         CHECK_EQUAL(title, result);
 }
 
-TEST(statement_column_invoice_number, retrieve_value)
+TEST(statement_data_invoice_number_test, retrieve_value)
 {
         store->append(gui::part::statement::columns::entries::create("INV-200",
                                                                      "2025-06-14",

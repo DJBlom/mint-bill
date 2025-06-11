@@ -18,7 +18,10 @@ extern "C"
 
 
 /***************************GUI PAGE STATEMENT TEST LIST***********************
- * 1)
+ * 1) The statements data should be placed in columns on a single row.
+ * 2) The user should be able to see the invoices associated with each
+ *    statement.
+ * 3)
  ******************************************************************************/
 TEST_GROUP(statement_page_test)
 {
