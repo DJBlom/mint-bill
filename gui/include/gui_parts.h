@@ -190,7 +190,7 @@ private:
 class search_bar : public interface::search {
 public:
 	search_bar() = delete;
-	explicit search_bar(const std::string&);
+	explicit search_bar(const std::string&, const std::string&);
 	search_bar(const search_bar&) = delete;
 	search_bar(search_bar&&) = delete;
 	search_bar& operator= (const search_bar&) = delete;
@@ -203,8 +203,10 @@ public:
         [[nodiscard]] virtual std::string keyword() override;
 
 private:
-	std::string name{""};
-	std::string search_value{""};
+	std::string stack_name{""};
+	std::string search_bar_name{""};
+	std::string search_keyword{""};
+        std::unique_ptr<Gtk::Stack> gui_stack{};
         std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
 };
 

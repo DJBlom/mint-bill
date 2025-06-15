@@ -745,9 +745,11 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 /***************************************************************************
  * Search Bar
  **************************************************************************/
-gui::part::search_bar::search_bar(const std::string& _name) : name{_name}
+gui::part::search_bar::search_bar(const std::string& _stack_name, const std::string& _search_bar_name)
+	: stack_name{_stack_name}, search_bar_name{_search_bar_name}
 {
-        name.shrink_to_fit();
+        stack_name.shrink_to_fit();
+        search_bar_name.shrink_to_fit();
 }
 
 gui::part::search_bar::~search_bar() {}
@@ -762,9 +764,11 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
         }
         else
         {
+                this->gui_stack = std::unique_ptr<Gtk::Stack>{
+			_ui_builder->get_widget<Gtk::Stack>(this->stack_name)};
                 this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
-			_ui_builder->get_widget<Gtk::SearchEntry>(this->name)};
-                if (this->gui_search_bar)
+			_ui_builder->get_widget<Gtk::SearchEntry>(this->search_bar_name)};
+                if (is_not_valid() == false)
                 {
                         success = true;
                 }
@@ -775,7 +779,7 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 
 bool gui::part::search_bar::is_not_valid() const
 {
-        return !(this->gui_search_bar);
+        return !(this->gui_search_bar || this->gui_stack);
 }
 
 bool gui::part::search_bar::connect()
@@ -789,10 +793,17 @@ bool gui::part::search_bar::connect()
 	else
 	{
 		success = true;
+		this->gui_stack->property_visible_child_name()
+			.signal_changed()
+			.connect([this]() {
+				std::string name = this->gui_stack->get_visible_child_name();
+				this->gui_search_bar->set_text("");
+				std::cout << "Switched to page: " << name << std::endl;
+			});
 		this->gui_search_bar->signal_changed().connect([this] () {
 			Glib::signal_timeout().connect_once([this](){
-				this->search_value = this->gui_search_bar->get_text();
-				std::cout << "++++++++++++++++++++++++ Searched for: " << this->search_value << std::endl;
+				this->search_keyword = this->gui_search_bar->get_text();
+				std::cout << "++++++++++++++++++++++++ Searched for: " << this->search_keyword << std::endl;
 			}, 200, Glib::PRIORITY_DEFAULT);
 		});
 	}
@@ -802,7 +813,7 @@ bool gui::part::search_bar::connect()
 
 std::string gui::part::search_bar::keyword()
 {
-	return "";
+	return this->search_keyword;
 }
 
 

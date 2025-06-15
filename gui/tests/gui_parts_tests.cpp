@@ -27,7 +27,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(gui_part_search_bar)
 {
-        gui::part::search_bar search_bar{"business-name-search"};
+        gui::part::search_bar search_bar{"business-stack", "business-name-search"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
 	void setup()
