@@ -1,23 +1,28 @@
 
 #ifndef _PART_H_
 #define _PART_H_
+#include <any>
+#include <vector>
+#include <string>
 #include <gtkmm.h>
 #include <interfaces.h>
 
 namespace interface {
-//class view {
-//public:
-//        virtual ~view() = default;
-//
-//        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-//        [[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
-//};
+class search {
+public:
+        virtual ~search() = default;
 
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+        [[nodiscard]] virtual bool is_not_valid() const = 0;
+        [[nodiscard]] virtual bool connect() = 0;
+        [[nodiscard]] virtual std::string keyword() = 0;
+};
 
 class item {
 public:
         virtual ~item() = default;
 
+        [[nodiscard]] virtual bool create(const std::string&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const = 0;
         [[nodiscard]] virtual std::string retrieve_value() const = 0;
@@ -31,6 +36,7 @@ public:
         [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
         [[nodiscard]] virtual bool populate(const interface::feature&) = 0;
+        [[nodiscard]] virtual std::vector<std::any> extract() = 0;
 };
 
 class dialog {

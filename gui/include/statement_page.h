@@ -31,6 +31,11 @@ private:
         part::dialog print_dialog{"statement-print-alert"};
         part::button email_button{"statement-email-button"};
         part::dialog email_dialog{"statement-email-alert"};
+	part::statement::columns::date date{};
+	part::statement::columns::price price{};
+	part::statement::columns::paid_status paid_status{};
+	part::statement::columns::order_number order_number{};
+	part::statement::columns::invoice_number invoice_number{};
         part::statement::column_view statement_view{"statement-column-view"};
 };
 }

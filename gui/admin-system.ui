@@ -46,7 +46,11 @@
         </child>
         <child type="start">
           <object class="GtkSearchEntry" id="business-name-search">
+            <property name="hexpand">True</property>
+            <property name="hexpand-set">True</property>
             <property name="placeholder-text">Soek vir besigheid . . .</property>
+            <property name="vexpand">True</property>
+            <property name="vexpand-set">True</property>
           </object>
         </child>
       </object>
@@ -507,13 +511,9 @@
                                 <child>
                                   <object class="GtkScrolledWindow" id="statement-scroll-window-column-view">
                                     <property name="child">
-                                      <object class="GtkColumnView" id="statement-column-view"/>
-                                    </property>
-                                    <property name="hadjustment">
-                                      <object class="GtkAdjustment" id="statement-column-view-hadjustment"/>
-                                    </property>
-                                    <property name="vadjustment">
-                                      <object class="GtkAdjustment" id="statement-column-view-vadjustment"/>
+                                      <object class="GtkColumnView" id="statement-column-view">
+                                        <property name="reorderable">False</property>
+                                      </object>
                                     </property>
                                     <layout>
                                       <property name="column">0</property>

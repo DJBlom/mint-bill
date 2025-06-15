@@ -9,6 +9,8 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <vector>
+#include <iostream>
 #include <statement_data.h>
 #include <client_statement.h>
 extern "C"
@@ -34,7 +36,12 @@ TEST_GROUP(client_statement_feature_test)
 
 TEST(client_statement_feature_test, load_data_from_db)
 {
-	data::statement result{std::any_cast<data::statement>(statement.load("test_business"))};
+	std::vector<data::statement> result{};
+	std::vector<std::any> tmp = statement.load("test_business");
+	for (const std::any& stm : tmp)
+	{
+		result.push_back(std::any_cast<data::statement>(stm));
+	}
 
-	CHECK_EQUAL(true, result.is_valid());
+	CHECK_EQUAL(false, result.empty());
 }

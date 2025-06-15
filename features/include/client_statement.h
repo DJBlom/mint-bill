@@ -19,7 +19,7 @@ public:
 	client_statement& operator= (client_statement&&) = default;
 	virtual ~client_statement() override;
 
-	[[nodiscard]] virtual std::any load(const std::string&) const override;
+	[[nodiscard]] virtual std::vector<std::any> load(const std::string&) const override;
 };
 }
 #endif

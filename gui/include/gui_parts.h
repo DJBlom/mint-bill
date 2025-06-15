@@ -11,11 +11,11 @@ namespace columns {
 struct entries : public Glib::Object {
 public:
         static Glib::RefPtr<entries> create();
-        static Glib::RefPtr<entries> create(const std::string& _invoice_number,
-                                            const std::string& _date,
-                                            const std::string& _order_number,
-                                            const std::string& _paid_status,
-                                            const std::string& _price);
+        static Glib::RefPtr<entries> create(const std::string&,
+                                            const std::string&,
+                                            const std::string&,
+                                            const std::string&,
+                                            const std::string&);
 
 protected:
         entries() = default;
@@ -40,14 +40,14 @@ public:
 
 class invoice_number : public interface::item {
 public:
-        invoice_number() = delete;
-        explicit invoice_number(const std::string&);
+        invoice_number() = default;
         invoice_number(const invoice_number&) = delete;
         invoice_number(invoice_number&&) = delete;
         invoice_number& operator= (const invoice_number&) = delete;
         invoice_number& operator= (invoice_number&&) = delete;
         virtual ~invoice_number() override;
 
+        [[nodiscard]] virtual bool create(const std::string&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
         [[nodiscard]] virtual std::string retrieve_value() const override;
@@ -64,14 +64,14 @@ private:
 
 class date : public interface::item {
 public:
-        date() = delete;
-        explicit date(const std::string&);
+        date() = default;
         date(const date&) = delete;
         date(date&&) = delete;
         date& operator= (const date&) = delete;
         date& operator= (date&&) = delete;
         virtual ~date() override;
 
+        [[nodiscard]] virtual bool create(const std::string&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
         [[nodiscard]] virtual std::string retrieve_value() const override;
@@ -88,14 +88,62 @@ private:
 
 class order_number : public interface::item {
 public:
-        order_number() = delete;
-        explicit order_number(const std::string&);
+        order_number() = default;
         order_number(const order_number&) = delete;
         order_number(order_number&&) = delete;
         order_number& operator= (const order_number&) = delete;
         order_number& operator= (order_number&&) = delete;
         virtual ~order_number() override;
 
+        [[nodiscard]] virtual bool create(const std::string&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
+        [[nodiscard]] virtual std::string retrieve_value() const override;
+private:
+        void setup(const Glib::RefPtr<Gtk::ListItem>&);
+        void bind(const Glib::RefPtr<Gtk::ListItem>&);
+        void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string value{""};
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{};
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
+};
+
+class paid_status : public interface::item {
+public:
+        paid_status() = default;
+        paid_status(const paid_status&) = delete;
+        paid_status(paid_status&&) = delete;
+        paid_status& operator= (const paid_status&) = delete;
+        paid_status& operator= (paid_status&&) = delete;
+        virtual ~paid_status() override;
+
+        [[nodiscard]] virtual bool create(const std::string&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
+        [[nodiscard]] virtual std::string retrieve_value() const override;
+private:
+        void setup(const Glib::RefPtr<Gtk::ListItem>&);
+        void bind(const Glib::RefPtr<Gtk::ListItem>&);
+        void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string value{""};
+        Glib::RefPtr<Gtk::ColumnViewColumn> column{};
+        Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
+};
+
+class price : public interface::item {
+public:
+        price() = default;
+        price(const price&) = delete;
+        price(price&&) = delete;
+        price& operator= (const price&) = delete;
+        price& operator= (price&&) = delete;
+        virtual ~price() override;
+
+        [[nodiscard]] virtual bool create(const std::string&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual Glib::RefPtr<Gtk::ColumnViewColumn> retrieve_item() const override;
         [[nodiscard]] virtual std::string retrieve_value() const override;
@@ -125,15 +173,40 @@ public:
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual bool add_column(const interface::item&) override;
         [[nodiscard]] virtual bool populate(const interface::feature&) override;
+        [[nodiscard]] virtual std::vector<std::any> extract() override;
 
 private:
         std::string name{""};
         std::unique_ptr<Gtk::ColumnView> view{};
 	std::shared_ptr<Gtk::Adjustment> adjustment{};
         std::shared_ptr<Gio::ListStore<statement::columns::entries>> store{};
+
+	enum DURATION {
+		MS_30 = 30
+	};
 };
 }
 
+class search_bar : public interface::search {
+public:
+	search_bar() = delete;
+	explicit search_bar(const std::string&);
+	search_bar(const search_bar&) = delete;
+	search_bar(search_bar&&) = delete;
+	search_bar& operator= (const search_bar&) = delete;
+	search_bar& operator= (search_bar&&) = delete;
+        virtual ~search_bar() override;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual bool connect() override;
+        [[nodiscard]] virtual std::string keyword() override;
+
+private:
+	std::string name{""};
+	std::string search_value{""};
+        std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
+};
 
 class dialog : public interface::dialog {
 public:

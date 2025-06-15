@@ -86,13 +86,38 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			return false;
 		}
 
-		part::statement::columns::invoice_number invoice_number{"invoice number"};
-		(void) this->statement_view.add_column(invoice_number);
+		(void) this->date.create("Date");
+		(void) this->price.create("Price");
+		(void) this->paid_status.create("Paid Status");
+		(void) this->order_number.create("Order Number");
+		(void) this->invoice_number.create("Invoice Number");
+
+		if (this->statement_view.add_column(invoice_number) == false)
+		{
+			return false;
+		}
+		if (this->statement_view.add_column(date) == false)
+		{
+			return false;
+		}
+		if (this->statement_view.add_column(order_number) == false)
+		{
+			return false;
+		}
+		if (this->statement_view.add_column(paid_status) == false)
+		{
+			return false;
+		}
+		if (this->statement_view.add_column(price) == false)
+		{
+			return false;
+		}
+
 		feature::client_statement client_statement{};
 		if (this->statement_view.is_not_valid())
 			return false;
-		/*else*/
-		/*	(void) this->statement_view.populate(client_statement);*/
+		else
+			(void) this->statement_view.populate(client_statement);
         }
 
         return true;

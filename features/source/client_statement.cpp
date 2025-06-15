@@ -10,16 +10,20 @@
 
 feature::client_statement::~client_statement() {}
 
-std::any feature::client_statement::load(const std::string& _business_name) const
+std::vector<std::any> feature::client_statement::load(const std::string& _business_name) const
 {
 	(void) _business_name;
-	data::statement statement_data{};
-        statement_data.set_invoice_number("1234");
-        statement_data.set_date("2025/06/14");
-        statement_data.set_order_number("md 1234");
-        statement_data.set_paid_status("Yes");
-        statement_data.set_price("R1234.00");
-	std::any temp{statement_data};
+	std::vector<std::any> temp{};
+	for (int i = 0; i < 100; ++i)
+	{
+		data::statement data{};
+		       data.set_invoice_number("INV-" + std::to_string(i));
+		       data.set_date("2025/06/14");
+		       data.set_order_number("MD 1234");
+		       data.set_paid_status("paid");
+		       data.set_price("R123" + std::to_string(i) + ".00");
+		temp.push_back(data);
+	}
 
 	return temp;
 }

@@ -9,13 +9,14 @@
 #define _INTERFACES_H_
 #include <any>
 #include <string>
+#include <vector>
 
 namespace interface {
 class feature {
 public:
 	virtual ~feature() = default;
 
-	[[nodiscard]] virtual std::any load(const std::string&) const = 0;
+	[[nodiscard]] virtual std::vector<std::any> load(const std::string&) const = 0;
 };
 }
 #endif
