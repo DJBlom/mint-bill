@@ -787,7 +787,7 @@ bool gui::part::search_bar::connect_signals()
         bool success{false};
 	if (this->is_not_valid())
 	{
-		syslog(LOG_CRIT, "The search bar is not valid - "
+		syslog(LOG_CRIT, "The search bar or the stack is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -836,7 +836,12 @@ void gui::part::search_bar::on_search_changed()
 {
 	Glib::signal_timeout().connect_once([&, this]() {
 		std::string keyword = this->gui_search_bar->get_text();              // Glib::ustring
-		if (!keyword.empty())
+		if (keyword.empty())
+		{
+			syslog(LOG_CRIT, "The keyword is empty is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
 		{
 			notify_current_page(keyword);
 		}
@@ -845,15 +850,17 @@ void gui::part::search_bar::on_search_changed()
 
 void gui::part::search_bar::notify_current_page(const std::string& _keyword) const
 {
-	/*(void) _keyword;*/
 	std::unordered_map<
 		std::string,
 		std::function<void(const std::string&)>
 		>::iterator iterator = this->subscribers.find(this->current_stack_page);
-//	(void) iterator;
-	if (iterator != this->subscribers.end())
+	if (iterator == this->subscribers.end())
 	{
-		std::cout << "Keyword searching for: " << _keyword << " | From stack page: " << this->current_stack_page << std::endl;
+		syslog(LOG_CRIT, "The subscriber has not been registered - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
 		iterator->second(_keyword);
 	}
 }
