@@ -5,12 +5,14 @@
  *
  * NOTE:
  *******************************************************/
+#include <iostream>
 #include <statement_page.h>
 #include <client_statement.h>
 
 gui::statement_page::~statement_page() {}
 
-bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+//bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, const interface::search& _search_bar)
 {
         if (_ui_builder)
         {
@@ -114,10 +116,18 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 		}
 
 		feature::client_statement client_statement{};
-		if (this->statement_view.is_not_valid())
-			return false;
-		else
-			(void) this->statement_view.populate(client_statement);
+//		(void) _search_bar;
+		_search_bar.subscribe("statements-page", [this, client_statement](const std::string& _keyword) {
+			(void) this->statement_view.populate(client_statement.load(_keyword));
+			std::cout << " Calling callback: \n";
+		});
+		/*if (this->statement_view.is_not_valid())*/
+		/*	return false;*/
+		/*else*/
+		/*{*/
+		/*	(void) this->statement_view.populate(client_statement.load("business"));*/
+		/*}*/
+
         }
 
         return true;

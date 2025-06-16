@@ -5,7 +5,10 @@
 #include <vector>
 #include <string>
 #include <gtkmm.h>
+#include <functional>
 #include <interfaces.h>
+
+
 
 namespace interface {
 class search {
@@ -14,8 +17,9 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
-        [[nodiscard]] virtual bool connect() = 0;
-        [[nodiscard]] virtual std::string keyword() = 0;
+        [[nodiscard]] virtual bool connect_signals() = 0;
+	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
+				      std::function<void(const std::string&)> callback) const = 0;
 };
 
 class item {
@@ -35,7 +39,7 @@ public:
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
-        [[nodiscard]] virtual bool populate(const interface::feature&) = 0;
+        [[nodiscard]] virtual bool populate(const std::vector<std::any>&) = 0;
         [[nodiscard]] virtual std::vector<std::any> extract() = 0;
 };
 

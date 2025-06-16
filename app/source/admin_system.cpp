@@ -66,7 +66,10 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->statement_page.create(ui_builder) == false)
+		(void) this->search_bar.create(ui_builder);
+		(void) this->search_bar.connect_signals();
+
+                if (this->statement_page.create(ui_builder, this->search_bar) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the statement page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);

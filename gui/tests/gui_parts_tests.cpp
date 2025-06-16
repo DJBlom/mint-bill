@@ -10,6 +10,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+
 #include <gtkmm.h>
 #include <iostream>
 #include <statement_page.h>
@@ -20,6 +21,11 @@ extern "C"
 
 }
 
+
+void callback_function(const std::string& _business_name)
+{
+	std::cout << "Business name" << _business_name << std::endl;
+}
 
 
 /**********************************GUI PART SEARCH BAR TEST LIST***************
@@ -64,15 +70,15 @@ TEST(gui_part_search_bar, connect_search_bar)
 {
 	(void) search_bar.create(builder);
 
-	CHECK_EQUAL(true, search_bar.connect());
+	CHECK_EQUAL(true, search_bar.connect_signals());
 }
 
-TEST(gui_part_search_bar, search_value)
+TEST(gui_part_search_bar, add_subscriber)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.connect();
+	(void) search_bar.connect_signals();
 
-	CHECK_EQUAL("", search_bar.keyword());
+	CHECK_EQUAL(true, search_bar.subscribe("statement-page", callback_function));
 }
 
 
@@ -273,7 +279,7 @@ TEST(statement_page_column_view, column_view_populate)
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
 
-        CHECK_EQUAL(true, column_view.populate(client_statement));
+        CHECK_EQUAL(true, column_view.populate(client_statement.load("business")));
 }
 
 TEST(statement_page_column_view, extract_data_from_store)
@@ -286,7 +292,7 @@ TEST(statement_page_column_view, extract_data_from_store)
         (void) column_view.add_column(order_number);
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
-        (void) column_view.populate(client_statement);
+        (void) column_view.populate(client_statement.load("business"));
 	std::vector<std::any> records(column_view.extract());
 
         CHECK_EQUAL(100, records.size());

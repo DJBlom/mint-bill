@@ -3,6 +3,7 @@
 #define _GUI_PART_H_
 #include <part.h>
 #include <syslog.h>
+#include <unordered_map>
 
 namespace gui {
 namespace part {
@@ -172,7 +173,7 @@ public:
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual bool add_column(const interface::item&) override;
-        [[nodiscard]] virtual bool populate(const interface::feature&) override;
+        [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
         [[nodiscard]] virtual std::vector<std::any> extract() override;
 
 private:
@@ -199,15 +200,24 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-        [[nodiscard]] virtual bool connect() override;
-        [[nodiscard]] virtual std::string keyword() override;
+        [[nodiscard]] virtual bool connect_signals() override;
+	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
+				      std::function<void(const std::string&)> callback) const override;
+
+private:
+	void on_page_switched();
+	void on_search_changed();
+	void notify_current_page(const std::string&) const;
 
 private:
 	std::string stack_name{""};
 	std::string search_bar_name{""};
 	std::string search_keyword{""};
+	std::string current_stack_page{""};
         std::unique_ptr<Gtk::Stack> gui_stack{};
-        std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
+	std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
+	mutable std::unordered_map<std::string,
+		std::function<void(const std::string&)>> subscribers{};
 };
 
 class dialog : public interface::dialog {

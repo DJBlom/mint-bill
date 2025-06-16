@@ -25,6 +25,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(statement_page_test)
 {
+        gui::part::search_bar search_bar{"business-stack", "business-name-search"};
         gui::statement_page page;
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
@@ -33,6 +34,8 @@ TEST_GROUP(statement_page_test)
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
                 builder->add_from_file("../gui/admin-system.ui");
+		(void) search_bar.create(builder);
+		(void) search_bar.connect_signals();
 	}
 
 	void teardown()
@@ -42,5 +45,5 @@ TEST_GROUP(statement_page_test)
 
 TEST(statement_page_test, create_statement_page)
 {
-        CHECK_EQUAL(true, page.create(builder));
+        CHECK_EQUAL(true, page.create(builder, search_bar));
 }

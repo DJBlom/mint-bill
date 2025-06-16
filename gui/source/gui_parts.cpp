@@ -1,8 +1,8 @@
 
+#include <gui_parts.h>
 #include <sql.h>
 #include <errors.h>
 #include <iostream>
-#include <gui_parts.h>
 #include <statement_data.h>
 
 
@@ -662,7 +662,7 @@ bool gui::part::statement::column_view::add_column(const interface::item& _item)
         return added;
 }
 
-bool gui::part::statement::column_view::populate(const interface::feature& _feature)
+bool gui::part::statement::column_view::populate(const std::vector<std::any>& _statements)
 {
 	bool success{false};
 	if (this->is_not_valid())
@@ -674,8 +674,7 @@ bool gui::part::statement::column_view::populate(const interface::feature& _feat
 	else
 	{
 		this->store->remove_all();
-		std::vector<std::any> statements = _feature.load("test_business");
-		for (const std::any& statement : statements)
+		for (const std::any& statement : _statements)
 		{
 			data::statement data{std::any_cast<data::statement>(statement)};
 			if (data.is_valid() == false)
@@ -750,6 +749,7 @@ gui::part::search_bar::search_bar(const std::string& _stack_name, const std::str
 {
         stack_name.shrink_to_fit();
         search_bar_name.shrink_to_fit();
+
 }
 
 gui::part::search_bar::~search_bar() {}
@@ -782,7 +782,7 @@ bool gui::part::search_bar::is_not_valid() const
         return !(this->gui_search_bar || this->gui_stack);
 }
 
-bool gui::part::search_bar::connect()
+bool gui::part::search_bar::connect_signals()
 {
         bool success{false};
 	if (this->is_not_valid())
@@ -793,28 +793,75 @@ bool gui::part::search_bar::connect()
 	else
 	{
 		success = true;
+		this->current_stack_page = this->gui_stack->get_visible_child_name();
 		this->gui_stack->property_visible_child_name()
 			.signal_changed()
-			.connect([this]() {
-				std::string name = this->gui_stack->get_visible_child_name();
-				this->gui_search_bar->set_text("");
-				std::cout << "Switched to page: " << name << std::endl;
-			});
-		this->gui_search_bar->signal_changed().connect([this] () {
-			Glib::signal_timeout().connect_once([this](){
-				this->search_keyword = this->gui_search_bar->get_text();
-				std::cout << "++++++++++++++++++++++++ Searched for: " << this->search_keyword << std::endl;
-			}, 200, Glib::PRIORITY_DEFAULT);
-		});
+			.connect(sigc::mem_fun(*this, &search_bar::on_page_switched));
+
+		this->gui_search_bar->signal_search_changed()
+			.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
 	}
 
 	return success;
 }
 
-std::string gui::part::search_bar::keyword()
+bool gui::part::search_bar::subscribe(const std::string& _page_name,
+			      std::function<void(const std::string&)> _callback) const
 {
-	return this->search_keyword;
+	bool success{false};
+	std::pair<
+	std::unordered_map<
+		std::string,
+		std::function<void(const std::string&)>>::iterator,
+		bool> result{this->subscribers.emplace(_page_name, std::move(_callback))};
+	if (result.second)
+	{
+		success = true;
+	}
+	else
+	{
+		result.first->second = std::move(_callback);
+	}
+
+	return success;
 }
+
+void gui::part::search_bar::on_page_switched()
+{
+	this->gui_search_bar->set_text("");
+	this->current_stack_page = this->gui_stack->get_visible_child_name();
+}
+
+void gui::part::search_bar::on_search_changed()
+{
+	Glib::signal_timeout().connect_once([&, this]() {
+		std::string keyword = this->gui_search_bar->get_text();              // Glib::ustring
+		if (!keyword.empty())
+		{
+			notify_current_page(keyword);
+		}
+	}, 200, Glib::PRIORITY_DEFAULT);
+}
+
+void gui::part::search_bar::notify_current_page(const std::string& _keyword) const
+{
+	/*(void) _keyword;*/
+	std::unordered_map<
+		std::string,
+		std::function<void(const std::string&)>
+		>::iterator iterator = this->subscribers.find(this->current_stack_page);
+//	(void) iterator;
+	if (iterator != this->subscribers.end())
+	{
+		std::cout << "Keyword searching for: " << _keyword << " | From stack page: " << this->current_stack_page << std::endl;
+		iterator->second(_keyword);
+	}
+}
+
+
+
+
+
 
 
 /***************************************************************************

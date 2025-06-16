@@ -26,6 +26,7 @@ CPPUTEST_CFLAGS += $(shell curl-config --cflags)
 CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairomm-1.16 gtkmm-4.0 poppler-cpp)
 CPPUTEST_LDFLAGS += $(shell curl-config --libs)
 
+
 SRC_DIRS :=\
 	$(PROJECT_DIR)/app/source\
 	$(PROJECT_DIR)/gui/source\
