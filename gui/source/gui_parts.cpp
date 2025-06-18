@@ -768,10 +768,13 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 			_ui_builder->get_widget<Gtk::Stack>(this->stack_name)};
                 this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
 			_ui_builder->get_widget<Gtk::SearchEntry>(this->search_bar_name)};
-                if (is_not_valid() == false)
-                {
-                        success = true;
-                }
+		this->current_stack_page = this->gui_stack->get_visible_child_name();
+		this->gui_stack->property_visible_child_name()
+			.signal_changed()
+			.connect(sigc::mem_fun(*this, &search_bar::on_page_switched));
+		this->gui_search_bar->signal_search_changed()
+			.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
+		success = true;
         }
 
         return success;
@@ -782,45 +785,29 @@ bool gui::part::search_bar::is_not_valid() const
         return !(this->gui_search_bar || this->gui_stack);
 }
 
-bool gui::part::search_bar::connect_signals()
-{
-        bool success{false};
-	if (this->is_not_valid())
-	{
-		syslog(LOG_CRIT, "The search bar or the stack is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		success = true;
-		this->current_stack_page = this->gui_stack->get_visible_child_name();
-		this->gui_stack->property_visible_child_name()
-			.signal_changed()
-			.connect(sigc::mem_fun(*this, &search_bar::on_page_switched));
-
-		this->gui_search_bar->signal_search_changed()
-			.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
-	}
-
-	return success;
-}
-
 bool gui::part::search_bar::subscribe(const std::string& _page_name,
 			      std::function<void(const std::string&)> _callback) const
 {
 	bool success{false};
-	std::pair<
-	std::unordered_map<
-		std::string,
-		std::function<void(const std::string&)>>::iterator,
-		bool> result{this->subscribers.emplace(_page_name, std::move(_callback))};
-	if (result.second)
+	if (_page_name.empty() || !_callback)
 	{
-		success = true;
+		return success;
 	}
 	else
 	{
-		result.first->second = std::move(_callback);
+		std::pair<
+		std::unordered_map<
+		std::string,
+		std::function<void(const std::string&)>>::iterator,
+		bool> result{this->subscribers.emplace(_page_name, std::move(_callback))};
+		if (result.second)
+		{
+			success = true;
+		}
+		else
+		{
+			result.first->second = std::move(_callback);
+		}
 	}
 
 	return success;
@@ -834,18 +821,16 @@ void gui::part::search_bar::on_page_switched()
 
 void gui::part::search_bar::on_search_changed()
 {
-	Glib::signal_timeout().connect_once([&, this]() {
-		std::string keyword = this->gui_search_bar->get_text();              // Glib::ustring
-		if (keyword.empty())
-		{
-			syslog(LOG_CRIT, "The keyword is empty is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-		}
-		else
-		{
-			notify_current_page(keyword);
-		}
-	}, 200, Glib::PRIORITY_DEFAULT);
+	std::string keyword = this->gui_search_bar->get_text();
+	if (keyword.empty())
+	{
+		syslog(LOG_CRIT, "The keyword is empty - "
+	 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		notify_current_page(keyword);
+	}
 }
 
 void gui::part::search_bar::notify_current_page(const std::string& _keyword) const

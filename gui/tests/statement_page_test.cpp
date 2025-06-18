@@ -35,7 +35,6 @@ TEST_GROUP(statement_page_test)
                 builder = Gtk::Builder::create();
                 builder->add_from_file("../gui/admin-system.ui");
 		(void) search_bar.create(builder);
-		(void) search_bar.connect_signals();
 	}
 
 	void teardown()

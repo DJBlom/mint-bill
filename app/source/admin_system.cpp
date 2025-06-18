@@ -45,6 +45,13 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
+		if (this->search_bar.create(ui_builder) == false)
+		{
+                        syslog(LOG_CRIT, "Failed to create the search bar - "
+                                         "filename %s, line number %d", __FILE__, __LINE__);
+			return;
+		}
+
                 if (this->business_page.create(ui_builder) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the business page - "
@@ -65,9 +72,6 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
-
-		(void) this->search_bar.create(ui_builder);
-		(void) this->search_bar.connect_signals();
 
                 if (this->statement_page.create(ui_builder, this->search_bar) == false)
                 {

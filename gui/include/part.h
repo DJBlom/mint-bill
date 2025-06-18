@@ -17,7 +17,6 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
-        [[nodiscard]] virtual bool connect_signals() = 0;
 	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
 				      std::function<void(const std::string&)> callback) const = 0;
 };

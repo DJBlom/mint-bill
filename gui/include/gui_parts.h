@@ -200,7 +200,6 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-        [[nodiscard]] virtual bool connect_signals() override;
 	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
 				      std::function<void(const std::string&)> callback) const override;
 
