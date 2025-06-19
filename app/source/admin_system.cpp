@@ -52,21 +52,21 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 			return;
 		}
 
-                if (this->business_page.create(ui_builder) == false)
+                if (this->business_page.create(ui_builder, this->search_bar) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the business page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->client_register_page.create(ui_builder) == false)
+                if (this->client_register_page.create(ui_builder, this->search_bar) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the client registration page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->invoice_page.create(ui_builder) == false)
+                if (this->invoice_page.create(ui_builder, this->search_bar) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the invoice page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);

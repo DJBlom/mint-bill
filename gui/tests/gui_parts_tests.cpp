@@ -29,7 +29,11 @@ static void callback_function(const std::string& keyword) {
 
 
 /**********************************GUI PART SEARCH BAR TEST LIST***************
- * 1)
+ * 1) The user should be able to search for a business. Done
+ * 2) There should be no elements in the list if the user clears the
+ *    search. Done
+ * 3) When the user navigates to a different page, the search entry should
+ *    be automatically cleared. Done
  ******************************************************************************/
 TEST_GROUP(gui_part_search_bar)
 {
@@ -83,32 +87,32 @@ TEST(gui_part_search_bar, fail_to_add_subscriber_without_callback_function)
 {
 	(void) search_bar.create(builder);
 
-	CHECK_EQUAL(false, search_bar.subscribe("statements-page", nullptr));
+	CHECK_EQUAL(false, search_bar.subscribe("statement-page", nullptr));
 }
 
 TEST(gui_part_search_bar, add_subscriber)
 {
 	(void) search_bar.create(builder);
 
-	CHECK_EQUAL(true, search_bar.subscribe("statements-page", callback_function));
+	CHECK_EQUAL(true, search_bar.subscribe("statement-page", callback_function));
 }
 
 TEST(gui_part_search_bar, try_to_add_multiple_subscriber_to_the_same_page)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statements-page", callback_function);
+	(void) search_bar.subscribe("statement-page", callback_function);
 
-	CHECK_EQUAL(false, search_bar.subscribe("statements-page", callback_function));
+	CHECK_EQUAL(false, search_bar.subscribe("statement-page", callback_function));
 }
 
 TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statements-page", callback_function);
+	(void) search_bar.subscribe("statement-page", callback_function);
 	auto stack = builder->get_widget<Gtk::Stack>("business-stack");
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	entry->set_text("invoice123");
-	stack->set_visible_child("statements-page", Gtk::StackTransitionType::NONE);
+	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
 
 	CHECK_EQUAL("", entry->get_text());
@@ -117,7 +121,7 @@ TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change)
 TEST(gui_part_search_bar, changing_the_search_keyword_unsuccessfully)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statements-page", callback_function);
+	(void) search_bar.subscribe("statement-page", callback_function);
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	entry->set_text("");
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
@@ -129,7 +133,7 @@ TEST(gui_part_search_bar, changing_the_search_keyword_successfully)
 {
 	std::string result{"Test Business"};
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statements-page", callback_function);
+	(void) search_bar.subscribe("statement-page", callback_function);
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	entry->set_text(result);
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
@@ -142,10 +146,10 @@ TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
 {
 	std::string expected{"Test Business"};
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statements-page", callback_function);
+	(void) search_bar.subscribe("statement-page", callback_function);
 	auto stack = builder->get_widget<Gtk::Stack>("business-stack");
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
-	stack->set_visible_child("statements-page", Gtk::StackTransitionType::NONE);
+	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);
 	entry->set_text(expected);
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
 

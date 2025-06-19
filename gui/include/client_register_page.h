@@ -22,11 +22,10 @@ namespace gui {
                         client_register_page& operator= (client_register_page&&) = delete;
                         ~client_register_page() override;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::search&) override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_search();
                         void connect_save_button();
                         void connect_save_alert();
                         void connect_wrong_info_alert();

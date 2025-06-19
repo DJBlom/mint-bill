@@ -14,15 +14,22 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 {
 	(void) _business_name;
 	std::vector<std::any> temp{};
-	for (int i = 0; i < 100; ++i)
+	if (_business_name.empty())
 	{
-		data::statement data{};
-		       data.set_invoice_number("INV-" + std::to_string(i));
-		       data.set_date("2025/06/14");
-		       data.set_order_number("MD 1234");
-		       data.set_paid_status("paid");
-		       data.set_price("R123" + std::to_string(i) + ".00");
-		temp.push_back(data);
+
+	}
+	else
+	{
+		for (int i = 0; i < 100; ++i)
+		{
+			data::statement data{};
+			data.set_invoice_number("INV-" + std::to_string(i));
+			data.set_date("2025/06/14");
+			data.set_order_number("MD 1234");
+			data.set_paid_status("paid");
+			data.set_price("R123" + std::to_string(i) + ".00");
+			temp.push_back(data);
+		}
 	}
 
 	return temp;

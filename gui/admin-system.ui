@@ -118,6 +118,7 @@
                                     <property name="vexpand">True</property>
                                     <layout>
                                       <property name="column">0</property>
+                                      <property name="column-span">2</property>
                                       <property name="row">2</property>
                                     </layout>
                                   </object>
@@ -130,8 +131,8 @@
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
                                     <layout>
-                                      <property name="column">1</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column">2</property>
+                                      <property name="column-span">2</property>
                                       <property name="row">2</property>
                                     </layout>
                                   </object>
@@ -232,17 +233,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkSearchEntry" id="invoice-search-entry">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="search-delay">0</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkEntry" id="new-invoice-number-entry">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
@@ -253,7 +243,7 @@
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
                                     <layout>
-                                      <property name="column">1</property>
+                                      <property name="column">0</property>
                                       <property name="column-span">2</property>
                                       <property name="row">1</property>
                                     </layout>
@@ -270,7 +260,8 @@
                                     <property name="valign">center</property>
                                     <property name="vexpand">True</property>
                                     <layout>
-                                      <property name="column">3</property>
+                                      <property name="column">2</property>
+                                      <property name="column-span">2</property>
                                       <property name="row">1</property>
                                     </layout>
                                   </object>
@@ -546,7 +537,7 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">statements-page</property>
+                        <property name="name">statement-page</property>
                         <property name="title">State</property>
                       </object>
                     </child>
@@ -573,7 +564,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">2</property>
+                                      <property name="row">1</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -584,7 +575,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">3</property>
+                                      <property name="row">2</property>
                                       <property name="row-span">1</property>
                                     </layout>
                                   </object>
@@ -596,7 +587,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">5</property>
+                                      <property name="row">4</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -607,7 +598,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">6</property>
+                                      <property name="row">5</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -618,7 +609,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">8</property>
+                                      <property name="row">7</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -629,7 +620,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">10</property>
+                                      <property name="row">9</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -656,7 +647,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">9</property>
+                                      <property name="row">8</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -667,18 +658,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">4</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSearchEntry" id="register-search-entry">
-                                    <property name="placeholder-text">Soek vir besigheid . . .</property>
-                                    <property name="search-delay">0</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">1</property>
+                                      <property name="row">3</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -689,7 +669,7 @@
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>
-                                      <property name="row">7</property>
+                                      <property name="row">6</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -702,9 +682,9 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage" id="business-info">
+                      <object class="GtkStackPage" id="business-page">
                         <property name="child">
-                          <object class="GtkBox" id="business-info-box">
+                          <object class="GtkBox" id="business-page-box">
                             <property name="margin-bottom">50</property>
                             <property name="margin-end">150</property>
                             <property name="margin-start">150</property>
@@ -712,13 +692,13 @@
                             <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkGrid" id="business-info-grid">
+                              <object class="GtkGrid" id="business-page-grid">
                                 <property name="column-homogeneous">True</property>
                                 <property name="column-spacing">10</property>
                                 <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">10</property>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-name-entry">
+                                  <object class="GtkEntry" id="business-page-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Besigheid se naam . . .</property>
                                     <layout>
@@ -729,7 +709,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-address-entry">
+                                  <object class="GtkEntry" id="business-page-address-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Straat adres . . .</property>
                                     <layout>
@@ -741,7 +721,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-town-name-entry">
+                                  <object class="GtkEntry" id="business-page-town-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Dorp se naam . . .</property>
                                     <layout>
@@ -752,7 +732,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-cell-number-entry">
+                                  <object class="GtkEntry" id="business-page-cell-number-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Kontak nommer . . .</property>
                                     <layout>
@@ -763,7 +743,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-bank-name-entry">
+                                  <object class="GtkEntry" id="business-page-bank-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Bank se naam . . .</property>
                                     <layout>
@@ -774,7 +754,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-account-number-entry">
+                                  <object class="GtkEntry" id="business-page-account-number-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Rekeningnommer . . .</property>
                                     <layout>
@@ -785,7 +765,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-branch-code-entry">
+                                  <object class="GtkEntry" id="business-page-branch-code-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Tak se kode . . .</property>
                                     <layout>
@@ -796,7 +776,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-client-message-entry">
+                                  <object class="GtkEntry" id="business-page-client-message-entry">
                                     <property name="max-length">100</property>
                                     <property name="placeholder-text">Boodskap vir kliënt . . .</property>
                                     <layout>
@@ -807,7 +787,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="business-info-bank-label">
+                                  <object class="GtkLabel" id="business-page-bank-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -822,7 +802,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="business-info-save-button">
+                                  <object class="GtkButton" id="business-page-save-button">
                                     <property name="css-name">save-button</property>
                                     <property name="label">Stoor</property>
                                     <layout>
@@ -833,7 +813,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="business-info-grid-label">
+                                  <object class="GtkLabel" id="business-page-grid-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -849,7 +829,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-email-entry">
+                                  <object class="GtkEntry" id="business-page-email-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
@@ -860,7 +840,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-info-area-code-entry">
+                                  <object class="GtkEntry" id="business-page-area-code-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Area kode . . .</property>
                                     <layout>
@@ -871,7 +851,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkPasswordEntry" id="business-info-email-password-entry">
+                                  <object class="GtkPasswordEntry" id="business-page-email-password-entry">
                                     <property name="activates-default">True</property>
                                     <property name="placeholder-text">E-pos wagwoord . . .</property>
                                     <layout>
@@ -885,7 +865,7 @@
                             </child>
                           </object>
                         </property>
-                        <property name="name">business-info</property>
+                        <property name="name">business-page</property>
                         <property name="title">Besigheids-inligting</property>
                       </object>
                     </child>

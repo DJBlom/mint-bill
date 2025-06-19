@@ -824,12 +824,13 @@ void gui::part::search_bar::on_search_changed()
 	std::string keyword = this->gui_search_bar->get_text();
 	if (keyword.empty())
 	{
-		syslog(LOG_CRIT, "The keyword is empty - "
-	 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The keyword is empty, nothing to notify about - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		notify_current_page(keyword);
+		syslog(LOG_INFO, "Notifying the %s of a search", this->current_stack_page.c_str());
 	}
 }
 

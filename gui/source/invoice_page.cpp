@@ -27,7 +27,8 @@ gui::invoice_page::~invoice_page()
 
 }
 
-bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
+			       const interface::search& _search_bar)
 {
         bool created{false};
         if (!_ui_builder)
@@ -39,11 +40,13 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         else
         {
                 created = true;
+		_search_bar.subscribe("invoice-page", [this] (const std::string& _keyword) {
+			perform_search(_keyword);
+		});
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
                 create_buttons(_ui_builder);
-                connect_search();
                 connect_save_button();
                 connect_material_view();
                 connect_description_view();
@@ -96,8 +99,6 @@ void gui::invoice_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Entry>("new-invoice-date-entry")};
         this->invoice_number = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("new-invoice-number-entry")};
-        this->search_entry = std::unique_ptr<Gtk::SearchEntry>{
-                _ui_builder->get_widget<Gtk::SearchEntry>("invoice-search-entry")};
 }
 
 void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -138,28 +139,12 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
 }
 
-void gui::invoice_page::perform_search() {
-        std::string business_name{this->search_entry->get_text()};
+void gui::invoice_page::perform_search(const std::string& _keyword) {
+	this->business_name.clear();
+        this->business_name = _keyword;
         this->populate(business_name);
         this->invoice_number->set_text("51");
         this->invoice_date->set_text("10-12-2024");
-}
-
-void gui::invoice_page::on_search_changed() {
-    Glib::signal_timeout().connect_once(
-        sigc::mem_fun(*this, &invoice_page::perform_search), 500, Glib::PRIORITY_DEFAULT);
-}
-
-void gui::invoice_page::connect_search()
-{
-        if (!this->search_entry)
-        {
-                syslog(LOG_CRIT, "The search_entry is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        search_entry->signal_changed().connect(sigc::mem_fun(*this, &invoice_page::on_search_changed));
 }
 
 void gui::invoice_page::connect_save_button()
@@ -829,7 +814,7 @@ double gui::invoice_page::compute_grand_total()
 data::invoice gui::invoice_page::extract_invoice_data()
 {
         data::invoice data{};
-        data.set_business_name(this->search_entry->get_text());
+        data.set_business_name(this->business_name);
         data.set_invoice_number(this->invoice_number->get_text());
         data.set_invoice_date(this->invoice_date->get_text());
         data.set_job_card_number(this->job_card->get_text());

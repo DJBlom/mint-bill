@@ -13,7 +13,7 @@
 
 
 namespace gui {
-class statement_page : public interface::gui_test {
+class statement_page : public interface::gui {
 public:
         statement_page() = default;
         statement_page(const statement_page&) = delete;

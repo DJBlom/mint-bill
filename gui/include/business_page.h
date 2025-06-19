@@ -22,7 +22,7 @@ namespace gui {
                         business_page& operator= (business_page&&) = delete;
                         ~business_page() override;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::search&) override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
@@ -30,7 +30,7 @@ namespace gui {
                         void connect_save_alert();
                         void connect_save_button();
                         void clear_entries();
-                        void update_business_info_with_db_data();
+                        void update_business_info_with_db_data(const std::string&);
                         data::business extract_page_entries();
 
                 private:

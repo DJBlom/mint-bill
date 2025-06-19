@@ -94,7 +94,7 @@ namespace gui {
                         invoice_page& operator= (invoice_page&&) = delete;
                         ~invoice_page() override;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::search&) override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);
@@ -103,7 +103,6 @@ namespace gui {
                         void create_buttons(const Glib::RefPtr<Gtk::Builder>&);
 
                 private: // Button events
-                        void connect_search();
                         void connect_save_button();
                         void connect_material_add_button();
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&);
@@ -153,8 +152,7 @@ namespace gui {
                         void edit_known_invoice(uint);
 
                 private: // helper
-                        void perform_search();
-                        void on_search_changed();
+                        void perform_search(const std::string&);
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
@@ -179,6 +177,7 @@ namespace gui {
                         bool print_success{false};
                         bool email_success{false};
                         std::string grand_total{""};
+			std::string business_name{""};
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};

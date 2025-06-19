@@ -14,7 +14,8 @@ gui::client_register_page::~client_register_page()
 {
 }
 
-bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
+				       const interface::search& _search_bar)
 {
         bool created{false};
         if (!_ui_builder)
@@ -26,8 +27,11 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         else
         {
                 created = true;
+		_search_bar.subscribe("register-page", [this] (const std::string& _keyword) {
+			data::client data = this->client_register.search(_keyword, this->db);
+			display_on_ui(data);
+		});
                 create_entries(_ui_builder);
-                connect_search();
                 connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();
@@ -44,8 +48,6 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
                 _ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
         this->vat_number = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
-        this->search_entry = std::unique_ptr<Gtk::SearchEntry>{
-                _ui_builder->get_widget<Gtk::SearchEntry>("register-search-entry")};
         this->business_name = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
         this->statment_schedule = std::unique_ptr<Gtk::Entry>{
@@ -62,23 +64,6 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-wrong-info-alert")};
-}
-
-void gui::client_register_page::connect_search()
-{
-        if (!this->search_entry)
-        {
-                syslog(LOG_CRIT, "The search_entry is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->search_entry->signal_search_changed().connect([this] () {
-                syslog(LOG_INFO, "User is searching - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                data::client data = client_register.search(this->search_entry->get_text(), this->db);
-                display_on_ui(data);
-        });
 }
 
 void gui::client_register_page::connect_save_button()

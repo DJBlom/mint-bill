@@ -116,7 +116,7 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, 
 		}
 
 		feature::client_statement client_statement{};
-		_search_bar.subscribe("statements-page", [this, client_statement](const std::string& _keyword) {
+		_search_bar.subscribe("statement-page", [this, client_statement](const std::string& _keyword) {
 			bool success{true};
 			if (this->statement_view.populate(client_statement.load(_keyword)) == false)
 			{
