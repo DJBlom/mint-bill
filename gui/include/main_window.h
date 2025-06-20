@@ -23,19 +23,10 @@ namespace gui {
                         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
 
                 private:
-                        void connect_exit_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_max_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_min_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void exit_clicked();
-                        void min_clicked();
-                        void max_clicked();
                         void setup_css();
 
                 private:
                         std::unique_ptr<Gtk::Window> window{};
-                        std::unique_ptr<Gtk::Button> max_button{};
-                        std::unique_ptr<Gtk::Button> min_button{};
-                        std::unique_ptr<Gtk::Button> exit_button{};
         };
 
         //GCOVR_EXCL_STOP
