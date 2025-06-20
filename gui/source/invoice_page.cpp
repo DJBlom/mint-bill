@@ -76,7 +76,7 @@ void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_build
         this->material_view = std::unique_ptr<Gtk::ColumnView>{
                 _ui_builder->get_widget<Gtk::ColumnView>("new-invoice-material")};
         this->material_adjustment = std::shared_ptr<Gtk::Adjustment>{
-                _ui_builder->get_object<Gtk::Adjustment>("new-invoice-material-column-view-adjustment")};
+                _ui_builder->get_object<Gtk::Adjustment>("new-invoice-material-column-view-vadjustment")};
         this->invoice_view = std::unique_ptr<Gtk::ListView>{
                 _ui_builder->get_widget<Gtk::ListView>("known-invoice-view")};
         this->invoices_adjustment = std::shared_ptr<Gtk::Adjustment>{
@@ -128,7 +128,7 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         this->description_add_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-add-button")};
         this->material_add_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("invoice-material-button")};
+                _ui_builder->get_widget<Gtk::Button>("invoice-material-add-button")};
         this->material_delete_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-material-delete-button")};
         this->description_delete_button = std::unique_ptr<Gtk::Button>{
