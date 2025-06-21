@@ -360,6 +360,13 @@ TEST(statement_page_column_view, column_view_populate)
 TEST(statement_page_column_view, column_view_clear_unsuccessful)
 {
         feature::client_statement client_statement{};
+
+        CHECK_EQUAL(false, column_view.clear());
+}
+
+TEST(statement_page_column_view, column_view_clear_successful)
+{
+        feature::client_statement client_statement{};
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
         (void) column_view.add_column(invoice_number);
@@ -367,24 +374,10 @@ TEST(statement_page_column_view, column_view_clear_unsuccessful)
         (void) column_view.add_column(order_number);
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
+        (void) column_view.populate(client_statement.load("business"));
 
-        CHECK_EQUAL(false, column_view.clear());
+        CHECK_EQUAL(true, column_view.clear());
 }
-
-/*TEST(statement_page_column_view, column_view_clear_successful)*/
-/*{*/
-/*        feature::client_statement client_statement{};*/
-/*        (void) column_view.create(builder);*/
-/*        (void) column_view.is_not_valid();*/
-/*        (void) column_view.add_column(invoice_number);*/
-/*        (void) column_view.add_column(date);*/
-/*        (void) column_view.add_column(order_number);*/
-/*        (void) column_view.add_column(paid_status);*/
-/*        (void) column_view.add_column(price);*/
-/*        (void) column_view.populate(client_statement.load("business"));*/
-/**/
-/*        CHECK_EQUAL(true, column_view.clear());*/
-/*}*/
 
 TEST(statement_page_column_view, extract_data_from_store)
 {
