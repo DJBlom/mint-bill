@@ -602,9 +602,11 @@ void gui::part::statement::columns::price::teardown(const Glib::RefPtr<Gtk::List
 /***************************************************************************
  * Column View
  **************************************************************************/
-gui::part::statement::column_view::column_view(const std::string& _name) : name{_name}
+gui::part::statement::column_view::column_view(const std::string& _name, const std::string& _vadjustment)
+	: name{_name}, vadjustment{_vadjustment}
 {
         name.shrink_to_fit();
+	vadjustment.shrink_to_fit();
 }
 
 gui::part::statement::column_view::~column_view() {}
@@ -623,7 +625,8 @@ bool gui::part::statement::column_view::create(const Glib::RefPtr<Gtk::Builder>&
                         _ui_builder->get_widget<Gtk::ColumnView>(this->name)};
                 this->store = std::shared_ptr<Gio::ListStore<statement::columns::entries>>{
 	                       Gio::ListStore<statement::columns::entries>::create()};
-		this->adjustment = Gtk::Adjustment::create(0.0, 0, 0, 0, 0, 0);
+		this->adjustment = std::shared_ptr<Gtk::Adjustment>{
+					_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment)};
                 Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
                 if (!this->view || !this->store || !model)
                 {
@@ -700,6 +703,23 @@ bool gui::part::statement::column_view::populate(const std::vector<std::any>& _s
 	}
 
         return success;
+}
+
+bool gui::part::statement::column_view::clear()
+{
+	bool success{false};
+	if (is_not_valid() == true)
+	{
+		syslog(LOG_CRIT, "The column_view is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->store->remove_all();
+	}
+
+	return success;
 }
 
 std::vector<std::any> gui::part::statement::column_view::extract()

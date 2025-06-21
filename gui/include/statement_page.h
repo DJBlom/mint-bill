@@ -36,7 +36,7 @@ private:
 	part::statement::columns::paid_status paid_status{};
 	part::statement::columns::order_number order_number{};
 	part::statement::columns::invoice_number invoice_number{};
-        part::statement::column_view statement_view{"statement-column-view"};
+        part::statement::column_view statement_view{"statement-column-view", "statement-column-view-vadjustment"};
 };
 }
 

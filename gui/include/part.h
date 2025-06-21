@@ -39,6 +39,7 @@ public:
         [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
         [[nodiscard]] virtual bool populate(const std::vector<std::any>&) = 0;
+        [[nodiscard]] virtual bool clear() = 0;
         [[nodiscard]] virtual std::vector<std::any> extract() = 0;
 };
 

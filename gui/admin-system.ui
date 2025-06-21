@@ -522,6 +522,9 @@
                                         <property name="reorderable">False</property>
                                       </object>
                                     </property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="statement-column-view-vadjustment"/>
+                                    </property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">4</property>

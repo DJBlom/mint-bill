@@ -163,7 +163,7 @@ private:
 class column_view : public interface::view {
 public:
         column_view() = delete;
-        explicit column_view(const std::string&);
+        explicit column_view(const std::string&, const std::string&);
         column_view(const column_view&) = delete;
         column_view(column_view&&) = delete;
         column_view& operator= (const column_view&) = delete;
@@ -174,10 +174,12 @@ public:
         [[nodiscard]] virtual bool is_not_valid() const override;
         [[nodiscard]] virtual bool add_column(const interface::item&) override;
         [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
+        [[nodiscard]] virtual bool clear() override;
         [[nodiscard]] virtual std::vector<std::any> extract() override;
 
 private:
         std::string name{""};
+        std::string vadjustment{""};
         std::unique_ptr<Gtk::ColumnView> view{};
 	std::shared_ptr<Gtk::Adjustment> adjustment{};
         std::shared_ptr<Gio::ListStore<statement::columns::entries>> store{};

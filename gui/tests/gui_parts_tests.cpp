@@ -295,7 +295,7 @@ TEST_GROUP(statement_page_column_view)
 {
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
-        gui::part::statement::column_view column_view{"statement-column-view"};
+        gui::part::statement::column_view column_view{"statement-column-view", "statement-column-view-vadjustment"};
         gui::part::statement::columns::date date{};
         gui::part::statement::columns::price price{};
         gui::part::statement::columns::paid_status paid_status{};
@@ -357,6 +357,35 @@ TEST(statement_page_column_view, column_view_populate)
         CHECK_EQUAL(true, column_view.populate(client_statement.load("business")));
 }
 
+TEST(statement_page_column_view, column_view_clear_unsuccessful)
+{
+        feature::client_statement client_statement{};
+        (void) column_view.create(builder);
+        (void) column_view.is_not_valid();
+        (void) column_view.add_column(invoice_number);
+        (void) column_view.add_column(date);
+        (void) column_view.add_column(order_number);
+        (void) column_view.add_column(paid_status);
+        (void) column_view.add_column(price);
+
+        CHECK_EQUAL(false, column_view.clear());
+}
+
+/*TEST(statement_page_column_view, column_view_clear_successful)*/
+/*{*/
+/*        feature::client_statement client_statement{};*/
+/*        (void) column_view.create(builder);*/
+/*        (void) column_view.is_not_valid();*/
+/*        (void) column_view.add_column(invoice_number);*/
+/*        (void) column_view.add_column(date);*/
+/*        (void) column_view.add_column(order_number);*/
+/*        (void) column_view.add_column(paid_status);*/
+/*        (void) column_view.add_column(price);*/
+/*        (void) column_view.populate(client_statement.load("business"));*/
+/**/
+/*        CHECK_EQUAL(true, column_view.clear());*/
+/*}*/
+
 TEST(statement_page_column_view, extract_data_from_store)
 {
         feature::client_statement client_statement{};
@@ -373,6 +402,52 @@ TEST(statement_page_column_view, extract_data_from_store)
         CHECK_EQUAL(100, records.size());
 }
 
+
+
+
+
+/**********************************GUI PART LIST_VIEW TEST LIST**************
+ * 1) Create the list view.
+ * 3) Extract data from the list view.
+ * 4) Populate the list view.
+ * 5) Clear the list view.
+ * 6) Ensure the list view is valid.
+ * 7) Add a column to the list view.
+ * 8) Add a single data line to the list view.
+ * 9) Populate the list view based on a search.
+ ******************************************************************************/
+/*TEST_GROUP(statement_page_column_view)*/
+/*{*/
+/*        Glib::RefPtr<Gtk::Builder> builder{};*/
+/*        Glib::RefPtr<Gtk::Application> app{};*/
+/*        gui::part::statement::column_view column_view{"statement-column-view"};*/
+/*        gui::part::statement::columns::date date{};*/
+/*        gui::part::statement::columns::price price{};*/
+/*        gui::part::statement::columns::paid_status paid_status{};*/
+/*        gui::part::statement::columns::order_number order_number{};*/
+/*        gui::part::statement::columns::invoice_number invoice_number{};*/
+/*	void setup()*/
+/*	{*/
+/*                app = Gtk::Application::create("org.testing");*/
+/*                builder = Gtk::Builder::create();*/
+/*                builder->add_from_file("../gui/admin-system.ui");*/
+/*		(void) date.create("Date");*/
+/*		(void) price.create("Price");*/
+/*		(void) paid_status.create("Paid Status");*/
+/*		(void) order_number.create("Order Number");*/
+/*		(void) invoice_number.create("Invoice Number");*/
+/*	}*/
+/**/
+/*	void teardown()*/
+/*	{*/
+/*                app.reset();*/
+/*	}*/
+/*};*/
+/**/
+/*TEST(statement_page_column_view, column_view_create)*/
+/*{*/
+/*        CHECK_EQUAL(true, column_view.create(builder));*/
+/*}*/
 
 
 
