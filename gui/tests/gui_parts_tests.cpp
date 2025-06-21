@@ -397,42 +397,42 @@ TEST_GROUP(statement_columns_test)
 	std::string date_title{"date"};
 	std::string order_number_title{"order number"};
 	std::string paid_status_title{"paid"};
-        std::string invoice_number_title{"invoice number"};
-        Glib::RefPtr<Gtk::Builder> builder{};
-        Glib::RefPtr<Gtk::Application> app{};
-        std::unique_ptr<Gtk::ColumnView> view{};
-        Glib::RefPtr<Gtk::SelectionModel> selection{};
-        gui::part::statement::columns::date date_column{};
-        gui::part::statement::columns::price price_column{};
-        gui::part::statement::columns::paid_status paid_status_column{};
-        gui::part::statement::columns::order_number order_number_column{};
-        gui::part::statement::columns::invoice_number invoice_number_column{};
-        Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store{};
+	std::string invoice_number_title{"invoice number"};
+	Glib::RefPtr<Gtk::Builder> builder{};
+	Glib::RefPtr<Gtk::Application> app{};
+	std::unique_ptr<Gtk::ColumnView> view{};
+	Glib::RefPtr<Gtk::SelectionModel> selection{};
+	gui::part::statement::columns::date date_column{};
+	gui::part::statement::columns::price price_column{};
+	gui::part::statement::columns::paid_status paid_status_column{};
+	gui::part::statement::columns::order_number order_number_column{};
+	gui::part::statement::columns::invoice_number invoice_number_column{};
+	Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store{};
 	void setup()
 	{
-                app = Gtk::Application::create("org.testing");
-                builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
-                view = std::unique_ptr<Gtk::ColumnView>{
-                        builder->get_widget<Gtk::ColumnView>("statement-column-view")};
-                store = Gio::ListStore<gui::part::statement::columns::entries>::create();
-                store->append(gui::part::statement::columns::entries::create(invoice_number,
-                                                                             date,
-                                                                             order_number,
-                                                                             paid_status,
-                                                                             price));
-                selection = Gtk::SingleSelection::create(store);
-                view->set_model(selection);
+		app = Gtk::Application::create("org.testing");
+		builder = Gtk::Builder::create();
+		builder->add_from_file("../gui/admin-system.ui");
+		view = std::unique_ptr<Gtk::ColumnView>{
+			builder->get_widget<Gtk::ColumnView>("statement-column-view")};
+		store = Gio::ListStore<gui::part::statement::columns::entries>::create();
+		store->append(gui::part::statement::columns::entries::create(invoice_number,
+							       date,
+							       order_number,
+							       paid_status,
+							       price));
+		selection = Gtk::SingleSelection::create(store);
+		view->set_model(selection);
 		(void) date_column.create(date_title);
 		(void) price_column.create(price_title);
 		(void) paid_status_column.create(paid_status_title);
 		(void) order_number_column.create(order_number_title);
 		(void) invoice_number_column.create(invoice_number_title);
-        }
+	}
 
 	void teardown()
 	{
-                app.reset();
+		app.reset();
 	}
 };
 

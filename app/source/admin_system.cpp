@@ -35,6 +35,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                 }
                 else
                 {
+			system_settings->property_gtk_cursor_blink() = false;
                         system_settings->property_gtk_application_prefer_dark_theme() = true;
                 }
 

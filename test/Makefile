@@ -17,7 +17,8 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # NOTE: Ensure this line is uncommented when pushing code to the remote.
 # 
 #CPPUTEST_EXE_FLAGS +=-xg "email_test"
-CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
+CPPUTEST_EXE_FLAGS +=-sg "statement_columns_test"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 
 CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)

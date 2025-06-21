@@ -8,7 +8,6 @@
     <property name="default-width">860</property>
     <property name="destroy-with-parent">True</property>
     <property name="icon-name">application-x-executable</property>
-    <property name="title">Administrasie</property>
     <property name="titlebar">
       <object class="GtkHeaderBar" id="nav-bar">
         <property name="decoration-layout">menu:minimize,maximize,close</property>
@@ -284,7 +283,6 @@
                                         <property name="focusable">True</property>
                                         <property name="hexpand">True</property>
                                         <property name="hscroll-policy">natural</property>
-                                        <property name="overflow">visible</property>
                                         <property name="receives-default">True</property>
                                         <property name="reorderable">False</property>
                                         <property name="vscroll-policy">natural</property>

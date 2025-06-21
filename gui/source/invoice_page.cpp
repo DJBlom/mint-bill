@@ -599,7 +599,6 @@ void gui::invoice_page::amount_column(const std::unique_ptr<Gtk::ColumnView>& vi
         factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_page::bind_amount));
         factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_page::teardown)));
         column->set_expand(false);
-        column->set_expand(false);
         view->append_column(column);
 }
 
