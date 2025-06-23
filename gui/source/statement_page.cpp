@@ -7,11 +7,11 @@
  *******************************************************/
 #include <iostream>
 #include <statement_page.h>
+#include <client_invoice.h>
 #include <client_statement.h>
 
 gui::statement_page::~statement_page() {}
 
-//bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, const interface::search& _search_bar)
 {
         if (_ui_builder)
@@ -114,6 +114,12 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, 
 		{
 			return false;
 		}
+
+		if (this->invoice_pdf_view.create(_ui_builder) == false)
+		{
+			return false;
+		}
+
 
 		feature::client_statement client_statement{};
 		_search_bar.subscribe("statement-page", [this, client_statement](const std::string& _keyword) {

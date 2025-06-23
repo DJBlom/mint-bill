@@ -4,6 +4,11 @@
 #include <part.h>
 #include <syslog.h>
 #include <unordered_map>
+#include <pdf_invoice_data.h>
+#include <poppler/cpp/poppler-page.h>
+#include <poppler/cpp/poppler-image.h>
+#include <poppler/cpp/poppler-document.h>
+#include <poppler/cpp/poppler-page-renderer.h>
 
 namespace gui {
 namespace part {
@@ -39,7 +44,7 @@ public:
         std::string price{""};
 };
 
-class invoice_number : public interface::item {
+class invoice_number : public interface::column_item {
 public:
         invoice_number() = default;
         invoice_number(const invoice_number&) = delete;
@@ -63,7 +68,7 @@ private:
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
 
-class date : public interface::item {
+class date : public interface::column_item {
 public:
         date() = default;
         date(const date&) = delete;
@@ -87,7 +92,7 @@ private:
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
 
-class order_number : public interface::item {
+class order_number : public interface::column_item {
 public:
         order_number() = default;
         order_number(const order_number&) = delete;
@@ -111,7 +116,7 @@ private:
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
 
-class paid_status : public interface::item {
+class paid_status : public interface::column_item {
 public:
         paid_status() = default;
         paid_status(const paid_status&) = delete;
@@ -135,7 +140,7 @@ private:
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};
 };
 
-class price : public interface::item {
+class price : public interface::column_item {
 public:
         price() = default;
         price(const price&) = delete;
@@ -160,7 +165,7 @@ private:
 };
 }
 
-class column_view : public interface::view {
+class column_view : public interface::column_view {
 public:
         column_view() = delete;
         explicit column_view(const std::string&, const std::string&);
@@ -172,7 +177,7 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-        [[nodiscard]] virtual bool add_column(const interface::item&) override;
+        [[nodiscard]] virtual bool add_column(const interface::column_item&) override;
         [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
         [[nodiscard]] virtual bool clear() override;
         [[nodiscard]] virtual std::vector<std::any> extract() override;
@@ -183,6 +188,68 @@ private:
         std::unique_ptr<Gtk::ColumnView> view{};
 	std::shared_ptr<Gtk::Adjustment> adjustment{};
         std::shared_ptr<Gio::ListStore<statement::columns::entries>> store{};
+
+	enum DURATION {
+		MS_30 = 30
+	};
+};
+
+namespace rows{
+struct invoice_pdf_entries : public Glib::Object {
+public:
+        static Glib::RefPtr<invoice_pdf_entries> create();
+        static Glib::RefPtr<invoice_pdf_entries> create(const data::pdf_invoice&);
+
+protected:
+        invoice_pdf_entries() = default;
+        explicit invoice_pdf_entries(const data::pdf_invoice& _pdf_invoice): pdf_invoice{_pdf_invoice} {}
+
+public:
+	data::pdf_invoice pdf_invoice{};
+};
+}
+
+class pdf_view : public Gtk::DrawingArea {
+public:
+	pdf_view() = delete;
+	explicit pdf_view(std::shared_ptr<poppler::document>, int);
+
+private:
+	void on_draw(const Cairo::RefPtr<Cairo::Context>&, int, int);
+
+private:
+	std::shared_ptr<poppler::document> document;
+	int page_number;
+};
+
+class invoice_pdf_view : public interface::list_view {
+public:
+        invoice_pdf_view() = delete;
+        explicit invoice_pdf_view(const std::string&, const std::string&);
+        invoice_pdf_view(const invoice_pdf_view&) = delete;
+        invoice_pdf_view(invoice_pdf_view&&) = delete;
+        invoice_pdf_view& operator= (const invoice_pdf_view&) = delete;
+        invoice_pdf_view& operator= (invoice_pdf_view&&) = delete;
+        virtual ~invoice_pdf_view();
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
+        [[nodiscard]] virtual bool clear() override;
+        [[nodiscard]] virtual std::vector<std::any> extract() override;
+
+private:
+	void display_invoice(uint);
+	void setup(const Glib::RefPtr<Gtk::ListItem>&);
+	void bind(const Glib::RefPtr<Gtk::ListItem>&);
+	void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string name{""};
+        std::string vadjustment_name{""};
+        std::unique_ptr<Gtk::ListView> view{};
+	std::shared_ptr<Gtk::Adjustment> vadjustment{};
+        std::shared_ptr<Gio::ListStore<rows::invoice_pdf_entries>> store{};
 
 	enum DURATION {
 		MS_30 = 30

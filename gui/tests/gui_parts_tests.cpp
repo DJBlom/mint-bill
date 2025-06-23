@@ -16,6 +16,7 @@
 #include <statement_page.h>
 #include <statement_data.h>
 #include <client_statement.h>
+#include <mock_pdf_invoice_data.h>
 extern "C"
 {
 
@@ -291,7 +292,7 @@ TEST(gui_part_button, button_enable)
  * 8) Add a single data line to the column view. (Done)
  * 9) Populate the column view based on a search.
  ******************************************************************************/
-TEST_GROUP(statement_page_column_view)
+TEST_GROUP(statement_page_column_view_test)
 {
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
@@ -319,19 +320,19 @@ TEST_GROUP(statement_page_column_view)
 	}
 };
 
-TEST(statement_page_column_view, column_view_create)
+TEST(statement_page_column_view_test, column_view_create)
 {
         CHECK_EQUAL(true, column_view.create(builder));
 }
 
-TEST(statement_page_column_view, column_view_is_valid)
+TEST(statement_page_column_view_test, column_view_is_valid)
 {
         (void) column_view.create(builder);
 
         CHECK_EQUAL(false, column_view.is_not_valid());
 }
 
-TEST(statement_page_column_view, column_view_add_column)
+TEST(statement_page_column_view_test, column_view_add_column)
 {
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
@@ -343,7 +344,7 @@ TEST(statement_page_column_view, column_view_add_column)
         CHECK_EQUAL(true, column_view.add_column(price));
 }
 
-TEST(statement_page_column_view, column_view_populate)
+TEST(statement_page_column_view_test, column_view_populate)
 {
         feature::client_statement client_statement{};
         (void) column_view.create(builder);
@@ -357,14 +358,14 @@ TEST(statement_page_column_view, column_view_populate)
         CHECK_EQUAL(true, column_view.populate(client_statement.load("business")));
 }
 
-TEST(statement_page_column_view, column_view_clear_unsuccessful)
+TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
 {
         feature::client_statement client_statement{};
 
         CHECK_EQUAL(false, column_view.clear());
 }
 
-TEST(statement_page_column_view, column_view_clear_successful)
+TEST(statement_page_column_view_test, column_view_clear_successful)
 {
         feature::client_statement client_statement{};
         (void) column_view.create(builder);
@@ -379,7 +380,7 @@ TEST(statement_page_column_view, column_view_clear_successful)
         CHECK_EQUAL(true, column_view.clear());
 }
 
-TEST(statement_page_column_view, extract_data_from_store)
+TEST(statement_page_column_view_test, extract_data_from_store)
 {
         feature::client_statement client_statement{};
         (void) column_view.create(builder);
@@ -398,9 +399,8 @@ TEST(statement_page_column_view, extract_data_from_store)
 
 
 
-
 /**********************************GUI PART LIST_VIEW TEST LIST**************
- * 1) Create the list view.
+ * 1) Create the list view. (Done)
  * 3) Extract data from the list view.
  * 4) Populate the list view.
  * 5) Clear the list view.
@@ -409,37 +409,189 @@ TEST(statement_page_column_view, extract_data_from_store)
  * 8) Add a single data line to the list view.
  * 9) Populate the list view based on a search.
  ******************************************************************************/
-/*TEST_GROUP(statement_page_column_view)*/
+TEST_GROUP(invoice_pdf_view_test)
+{
+        Glib::RefPtr<Gtk::Builder> builder{};
+        Glib::RefPtr<Gtk::Application> app{};
+        gui::part::statement::invoice_pdf_view invoice_pdf_view{"statement-invoice-list-view", "statement-invoice-list-view-vadjustment"};
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+	}
+
+	void teardown()
+	{
+                app.reset();
+	}
+};
+
+TEST(invoice_pdf_view_test, invoice_pdf_view_create_unsuccessfully)
+{
+        CHECK_EQUAL(false, invoice_pdf_view.create(nullptr));
+}
+
+TEST(invoice_pdf_view_test, create_successfully)
+{
+        CHECK_EQUAL(true, invoice_pdf_view.create(builder));
+}
+
+TEST(invoice_pdf_view_test, view_is_not_valid)
+{
+        CHECK_EQUAL(true, invoice_pdf_view.is_not_valid());
+}
+
+TEST(invoice_pdf_view_test, view_is_valid)
+{
+        (void) invoice_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, invoice_pdf_view.is_not_valid());
+}
+
+TEST(invoice_pdf_view_test, populate_view_without_being_created)
+{
+	std::vector<std::any> invoices{};
+
+        CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
+}
+
+TEST(invoice_pdf_view_test, populate_view_with_empty_data)
+{
+	std::vector<std::any> invoices{};
+        (void) invoice_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
+}
+
+TEST(invoice_pdf_view_test, populate_view_with_bad_pdf_invoice_data)
+{
+        data::pdf_invoice invoice_data;
+	std::vector<std::any> invoices{};
+	invoice_data.set_business(retrieve_bad_business_data());
+	invoice_data.set_client(retrieve_bad_client_data());
+	invoice_data.set_invoice(retrieve_bad_invoice_data());
+	invoices.push_back(invoice_data);
+        (void) invoice_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
+}
+
+TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
+{
+        data::pdf_invoice invoice_data;
+	std::vector<std::any> invoices{};
+	invoice_data.set_business(retrieve_business_data());
+	invoice_data.set_client(retrieve_client_data());
+	invoice_data.set_invoice(retrieve_invoice_data());
+	invoices.push_back(invoice_data);
+        (void) invoice_pdf_view.create(builder);
+
+        CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
+}
+
+TEST(invoice_pdf_view_test, clear_invoice_view_data_unsuccessfully)
+{
+        CHECK_EQUAL(false, invoice_pdf_view.clear());
+}
+
+TEST(invoice_pdf_view_test, clear_invoice_view_data_successfully)
+{
+        data::pdf_invoice invoice_data;
+	std::vector<std::any> invoices{};
+	invoice_data.set_business(retrieve_business_data());
+	invoice_data.set_client(retrieve_client_data());
+	invoice_data.set_invoice(retrieve_invoice_data());
+	invoices.push_back(invoice_data);
+        (void) invoice_pdf_view.create(builder);
+        (void) invoice_pdf_view.populate(invoices);
+
+        CHECK_EQUAL(true, invoice_pdf_view.clear());
+}
+
+TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)
+{
+        data::pdf_invoice invoice_data;
+	std::vector<std::any> invoices{};
+	invoice_data.set_business(retrieve_business_data());
+	invoice_data.set_client(retrieve_client_data());
+	invoice_data.set_invoice(retrieve_invoice_data());
+	invoices.push_back(invoice_data);
+        (void) invoice_pdf_view.create(builder);
+        (void) invoice_pdf_view.populate(invoices);
+	std::vector<std::any> expected{invoice_pdf_view.extract()};
+
+        CHECK_EQUAL(false, expected.empty());
+}
+
+/*TEST(invoice_pdf_view_test, display_invoice)*/
 /*{*/
-/*        Glib::RefPtr<Gtk::Builder> builder{};*/
-/*        Glib::RefPtr<Gtk::Application> app{};*/
-/*        gui::part::statement::column_view column_view{"statement-column-view"};*/
-/*        gui::part::statement::columns::date date{};*/
-/*        gui::part::statement::columns::price price{};*/
-/*        gui::part::statement::columns::paid_status paid_status{};*/
-/*        gui::part::statement::columns::order_number order_number{};*/
-/*        gui::part::statement::columns::invoice_number invoice_number{};*/
+/*        data::pdf_invoice invoice_data;*/
+/*	std::vector<std::any> invoices{};*/
+/*	invoice_data.set_business(retrieve_business_data());*/
+/*	invoice_data.set_client(retrieve_client_data());*/
+/*	invoice_data.set_invoice(retrieve_invoice_data());*/
+/*	invoices.push_back(invoice_data);*/
+/*        (void) invoice_pdf_view.create(builder);*/
+/*        (void) invoice_pdf_view.populate(invoices);*/
+/**/
+/*        CHECK_EQUAL(true, expected.empty());*/
+/*}*/
+
+
+
+/*************************GUI PART LIST ITEM TEST LIST**************************
+ * 1)
+  ******************************************************************************/
+/*TEST_GROUP(statement_list_item_test)*/
+/*{*/
+/*	data::invoice invoice{};*/
+/*	Glib::RefPtr<Gtk::Builder> builder{};*/
+/*	Glib::RefPtr<Gtk::Application> app{};*/
+/*	std::unique_ptr<Gtk::ListView> view{};*/
+/*	Glib::RefPtr<Gtk::SelectionModel> selection{};*/
+/*	gui::part::statement::rows::list_information invoice_information{};*/
+/*	Glib::RefPtr<Gio::ListStore<gui::part::statement::rows::entries>> store{};*/
 /*	void setup()*/
 /*	{*/
-/*                app = Gtk::Application::create("org.testing");*/
-/*                builder = Gtk::Builder::create();*/
-/*                builder->add_from_file("../gui/admin-system.ui");*/
-/*		(void) date.create("Date");*/
-/*		(void) price.create("Price");*/
-/*		(void) paid_status.create("Paid Status");*/
-/*		(void) order_number.create("Order Number");*/
-/*		(void) invoice_number.create("Invoice Number");*/
+/*		app = Gtk::Application::create("org.testing");*/
+/*		builder = Gtk::Builder::create();*/
+/*		builder->add_from_file("../gui/admin-system.ui");*/
+/*		view = std::unique_ptr<Gtk::ListView>{*/
+/*			builder->get_widget<Gtk::ListView>("statement-invoice-list-view")};*/
+/*		store = Gio::ListStore<gui::part::statement::rows::entries>::create();*/
+/*		store->append(gui::part::statement::rows::entries::create(invoice));*/
+/*		selection = Gtk::MultiSelection::create(store);*/
+/*		view->set_model(selection);*/
 /*	}*/
 /**/
 /*	void teardown()*/
 /*	{*/
-/*                app.reset();*/
+/*		app.reset();*/
 /*	}*/
 /*};*/
 /**/
-/*TEST(statement_page_column_view, column_view_create)*/
+/*TEST(statement_list_item_test, create_list_item)*/
 /*{*/
-/*        CHECK_EQUAL(true, column_view.create(builder));*/
+/*	CHECK_EQUAL(true, invoice_information.create());*/
+/*}*/
+/**/
+/*TEST(statement_list_item_test, list_item_is_valid)*/
+/*{*/
+/*	CHECK_EQUAL(true, invoice_information.is_not_valid());*/
+/*}*/
+/**/
+/*TEST(statement_list_item_test, list_item_retrieve_item)*/
+/*{*/
+/*	(void) invoice_information.create();*/
+/*        Glib::RefPtr<Gtk::SignalListItemFactory> factory = invoice_information.retrieve_item();*/
+/**/
+/*	if (factory)*/
+/*		CHECK(true);*/
+/*}*/
+/**/
+/*TEST(statement_list_item_test, list_item_retrieve_value)*/
+/*{*/
 /*}*/
 
 

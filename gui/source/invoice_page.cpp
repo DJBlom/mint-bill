@@ -7,7 +7,6 @@
  **********************************************************/
 #include <syslog.h>
 #include <invoice_page.h>
-#include <iostream>
 
 //GCOVR_EXCL_START
 namespace limit {

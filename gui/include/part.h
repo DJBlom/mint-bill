@@ -21,9 +21,9 @@ public:
 				      std::function<void(const std::string&)> callback) const = 0;
 };
 
-class item {
+class column_item {
 public:
-        virtual ~item() = default;
+        virtual ~column_item() = default;
 
         [[nodiscard]] virtual bool create(const std::string&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
@@ -31,13 +31,34 @@ public:
         [[nodiscard]] virtual std::string retrieve_value() const = 0;
 };
 
-class view {
+/*class list_item {*/
+/*public:*/
+/*        virtual ~list_item() = default;*/
+/**/
+/*        [[nodiscard]] virtual bool create() = 0;*/
+/*        [[nodiscard]] virtual bool is_not_valid() const = 0;*/
+/*        [[nodiscard]] virtual Glib::RefPtr<Gtk::SignalListItemFactory> retrieve_item() const = 0;*/
+/*        [[nodiscard]] virtual std::string retrieve_value() const = 0;*/
+/*};*/
+
+class column_view {
 public:
-        virtual ~view() = default;
+        virtual ~column_view() = default;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool is_not_valid() const = 0;
-        [[nodiscard]] virtual bool add_column(const interface::item&) = 0;
+        [[nodiscard]] virtual bool add_column(const interface::column_item&) = 0;
+        [[nodiscard]] virtual bool populate(const std::vector<std::any>&) = 0;
+        [[nodiscard]] virtual bool clear() = 0;
+        [[nodiscard]] virtual std::vector<std::any> extract() = 0;
+};
+
+class list_view {
+public:
+        virtual ~list_view() = default;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+        [[nodiscard]] virtual bool is_not_valid() const = 0;
         [[nodiscard]] virtual bool populate(const std::vector<std::any>&) = 0;
         [[nodiscard]] virtual bool clear() = 0;
         [[nodiscard]] virtual std::vector<std::any> extract() = 0;

@@ -1,8 +1,10 @@
 
 #include <gui_parts.h>
+#include <pdf.h>
 #include <sql.h>
 #include <errors.h>
 #include <iostream>
+#include <invoice_data.h>
 #include <statement_data.h>
 
 
@@ -514,6 +516,7 @@ bool gui::part::statement::columns::price::create(const std::string& _title)
 
 	return true;
 }
+
 bool gui::part::statement::columns::price::is_not_valid() const
 {
         return !(this->column || this->factory);
@@ -600,6 +603,24 @@ void gui::part::statement::columns::price::teardown(const Glib::RefPtr<Gtk::List
 }
 
 /***************************************************************************
+ * Row Item
+ **************************************************************************/
+Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
+	gui::part::statement::rows::invoice_pdf_entries::create()
+{
+        return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries());
+}
+
+Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
+gui::part::statement::rows::invoice_pdf_entries::create(const data::pdf_invoice& _pdf_invoice)
+{
+        return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries(_pdf_invoice));
+}
+
+
+
+
+/***************************************************************************
  * Column View
  **************************************************************************/
 gui::part::statement::column_view::column_view(const std::string& _name, const std::string& _vadjustment)
@@ -648,7 +669,7 @@ bool gui::part::statement::column_view::is_not_valid() const
         return !(this->view || this->store);
 }
 
-bool gui::part::statement::column_view::add_column(const interface::item& _item)
+bool gui::part::statement::column_view::add_column(const interface::column_item& _item)
 {
         bool added{false};
         if (_item.is_not_valid())
@@ -707,16 +728,20 @@ bool gui::part::statement::column_view::populate(const std::vector<std::any>& _s
 
 bool gui::part::statement::column_view::clear()
 {
-	bool success{false};
+	bool success{true};
 	if (is_not_valid() == true)
 	{
 		syslog(LOG_CRIT, "The column_view is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
+		success = false;
 	}
 	else
 	{
-		success = true;
 		this->store->remove_all();
+		if (this->store->property_n_items() > 0)
+		{
+			success = false;
+		}
 	}
 
 	return success;
@@ -758,6 +783,317 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 	return records;
 }
 
+
+
+
+
+
+/*********************************TEST******************************************/
+gui::part::statement::pdf_view::pdf_view(std::shared_ptr<poppler::document> _doc, int _page_num = 0)
+	: document(std::move(_doc)), page_number(_page_num)
+{
+	set_draw_func(sigc::mem_fun(*this, &pdf_view::on_draw));
+}
+
+void gui::part::statement::pdf_view::on_draw(const Cairo::RefPtr<Cairo::Context>& _cr, int _width, int _height)
+{
+	if (!this->document)
+	{
+		return;
+	}
+
+	auto page = this->document->create_page(this->page_number);
+	if (!page)
+	{
+		return;
+	}
+
+	poppler::page_renderer renderer;
+	renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
+	renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
+
+	const double target_dpi = 150.0;
+	auto image = renderer.render_page(page, target_dpi, target_dpi);
+	if (!image.is_valid())
+	{
+		return;
+	}
+
+	auto surface = Cairo::ImageSurface::create(
+		reinterpret_cast<unsigned char*>(image.data()),
+		Cairo::Surface::Format::ARGB32,
+		image.width(), image.height(),
+		image.bytes_per_row());
+
+	const double scale_x = static_cast<double>(_width) / image.width();
+	const double scale_y = static_cast<double>(_height) / image.height();
+	const double scale = std::min(scale_x, scale_y);
+
+	_cr->save();
+	_cr->scale(scale, scale);
+	_cr->set_source(surface, 0, 0);
+	_cr->paint();
+	_cr->restore();
+}
+
+
+/***************************************************************************
+ * List View
+ **************************************************************************/
+gui::part::statement::invoice_pdf_view::invoice_pdf_view(const std::string& _name, const std::string& _vadjustment)
+	: name{_name}, vadjustment_name{_vadjustment}
+{
+        name.shrink_to_fit();
+	vadjustment_name.shrink_to_fit();
+}
+
+gui::part::statement::invoice_pdf_view::~invoice_pdf_view() {}
+
+bool gui::part::statement::invoice_pdf_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+        bool success{true};
+        if (!_ui_builder)
+        {
+                syslog(LOG_CRIT, "The UI builder is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		success = false;
+        }
+        else
+        {
+                this->view = std::unique_ptr<Gtk::ListView>{
+                        _ui_builder->get_widget<Gtk::ListView>(this->name)};
+                this->store = std::shared_ptr<Gio::ListStore<rows::invoice_pdf_entries>>{
+	                       Gio::ListStore<rows::invoice_pdf_entries>::create()};
+		this->vadjustment = std::shared_ptr<Gtk::Adjustment>{
+					_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment_name)};
+                Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
+		Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
+                if (!this->view || !this->store || !model || !factory)
+                {
+                        syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
+                                         "filename %s, line number %d", __FILE__, __LINE__);
+			success = false;
+                }
+                else
+                {
+                        this->view->set_model(model);
+			this->view->set_factory(factory);
+			this->view->set_single_click_activate(false);
+			this->view->signal_activate().connect(sigc::mem_fun(*this, &invoice_pdf_view::display_invoice));
+			factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_pdf_view::setup)));
+			factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_pdf_view::bind));
+			factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_pdf_view::teardown)));
+		}
+	}
+
+        return success;
+}
+
+bool gui::part::statement::invoice_pdf_view::is_not_valid() const
+{
+	return !(this->view || this->store);
+}
+
+bool gui::part::statement::invoice_pdf_view::populate(const std::vector<std::any>& _invoices)
+{
+	bool success{true};
+	if (_invoices.empty() == true)
+	{
+                syslog(LOG_CRIT, "The _data is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		success = false;
+	}
+	else
+	{
+		this->store->remove_all();
+		for (const std::any& invoice : _invoices)
+		{
+			data::pdf_invoice data{std::any_cast<data::pdf_invoice> (invoice)};
+			if (data.is_valid() == false)
+			{
+				success = false;
+				break;
+			}
+			else
+			{
+				this->store->append(rows::invoice_pdf_entries::create(data));
+				Glib::signal_timeout().connect_once([this]() {
+					this->vadjustment->set_value(this->vadjustment->get_upper());
+				}, 30);
+			}
+		}
+	}
+
+	return success;
+}
+
+bool gui::part::statement::invoice_pdf_view::clear()
+{
+	bool success{true};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The view or store is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		success = false;
+	}
+	else
+	{
+		this->store->remove_all();
+		if (this->store->property_n_items() > 0)
+		{
+			success = false;
+		}
+	}
+
+	return success;
+}
+
+std::vector<std::any> gui::part::statement::invoice_pdf_view::extract()
+{
+	std::vector<std::any> records{};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The view or store is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		return records;
+	}
+	else
+	{
+		for (guint i = 0; i < store->get_n_items(); ++i)
+		{
+			auto item = this->store->get_item(i);
+			if (!item)
+			{
+				syslog(LOG_CRIT, "The item is not valid - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				break;
+			}
+			else
+			{
+				data::pdf_invoice data{item->pdf_invoice};
+				records.push_back(data);
+			}
+		}
+	}
+
+	return records;
+}
+
+void gui::part::statement::invoice_pdf_view::display_invoice(uint _position)
+{
+        auto item = this->store->get_item(_position);
+        if (!item)
+        {
+                syslog(LOG_CRIT, "The item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(item);
+        if (!data)
+        {
+                syslog(LOG_CRIT, "The data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        data::pdf_invoice pdf_invoice{data->pdf_invoice};
+        if (pdf_invoice.is_valid() == false)
+        {
+                syslog(LOG_CRIT, "The invoice data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+	feature::pdf pdf{};
+	std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};
+	if (!document)
+	{
+		return;
+	}
+
+	auto pdf_window = Gtk::make_managed<Gtk::Window>();
+	pdf_window->set_title("Invoice PDF");
+	pdf_window->set_default_size(800, 1000);
+
+	auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
+	auto pdf_view = Gtk::make_managed<gui::part::statement::pdf_view>(document);
+	pdf_view->set_content_width(800);
+	pdf_view->set_content_height(1000);
+	scroller->set_child(*pdf_view);
+	pdf_window->set_child(*scroller);
+	pdf_window->present();
+}
+
+void gui::part::statement::invoice_pdf_view::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+		auto label = Gtk::make_managed<Gtk::Label>("");
+		if (!label)
+		{
+			syslog(LOG_CRIT, "The label is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return;
+		}
+
+		label->set_xalign(0.50);
+		label->set_hexpand(true);
+		label->set_halign(Gtk::Align::START);
+                _item->set_child(*label);
+        }
+}
+
+void gui::part::statement::invoice_pdf_view::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The _item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(_item->get_item());
+        if (!data)
+        {
+                syslog(LOG_CRIT, "The data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+        if (!label)
+        {
+                syslog(LOG_CRIT, "The label is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
+        data::pdf_invoice pdf_invoice{data->pdf_invoice};
+	data::invoice invoice{pdf_invoice.get_invoice()};
+        std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+        label->set_text(details);
+}
+
+void gui::part::statement::invoice_pdf_view::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->unset_child();
+        }
+}
 
 
 

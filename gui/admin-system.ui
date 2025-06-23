@@ -510,7 +510,7 @@
                                   <object class="GtkLabel" id="statement-saved-label">
                                     <property name="label">Gestoorde State</property>
                                     <layout>
-                                      <property name="column">3</property>
+                                      <property name="column">2</property>
                                       <property name="row">7</property>
                                     </layout>
                                   </object>
@@ -538,6 +538,9 @@
                                     <property name="child">
                                       <object class="GtkListView" id="statement-invoice-list-view"/>
                                     </property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="statement-invoice-list-view-vadjustment"/>
+                                    </property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">2</property>
@@ -549,7 +552,7 @@
                                 <child>
                                   <object class="GtkScrolledWindow" id="statement-scroll-window-list-view">
                                     <property name="child">
-                                      <object class="GtkListView" id="statement-list-vew"/>
+                                      <object class="GtkListView" id="statement-list-view"/>
                                     </property>
                                     <layout>
                                       <property name="column">2</property>
