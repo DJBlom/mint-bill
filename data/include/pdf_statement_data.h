@@ -7,31 +7,47 @@
  *******************************************************/
 #ifndef _PDF_STATEMENT_DATA_H_
 #define _PDF_STATEMENT_DATA_H_
-#include <client_data.h>
-#include <business_data.h>
 #include <statement_data.h>
+#include <pdf_invoice_data.h>
 
-/*namespace data {*/
-/*struct statement {*/
-/*public:*/
-/*        statement() = default;*/
-/*        statement(const statement&);*/
-/*        statement(statement&&);*/
-/*        statement& operator= (const statement&);*/
-/*        statement& operator= (statement&&);*/
-/*        virtual ~statement() = default;*/
-/**/
-/*	virtual void set_columns(const data::statement_column&);*/
-/*	[[nodiscard]] virtual data::statement_column get_columns() const;*/
-/*	virtual void set_business(const data::business&);*/
-/*	[[nodiscard]] virtual data::business get_business() const;*/
-/*	virtual void set_client(const data::client&);*/
-/*	[[nodiscard]] virtual data::client get_client() const;*/
-/**/
-/*private:*/
-/*	data::statement_column columns{};*/
-/*	data::business business{};*/
-/*	data::client client{};*/
-/*};*/
-/*}*/
+namespace data {
+struct pdf_statement {
+public:
+        pdf_statement();
+        pdf_statement(const pdf_statement&);
+        pdf_statement(pdf_statement&&);
+        pdf_statement& operator= (const pdf_statement&);
+        pdf_statement& operator= (pdf_statement&&);
+        virtual ~pdf_statement();
+
+	[[nodiscard]] virtual bool is_valid() const;
+	virtual void set_statement(const data::statement&);
+	[[nodiscard]] virtual data::statement get_statement() const;
+	virtual void set_pdf_invoice(const data::pdf_invoice&);
+	[[nodiscard]] virtual data::pdf_invoice get_pdf_invoice() const;
+
+private:
+	void set_flag(const int&);
+	void clear_flag(const int&);
+	[[nodiscard]] bool check_flags() const;
+
+private:
+	using mask_type = std::uint8_t;
+
+	data::statement statement{};
+	data::pdf_invoice pdf_invoice{};
+	std::mutex data_mutex{};
+	mask_type flags{0x0};
+	mask_type mask{0x3};
+	enum FLAG {
+		STATEMENT,
+		PDF_INVOICE
+	};
+
+	enum BIT {
+		CLEAR = 0,
+		SET
+	};
+};
+}
 #endif
