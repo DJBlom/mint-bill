@@ -16,7 +16,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 #
 # NOTE: Ensure this line is uncommented when pushing code to the remote.
 # 
-CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
