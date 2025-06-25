@@ -440,8 +440,15 @@ bool feature::pdf::context_ok()
 
 void feature::pdf::add_new_line()
 {
-        std::lock_guard<std::mutex> guard(this->pdf_mutex);
-        this->current_height += height::text_offset;
+	double next_line = this->current_height + height::text_offset;
+	if (next_line >= (height::page_height - height::top_border)) {
+		this->context->show_page();
+		align_to_top_border();
+		align_to_left_border();
+	}
+
+	std::lock_guard<std::mutex> guard(this->pdf_mutex);
+	this->current_height += height::text_offset;
 }
 
 void feature::pdf::add_new_section()
