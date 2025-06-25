@@ -31,16 +31,6 @@ public:
         [[nodiscard]] virtual std::string retrieve_value() const = 0;
 };
 
-/*class list_item {*/
-/*public:*/
-/*        virtual ~list_item() = default;*/
-/**/
-/*        [[nodiscard]] virtual bool create() = 0;*/
-/*        [[nodiscard]] virtual bool is_not_valid() const = 0;*/
-/*        [[nodiscard]] virtual Glib::RefPtr<Gtk::SignalListItemFactory> retrieve_item() const = 0;*/
-/*        [[nodiscard]] virtual std::string retrieve_value() const = 0;*/
-/*};*/
-
 class column_view {
 public:
         virtual ~column_view() = default;

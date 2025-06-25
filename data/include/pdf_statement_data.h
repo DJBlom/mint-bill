@@ -23,8 +23,8 @@ public:
 	[[nodiscard]] virtual bool is_valid() const;
 	virtual void set_statement(const data::statement&);
 	[[nodiscard]] virtual data::statement get_statement() const;
-	virtual void set_pdf_invoice(const data::pdf_invoice&);
-	[[nodiscard]] virtual data::pdf_invoice get_pdf_invoice() const;
+	virtual void set_pdf_invoices(const std::vector<data::pdf_invoice>&);
+	[[nodiscard]] virtual std::vector<data::pdf_invoice> get_pdf_invoices() const;
 
 private:
 	void set_flag(const int&);
@@ -35,7 +35,7 @@ private:
 	using mask_type = std::uint8_t;
 
 	data::statement statement{};
-	data::pdf_invoice pdf_invoice{};
+	std::vector<data::pdf_invoice> pdf_invoices{};
 	std::mutex data_mutex{};
 	mask_type flags{0x0};
 	mask_type mask{0x3};

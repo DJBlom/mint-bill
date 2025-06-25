@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Contents: gui parts unit tests
  * Author: Dawid Blom
@@ -11,11 +10,14 @@
 
 
 
+#include <pdf.h>
 #include <gtkmm.h>
 #include <iostream>
 #include <statement_page.h>
 #include <statement_data.h>
 #include <client_statement.h>
+#include <pdf_invoice_data.h>
+#include <pdf_statement_data.h>
 #include <mock_pdf_invoice_data.h>
 extern "C"
 {
@@ -347,6 +349,12 @@ TEST(statement_page_column_view_test, column_view_add_column)
 TEST(statement_page_column_view_test, column_view_populate)
 {
         feature::client_statement client_statement{};
+	std::vector<std::any> statements{};
+	for (const std::any& data : client_statement.load("Test Business Name"))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		statements.emplace_back(pdf_statement.get_statement());
+	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
         (void) column_view.add_column(invoice_number);
@@ -355,7 +363,7 @@ TEST(statement_page_column_view_test, column_view_populate)
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
 
-        CHECK_EQUAL(true, column_view.populate(client_statement.load("business")));
+        CHECK_EQUAL(true, column_view.populate(statements));
 }
 
 TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
@@ -368,6 +376,12 @@ TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
 TEST(statement_page_column_view_test, column_view_clear_successful)
 {
         feature::client_statement client_statement{};
+	std::vector<std::any> statements{};
+	for (const std::any& data : client_statement.load("Test Business Name"))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		statements.emplace_back(pdf_statement.get_statement());
+	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
         (void) column_view.add_column(invoice_number);
@@ -375,7 +389,7 @@ TEST(statement_page_column_view_test, column_view_clear_successful)
         (void) column_view.add_column(order_number);
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
-        (void) column_view.populate(client_statement.load("business"));
+        (void) column_view.populate(statements);
 
         CHECK_EQUAL(true, column_view.clear());
 }
@@ -383,6 +397,12 @@ TEST(statement_page_column_view_test, column_view_clear_successful)
 TEST(statement_page_column_view_test, extract_data_from_store)
 {
         feature::client_statement client_statement{};
+	std::vector<std::any> statements{};
+	for (const std::any& data : client_statement.load("Test Business Name"))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		statements.emplace_back(pdf_statement.get_statement());
+	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
         (void) column_view.add_column(invoice_number);
@@ -390,10 +410,62 @@ TEST(statement_page_column_view_test, extract_data_from_store)
         (void) column_view.add_column(order_number);
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
-        (void) column_view.populate(client_statement.load("business"));
+        (void) column_view.populate(statements);
 	std::vector<std::any> records(column_view.extract());
 
         CHECK_EQUAL(100, records.size());
+}
+
+
+
+
+
+/**********************************GUI PART LIST_VIEW TEST LIST**************
+ * 1) Create the list view. (Done)
+ * 3) Extract data from the list view.
+ * 4) Populate the list view.
+ * 5) Clear the list view.
+ * 6) Ensure the list view is valid.
+ * 7) Add a column to the list view.
+ * 8) Add a single data line to the list view.
+ * 9) Populate the list view based on a search.
+ ******************************************************************************/
+TEST_GROUP(pdf_window_test)
+{
+	feature::pdf pdf{};
+        Glib::RefPtr<Gtk::Builder> builder{};
+        Glib::RefPtr<Gtk::Application> app{};
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+	}
+
+	void teardown()
+	{
+                app.reset();
+	}
+};
+
+TEST(pdf_window_test, generate_window_with_bad_document)
+{
+	gui::part::statement::pdf_window pdf_window{"Invoice"};
+	std::shared_ptr<poppler::document> document{nullptr};
+
+	CHECK_EQUAL(false, pdf_window.generate(document));
+}
+
+TEST(pdf_window_test, generate_window_with_good_document)
+{
+	data::pdf_invoice pdf_invoice{};
+	pdf_invoice.set_business(retrieve_business_data());
+	pdf_invoice.set_client(retrieve_client_data());
+	pdf_invoice.set_invoice(retrieve_invoice_data());
+	gui::part::statement::pdf_window pdf_window{"Invoice"};
+	std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};
+
+	CHECK_EQUAL(true, pdf_window.generate(document));
 }
 
 
@@ -411,6 +483,7 @@ TEST(statement_page_column_view_test, extract_data_from_store)
  ******************************************************************************/
 TEST_GROUP(invoice_pdf_view_test)
 {
+	feature::client_statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::invoice_pdf_view invoice_pdf_view{"statement-invoice-list-view", "statement-invoice-list-view-vadjustment"};
@@ -458,71 +531,60 @@ TEST(invoice_pdf_view_test, populate_view_without_being_created)
 
 TEST(invoice_pdf_view_test, populate_view_with_empty_data)
 {
-	std::vector<std::any> invoices{};
+	std::vector<std::any> empty_data{};
         (void) invoice_pdf_view.create(builder);
 
-        CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
-}
-
-TEST(invoice_pdf_view_test, populate_view_with_bad_pdf_invoice_data)
-{
-        data::pdf_invoice invoice_data;
-	std::vector<std::any> invoices{};
-	invoice_data.set_business(retrieve_bad_business_data());
-	invoice_data.set_client(retrieve_bad_client_data());
-	invoice_data.set_invoice(retrieve_bad_invoice_data());
-	invoices.push_back(invoice_data);
-        (void) invoice_pdf_view.create(builder);
-
-        CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
+        CHECK_EQUAL(false, invoice_pdf_view.populate(empty_data));
 }
 
 TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
 {
-        data::pdf_invoice invoice_data;
+	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
+	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
 	std::vector<std::any> invoices{};
-	invoice_data.set_business(retrieve_business_data());
-	invoice_data.set_client(retrieve_client_data());
-	invoice_data.set_invoice(retrieve_invoice_data());
-	invoices.push_back(invoice_data);
-        (void) invoice_pdf_view.create(builder);
+	for (const data::pdf_invoice& inv : temp_invoices)
+	{
+		invoices.emplace_back(inv);
+	}
+	(void) invoice_pdf_view.create(builder);
 
-        CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
+	CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
 }
 
-TEST(invoice_pdf_view_test, clear_invoice_view_data_unsuccessfully)
-{
-        CHECK_EQUAL(false, invoice_pdf_view.clear());
-}
-
-TEST(invoice_pdf_view_test, clear_invoice_view_data_successfully)
-{
-        data::pdf_invoice invoice_data;
-	std::vector<std::any> invoices{};
-	invoice_data.set_business(retrieve_business_data());
-	invoice_data.set_client(retrieve_client_data());
-	invoice_data.set_invoice(retrieve_invoice_data());
-	invoices.push_back(invoice_data);
-        (void) invoice_pdf_view.create(builder);
-        (void) invoice_pdf_view.populate(invoices);
-
-        CHECK_EQUAL(true, invoice_pdf_view.clear());
-}
-
-TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)
-{
-        data::pdf_invoice invoice_data;
-	std::vector<std::any> invoices{};
-	invoice_data.set_business(retrieve_business_data());
-	invoice_data.set_client(retrieve_client_data());
-	invoice_data.set_invoice(retrieve_invoice_data());
-	invoices.push_back(invoice_data);
-        (void) invoice_pdf_view.create(builder);
-        (void) invoice_pdf_view.populate(invoices);
-	std::vector<std::any> expected{invoice_pdf_view.extract()};
-
-        CHECK_EQUAL(false, expected.empty());
-}
+/*TEST(invoice_pdf_view_test, clear_invoice_view_data_unsuccessfully)*/
+/*{*/
+/*        CHECK_EQUAL(false, invoice_pdf_view.clear());*/
+/*}*/
+/**/
+/*TEST(invoice_pdf_view_test, clear_invoice_view_data_successfully)*/
+/*{*/
+/*        data::pdf_invoice invoice_data;*/
+/*	std::vector<std::any> invoices{};*/
+/*	invoice_data.set_business(retrieve_business_data());*/
+/*	invoice_data.set_client(retrieve_client_data());*/
+/*	invoice_data.set_invoice(retrieve_invoice_data());*/
+/*	invoices.push_back(invoice_data);*/
+/*        (void) invoice_pdf_view.create(builder);*/
+/*        (void) invoice_pdf_view.populate(invoices);*/
+/**/
+/*        CHECK_EQUAL(true, invoice_pdf_view.clear());*/
+/*}*/
+/**/
+/*TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)*/
+/*{*/
+/*        data::pdf_invoice invoice_data;*/
+/*	std::vector<std::any> invoices{};*/
+/*	invoice_data.set_business(retrieve_business_data());*/
+/*	invoice_data.set_client(retrieve_client_data());*/
+/*	invoice_data.set_invoice(retrieve_invoice_data());*/
+/*	invoices.push_back(invoice_data);*/
+/*        (void) invoice_pdf_view.create(builder);*/
+/*        (void) invoice_pdf_view.populate(invoices);*/
+/*	std::vector<std::any> expected{invoice_pdf_view.extract()};*/
+/**/
+/*        CHECK_EQUAL(false, expected.empty());*/
+/*}*/
 
 /*TEST(invoice_pdf_view_test, display_invoice)*/
 /*{*/

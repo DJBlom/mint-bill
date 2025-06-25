@@ -173,7 +173,7 @@ public:
         column_view(column_view&&) = delete;
         column_view& operator= (const column_view&) = delete;
         column_view& operator= (column_view&&) = delete;
-        virtual ~column_view();
+        virtual ~column_view() override;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
@@ -209,10 +209,32 @@ public:
 };
 }
 
-class pdf_view : public Gtk::DrawingArea {
+class pdf_window {
 public:
-	pdf_view() = delete;
-	explicit pdf_view(std::shared_ptr<poppler::document>, int);
+	pdf_window() = default;
+	explicit pdf_window(const std::string&);
+	~pdf_window() = default;
+
+	bool generate(const std::shared_ptr<poppler::document>&);
+
+private:
+
+	std::string title{""};
+	enum WINDOW_SIZE {
+		WIDTH = 595,
+		HEIGHT = 515
+	};
+
+	enum A4_DIMENTIONS {
+		PAGE_WIDTH = 595,
+		PAGE_HEIGHT = 842
+	};
+};
+
+class pdf_draw : public Gtk::DrawingArea {
+public:
+	pdf_draw() = delete;
+	explicit pdf_draw(std::shared_ptr<poppler::document>, int);
 
 private:
 	void on_draw(const Cairo::RefPtr<Cairo::Context>&, int, int);
@@ -220,6 +242,21 @@ private:
 private:
 	std::shared_ptr<poppler::document> document;
 	int page_number;
+
+	enum DPI {
+		X = 190,
+		Y = 290
+	};
+
+	enum WINDOW_SIZE {
+		WIDTH = 595,
+		HEIGHT = 515
+	};
+
+	enum A4_DIMENTIONS {
+		PAGE_WIDTH = 595,
+		PAGE_HEIGHT = 842
+	};
 };
 
 class invoice_pdf_view : public interface::list_view {
@@ -230,7 +267,7 @@ public:
         invoice_pdf_view(invoice_pdf_view&&) = delete;
         invoice_pdf_view& operator= (const invoice_pdf_view&) = delete;
         invoice_pdf_view& operator= (invoice_pdf_view&&) = delete;
-        virtual ~invoice_pdf_view();
+        virtual ~invoice_pdf_view() override;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
@@ -320,9 +357,9 @@ public:
         virtual ~button() override;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
-        [[nodiscard]] virtual bool connect(const interface::dialog&);
-        virtual void disable();
-        virtual void enable();
+        [[nodiscard]] virtual bool connect(const interface::dialog&) override;
+        virtual void disable() override;
+        virtual void enable() override;
 
 
 private:

@@ -21,6 +21,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/business_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/statement_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/pdf_invoice_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/pdf_statement_data.cpp
         )
 
         target_include_directories(data

@@ -25,11 +25,10 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         }
         else
         {
-                created = true;
-                create_entries(_ui_builder);
-		_search_bar.subscribe("business-page", [this] (const std::string& _keyword) {
+		created = _search_bar.subscribe("business-page", [this] (const std::string& _keyword) {
 			update_business_info_with_db_data(_keyword);
 		});
+                create_entries(_ui_builder);
                 connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();

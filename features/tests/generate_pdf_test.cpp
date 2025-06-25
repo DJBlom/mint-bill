@@ -58,7 +58,7 @@ TEST(generate_pdf_test, generate_invoice_pdf_for_upper_bounds)
 
 TEST(generate_pdf_test, generate_invoice_pdf_for_lower_bounds)
 {
-        std::string short_description{"Machining steel Poes tog"};
+        std::string short_description{"Machining steel"};
         data::pdf_invoice pdf_data;
         data::business business_data{test::generate_business_data()};
         pdf_data.set_business(business_data);

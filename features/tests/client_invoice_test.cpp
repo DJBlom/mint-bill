@@ -62,7 +62,7 @@ TEST(client_invoice_test, send_invoice_to_client)
         std::string name{"Test Business"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
-        std::string grand_total{"1234.00"};
+        std::string grand_total{"2468.00"};
         std::string number{"1"};
 
         std::vector<data::invoice> data{};

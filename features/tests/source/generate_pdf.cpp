@@ -82,7 +82,7 @@ data::client test::generate_client_data_multiple_emails()
 
 data::invoice test::generate_invoice_data(const std::string& _desc)
 {
-        const int size{5};
+        const int size{50};
         std::vector<data::column> vec{};
         std::string description{_desc};
         for (unsigned int i = 0; i < size; ++i)
@@ -119,7 +119,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
 
 data::invoice test::generate_invoice_data(const std::string& _desc, const int& num)
 {
-        const int size{5};
+        const int size{50};
         std::vector<data::column> vec{};
         for (unsigned int i = 0; i < size; ++i)
         {

@@ -38,8 +38,7 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         }
         else
         {
-                created = true;
-		_search_bar.subscribe("invoice-page", [this] (const std::string& _keyword) {
+		created = _search_bar.subscribe("invoice-page", [this] (const std::string& _keyword) {
 			perform_search(_keyword);
 		});
                 create_views(_ui_builder);

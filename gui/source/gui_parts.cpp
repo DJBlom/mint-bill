@@ -786,36 +786,108 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 
 
 
-
-
-/*********************************TEST******************************************/
-gui::part::statement::pdf_view::pdf_view(std::shared_ptr<poppler::document> _doc, int _page_num = 0)
-	: document(std::move(_doc)), page_number(_page_num)
+/*************************************************************************************
+ * PDF_WINDOW
+ *************************************************************************************/
+gui::part::statement::pdf_window::pdf_window(const std::string& _title) : title{_title}
 {
-	set_draw_func(sigc::mem_fun(*this, &pdf_view::on_draw));
+	this->title.shrink_to_fit();
 }
 
-void gui::part::statement::pdf_view::on_draw(const Cairo::RefPtr<Cairo::Context>& _cr, int _width, int _height)
+bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::document>& _document)
+{
+	bool success{true};
+	if (!_document)
+	{
+		success = false;
+		syslog(LOG_CRIT, "The poppler document is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		auto window = Gtk::make_managed<Gtk::Window>();
+		auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
+		auto vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 10);
+		if (!(window || scroller || vbox))
+		{
+			success = false;
+			syslog(LOG_CRIT, "The window, scroller, or vbox is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			for (int i = 0; i < _document->pages(); ++i)
+			{
+				auto page_view = Gtk::make_managed<pdf_draw>(_document, i);
+				auto pdf_area = Gtk::make_managed<pdf_draw>(_document, i);
+				if (!(page_view || pdf_area))
+				{
+					success = false;
+					syslog(LOG_CRIT, "The window, scroller, or vbox is not valid - "
+							 "filename %s, line number %d", __FILE__, __LINE__);
+					break;
+
+				}
+				else
+				{
+					page_view->set_content_width(A4_DIMENTIONS::PAGE_WIDTH);
+					page_view->set_content_height(A4_DIMENTIONS::PAGE_HEIGHT);
+					scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
+					scroller->set_child(*pdf_area);
+					scroller->set_expand();
+					vbox->append(*page_view);
+				}
+			}
+
+			scroller->set_child(*vbox);
+			window->set_title(this->title);
+			window->set_default_size(WINDOW_SIZE::WIDTH, WINDOW_SIZE::HEIGHT);
+			window->set_child(*scroller);
+			window->set_modal(true);
+			window->present();
+		}
+	}
+
+	return success;
+}
+
+
+/*************************************************************************************
+ * PDF_DRAWER
+ *************************************************************************************/
+gui::part::statement::pdf_draw::pdf_draw(std::shared_ptr<poppler::document> _doc, int _page_num)
+	: document(std::move(_doc)), page_number(_page_num)
+{
+	set_draw_func(sigc::mem_fun(*this, &pdf_draw::on_draw));
+}
+
+void gui::part::statement::pdf_draw::on_draw(const Cairo::RefPtr<Cairo::Context>& _cr, int _width, int _height)
 {
 	if (!this->document)
 	{
+                syslog(LOG_CRIT, "The poppler document is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
 	auto page = this->document->create_page(this->page_number);
 	if (!page)
 	{
+                syslog(LOG_CRIT, "The poppler document page is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
-	poppler::page_renderer renderer;
+	poppler::page_renderer renderer{};
 	renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
 	renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
 
-	const double target_dpi = 150.0;
+	const double target_dpi = std::max(DPI::X, DPI::Y);
 	auto image = renderer.render_page(page, target_dpi, target_dpi);
 	if (!image.is_valid())
 	{
+                syslog(LOG_CRIT, "The poppler image is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
@@ -825,8 +897,8 @@ void gui::part::statement::pdf_view::on_draw(const Cairo::RefPtr<Cairo::Context>
 		image.width(), image.height(),
 		image.bytes_per_row());
 
-	const double scale_x = static_cast<double>(_width) / image.width();
-	const double scale_y = static_cast<double>(_height) / image.height();
+	const double scale_x = (static_cast<double>(_width) / image.width());
+	const double scale_y = (static_cast<double>(_height) / image.height());
 	const double scale = std::min(scale_x, scale_y);
 
 	_cr->save();
@@ -1009,20 +1081,18 @@ void gui::part::statement::invoice_pdf_view::display_invoice(uint _position)
 	std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};
 	if (!document)
 	{
+                syslog(LOG_CRIT, "The poppler document is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
-	auto pdf_window = Gtk::make_managed<Gtk::Window>();
-	pdf_window->set_title("Invoice PDF");
-	pdf_window->set_default_size(800, 1000);
-
-	auto scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
-	auto pdf_view = Gtk::make_managed<gui::part::statement::pdf_view>(document);
-	pdf_view->set_content_width(800);
-	pdf_view->set_content_height(1000);
-	scroller->set_child(*pdf_view);
-	pdf_window->set_child(*scroller);
-	pdf_window->present();
+	pdf_window pdf_window{"Invoice"};
+	if (pdf_window.generate(document) == false)
+	{
+                syslog(LOG_CRIT, "Failed generate pdf_window - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 }
 
 void gui::part::statement::invoice_pdf_view::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
@@ -1155,14 +1225,14 @@ bool gui::part::search_bar::subscribe(const std::string& _page_name,
 		std::unordered_map<
 		std::string,
 		std::function<void(const std::string&)>>::iterator,
-		bool> result{this->subscribers.emplace(_page_name, std::move(_callback))};
+		bool> result{this->subscribers.emplace(_page_name, _callback)};
 		if (result.second)
 		{
 			success = true;
 		}
 		else
 		{
-			result.first->second = std::move(_callback);
+			result.first->second = _callback;
 		}
 	}
 

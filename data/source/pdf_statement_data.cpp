@@ -7,17 +7,17 @@ data::pdf_statement::pdf_statement() {}
 data::pdf_statement::~pdf_statement() {}
 
 data::pdf_statement::pdf_statement(const pdf_statement& _copy)
-	: statement{_copy.statement}, pdf_invoice{_copy.pdf_invoice},
-	  flags{_copy.flags}, data_mutex{}, mask{_copy.mask}
+	: statement{_copy.statement}, pdf_invoices{_copy.pdf_invoices},
+	  data_mutex{}, flags{_copy.flags}, mask{_copy.mask}
 {
 }
 
 data::pdf_statement::pdf_statement(pdf_statement&& _move)
-	: statement{_move.statement}, pdf_invoice{_move.pdf_invoice},
-	  flags{_move.flags}, data_mutex{}, mask{_move.mask}
+	: statement{_move.statement}, pdf_invoices{_move.pdf_invoices},
+	  data_mutex{}, flags{_move.flags}, mask{_move.mask}
 {
-        _move.pdf_invoice = pdf_invoice;
         _move.statement = statement;
+        _move.pdf_invoices = pdf_invoices;
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -33,7 +33,7 @@ data::pdf_statement& data::pdf_statement::operator= (const pdf_statement& _copy)
 data::pdf_statement& data::pdf_statement::operator= (pdf_statement&& _move)
 {
         std::swap(statement, _move.statement);
-        std::swap(pdf_invoice, _move.pdf_invoice);
+        std::swap(pdf_invoices, _move.pdf_invoices);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -64,13 +64,13 @@ data::statement data::pdf_statement::get_statement() const
 	return this->statement;
 }
 
-void data::pdf_statement::set_pdf_invoice(const data::pdf_invoice& _pdf_invoice)
+void data::pdf_statement::set_pdf_invoices(const std::vector<data::pdf_invoice>& _pdf_invoices)
 {
-	if (_pdf_invoice.is_valid())
+	if (!_pdf_invoices.empty())
 	{
                 set_flag(FLAG::PDF_INVOICE);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-		this->pdf_invoice = std::move(_pdf_invoice);
+		this->pdf_invoices = std::move(_pdf_invoices);
 	}
         else
         {
@@ -78,9 +78,9 @@ void data::pdf_statement::set_pdf_invoice(const data::pdf_invoice& _pdf_invoice)
 	}
 }
 
-data::pdf_invoice data::pdf_statement::get_pdf_invoice() const
+std::vector<data::pdf_invoice> data::pdf_statement::get_pdf_invoices() const
 {
-	return this->pdf_invoice;
+	return this->pdf_invoices;
 }
 
 void data::pdf_statement::set_flag(const int& _bit)

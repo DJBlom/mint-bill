@@ -30,13 +30,12 @@ data::invoice feature::invoice::load(const std::string& business_name, const int
                 std::string order_number{"order number 123"};
                 std::string card_number{"24/md"};
                 std::string date{"2023-09-04"};
-                std::string name{"Test Business"};
                 std::string description_total{"1234.00"};
                 std::string material_total{"1234.00"};
-                std::string grand_total{"1234.00"};
+                std::string grand_total{"2468.00"};
                 std::string number{"1"};
 
-                data.set_business_name(name);
+                data.set_business_name(business_name);
                 data.set_invoice_number(number);
                 data.set_invoice_date(date);
                 data.set_job_card_number(card_number);
@@ -98,8 +97,8 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
         {
                 for (int i = 1; i <= 50; ++i)
                 {
+                        const int size{50};
                         data::invoice _invoice;
-                        const int size{10};
                         std::vector<data::column> vec{};
                         for (unsigned int j = 0; j < size; ++j)
                         {
@@ -114,13 +113,12 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
                         std::string order_number{"order number 123"};
                         std::string card_number{"24/md"};
                         std::string date{"2023-09-04"};
-                        std::string name{business_name};
                         std::string description_total{"1234.00"};
                         std::string material_total{"1234.00"};
-                        std::string grand_total{"1234.00"};
+                        std::string grand_total{"2468.00"};
                         std::string number{std::to_string(i)};
 
-                        _invoice.set_business_name(name);
+                        _invoice.set_business_name(business_name);
                         _invoice.set_invoice_number(number);
                         _invoice.set_invoice_date(date);
                         _invoice.set_job_card_number(card_number);

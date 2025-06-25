@@ -26,8 +26,7 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         }
         else
         {
-                created = true;
-		_search_bar.subscribe("register-page", [this] (const std::string& _keyword) {
+		created = _search_bar.subscribe("register-page", [this] (const std::string& _keyword) {
 			data::client data = this->client_register.search(_keyword, this->db);
 			display_on_ui(data);
 		});
