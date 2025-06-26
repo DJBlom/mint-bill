@@ -56,8 +56,9 @@
                 <property name="vexpand">True</property>
                 <child>
                   <object class="GtkStackSidebar" id="side-bar">
-                    <property name="margin-bottom">20</property>
-                    <property name="margin-top">20</property>
+                    <property name="css-classes">stacksidebar</property>
+                    <property name="margin-bottom">25</property>
+                    <property name="margin-top">25</property>
                     <property name="stack">business-stack</property>
                   </object>
                 </child>
@@ -168,59 +169,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="known-invoice-print-button">
-                                    <property name="css-classes">outlined_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Print</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">15</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="known-invoice-email-button">
-                                    <property name="css-classes">outlined_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stuur E-pos</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">15</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="new-invoice-save-button">
-                                    <property name="css-name">save_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stoor</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="invoice-material-add-button">
-                                    <property name="css-classes">add_button</property>
-                                    <property name="label">Byvoeg</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkEntry" id="new-invoice-number-entry">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
@@ -251,28 +199,6 @@
                                     <layout>
                                       <property name="column">1</property>
                                       <property name="row">1</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="invoice-description-add-button">
-                                    <property name="css-classes">add_button</property>
-                                    <property name="label">Byvoeg</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="row">3</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="invoice-description-delete-button">
-                                    <property name="css-classes">delete_button</property>
-                                    <property name="label">Verwyder</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">3</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -338,17 +264,6 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="invoice-material-delete-button">
-                                    <property name="css-classes">delete_button</property>
-                                    <property name="label">Verwyder</property>
-                                    <property name="valign">center</property>
-                                    <layout>
-                                      <property name="column">1</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
                                   <object class="GtkScrolledWindow" id="known-invoice-scroll-bar">
                                     <property name="child">
                                       <object class="GtkListView" id="known-invoice-view">
@@ -409,9 +324,117 @@
                                     <property name="label">Grand Total: R 0.00</property>
                                     <property name="xalign">-0.0</property>
                                     <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">15</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="new-invoice-description-button-box">
+                                    <property name="halign">end</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="homogeneous">True</property>
+                                    <property name="spacing">10</property>
+                                    <child>
+                                      <object class="GtkButton" id="invoice-description-delete-button">
+                                        <property name="css-classes">delete_button</property>
+                                        <property name="label">Verwyder</property>
+                                        <property name="valign">center</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="invoice-description-add-button">
+                                        <property name="css-classes">add_button</property>
+                                        <property name="label">Byvoeg</property>
+                                        <property name="valign">center</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">3</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="new-invoice-material-add-button">
+                                    <property name="halign">end</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="homogeneous">True</property>
+                                    <property name="spacing">10</property>
+                                    <child>
+                                      <object class="GtkButton" id="invoice-material-delete-button">
+                                        <property name="css-classes">delete_button</property>
+                                        <property name="label">Verwyder</property>
+                                        <property name="valign">center</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="invoice-material-add-button">
+                                        <property name="css-classes">add_button</property>
+                                        <property name="label">Byvoeg</property>
+                                        <property name="valign">center</property>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">1</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">9</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkGrid" id="invoice-button-grid">
+                                    <property name="column-homogeneous">True</property>
+                                    <property name="column-spacing">10</property>
+                                    <property name="row-spacing">10</property>
+                                    <child>
+                                      <object class="GtkButton" id="new-invoice-save-button">
+                                        <property name="css-classes">save_button</property>
+                                        <property name="css-name">save_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Stoor</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="column-span">2</property>
+                                          <property name="row">1</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="known-invoice-print-button">
+                                        <property name="css-classes">outlined_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Print</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">1</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="known-invoice-email-button">
+                                        <property name="css-classes">outlined_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Stuur E-pos</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <layout>
                                       <property name="column">2</property>
                                       <property name="column-span">2</property>
                                       <property name="row">14</property>
+                                      <property name="row-span">2</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -444,48 +467,6 @@
                                 <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">10</property>
                                 <property name="vexpand">True</property>
-                                <child>
-                                  <object class="GtkButton" id="statement-save-button">
-                                    <property name="css-name">save_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stoor</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">4</property>
-                                      <property name="row">16</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="statement-email-button">
-                                    <property name="css-classes">outlined_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Stuur E-pos</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">15</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="statement-print-button">
-                                    <property name="css-classes">outlined_button</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label">Print</property>
-                                    <property name="valign">center</property>
-                                    <property name="vexpand">True</property>
-                                    <layout>
-                                      <property name="column">2</property>
-                                      <property name="column-span">2</property>
-                                      <property name="row">15</property>
-                                    </layout>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkLabel" id="statement-new-label">
                                     <property name="halign">start</property>
@@ -562,6 +543,60 @@
                                     </layout>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="column-homogeneous">True</property>
+                                    <property name="column-spacing">10</property>
+                                    <property name="row-spacing">10</property>
+                                    <child>
+                                      <object class="GtkButton" id="statement-save-button">
+                                        <property name="css-classes">save_button</property>
+                                        <property name="css-name">save_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Stoor</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="column-span">2</property>
+                                          <property name="row">1</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="statement-email-button">
+                                        <property name="css-classes">outlined_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Stuur E-pos</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">0</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="statement-print-button">
+                                        <property name="css-classes">outlined_button</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="label">Print</property>
+                                        <property name="valign">center</property>
+                                        <property name="vexpand">True</property>
+                                        <layout>
+                                          <property name="column">1</property>
+                                          <property name="row">0</property>
+                                        </layout>
+                                      </object>
+                                    </child>
+                                    <layout>
+                                      <property name="column">2</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">15</property>
+                                      <property name="row-span">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -574,16 +609,18 @@
                       <object class="GtkStackPage" id="register-page">
                         <property name="child">
                           <object class="GtkBox" id="register-box">
+                            <property name="halign">center</property>
                             <property name="margin-bottom">50</property>
-                            <property name="margin-end">150</property>
-                            <property name="margin-start">150</property>
+                            <property name="margin-end">50</property>
+                            <property name="margin-start">50</property>
                             <property name="margin-top">50</property>
                             <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
                               <object class="GtkGrid" id="register-grid">
-                                <property name="column-homogeneous">True</property>
                                 <property name="column-spacing">10</property>
+                                <property name="margin-end">120</property>
+                                <property name="margin-start">100</property>
                                 <property name="row-spacing">10</property>
                                 <child>
                                   <object class="GtkEntry" id="register-business-name-entry">
@@ -591,7 +628,7 @@
                                     <property name="placeholder-text">Besigheid naam...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">1</property>
                                     </layout>
                                   </object>
@@ -602,7 +639,7 @@
                                     <property name="placeholder-text">Straat adres...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">2</property>
                                       <property name="row-span">1</property>
                                     </layout>
@@ -614,7 +651,7 @@
                                     <property name="placeholder-text">Dorp se naam...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">4</property>
                                     </layout>
                                   </object>
@@ -625,7 +662,7 @@
                                     <property name="placeholder-text">Selfoon nommer...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">5</property>
                                     </layout>
                                   </object>
@@ -636,18 +673,19 @@
                                     <property name="placeholder-text">BTW nommer...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">7</property>
                                     </layout>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="register-save-button">
+                                    <property name="css-classes">save_button</property>
                                     <property name="css-name">save_button</property>
                                     <property name="label">Stoor</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">9</property>
                                     </layout>
                                   </object>
@@ -674,7 +712,7 @@
                                     <property name="placeholder-text">Staatskedule (Aantal dae elke maand),(dag van week)...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">8</property>
                                     </layout>
                                   </object>
@@ -685,7 +723,7 @@
                                     <property name="placeholder-text">Gebied kode...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">3</property>
                                     </layout>
                                   </object>
@@ -696,7 +734,7 @@
                                     <property name="placeholder-text">E-pos...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">4</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">6</property>
                                     </layout>
                                   </object>
@@ -713,16 +751,19 @@
                       <object class="GtkStackPage" id="business-page">
                         <property name="child">
                           <object class="GtkBox" id="business-page-box">
+                            <property name="halign">center</property>
                             <property name="margin-bottom">50</property>
-                            <property name="margin-end">150</property>
-                            <property name="margin-start">150</property>
+                            <property name="margin-end">120</property>
+                            <property name="margin-start">100</property>
                             <property name="margin-top">50</property>
                             <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
                               <object class="GtkGrid" id="business-page-grid">
-                                <property name="column-homogeneous">True</property>
                                 <property name="column-spacing">10</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-end">50</property>
+                                <property name="margin-start">50</property>
                                 <property name="row-spacing">10</property>
                                 <child>
                                   <object class="GtkEntry" id="business-page-name-entry">
@@ -730,7 +771,7 @@
                                     <property name="placeholder-text">Besigheid se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">1</property>
                                     </layout>
                                   </object>
@@ -741,7 +782,7 @@
                                     <property name="placeholder-text">Straat adres . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">2</property>
                                       <property name="row-span">1</property>
                                     </layout>
@@ -753,7 +794,7 @@
                                     <property name="placeholder-text">Dorp se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">4</property>
                                     </layout>
                                   </object>
@@ -764,7 +805,7 @@
                                     <property name="placeholder-text">Kontak nommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">5</property>
                                     </layout>
                                   </object>
@@ -775,7 +816,7 @@
                                     <property name="placeholder-text">Bank se naam . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">9</property>
                                     </layout>
                                   </object>
@@ -786,7 +827,7 @@
                                     <property name="placeholder-text">Rekeningnommer . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">11</property>
                                     </layout>
                                   </object>
@@ -797,7 +838,7 @@
                                     <property name="placeholder-text">Tak se kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">10</property>
                                     </layout>
                                   </object>
@@ -808,7 +849,7 @@
                                     <property name="placeholder-text">Boodskap vir kliënt . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">12</property>
                                     </layout>
                                   </object>
@@ -830,11 +871,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="business-page-save-button">
+                                    <property name="css-classes">save_button</property>
                                     <property name="css-name">save_button</property>
                                     <property name="label">Stoor</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">13</property>
                                     </layout>
                                   </object>
@@ -861,7 +903,7 @@
                                     <property name="placeholder-text">E-pos . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">6</property>
                                     </layout>
                                   </object>
@@ -872,7 +914,7 @@
                                     <property name="placeholder-text">Area kode . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">3</property>
                                     </layout>
                                   </object>
@@ -883,7 +925,7 @@
                                     <property name="placeholder-text">E-pos wagwoord . . .</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">10</property>
                                       <property name="row">7</property>
                                     </layout>
                                   </object>

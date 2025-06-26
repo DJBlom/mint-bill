@@ -34,6 +34,7 @@ CPPUTEST_LDFLAGS += $(shell curl-config --libs)
 SRC_DIRS :=\
 	$(PROJECT_DIR)/app/source\
 	$(PROJECT_DIR)/gui/source\
+	$(PROJECT_DIR)/gui/components/source\
 	$(PROJECT_DIR)/data/source\
 	$(PROJECT_DIR)/utility/source\
 	$(PROJECT_DIR)/storage/source\
@@ -44,6 +45,7 @@ INCLUDE_DIRS :=\
 	$(CPPUTEST_HOME)/include\
 	$(PROJECT_DIR)/app/include\
 	$(PROJECT_DIR)/gui/include\
+	$(PROJECT_DIR)/gui/components/include\
 	$(PROJECT_DIR)/data/include\
 	$(PROJECT_DIR)/data/mocks/include\
 	$(PROJECT_DIR)/utility/include\
@@ -57,6 +59,7 @@ INCLUDE_DIRS :=\
 TEST_SRC_DIRS :=\
 	$(TEST_DIR)\
 	$(PROJECT_DIR)/gui/tests\
+	$(PROJECT_DIR)/gui/components/tests\
 	$(PROJECT_DIR)/data/tests\
 	$(PROJECT_DIR)/utility/tests\
 	$(PROJECT_DIR)/storage/tests\
@@ -66,6 +69,7 @@ TEST_SRC_DIRS :=\
 
 MOCKS_SRC_DIRS := \
 	$(PROJECT_DIR)/gui/mocks/source\
+	$(PROJECT_DIR)/gui/components/mocks/source\
 	$(PROJECT_DIR)/data/mocks/source\
 	$(PROJECT_DIR)/utility/mocks/source\
 	$(PROJECT_DIR)/storage/mocks/source\

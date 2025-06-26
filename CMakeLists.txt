@@ -72,6 +72,7 @@ if(BUILD_PROJECT)
                 ${POPPLER_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
+                ${CMAKE_SOURCE_DIR}/gui/components/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
@@ -103,6 +104,13 @@ if(BUILD_PROJECT)
                 target_link_libraries(${PROJECT_NAME} PRIVATE gui)
         else()
                 message(STATUS "Directory gui, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui/components)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/gui/components)
+                target_link_libraries(${PROJECT_NAME} PRIVATE components)
+        else()
+                message(STATUS "Directory components, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)

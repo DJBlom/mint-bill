@@ -6,28 +6,22 @@
 # NOTE:
 ############################################################################
 cmake_minimum_required(VERSION 3.25)
-project(target-gui VERSION 0.0.1 LANGUAGES CXX C)
+project(target-components VERSION 0.0.1 LANGUAGES CXX C)
 
 
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
 
-        add_library(gui
+        add_library(components
                 OBJECT
-                # ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
-                ${PROJECT_SOURCE_DIR}/source/main_window.cpp
-                ${PROJECT_SOURCE_DIR}/source/invoice_page.cpp
-                ${PROJECT_SOURCE_DIR}/source/business_page.cpp
-                ${PROJECT_SOURCE_DIR}/source/statement_page.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_register_page.cpp
+                ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
         )
 
-        target_include_directories(gui
+        target_include_directories(components
                 PRIVATE
                 ${GTKMM_INCLUDE_DIRS}
                 ${PROJECT_SOURCE_DIR}/include/
-                ${PROJECT_SOURCE_DIR}/components/include/
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
