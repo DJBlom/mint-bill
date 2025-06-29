@@ -15,7 +15,7 @@ gui::client_register_page::~client_register_page()
 }
 
 bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
-				       const interface::search& _search_bar)
+				       const interface::observer& _search_bar)
 {
         bool created{false};
         if (!_ui_builder)

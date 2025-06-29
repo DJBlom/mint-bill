@@ -81,3 +81,12 @@ app_label {
 	font-size: 20px;
 	font-weight: bold;
 }
+
+.side_panel {
+        background-color: #2e2e2e;
+	box-shadow: 0px 0px 1px 1px rgba(251, 153, 2, 0.2);
+}
+
+stack_sidebar {
+        background-color: #2e2e2e;
+}

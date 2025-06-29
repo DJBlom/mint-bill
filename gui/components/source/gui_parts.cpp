@@ -1170,10 +1170,9 @@ void gui::part::statement::invoice_pdf_view::teardown(const Glib::RefPtr<Gtk::Li
 /***************************************************************************
  * Search Bar
  **************************************************************************/
-gui::part::search_bar::search_bar(const std::string& _stack_name, const std::string& _search_bar_name)
-	: stack_name{_stack_name}, search_bar_name{_search_bar_name}
+gui::part::search_bar::search_bar(const std::string& _search_bar_name)
+	: search_bar_name{_search_bar_name}
 {
-        stack_name.shrink_to_fit();
         search_bar_name.shrink_to_fit();
 
 }
@@ -1190,16 +1189,10 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
         }
         else
         {
-                this->gui_stack = std::unique_ptr<Gtk::Stack>{
-			_ui_builder->get_widget<Gtk::Stack>(this->stack_name)};
                 this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
 			_ui_builder->get_widget<Gtk::SearchEntry>(this->search_bar_name)};
-		this->current_stack_page = this->gui_stack->get_visible_child_name();
-		this->gui_stack->property_visible_child_name()
-			.signal_changed()
-			.connect(sigc::mem_fun(*this, &search_bar::on_page_switched));
-		this->gui_search_bar->signal_search_changed()
-			.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
+		/*this->gui_search_bar->signal_search_changed()*/
+		/*	.connect(sigc::sigc::mem_fun(*this, &search_bar::on_search_changed), std::ref(_stack)));*/
 		success = true;
         }
 
@@ -1208,7 +1201,7 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 
 bool gui::part::search_bar::is_not_valid() const
 {
-        return !(this->gui_search_bar || this->gui_stack);
+        return !(this->gui_search_bar);
 }
 
 bool gui::part::search_bar::subscribe(const std::string& _page_name,
@@ -1239,13 +1232,7 @@ bool gui::part::search_bar::subscribe(const std::string& _page_name,
 	return success;
 }
 
-void gui::part::search_bar::on_page_switched()
-{
-	this->gui_search_bar->set_text("");
-	this->current_stack_page = this->gui_stack->get_visible_child_name();
-}
-
-void gui::part::search_bar::on_search_changed()
+void gui::part::search_bar::on_search_changed(const interface::stack& _stack)
 {
 	std::string keyword = this->gui_search_bar->get_text();
 	if (keyword.empty())
@@ -1255,25 +1242,20 @@ void gui::part::search_bar::on_search_changed()
 	}
 	else
 	{
-		notify_current_page(keyword);
-		syslog(LOG_INFO, "Notifying the %s of a search", this->current_stack_page.c_str());
-	}
-}
-
-void gui::part::search_bar::notify_current_page(const std::string& _keyword) const
-{
-	std::unordered_map<
+		std::unordered_map<
 		std::string,
 		std::function<void(const std::string&)>
-		>::iterator iterator = this->subscribers.find(this->current_stack_page);
-	if (iterator == this->subscribers.end())
-	{
-		syslog(LOG_CRIT, "The subscriber has not been registered - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		iterator->second(_keyword);
+		>::iterator iterator = this->subscribers.find(_stack.current_stack_page());
+		if (iterator == this->subscribers.end())
+		{
+			syslog(LOG_CRIT, "The subscriber has not been registered - "
+					  "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			iterator->second(keyword);
+			syslog(LOG_INFO, "Notifying the %s of a search", (_stack.current_stack_page()).c_str());
+		}
 	}
 }
 
@@ -1419,4 +1401,122 @@ void gui::part::button::disable()
 void gui::part::button::enable()
 {
         this->gui_button->set_sensitive(true);
+}
+
+
+
+/****************************************************************************************
+ * Test
+ ***************************************************************************************/
+gui::part::sub_button::sub_button(const std::string& _button_name)
+	: button_name{_button_name}
+{
+        button_name.shrink_to_fit();
+
+}
+
+gui::part::sub_button::~sub_button() {}
+
+bool gui::part::sub_button::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+        bool success{false};
+        if (!_ui_builder)
+        {
+                syslog(LOG_CRIT, "The UI builder or stack is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+        }
+        else
+        {
+		this->button = std::unique_ptr<Gtk::Button>{_ui_builder->get_widget<Gtk::Button>(this->button_name)};
+		/*this->button->signal_clicked()*/
+		/*	.connect(sigc::bind(sigc::mem_fun(*this, &sub_button::on_clicked), std::ref(_stack)));*/
+		success = true;
+        }
+
+        return success;
+}
+
+bool gui::part::sub_button::is_not_valid() const
+{
+        return !(this->button);
+}
+
+bool gui::part::sub_button::subscribe(const std::string& _page_name,
+			      std::function<void(const std::string&)> _callback) const
+{
+	bool success{false};
+	if (_page_name.empty() || !_callback)
+	{
+		return success;
+	}
+	else
+	{
+		std::pair<
+		std::unordered_map<
+		std::string,
+		std::function<void(const std::string&)>>::iterator,
+		bool> result{this->subscribers.emplace(_page_name, _callback)};
+		if (result.second)
+		{
+			success = true;
+		}
+		else
+		{
+			result.first->second = _callback;
+		}
+	}
+
+	return success;
+}
+
+bool gui::part::sub_button::disable()
+{
+	if (is_not_valid())
+	{
+		return false;
+	}
+	else
+	{
+                this->button->set_sensitive(false);
+	}
+
+	return true;
+}
+
+bool gui::part::sub_button::enable()
+{
+	if (is_not_valid())
+	{
+		return false;
+	}
+	else
+	{
+                this->button->set_sensitive(true);
+	}
+
+	return true;
+}
+
+void gui::part::sub_button::on_clicked(const interface::stack& _stack)
+{
+	(void)_stack;
+	/*if (_stack.is_not_valid())*/
+	/*{*/
+	/*}*/
+	/*else*/
+	/*{*/
+	/*	std::unordered_map<*/
+	/*		std::string,*/
+	/*		std::function<void(const std::string&)>*/
+	/*		>::iterator iterator = this->subscribers.find(_stack.current_stack_page());*/
+	/*	if (iterator == this->subscribers.end())*/
+	/*	{*/
+	/*		syslog(LOG_CRIT, "The subscriber has not been registered - "*/
+	/*				  "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*	}*/
+	/*	else*/
+	/*	{*/
+	/*		iterator->second();*/
+	/*	}*/
+	/*}*/
 }

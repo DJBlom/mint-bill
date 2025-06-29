@@ -8,6 +8,7 @@
 #ifndef _ADMIN_SYSTEM_H_
 #define _ADMIN_SYSTEM_H_
 #include <gtkmm.h>
+#include <stack.h>
 #include <gui_parts.h>
 #include <main_window.h>
 #include <invoice_page.h>
@@ -34,7 +35,9 @@ namespace app {
                         gui::client_register_page client_register_page{};
                         gui::invoice_page invoice_page{};
                         gui::statement_page statement_page{};
-			gui::part::search_bar search_bar{"business-stack", "business-name-search"};
+			gui::part::stack stack{"business-stack"};
+			gui::part::search_bar search_bar{"business-name-search"};
+			gui::part::sub_button sub_save_button{"save-button"};
         };
 }
 #endif

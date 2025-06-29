@@ -46,12 +46,45 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
+
 		if (this->search_bar.create(ui_builder) == false)
 		{
-                        syslog(LOG_CRIT, "Failed to create the search bar - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
+			syslog(LOG_CRIT, "Failed to create the search bar - "
+					  "filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
+
+		(void) this->stack.create(ui_builder);
+		(void) this->sub_save_button.create(ui_builder);
+
+		(void) this->sub_save_button.subscribe("business-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Saving data from: %s", _stack_page_name.c_str());
+			return true;
+		});
+
+		(void) this->stack.subscribe("invoice-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
+			(void) this->sub_save_button.enable();
+			return true;
+		});
+
+		(void) this->stack.subscribe("register-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
+			(void) this->sub_save_button.enable();
+			return true;
+		});
+
+		(void) this->stack.subscribe("statement-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
+			(void) this->sub_save_button.enable();
+			return true;
+		});
+
+		(void) this->stack.subscribe("business-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
+			(void) this->sub_save_button.enable();
+			return true;
+		});
 
                 if (this->business_page.create(ui_builder, this->search_bar) == false)
                 {

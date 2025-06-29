@@ -94,7 +94,7 @@ namespace gui {
                         invoice_page& operator= (invoice_page&&) = delete;
                         ~invoice_page() override;
 
-			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::search&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);

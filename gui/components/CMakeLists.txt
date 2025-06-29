@@ -16,6 +16,7 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(components
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
+                ${PROJECT_SOURCE_DIR}/source/stack.cpp
         )
 
         target_include_directories(components

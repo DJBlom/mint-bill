@@ -22,7 +22,7 @@ public:
         statement_page& operator= (statement_page&&) = delete;
         ~statement_page() override;
 
-        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::search&) override;
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
 
 private:
         part::button save_button{"statement-save-button"};

@@ -14,7 +14,7 @@
 
 gui::statement_page::~statement_page() {}
 
-bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, const interface::search& _search_bar)
+bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, const interface::observer& _search_bar)
 {
 	bool created{false};
         if (_ui_builder)

@@ -294,10 +294,10 @@ private:
 };
 }
 
-class search_bar : public interface::search {
+class search_bar : public interface::observer {
 public:
 	search_bar() = delete;
-	explicit search_bar(const std::string&, const std::string&);
+	explicit search_bar(const std::string&);
 	search_bar(const search_bar&) = delete;
 	search_bar(search_bar&&) = delete;
 	search_bar& operator= (const search_bar&) = delete;
@@ -310,16 +310,12 @@ public:
 				      std::function<void(const std::string&)> callback) const override;
 
 private:
-	void on_page_switched();
-	void on_search_changed();
-	void notify_current_page(const std::string&) const;
+	void on_search_changed(const interface::stack&);
 
 private:
-	std::string stack_name{""};
 	std::string search_bar_name{""};
 	std::string search_keyword{""};
-	std::string current_stack_page{""};
-        std::unique_ptr<Gtk::Stack> gui_stack{};
+	std::string previous_stack_page{""};
 	std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
 	mutable std::unordered_map<std::string,
 		std::function<void(const std::string&)>> subscribers{};
@@ -365,6 +361,33 @@ public:
 private:
         std::string name{""};
         std::unique_ptr<Gtk::Button> gui_button{};
+};
+
+class sub_button : public interface::observer {
+public:
+	sub_button() = delete;
+	explicit sub_button(const std::string&);
+	sub_button(const sub_button&) = delete;
+	sub_button(sub_button&&) = delete;
+	sub_button& operator= (const sub_button&) = delete;
+	sub_button& operator= (sub_button&&) = delete;
+        virtual ~sub_button() override;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+	[[nodiscard]] virtual bool subscribe(const std::string&,
+					     std::function<void(const std::string&)>) const override;
+	[[nodiscard]] virtual bool disable();
+	[[nodiscard]] virtual bool enable();
+
+private:
+	void on_clicked(const interface::stack&);
+
+private:
+	std::string button_name{""};
+	std::unique_ptr<Gtk::Button> button{};
+	mutable std::unordered_map<std::string,
+		std::function<void(const std::string&)>> subscribers{};
 };
 }
 }
