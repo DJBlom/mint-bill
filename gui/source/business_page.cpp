@@ -25,7 +25,6 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         else
         {
                 create_entries(_ui_builder);
-                connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();
         }
@@ -35,19 +34,36 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 
 bool gui::business_page::search(const std::string& _keyword)
 {
-        bool searched{true};
+        bool searched{false};
         if (_keyword.empty())
         {
                 syslog(LOG_CRIT, "The _keywword is empty - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-		searched = false;
         }
         else
         {
+		searched = true;
 		update_business_info_with_db_data(_keyword);
         }
 
         return searched;
+}
+
+bool gui::business_page::save()
+{
+	bool success{false};
+	if (!this->save_alert_dialog)
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_alert_dialog->show();
+	}
+
+	return success;
 }
 
 void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -74,30 +90,12 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
                 _ui_builder->get_widget<Gtk::Entry>("business-page-client-message-entry")};
         this->password = std::unique_ptr<Gtk::PasswordEntry>{
                 _ui_builder->get_widget<Gtk::PasswordEntry>("business-page-email-password-entry")};
-        this->save_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("business-page-save-button")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
         this->organization_label = std::unique_ptr<Gtk::Label>{
                 _ui_builder->get_widget<Gtk::Label>("organization-name")};
-}
-
-void gui::business_page::connect_save_button()
-{
-        if (!this->save_button)
-        {
-                syslog(LOG_CRIT, "The save_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->save_button->signal_clicked().connect([this] () {
-                syslog(LOG_INFO, "User clicked the save button - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                this->save_alert_dialog->show();
-        });
 }
 
 void gui::business_page::connect_save_alert()

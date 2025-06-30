@@ -796,10 +796,9 @@ gui::part::statement::pdf_window::pdf_window(const std::string& _title) : title{
 
 bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::document>& _document)
 {
-	bool success{true};
+	bool success{false};
 	if (!_document)
 	{
-		success = false;
 		syslog(LOG_CRIT, "The poppler document is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
@@ -810,41 +809,34 @@ bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::d
 		auto vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 10);
 		if (!(window || scroller || vbox))
 		{
-			success = false;
 			syslog(LOG_CRIT, "The window, scroller, or vbox is not valid - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
+
 			for (int i = 0; i < _document->pages(); ++i)
 			{
 				auto page_view = Gtk::make_managed<pdf_draw>(_document, i);
-				auto pdf_area = Gtk::make_managed<pdf_draw>(_document, i);
-				if (!(page_view || pdf_area))
+				if (!page_view)
 				{
-					success = false;
-					syslog(LOG_CRIT, "The window, scroller, or vbox is not valid - "
+					syslog(LOG_CRIT, "The page_view is not valid - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 					break;
-
 				}
-				else
-				{
-					page_view->set_content_width(A4_DIMENTIONS::PAGE_WIDTH);
-					page_view->set_content_height(A4_DIMENTIONS::PAGE_HEIGHT);
-					scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-					scroller->set_child(*pdf_area);
-					scroller->set_expand();
-					vbox->append(*page_view);
-				}
+				page_view->set_content_width(PAGE_WIDTH);
+				page_view->set_content_height(PAGE_HEIGHT);
+				vbox->append(*page_view);
 			}
 
+			scroller->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
 			scroller->set_child(*vbox);
 			window->set_title(this->title);
-			window->set_default_size(WINDOW_SIZE::WIDTH, WINDOW_SIZE::HEIGHT);
+			window->set_default_size(WIDTH, HEIGHT);
 			window->set_child(*scroller);
 			window->set_modal(true);
 			window->present();
+			success = true;
 		}
 	}
 
@@ -923,12 +915,11 @@ gui::part::statement::invoice_pdf_view::~invoice_pdf_view() {}
 
 bool gui::part::statement::invoice_pdf_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{true};
+        bool success{false};
         if (!_ui_builder)
         {
                 syslog(LOG_CRIT, "The UI builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-		success = false;
         }
         else
         {
@@ -944,10 +935,10 @@ bool gui::part::statement::invoice_pdf_view::create(const Glib::RefPtr<Gtk::Buil
                 {
                         syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
-			success = false;
                 }
                 else
                 {
+			success = true;
                         this->view->set_model(model);
 			this->view->set_factory(factory);
 			this->view->set_single_click_activate(false);
@@ -968,12 +959,11 @@ bool gui::part::statement::invoice_pdf_view::is_not_valid() const
 
 bool gui::part::statement::invoice_pdf_view::populate(const std::vector<std::any>& _invoices)
 {
-	bool success{true};
+	bool success{false};
 	if (_invoices.empty() == true)
 	{
                 syslog(LOG_CRIT, "The _data is empty - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-		success = false;
 	}
 	else
 	{
@@ -988,6 +978,7 @@ bool gui::part::statement::invoice_pdf_view::populate(const std::vector<std::any
 			}
 			else
 			{
+				success = true;
 				this->store->append(rows::invoice_pdf_entries::create(data));
 				Glib::signal_timeout().connect_once([this]() {
 					this->vadjustment->set_value(this->vadjustment->get_upper());
@@ -1452,10 +1443,10 @@ bool gui::part::sub_button::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
         }
         else
         {
-		this->button = std::unique_ptr<Gtk::Button>{_ui_builder->get_widget<Gtk::Button>(this->button_name)};
-		/*this->button->signal_clicked()*/
-		/*	.connect(sigc::bind(sigc::mem_fun(*this, &sub_button::on_clicked), std::ref(_stack)));*/
 		success = true;
+		this->button = std::unique_ptr<Gtk::Button>{_ui_builder->get_widget<Gtk::Button>(this->button_name)};
+		this->button->signal_clicked()
+			.connect(sigc::mem_fun(*this, &sub_button::on_clicked));
         }
 
         return success;
@@ -1466,29 +1457,18 @@ bool gui::part::sub_button::is_not_valid() const
         return !(this->button);
 }
 
-bool gui::part::sub_button::subscribe(const std::string& _page_name,
-			      std::function<void(const std::string&)> _callback) const
+bool gui::part::sub_button::subscribe(std::function<void(void)> _callback)
 {
 	bool success{false};
-	if (_page_name.empty() || !_callback)
+	if (!_callback)
 	{
-		return success;
+                syslog(LOG_CRIT, "The _callback is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
-		std::pair<
-		std::unordered_map<
-		std::string,
-		std::function<void(const std::string&)>>::iterator,
-		bool> result{this->subscribers.emplace(_page_name, _callback)};
-		if (result.second)
-		{
-			success = true;
-		}
-		else
-		{
-			result.first->second = _callback;
-		}
+		success = true;
+		this->callback = _callback;
 	}
 
 	return success;
@@ -1496,52 +1476,47 @@ bool gui::part::sub_button::subscribe(const std::string& _page_name,
 
 bool gui::part::sub_button::disable()
 {
+	bool success{false};
 	if (is_not_valid())
 	{
-		return false;
+                syslog(LOG_CRIT, "The button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
+		success = true;
                 this->button->set_sensitive(false);
 	}
 
-	return true;
+	return success;
 }
 
 bool gui::part::sub_button::enable()
 {
+	bool success{false};
 	if (is_not_valid())
 	{
-		return false;
+                syslog(LOG_CRIT, "The button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
+		success = true;
                 this->button->set_sensitive(true);
 	}
 
-	return true;
+	return success;
 }
 
-void gui::part::sub_button::on_clicked(const interface::stack& _stack)
+void gui::part::sub_button::on_clicked()
 {
-	(void)_stack;
-	/*if (_stack.is_not_valid())*/
-	/*{*/
-	/*}*/
-	/*else*/
-	/*{*/
-	/*	std::unordered_map<*/
-	/*		std::string,*/
-	/*		std::function<void(const std::string&)>*/
-	/*		>::iterator iterator = this->subscribers.find(_stack.current_stack_page());*/
-	/*	if (iterator == this->subscribers.end())*/
-	/*	{*/
-	/*		syslog(LOG_CRIT, "The subscriber has not been registered - "*/
-	/*				  "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*	}*/
-	/*	else*/
-	/*	{*/
-	/*		iterator->second();*/
-	/*	}*/
-	/*}*/
+	if (this->is_not_valid())
+	{
+                syslog(LOG_CRIT, "The button is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->callback();
+	}
 }

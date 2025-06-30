@@ -24,9 +24,9 @@ public:
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 	[[nodiscard]] virtual bool search(const std::string&) override;
+	[[nodiscard]] virtual bool save() override;
 
 private:
-        part::button save_button{"statement-save-button"};
         part::dialog save_dialog{"statement-save-button-alert"};
         part::button print_button{"statement-print-button"};
         part::dialog print_dialog{"statement-print-alert"};

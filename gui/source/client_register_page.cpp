@@ -26,7 +26,6 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         else
         {
                 create_entries(_ui_builder);
-                connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();
         }
@@ -52,6 +51,23 @@ bool gui::client_register_page::search(const std::string& _keyword)
         return searched;
 }
 
+bool gui::client_register_page::save()
+{
+	bool success{false};
+	if (!this->save_alert_dialog)
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_alert_dialog->show();
+	}
+
+	return success;
+}
+
 void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->email = std::unique_ptr<Gtk::Entry>{
@@ -70,26 +86,10 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
                 _ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
         this->business_street_address = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
-        this->save_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("register-save-button")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-wrong-info-alert")};
-}
-
-void gui::client_register_page::connect_save_button()
-{
-        if (!this->save_button)
-        {
-                syslog(LOG_CRIT, "The save_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->save_button->signal_clicked().connect([this] () {
-                this->save_alert_dialog->show();
-        });
 }
 
 void gui::client_register_page::connect_save_alert()
@@ -155,7 +155,6 @@ void gui::client_register_page::connect_wrong_info_alert()
 
 void gui::client_register_page::clear_all_entries()
 {
-        this->search_entry->set_text("");
         this->business_name->set_text("");
         this->business_street_address->set_text("");
         this->business_area_code->set_text("");

@@ -79,33 +79,45 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 		(void) this->stack.create(ui_builder);
 		(void) this->search_bar.create(ui_builder);
 		(void) this->sub_save_button.create(ui_builder);
-		(void) this->sub_save_button.subscribe("business-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Saving data from: %s", _stack_page_name.c_str());
-			return true;
-		});
+		(void) this->sub_save_button.enable();
 
 		(void) this->stack.subscribe("search_bar", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
 			(void) this->search_bar.update(_stack_page_name);
-			(void) this->sub_save_button.enable();
+			if (_stack_page_name == "invoice-page")
+			{
+				(void) this->sub_save_button.enable();
+			}
+			else if (_stack_page_name == "statement-page")
+			{
+				(void) this->sub_save_button.enable();
+			}
+			else if (_stack_page_name == "register-page")
+			{
+
+			}
+			else if (_stack_page_name == "business-page")
+			{
+
+			}
+			else
+			{
+
+			}
+
 			return true;
 		});
 
 		(void) this->search_bar.subscribe("search", [this] (const std::string& _keyword) {
-			syslog(LOG_CRIT, "Current stack page name: %s", this->stack.current_page().c_str());
 			if (this->stack.current_page() == "invoice-page")
 			{
-				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
 				(void) this->invoice_page.search(_keyword);
 			}
 			else if (this->stack.current_page() == "statement-page")
 			{
-				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
 				(void) this->statement_page.search(_keyword);
 			}
 			else if (this->stack.current_page() == "register-page")
 			{
-				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
 				(void) this->client_register_page.search(_keyword);
 			}
 			else if (this->stack.current_page() == "business-page")
@@ -120,9 +132,30 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 			return true;
 		});
 
+		(void) this->sub_save_button.subscribe([this] () {
+			if (this->stack.current_page() == "invoice-page")
+			{
+				(void) this->invoice_page.save();
+			}
+			else if (this->stack.current_page() == "statement-page")
+			{
+				(void) this->statement_page.save();
+			}
+			else if (this->stack.current_page() == "register-page")
+			{
+				(void) this->client_register_page.save();
+			}
+			else if (this->stack.current_page() == "business-page")
+			{
+				(void) this->business_page.save();
+			}
+			else
+			{
+				syslog(LOG_CRIT, "Save function not implemented for: %s", this->stack.current_page().c_str());
+			}
 
-
-
+			return true;
+		});
         }
 }
 

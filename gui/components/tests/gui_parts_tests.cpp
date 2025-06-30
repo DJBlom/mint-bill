@@ -27,7 +27,7 @@ extern "C"
 
 
 static std::string callback_result{""};
-static void callback_function(const std::string& keyword) {
+static void search_bar_callback(const std::string& keyword) {
     callback_result = keyword;
 }
 
@@ -84,10 +84,10 @@ TEST(gui_part_search_bar, fail_to_add_subscriber_without_page_name)
 {
 	(void) search_bar.create(builder);
 
-	CHECK_EQUAL(false, search_bar.subscribe("", callback_function));
+	CHECK_EQUAL(false, search_bar.subscribe("", search_bar_callback));
 }
 
-TEST(gui_part_search_bar, fail_to_add_subscriber_without_callback_function)
+TEST(gui_part_search_bar, fail_to_add_subscriber_without_search_bar_callback)
 {
 	(void) search_bar.create(builder);
 
@@ -98,15 +98,15 @@ TEST(gui_part_search_bar, add_subscriber)
 {
 	(void) search_bar.create(builder);
 
-	CHECK_EQUAL(true, search_bar.subscribe("statement-page", callback_function));
+	CHECK_EQUAL(true, search_bar.subscribe("statement-page", search_bar_callback));
 }
 
 TEST(gui_part_search_bar, try_to_add_multiple_subscriber_to_the_same_page)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statement-page", callback_function);
+	(void) search_bar.subscribe("statement-page", search_bar_callback);
 
-	CHECK_EQUAL(false, search_bar.subscribe("statement-page", callback_function));
+	CHECK_EQUAL(false, search_bar.subscribe("statement-page", search_bar_callback));
 }
 
 TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change_unsuccessfully)
@@ -127,7 +127,7 @@ TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change)
 TEST(gui_part_search_bar, changing_the_search_keyword_unsuccessfully)
 {
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statement-page", callback_function);
+	(void) search_bar.subscribe("statement-page", search_bar_callback);
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	entry->set_text("");
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
@@ -139,7 +139,7 @@ TEST(gui_part_search_bar, changing_the_search_keyword_successfully)
 {
 	std::string result{"Test Business"};
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statement-page", callback_function);
+	(void) search_bar.subscribe("statement-page", search_bar_callback);
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	entry->set_text(result);
 	g_signal_emit_by_name(entry->gobj(), "search-changed");
@@ -152,7 +152,7 @@ TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
 {
 	std::string expected{"Test Business"};
 	(void) search_bar.create(builder);
-	(void) search_bar.subscribe("statement-page", callback_function);
+	(void) search_bar.subscribe("statement-page", search_bar_callback);
 	auto stack = builder->get_widget<Gtk::Stack>("business-stack");
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);
@@ -238,7 +238,6 @@ static void sub_button_callback_function() {
  ******************************************************************************/
 TEST_GROUP(sub_button_test)
 {
-	gui::part::stack stack{"business-stack"};
         gui::part::sub_button sub_button{"save-button"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
@@ -255,41 +254,41 @@ TEST_GROUP(sub_button_test)
 	}
 };
 
-/*TEST(sub_button_test, create_sub_button_unsuccessfully)*/
-/*{*/
-/*	CHECK_EQUAL(false, sub_button.create(nullptr, stack));*/
-/*}*/
-/**/
-/*TEST(sub_button_test, create_sub_button_successfully)*/
-/*{*/
-/*	CHECK_EQUAL(true, sub_button.create(builder, stack));*/
-/*}*/
-/**/
-/*TEST(sub_button_test, sub_button_subscribe_callback_unsuccessfully)*/
-/*{*/
-/*	(void) sub_button.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(false, sub_button.subscribe("", sub_button_callback_function));*/
-/*}*/
-/**/
-/*TEST(sub_button_test, sub_button_subscribe_callback_successfully)*/
-/*{*/
-/*	(void) sub_button.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(true, sub_button.subscribe("business-page", sub_button_callback_function));*/
-/*}*/
-/**/
-/*TEST(sub_button_test, sub_button_is_not_valid)*/
-/*{*/
-/*	CHECK_EQUAL(true, sub_button.is_not_valid());*/
-/*}*/
-/**/
-/*TEST(sub_button_test, sub_button_is_valid)*/
-/*{*/
-/*	(void) sub_button.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(false, sub_button.is_not_valid());*/
-/*}*/
+TEST(sub_button_test, create_sub_button_unsuccessfully)
+{
+	CHECK_EQUAL(false, sub_button.create(nullptr));
+}
+
+TEST(sub_button_test, create_sub_button_successfully)
+{
+	CHECK_EQUAL(true, sub_button.create(builder));
+}
+
+TEST(sub_button_test, sub_button_subscribe_callback_unsuccessfully)
+{
+	(void) sub_button.create(builder);
+
+	CHECK_EQUAL(false, sub_button.subscribe(nullptr));
+}
+
+TEST(sub_button_test, sub_button_subscribe_callback_successfully)
+{
+	(void) sub_button.create(builder);
+
+	CHECK_EQUAL(true, sub_button.subscribe(sub_button_callback_function));
+}
+
+TEST(sub_button_test, sub_button_is_not_valid)
+{
+	CHECK_EQUAL(true, sub_button.is_not_valid());
+}
+
+TEST(sub_button_test, sub_button_is_valid)
+{
+	(void) sub_button.create(builder);
+
+	CHECK_EQUAL(false, sub_button.is_not_valid());
+}
 
 
 
@@ -301,7 +300,7 @@ TEST_GROUP(sub_button_test)
  ******************************************************************************/
 TEST_GROUP(gui_part_button)
 {
-        gui::part::button gui_button{"statement-save-button"};
+        gui::part::button gui_button{"save-button"};
         gui::part::dialog dialog{"statement-save-button-alert"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;

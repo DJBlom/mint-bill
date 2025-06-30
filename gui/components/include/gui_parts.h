@@ -220,6 +220,7 @@ public:
 private:
 
 	std::string title{""};
+	Glib::RefPtr<Gtk::Window> window;
 	enum WINDOW_SIZE {
 		WIDTH = 595,
 		HEIGHT = 515
@@ -364,7 +365,7 @@ private:
         std::unique_ptr<Gtk::Button> gui_button{};
 };
 
-class sub_button : public interface::observer {
+class sub_button : public interface::dispatcher {
 public:
 	sub_button() = delete;
 	explicit sub_button(const std::string&);
@@ -376,19 +377,17 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-	[[nodiscard]] virtual bool subscribe(const std::string&,
-					     std::function<void(const std::string&)>) const override;
+	[[nodiscard]] virtual bool subscribe(std::function<void(void)>) override;
 	[[nodiscard]] virtual bool disable();
 	[[nodiscard]] virtual bool enable();
 
 private:
-	void on_clicked(const interface::stack&);
+	void on_clicked();
 
 private:
 	std::string button_name{""};
 	std::unique_ptr<Gtk::Button> button{};
-	mutable std::unordered_map<std::string,
-		std::function<void(const std::string&)>> subscribers{};
+	std::function<void(void)> callback{};
 };
 }
 }

@@ -96,6 +96,7 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
+			[[nodiscard]] virtual bool save() override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);
@@ -104,7 +105,6 @@ namespace gui {
                         void create_buttons(const Glib::RefPtr<Gtk::Builder>&);
 
                 private: // Button events
-                        void connect_save_button();
                         void connect_material_add_button();
                         void connect_material_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&);
                         void connect_description_add_button();
@@ -205,7 +205,6 @@ namespace gui {
                         std::shared_ptr<Gio::ListStore<column_entries>> description_store{};
 
                 private: // Member buttons
-                        std::unique_ptr<Gtk::Button> save_button{};
                         std::unique_ptr<Gtk::Button> material_add_button{};
                         std::unique_ptr<Gtk::Button> material_delete_button{};
                         std::unique_ptr<Gtk::Button> description_add_button{};

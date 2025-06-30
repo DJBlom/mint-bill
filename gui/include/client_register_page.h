@@ -24,10 +24,10 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
+			[[nodiscard]] virtual bool save() override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_save_button();
                         void connect_save_alert();
                         void connect_wrong_info_alert();
                         void clear_all_entries();
@@ -48,8 +48,6 @@ namespace gui {
                         std::unique_ptr<Gtk::Entry> business_area_code{};
                         std::unique_ptr<Gtk::Entry> business_town_name{};
                         std::unique_ptr<Gtk::Entry> business_street_address{};
-                        std::unique_ptr<Gtk::SearchEntry> search_entry{};
-                        std::unique_ptr<Gtk::Button> save_button{};
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };

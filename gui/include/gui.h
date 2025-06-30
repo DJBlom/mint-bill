@@ -24,6 +24,7 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool search(const std::string&) = 0;
+        [[nodiscard]] virtual bool save() = 0;
 };
 }
 #endif

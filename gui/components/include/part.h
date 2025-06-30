@@ -64,36 +64,15 @@ public:
 	virtual void enable() = 0;
 };
 
-class stack {
-public:
-	virtual ~stack() = default;
-
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-	[[nodiscard]] virtual bool is_not_valid() const = 0;
-	[[nodiscard]] virtual std::string current_stack_page() const = 0;
-};
-
 class test_button {
 public:
 	virtual ~test_button() = default;
 
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&,
-				   const interface::stack&) = 0;
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
 	[[nodiscard]] virtual bool is_not_valid() const = 0;
 	[[nodiscard]] virtual bool subscribe(const std::string&,
 				      std::function<void(void)>) const = 0;
 };
-
-class search {
-public:
-	virtual ~search() = default;
-
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::stack&) = 0;
-	[[nodiscard]] virtual bool is_not_valid() const = 0;
-	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
-				      std::function<void(const std::string&)> callback) const = 0;
-};
-
 
 class observer {
 public:
@@ -114,6 +93,15 @@ public:
 	[[nodiscard]] virtual bool is_not_valid() const = 0;
 	[[nodiscard]] virtual bool subscribe(const std::string&,
 				      std::function<void(const std::string&)>) const = 0;
+};
+
+class dispatcher {
+public:
+	virtual ~dispatcher() = default;
+
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+	[[nodiscard]] virtual bool is_not_valid() const = 0;
+	[[nodiscard]] virtual bool subscribe(std::function<void(void)>) = 0;
 };
 }
 #endif

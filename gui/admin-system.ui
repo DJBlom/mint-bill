@@ -444,21 +444,6 @@
                                     <property name="column-spacing">10</property>
                                     <property name="row-spacing">10</property>
                                     <child>
-                                      <object class="GtkButton" id="new-invoice-save-button">
-                                        <property name="css-classes">save_button</property>
-                                        <property name="css-name">save_button</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label">Stoor</property>
-                                        <property name="valign">center</property>
-                                        <property name="vexpand">True</property>
-                                        <layout>
-                                          <property name="column">0</property>
-                                          <property name="column-span">2</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
                                       <object class="GtkButton" id="known-invoice-print-button">
                                         <property name="css-classes">outlined_button</property>
                                         <property name="hexpand">True</property>
@@ -603,21 +588,6 @@
                                     <property name="column-spacing">10</property>
                                     <property name="row-spacing">10</property>
                                     <child>
-                                      <object class="GtkButton" id="statement-save-button">
-                                        <property name="css-classes">save_button</property>
-                                        <property name="css-name">save_button</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label">Stoor</property>
-                                        <property name="valign">center</property>
-                                        <property name="vexpand">True</property>
-                                        <layout>
-                                          <property name="column">0</property>
-                                          <property name="column-span">2</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
                                       <object class="GtkButton" id="statement-email-button">
                                         <property name="css-classes">outlined_button</property>
                                         <property name="hexpand">True</property>
@@ -729,18 +699,6 @@
                                       <property name="column">0</property>
                                       <property name="column-span">10</property>
                                       <property name="row">7</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="register-save-button">
-                                    <property name="css-classes">save_button</property>
-                                    <property name="css-name">save_button</property>
-                                    <property name="label">Stoor</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">9</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -920,18 +878,6 @@
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
                                       <property name="row">8</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="business-page-save-button">
-                                    <property name="css-classes">save_button</property>
-                                    <property name="css-name">save_button</property>
-                                    <property name="label">Stoor</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">13</property>
                                     </layout>
                                   </object>
                                 </child>

@@ -24,12 +24,12 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
+			[[nodiscard]] virtual bool save() override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_info_alert();
                         void connect_save_alert();
-                        void connect_save_button();
                         void clear_entries();
                         void update_business_info_with_db_data(const std::string&);
                         data::business extract_page_entries();
@@ -53,7 +53,6 @@ namespace gui {
                         std::unique_ptr<Gtk::Entry> account_number{};
                         std::unique_ptr<Gtk::Entry> client_message{};
                         std::unique_ptr<Gtk::PasswordEntry> password{};
-                        std::unique_ptr<Gtk::Button> save_button{};
 
                 private: // Dialogs
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};

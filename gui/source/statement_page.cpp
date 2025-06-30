@@ -20,22 +20,12 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         if (_ui_builder)
         {
                 // save
-                if (this->save_button.create(_ui_builder) == false)
-                {
-                        return created;
-                }
-
                 if (this->save_dialog.create(_ui_builder) == false)
                 {
                         return created;
                 }
 
                 if (this->save_dialog.connect() == false)
-                {
-                        return created;
-                }
-
-                if (this->save_button.connect(this->save_dialog) == false)
                 {
                         return created;
                 }
@@ -166,4 +156,21 @@ bool gui::statement_page::search(const std::string& _keyword)
         }
 
         return searched;
+}
+
+bool gui::statement_page::save()
+{
+	bool success{false};
+	if (this->save_dialog.is_not_valid())
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_dialog.show();
+	}
+
+	return success;
 }

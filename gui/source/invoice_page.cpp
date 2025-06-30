@@ -41,7 +41,6 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
                 create_buttons(_ui_builder);
-                connect_save_button();
                 connect_material_view();
                 connect_description_view();
                 connect_save_alert();
@@ -76,6 +75,23 @@ bool gui::invoice_page::search(const std::string& _keyword)
         }
 
         return searched;
+}
+
+bool gui::invoice_page::save()
+{
+	bool success{false};
+	if (!this->save_alert_dialog)
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_alert_dialog->show();
+	}
+
+	return success;
 }
 
 void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -134,8 +150,6 @@ void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_bui
 
 void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        this->save_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("new-invoice-save-button")};
         this->description_add_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-add-button")};
         this->material_add_button = std::unique_ptr<Gtk::Button>{
@@ -156,20 +170,6 @@ void gui::invoice_page::perform_search(const std::string& _keyword) {
         this->populate(business_name);
         this->invoice_number->set_text("51");
         this->invoice_date->set_text("10-12-2024");
-}
-
-void gui::invoice_page::connect_save_button()
-{
-        if (!this->save_button)
-        {
-                syslog(LOG_CRIT, "The save_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->save_button->signal_clicked().connect([this] () {
-                this->save_alert_dialog->show();
-        });
 }
 
 void gui::invoice_page::connect_description_view()
