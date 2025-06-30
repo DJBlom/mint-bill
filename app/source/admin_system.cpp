@@ -46,73 +46,83 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-
-		if (this->search_bar.create(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to create the search bar - "
-					  "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		(void) this->stack.create(ui_builder);
-		(void) this->sub_save_button.create(ui_builder);
-
-		(void) this->sub_save_button.subscribe("business-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Saving data from: %s", _stack_page_name.c_str());
-			return true;
-		});
-
-		(void) this->stack.subscribe("invoice-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
-			(void) this->sub_save_button.enable();
-			return true;
-		});
-
-		(void) this->stack.subscribe("register-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
-			(void) this->sub_save_button.enable();
-			return true;
-		});
-
-		(void) this->stack.subscribe("statement-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
-			(void) this->sub_save_button.enable();
-			return true;
-		});
-
-		(void) this->stack.subscribe("business-page", [this] (const std::string& _stack_page_name) {
-			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
-			(void) this->sub_save_button.enable();
-			return true;
-		});
-
-                if (this->business_page.create(ui_builder, this->search_bar) == false)
+                if (this->business_page.create(ui_builder) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the business page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->client_register_page.create(ui_builder, this->search_bar) == false)
+                if (this->client_register_page.create(ui_builder) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the client registration page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->invoice_page.create(ui_builder, this->search_bar) == false)
+                if (this->invoice_page.create(ui_builder) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the invoice page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->statement_page.create(ui_builder, this->search_bar) == false)
+                if (this->statement_page.create(ui_builder) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the statement page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
+
+
+
+		(void) this->stack.create(ui_builder);
+		(void) this->search_bar.create(ui_builder);
+		(void) this->sub_save_button.create(ui_builder);
+		(void) this->sub_save_button.subscribe("business-page", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Saving data from: %s", _stack_page_name.c_str());
+			return true;
+		});
+
+		(void) this->stack.subscribe("search_bar", [this] (const std::string& _stack_page_name) {
+			syslog(LOG_CRIT, "Switching stack page to: %s", _stack_page_name.c_str());
+			(void) this->search_bar.update(_stack_page_name);
+			(void) this->sub_save_button.enable();
+			return true;
+		});
+
+		(void) this->search_bar.subscribe("search", [this] (const std::string& _keyword) {
+			syslog(LOG_CRIT, "Current stack page name: %s", this->stack.current_page().c_str());
+			if (this->stack.current_page() == "invoice-page")
+			{
+				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
+				(void) this->invoice_page.search(_keyword);
+			}
+			else if (this->stack.current_page() == "statement-page")
+			{
+				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
+				(void) this->statement_page.search(_keyword);
+			}
+			else if (this->stack.current_page() == "register-page")
+			{
+				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
+				(void) this->client_register_page.search(_keyword);
+			}
+			else if (this->stack.current_page() == "business-page")
+			{
+				(void) this->business_page.search(_keyword);
+			}
+			else
+			{
+				syslog(LOG_CRIT, "Search function not implemented for: %s", this->stack.current_page().c_str());
+			}
+
+			return true;
+		});
+
+
+
+
         }
 }
 

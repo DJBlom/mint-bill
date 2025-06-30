@@ -13,7 +13,7 @@
 
 namespace gui {
         //GCOVR_EXCL_START
-        class business_page : public interface::gui {
+        class business_page : public interface::gui_test {
                 public:
                         business_page() = default;
                         business_page(const business_page&) = delete;
@@ -22,7 +22,8 @@ namespace gui {
                         business_page& operator= (business_page&&) = delete;
                         ~business_page() override;
 
-			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool search(const std::string&) override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);

@@ -13,7 +13,7 @@
 
 
 namespace gui {
-class statement_page : public interface::gui {
+class statement_page : public interface::gui_test {
 public:
         statement_page() = default;
         statement_page(const statement_page&) = delete;
@@ -22,7 +22,8 @@ public:
         statement_page& operator= (statement_page&&) = delete;
         ~statement_page() override;
 
-        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+	[[nodiscard]] virtual bool search(const std::string&) override;
 
 private:
         part::button save_button{"statement-save-button"};

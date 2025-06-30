@@ -23,8 +23,8 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"
-CPPUTEST_EXE_FLAGS +=-sg "stack_test"
-# CPPUTEST_EXE_FLAGS +=-sg "gui_search_bar_test"
+# CPPUTEST_EXE_FLAGS +=-sg "stack_test"
+# CPPUTEST_EXE_FLAGS +=-sg "gui_part_search_bar"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 
 CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)

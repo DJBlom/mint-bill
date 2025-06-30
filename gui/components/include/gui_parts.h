@@ -294,7 +294,7 @@ private:
 };
 }
 
-class search_bar : public interface::observer {
+class search_bar : public interface::publisher {
 public:
 	search_bar() = delete;
 	explicit search_bar(const std::string&);
@@ -305,17 +305,18 @@ public:
         virtual ~search_bar() override;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+	[[nodiscard]] virtual bool update(const std::string&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-	[[nodiscard]] virtual bool subscribe(const std::string& page_name,
-				      std::function<void(const std::string&)> callback) const override;
+	[[nodiscard]] virtual bool subscribe(const std::string&,
+				      std::function<void(const std::string&)>) const override;
 
 private:
-	void on_search_changed(const interface::stack&);
+	void on_search_changed();
 
 private:
 	std::string search_bar_name{""};
 	std::string search_keyword{""};
-	std::string previous_stack_page{""};
+	std::string stack_page_name{""};
 	std::unique_ptr<Gtk::SearchEntry> gui_search_bar{};
 	mutable std::unordered_map<std::string,
 		std::function<void(const std::string&)>> subscribers{};

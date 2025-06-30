@@ -104,5 +104,16 @@ public:
 	[[nodiscard]] virtual bool subscribe(const std::string&,
 				      std::function<void(const std::string&)>) const = 0;
 };
+
+class publisher {
+public:
+	virtual ~publisher() = default;
+
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+	[[nodiscard]] virtual bool update(const std::string&) = 0;
+	[[nodiscard]] virtual bool is_not_valid() const = 0;
+	[[nodiscard]] virtual bool subscribe(const std::string&,
+				      std::function<void(const std::string&)>) const = 0;
+};
 }
 #endif

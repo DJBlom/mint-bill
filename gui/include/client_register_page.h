@@ -13,7 +13,7 @@
 
 namespace gui {
         //GCOVR_EXCL_START
-        class client_register_page : public interface::gui {
+        class client_register_page : public interface::gui_test {
                 public:
                         client_register_page() = default;
                         client_register_page(const client_register_page&) = delete;
@@ -22,7 +22,8 @@ namespace gui {
                         client_register_page& operator= (client_register_page&&) = delete;
                         ~client_register_page() override;
 
-			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool search(const std::string&) override;
 
                 private:
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);

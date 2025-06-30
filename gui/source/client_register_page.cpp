@@ -14,22 +14,17 @@ gui::client_register_page::~client_register_page()
 {
 }
 
-bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
-				       const interface::observer& _search_bar)
+bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
+        bool created{true};
         if (!_ui_builder)
         {
                 syslog(LOG_CRIT, "The _ui_builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                return created;
+                created = false;
         }
         else
         {
-		created = _search_bar.subscribe("register-page", [this] (const std::string& _keyword) {
-			data::client data = this->client_register.search(_keyword, this->db);
-			display_on_ui(data);
-		});
                 create_entries(_ui_builder);
                 connect_save_button();
                 connect_save_alert();
@@ -37,6 +32,24 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         }
 
         return created;
+}
+
+bool gui::client_register_page::search(const std::string& _keyword)
+{
+        bool searched{true};
+        if (_keyword.empty())
+        {
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		searched = false;
+        }
+        else
+        {
+		data::client data = this->client_register.search(_keyword, this->db);
+		display_on_ui(data);
+        }
+
+        return searched;
 }
 
 void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)

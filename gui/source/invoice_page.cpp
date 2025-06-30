@@ -26,21 +26,17 @@ gui::invoice_page::~invoice_page()
 
 }
 
-bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
-			       const interface::observer& _search_bar)
+bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
+        bool created{true};
         if (!_ui_builder)
         {
                 syslog(LOG_CRIT, "UI builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                return created;
+                created = false;
         }
         else
         {
-		created = _search_bar.subscribe("invoice-page", [this] (const std::string& _keyword) {
-			perform_search(_keyword);
-		});
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
                 create_dialogs(_ui_builder);
@@ -63,6 +59,23 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         }
 
         return created;
+}
+
+bool gui::invoice_page::search(const std::string& _keyword)
+{
+        bool searched{true};
+        if (_keyword.empty())
+        {
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		searched = false;
+        }
+        else
+        {
+		perform_search(_keyword);
+        }
+
+        return searched;
 }
 
 void gui::invoice_page::create_views(const Glib::RefPtr<Gtk::Builder>& _ui_builder)

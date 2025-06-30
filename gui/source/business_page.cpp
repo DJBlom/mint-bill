@@ -13,21 +13,17 @@ gui::business_page::~business_page()
 
 }
 
-bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
-				const interface::observer& _search_bar)
+bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
+        bool created{true};
         if (!_ui_builder)
         {
                 syslog(LOG_CRIT, "The _ui_builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                return created;
+		created = false;
         }
         else
         {
-		created = _search_bar.subscribe("business-page", [this] (const std::string& _keyword) {
-			update_business_info_with_db_data(_keyword);
-		});
                 create_entries(_ui_builder);
                 connect_save_button();
                 connect_save_alert();
@@ -35,6 +31,23 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         }
 
         return created;
+}
+
+bool gui::business_page::search(const std::string& _keyword)
+{
+        bool searched{true};
+        if (_keyword.empty())
+        {
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		searched = false;
+        }
+        else
+        {
+		update_business_info_with_db_data(_keyword);
+        }
+
+        return searched;
 }
 
 void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)

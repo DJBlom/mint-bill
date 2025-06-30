@@ -19,8 +19,10 @@ extern "C"
 }
 
 
+static std::string callback_result{""};
 static void callback_function(const std::string& _stack_page_name)
 {
+	callback_result = _stack_page_name;
 	std::cout << "Stack page name: " << _stack_page_name << std::endl;
 }
 
@@ -88,14 +90,46 @@ TEST(stack_test, subscribe_successfully)
 	CHECK_EQUAL(true, stack.subscribe("business-page", callback_function));
 }
 
-/*TEST(stack_test, get_current_stack_page_name_unsuccessfully)*/
-/*{*/
-/*	CHECK_EQUAL("", stack.current_stack_page());*/
-/*}*/
-/**/
-/*TEST(stack_test, get_current_stack_page_name_successfully)*/
-/*{*/
-/*	(void) stack.create(builder);*/
-/**/
-/*	CHECK_EQUAL("invoice-page", stack.current_stack_page());*/
-/*}*/
+TEST(stack_test, try_to_add_multiple_subscriber_to_the_same_page)
+{
+	(void) stack.create(builder);
+	(void) stack.subscribe("statement-page", callback_function);
+
+	CHECK_EQUAL(false, stack.subscribe("statement-page", callback_function));
+}
+
+TEST(stack_test, changing_the_stack_page_unsuccessfully)
+{
+	(void) stack.create(builder);
+	(void) stack.subscribe("statement-page", callback_function);
+	auto temp_stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto children = temp_stack->get_children();
+	temp_stack->set_visible_child(*children.front());
+	temp_stack->remove(*temp_stack->get_visible_child());
+
+	CHECK_EQUAL("", temp_stack->get_visible_child_name());
+}
+
+TEST(stack_test, changing_the_stack_page_successfully)
+{
+	(void) stack.create(builder);
+	(void) stack.subscribe("statement-page", callback_function);
+	auto temp_stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto children = temp_stack->get_children();
+	temp_stack->set_visible_child(*children.front());
+	temp_stack->set_visible_child(*children.back());
+
+	CHECK_EQUAL("business-page", temp_stack->get_visible_child_name());
+}
+
+TEST(stack_test, get_current_stack_page_name_unsuccessfully)
+{
+	CHECK_EQUAL("", stack.current_page());
+}
+
+TEST(stack_test, get_current_stack_page_name_successfully)
+{
+	(void) stack.create(builder);
+
+	CHECK_EQUAL("invoice-page", stack.current_page());
+}

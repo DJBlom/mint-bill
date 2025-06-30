@@ -1191,12 +1191,38 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
         {
                 this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
 			_ui_builder->get_widget<Gtk::SearchEntry>(this->search_bar_name)};
-		/*this->gui_search_bar->signal_search_changed()*/
-		/*	.connect(sigc::sigc::mem_fun(*this, &search_bar::on_search_changed), std::ref(_stack)));*/
-		success = true;
+		if (this->is_not_valid())
+		{
+			syslog(LOG_CRIT, "The gui_search_bar is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+			this->gui_search_bar->signal_search_changed()
+				.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
+		}
         }
 
         return success;
+}
+
+bool gui::part::search_bar::update(const std::string& _current_stack_page_name)
+{
+	bool updated{true};
+	if (_current_stack_page_name.empty())
+	{
+		syslog(LOG_CRIT, "The _current_stack_page_name is empty - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		updated = false;
+	}
+	else
+	{
+		this->gui_search_bar->set_text("");
+		this->stack_page_name = _current_stack_page_name;
+	}
+
+	return updated;
 }
 
 bool gui::part::search_bar::is_not_valid() const
@@ -1210,7 +1236,8 @@ bool gui::part::search_bar::subscribe(const std::string& _page_name,
 	bool success{false};
 	if (_page_name.empty() || !_callback)
 	{
-		return success;
+		syslog(LOG_CRIT, "The _page_name or _callback is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1232,9 +1259,9 @@ bool gui::part::search_bar::subscribe(const std::string& _page_name,
 	return success;
 }
 
-void gui::part::search_bar::on_search_changed(const interface::stack& _stack)
+void gui::part::search_bar::on_search_changed()
 {
-	std::string keyword = this->gui_search_bar->get_text();
+	const std::string keyword{this->gui_search_bar->get_text()};
 	if (keyword.empty())
 	{
 		syslog(LOG_CRIT, "The keyword is empty, nothing to notify about - "
@@ -1242,19 +1269,17 @@ void gui::part::search_bar::on_search_changed(const interface::stack& _stack)
 	}
 	else
 	{
-		std::unordered_map<
-		std::string,
-		std::function<void(const std::string&)>
-		>::iterator iterator = this->subscribers.find(_stack.current_stack_page());
-		if (iterator == this->subscribers.end())
+		for (const auto& [key, callback] : this->subscribers)
 		{
-			syslog(LOG_CRIT, "The subscriber has not been registered - "
-					  "filename %s, line number %d", __FILE__, __LINE__);
-		}
-		else
-		{
-			iterator->second(keyword);
-			syslog(LOG_INFO, "Notifying the %s of a search", (_stack.current_stack_page()).c_str());
+			if (!callback)
+			{
+				syslog(LOG_CRIT, "The subscriber has not been registered - "
+						  "filename %s, line number %d", __FILE__, __LINE__);
+			}
+			else
+			{
+				callback(keyword);
+			}
 		}
 	}
 }

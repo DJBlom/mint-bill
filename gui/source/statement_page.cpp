@@ -14,7 +14,7 @@
 
 gui::statement_page::~statement_page() {}
 
-bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, const interface::observer& _search_bar)
+bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
 	bool created{false};
         if (_ui_builder)
@@ -123,36 +123,47 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder, 
                         return created;
 		}
 
-
-		feature::client_statement client_statement{};
-		created = _search_bar.subscribe("statement-page", [this, client_statement](const std::string& _keyword) {
-			bool success{true};
-			std::vector<std::any> invoices{};
-			std::vector<std::any> statements{};
-			for (const std::any& data : client_statement.load(_keyword))
-			{
-				data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-				statements.emplace_back(pdf_statement.get_statement());
-				const std::vector<data::pdf_invoice>& pdf_invoices = pdf_statement.get_pdf_invoices();
-				std::transform(pdf_invoices.begin(), pdf_invoices.end(), std::back_inserter(invoices),
-					[](const data::pdf_invoice& invoice) {
-					return std::any{invoice};
-				});
-			}
-
-			if (this->statement_view.populate(statements) == false)
-			{
-				success = false;
-			}
-
-			if (this->invoice_pdf_view.populate(invoices) == false)
-			{
-				success = false;
-			}
-
-			return success;
-		});
+		created = true;
         }
 
         return created;
+}
+
+bool gui::statement_page::search(const std::string& _keyword)
+{
+        bool searched{true};
+        if (_keyword.empty())
+        {
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		searched = false;
+        }
+        else
+        {
+		feature::client_statement client_statement{};
+		std::vector<std::any> invoices{};
+		std::vector<std::any> statements{};
+		for (const std::any& data : client_statement.load(_keyword))
+		{
+			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+			statements.emplace_back(pdf_statement.get_statement());
+			const std::vector<data::pdf_invoice>& pdf_invoices = pdf_statement.get_pdf_invoices();
+			std::transform(pdf_invoices.begin(), pdf_invoices.end(), std::back_inserter(invoices),
+				[](const data::pdf_invoice& invoice) {
+				return std::any{invoice};
+			});
+		}
+
+		if (this->statement_view.populate(statements) == false)
+		{
+			searched = false;
+		}
+
+		if (this->invoice_pdf_view.populate(invoices) == false)
+		{
+			searched = false;
+		}
+        }
+
+        return searched;
 }

@@ -41,7 +41,6 @@ static void callback_function(const std::string& keyword) {
  ******************************************************************************/
 TEST_GROUP(gui_part_search_bar)
 {
-	gui::part::stack stack{"business-stack"};
         gui::part::search_bar search_bar{"business-name-search"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
@@ -59,107 +58,109 @@ TEST_GROUP(gui_part_search_bar)
 	}
 };
 
-/*TEST(gui_part_search_bar, create_search_bar_successfully)*/
-/*{*/
-/*	CHECK_EQUAL(true, search_bar.create(builder, stack));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, create_search_bar_unsuccessfully)*/
-/*{*/
-/*	CHECK_EQUAL(false, search_bar.create(nullptr, stack));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, is_search_bar_not_valid)*/
-/*{*/
-/*	CHECK_EQUAL(true, search_bar.is_not_valid());*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, is_search_bar_valid)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(false, search_bar.is_not_valid());*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, fail_to_add_subscriber_without_page_name)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(false, search_bar.subscribe("", callback_function));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, fail_to_add_subscriber_without_callback_function)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(false, search_bar.subscribe("statement-page", nullptr));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, add_subscriber)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/**/
-/*	CHECK_EQUAL(true, search_bar.subscribe("statement-page", callback_function));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, try_to_add_multiple_subscriber_to_the_same_page)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/*	(void) search_bar.subscribe("statement-page", callback_function);*/
-/**/
-/*	CHECK_EQUAL(false, search_bar.subscribe("statement-page", callback_function));*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/*	(void) search_bar.subscribe("statement-page", callback_function);*/
-/*	auto stack = builder->get_widget<Gtk::Stack>("business-stack");*/
-/*	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");*/
-/*	entry->set_text("invoice123");*/
-/*	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);*/
-/*	g_signal_emit_by_name(entry->gobj(), "search-changed");*/
-/**/
-/*	CHECK_EQUAL("", entry->get_text());*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, changing_the_search_keyword_unsuccessfully)*/
-/*{*/
-/*	(void) search_bar.create(builder, stack);*/
-/*	(void) search_bar.subscribe("statement-page", callback_function);*/
-/*	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");*/
-/*	entry->set_text("");*/
-/*	g_signal_emit_by_name(entry->gobj(), "search-changed");*/
-/**/
-/*	CHECK_EQUAL("", entry->get_text());*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, changing_the_search_keyword_successfully)*/
-/*{*/
-/*	std::string result{"Test Business"};*/
-/*	(void) search_bar.create(builder, stack);*/
-/*	(void) search_bar.subscribe("statement-page", callback_function);*/
-/*	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");*/
-/*	entry->set_text(result);*/
-/*	g_signal_emit_by_name(entry->gobj(), "search-changed");*/
-/*	std::string expected{entry->get_text()};*/
-/**/
-/*	STRCMP_EQUAL(result.c_str(), expected.c_str());*/
-/*}*/
-/**/
-/*TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)*/
-/*{*/
-/*	std::string expected{"Test Business"};*/
-/*	(void) search_bar.create(builder, stack);*/
-/*	(void) search_bar.subscribe("statement-page", callback_function);*/
-/*	auto stack = builder->get_widget<Gtk::Stack>("business-stack");*/
-/*	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");*/
-/*	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);*/
-/*	entry->set_text(expected);*/
-/*	g_signal_emit_by_name(entry->gobj(), "search-changed");*/
-/**/
-/*	STRCMP_EQUAL(expected.c_str(), callback_result.c_str());*/
-/*}*/
+TEST(gui_part_search_bar, create_search_bar_successfully)
+{
+	CHECK_EQUAL(true, search_bar.create(builder));
+}
+
+TEST(gui_part_search_bar, create_search_bar_unsuccessfully)
+{
+	CHECK_EQUAL(false, search_bar.create(nullptr));
+}
+
+TEST(gui_part_search_bar, is_search_bar_not_valid)
+{
+	CHECK_EQUAL(true, search_bar.is_not_valid());
+}
+
+TEST(gui_part_search_bar, is_search_bar_valid)
+{
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(false, search_bar.is_not_valid());
+}
+
+TEST(gui_part_search_bar, fail_to_add_subscriber_without_page_name)
+{
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(false, search_bar.subscribe("", callback_function));
+}
+
+TEST(gui_part_search_bar, fail_to_add_subscriber_without_callback_function)
+{
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(false, search_bar.subscribe("statement-page", nullptr));
+}
+
+TEST(gui_part_search_bar, add_subscriber)
+{
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(true, search_bar.subscribe("statement-page", callback_function));
+}
+
+TEST(gui_part_search_bar, try_to_add_multiple_subscriber_to_the_same_page)
+{
+	(void) search_bar.create(builder);
+	(void) search_bar.subscribe("statement-page", callback_function);
+
+	CHECK_EQUAL(false, search_bar.subscribe("statement-page", callback_function));
+}
+
+TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change_unsuccessfully)
+{
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(false, search_bar.update(""));
+}
+
+TEST(gui_part_search_bar, clear_the_search_bar_entry_on_every_stack_page_change)
+{
+	std::string current_stack_page_name{"invoice-page"};
+	(void) search_bar.create(builder);
+
+	CHECK_EQUAL(true, search_bar.update(current_stack_page_name));
+}
+
+TEST(gui_part_search_bar, changing_the_search_keyword_unsuccessfully)
+{
+	(void) search_bar.create(builder);
+	(void) search_bar.subscribe("statement-page", callback_function);
+	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
+	entry->set_text("");
+	g_signal_emit_by_name(entry->gobj(), "search-changed");
+
+	CHECK_EQUAL("", entry->get_text());
+}
+
+TEST(gui_part_search_bar, changing_the_search_keyword_successfully)
+{
+	std::string result{"Test Business"};
+	(void) search_bar.create(builder);
+	(void) search_bar.subscribe("statement-page", callback_function);
+	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
+	entry->set_text(result);
+	g_signal_emit_by_name(entry->gobj(), "search-changed");
+	std::string expected{entry->get_text()};
+
+	STRCMP_EQUAL(result.c_str(), expected.c_str());
+}
+
+TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
+{
+	std::string expected{"Test Business"};
+	(void) search_bar.create(builder);
+	(void) search_bar.subscribe("statement-page", callback_function);
+	auto stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
+	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);
+	entry->set_text(expected);
+	g_signal_emit_by_name(entry->gobj(), "search-changed");
+
+	STRCMP_EQUAL(expected.c_str(), callback_result.c_str());
+}
 
 
 

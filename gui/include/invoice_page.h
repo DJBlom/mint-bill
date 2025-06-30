@@ -85,7 +85,7 @@ namespace gui {
                         size_t document_index{0};
         };
 
-        class invoice_page : public interface::gui {
+        class invoice_page : public interface::gui_test {
                 public:
                         invoice_page();
                         invoice_page(const invoice_page&) = delete;
@@ -94,7 +94,8 @@ namespace gui {
                         invoice_page& operator= (invoice_page&&) = delete;
                         ~invoice_page() override;
 
-			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool search(const std::string&) override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);
