@@ -13,7 +13,7 @@
 
 
 namespace gui {
-class statement_page : public interface::gui_test {
+class statement_page : public interface::operations_page {
 public:
         statement_page() = default;
         statement_page(const statement_page&) = delete;
@@ -24,13 +24,13 @@ public:
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 	[[nodiscard]] virtual bool search(const std::string&) override;
+	[[nodiscard]] virtual bool print() override;
+	[[nodiscard]] virtual bool email() override;
 	[[nodiscard]] virtual bool save() override;
 
 private:
         part::dialog save_dialog{"statement-save-button-alert"};
-        part::button print_button{"statement-print-button"};
         part::dialog print_dialog{"statement-print-alert"};
-        part::button email_button{"statement-email-button"};
         part::dialog email_dialog{"statement-email-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};

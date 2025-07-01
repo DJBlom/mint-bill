@@ -37,7 +37,9 @@ namespace app {
                         gui::statement_page statement_page{};
 			gui::part::stack stack{"business-stack"};
 			gui::part::search_bar search_bar{"business-name-search"};
-			gui::part::sub_button sub_save_button{"save-button"};
+			gui::part::sub_button print_button{"print-button"};
+			gui::part::sub_button email_button{"email-button"};
+			gui::part::sub_button save_button{"save-button"};
         };
 }
 #endif

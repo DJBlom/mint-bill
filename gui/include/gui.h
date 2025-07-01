@@ -18,12 +18,23 @@ public:
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const interface::observer&) = 0;
 };
 
-class gui_test {
+class register_page {
 public:
-        virtual ~gui_test() = default;
+        virtual ~register_page() = default;
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
         [[nodiscard]] virtual bool search(const std::string&) = 0;
+        [[nodiscard]] virtual bool save() = 0;
+};
+
+class operations_page {
+public:
+        virtual ~operations_page() = default;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+        [[nodiscard]] virtual bool search(const std::string&) = 0;
+        [[nodiscard]] virtual bool print() = 0;
+        [[nodiscard]] virtual bool email() = 0;
         [[nodiscard]] virtual bool save() = 0;
 };
 }

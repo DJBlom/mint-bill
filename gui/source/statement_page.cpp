@@ -31,30 +31,12 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 }
 
                 // print
-                if (this->print_button.create(_ui_builder) == false)
-                {
-                        return created;
-                }
-
                 if (this->print_dialog.create(_ui_builder) == false)
                 {
                         return created;
                 }
 
                 if (this->print_dialog.connect() == false)
-                {
-                        return created;
-                }
-
-                if (this->print_button.connect(this->print_dialog) == false)
-                {
-                        return created;
-                }
-
-                this->print_button.disable();
-
-                // email
-                if (this->email_button.create(_ui_builder) == false)
                 {
                         return created;
                 }
@@ -68,13 +50,6 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 {
                         return created;
                 }
-
-                if (this->email_button.connect(this->email_dialog) == false)
-                {
-                        return created;
-                }
-
-                this->email_button.disable();
 
 		if (this->statement_view.create(_ui_builder) == false)
 		{
@@ -156,6 +131,16 @@ bool gui::statement_page::search(const std::string& _keyword)
         }
 
         return searched;
+}
+
+bool gui::statement_page::print()
+{
+	return false;
+}
+
+bool gui::statement_page::email()
+{
+	return false;
 }
 
 bool gui::statement_page::save()

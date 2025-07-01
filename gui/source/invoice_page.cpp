@@ -49,9 +49,7 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                 connect_wrong_data_in_quantity_column_alert();
                 setup_page();
                 connect_email_alert();
-                connect_email_button();
                 connect_print_alert();
-                connect_print_button();
                 connect_invoice_view();
                 connect_no_printer_alert();
                 connect_no_internet_alert();
@@ -62,19 +60,53 @@ bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 
 bool gui::invoice_page::search(const std::string& _keyword)
 {
-        bool searched{true};
+        bool searched{false};
         if (_keyword.empty())
         {
                 syslog(LOG_CRIT, "The _keywword is empty - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-		searched = false;
         }
         else
         {
+		searched = true;
 		perform_search(_keyword);
         }
 
         return searched;
+}
+
+bool gui::invoice_page::print()
+{
+	bool success{false};
+	if (!this->print_confirmation)
+	{
+                syslog(LOG_CRIT, "The print_confirmation is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->print_confirmation->show();
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::email()
+{
+	bool success{false};
+	if (!this->email_confirmation)
+	{
+                syslog(LOG_CRIT, "The email_confirmation is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->email_confirmation->show();
+	}
+
+	return success;
 }
 
 bool gui::invoice_page::save()
@@ -158,10 +190,6 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Button>("invoice-material-delete-button")};
         this->description_delete_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-delete-button")};
-        this->print_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("known-invoice-print-button")};
-        this->email_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("known-invoice-email-button")};
 }
 
 void gui::invoice_page::perform_search(const std::string& _keyword) {
@@ -1049,8 +1077,7 @@ void gui::invoice_page::populate(const std::string& _business_name)
         this->invoice_store->remove_all();
         if (_business_name.empty())
         {
-                this->email_button->set_sensitive(false);
-                this->print_button->set_sensitive(false);
+		// Pop some dialog here
         }
         else
         {
@@ -1098,21 +1125,6 @@ void gui::invoice_page::connect_email_alert()
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         this->email_confirmation->hide();
                 }
-        });
-}
-
-void gui::invoice_page::connect_email_button()
-{
-        if (!this->email_button)
-        {
-                syslog(LOG_CRIT, "The email_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->email_button->set_sensitive(false);
-        this->email_button->signal_clicked().connect([this] () {
-                this->email_confirmation->show();
         });
 }
 
@@ -1199,21 +1211,6 @@ void gui::invoice_page::connect_no_internet_alert()
                                 this->email_no_internet->hide();
                                 break;
                 }
-        });
-}
-
-void gui::invoice_page::connect_print_button()
-{
-        if (!this->print_button)
-        {
-                syslog(LOG_CRIT, "The print_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->print_button->set_sensitive(false);
-        this->print_button->signal_clicked().connect([this] () {
-                this->print_confirmation->show();
         });
 }
 
@@ -1375,8 +1372,6 @@ void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
                 data::invoice temp{invoice->invoice};
                 this->invoices_selected.push_back(invoice->invoice);
         }
-        this->email_button->set_sensitive(true);
-        this->print_button->set_sensitive(true);
 }
 
 void gui::invoice_page::email_sent()

@@ -78,30 +78,42 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 
 		(void) this->stack.create(ui_builder);
 		(void) this->search_bar.create(ui_builder);
-		(void) this->sub_save_button.create(ui_builder);
-		(void) this->sub_save_button.enable();
+		(void) this->print_button.create(ui_builder);
+		(void) this->print_button.enable();
+		(void) this->email_button.create(ui_builder);
+		(void) this->email_button.enable();
+		(void) this->save_button.create(ui_builder);
+		(void) this->save_button.enable();
 
 		(void) this->stack.subscribe("search_bar", [this] (const std::string& _stack_page_name) {
 			(void) this->search_bar.update(_stack_page_name);
 			if (_stack_page_name == "invoice-page")
 			{
-				(void) this->sub_save_button.enable();
+				(void) this->print_button.enable();
+				(void) this->email_button.enable();
+				(void) this->save_button.enable();
 			}
 			else if (_stack_page_name == "statement-page")
 			{
-				(void) this->sub_save_button.enable();
+				(void) this->print_button.enable();
+				(void) this->email_button.enable();
+				(void) this->save_button.enable();
 			}
 			else if (_stack_page_name == "register-page")
 			{
-
+				(void) this->print_button.disable();
+				(void) this->email_button.disable();
+				(void) this->save_button.enable();
 			}
 			else if (_stack_page_name == "business-page")
 			{
-
+				(void) this->print_button.disable();
+				(void) this->email_button.disable();
+				(void) this->save_button.enable();
 			}
 			else
 			{
-
+				syslog(LOG_CRIT, "The stack page is not known: %s", _stack_page_name.c_str());
 			}
 
 			return true;
@@ -132,7 +144,41 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 			return true;
 		});
 
-		(void) this->sub_save_button.subscribe([this] () {
+		(void) this->print_button.subscribe([this] () {
+			if (this->stack.current_page() == "invoice-page")
+			{
+				(void) this->invoice_page.print();
+			}
+			else if (this->stack.current_page() == "statement-page")
+			{
+				(void) this->statement_page.print();
+			}
+			else
+			{
+				syslog(LOG_CRIT, "The print function not implemented for: %s", this->stack.current_page().c_str());
+			}
+
+			return true;
+		});
+
+		(void) this->email_button.subscribe([this] () {
+			if (this->stack.current_page() == "invoice-page")
+			{
+				(void) this->invoice_page.email();
+			}
+			else if (this->stack.current_page() == "statement-page")
+			{
+				(void) this->statement_page.email();
+			}
+			else
+			{
+				syslog(LOG_CRIT, "The email function not implemented for: %s", this->stack.current_page().c_str());
+			}
+
+			return true;
+		});
+
+		(void) this->save_button.subscribe([this] () {
 			if (this->stack.current_page() == "invoice-page")
 			{
 				(void) this->invoice_page.save();
@@ -151,7 +197,7 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
 			}
 			else
 			{
-				syslog(LOG_CRIT, "Save function not implemented for: %s", this->stack.current_page().c_str());
+				syslog(LOG_CRIT, "The save function not implemented for: %s", this->stack.current_page().c_str());
 			}
 
 			return true;

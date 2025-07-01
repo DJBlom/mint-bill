@@ -13,7 +13,7 @@
 
 namespace gui {
         //GCOVR_EXCL_START
-        class business_page : public interface::gui_test {
+        class business_page : public interface::register_page {
                 public:
                         business_page() = default;
                         business_page(const business_page&) = delete;

@@ -85,7 +85,7 @@ namespace gui {
                         size_t document_index{0};
         };
 
-        class invoice_page : public interface::gui_test {
+        class invoice_page : public interface::operations_page {
                 public:
                         invoice_page();
                         invoice_page(const invoice_page&) = delete;
@@ -96,6 +96,8 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
+			[[nodiscard]] virtual bool print() override;
+			[[nodiscard]] virtual bool email() override;
 			[[nodiscard]] virtual bool save() override;
 
                 private: // GUI creations
@@ -112,7 +114,7 @@ namespace gui {
 
                 private: // Email events
                         void connect_email_alert();
-                        void connect_email_button();
+                        /*void connect_email_button();*/
                         void connect_no_internet_alert();
                         void send_email(const std::vector<data::invoice>&);
                         void email_sent();
@@ -122,7 +124,7 @@ namespace gui {
                         void compute_number_of_pages(const std::vector<data::invoice>&);
                         void print_invoice(const std::vector<data::invoice>&);
                         void connect_print_alert();
-                        void connect_print_button();
+                        /*void connect_print_button();*/
                         void connect_no_printer_alert();
                         void on_draw_page(const Glib::RefPtr<Gtk::PrintContext>&, int);
                         void on_printoperation_done(Gtk::PrintOperation::Result, const Glib::RefPtr<Gtk::PrintOperation>&);
@@ -223,8 +225,6 @@ namespace gui {
 
                 private:
                         Glib::RefPtr<Gtk::PageSetup> page_setup{};
-                        std::unique_ptr<Gtk::Button> email_button{};
-                        std::unique_ptr<Gtk::Button> print_button{};
                         std::unique_ptr<Gtk::ListView> invoice_view{};
                         std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
                         std::unique_ptr<Gtk::MessageDialog> print_no_printer{};

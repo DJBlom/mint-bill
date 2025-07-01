@@ -13,7 +13,7 @@
 
 namespace gui {
         //GCOVR_EXCL_START
-        class client_register_page : public interface::gui_test {
+        class client_register_page : public interface::register_page {
                 public:
                         client_register_page() = default;
                         client_register_page(const client_register_page&) = delete;
