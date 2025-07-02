@@ -88,6 +88,11 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                         return created;
 		}
 
+		if (this->statement_pdf_view.create(_ui_builder) == false)
+		{
+                        return created;
+		}
+
 		created = true;
         }
 
@@ -108,7 +113,8 @@ bool gui::statement_page::search(const std::string& _keyword)
 		feature::client_statement client_statement{};
 		std::vector<std::any> invoices{};
 		std::vector<std::any> statements{};
-		for (const std::any& data : client_statement.load(_keyword))
+		std::vector<std::any> pdf_statements = client_statement.load(_keyword);
+		for (const std::any& data : pdf_statements)
 		{
 			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
 			statements.emplace_back(pdf_statement.get_statement());
@@ -125,6 +131,11 @@ bool gui::statement_page::search(const std::string& _keyword)
 		}
 
 		if (this->invoice_pdf_view.populate(invoices) == false)
+		{
+			searched = false;
+		}
+
+		if (this->statement_pdf_view.populate(pdf_statements) == false)
 		{
 			searched = false;
 		}

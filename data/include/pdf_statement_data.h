@@ -21,6 +21,10 @@ public:
         virtual ~pdf_statement();
 
 	[[nodiscard]] virtual bool is_valid() const;
+	virtual void set_number(const std::string&);
+	[[nodiscard]] virtual std::string get_number() const;
+	virtual void set_date(const std::string&);
+	[[nodiscard]] virtual std::string get_date() const;
 	virtual void set_statement(const data::statement&);
 	[[nodiscard]] virtual data::statement get_statement() const;
 	virtual void set_pdf_invoices(const std::vector<data::pdf_invoice>&);
@@ -34,12 +38,16 @@ private:
 private:
 	using mask_type = std::uint8_t;
 
+	std::string number{""};
+	std::string date{""};
 	data::statement statement{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
 	std::mutex data_mutex{};
 	mask_type flags{0x0};
-	mask_type mask{0x3};
+	mask_type mask{0xF};
 	enum FLAG {
+		NUMBER,
+		DATE,
 		STATEMENT,
 		PDF_INVOICE
 	};

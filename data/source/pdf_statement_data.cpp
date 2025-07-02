@@ -7,15 +7,19 @@ data::pdf_statement::pdf_statement() {}
 data::pdf_statement::~pdf_statement() {}
 
 data::pdf_statement::pdf_statement(const pdf_statement& _copy)
-	: statement{_copy.statement}, pdf_invoices{_copy.pdf_invoices},
+	: number{_copy.number}, date{_copy.date},
+	  statement{_copy.statement}, pdf_invoices{_copy.pdf_invoices},
 	  data_mutex{}, flags{_copy.flags}, mask{_copy.mask}
 {
 }
 
 data::pdf_statement::pdf_statement(pdf_statement&& _move)
-	: statement{_move.statement}, pdf_invoices{_move.pdf_invoices},
+	: number{_move.number}, date{_move.date},
+	  statement{_move.statement}, pdf_invoices{_move.pdf_invoices},
 	  data_mutex{}, flags{_move.flags}, mask{_move.mask}
 {
+        _move.number = number;
+        _move.date = date;
         _move.statement = statement;
         _move.pdf_invoices = pdf_invoices;
         _move.flags = 0;
@@ -32,6 +36,8 @@ data::pdf_statement& data::pdf_statement::operator= (const pdf_statement& _copy)
 
 data::pdf_statement& data::pdf_statement::operator= (pdf_statement&& _move)
 {
+        std::swap(number, _move.number);
+        std::swap(date, _move.date);
         std::swap(statement, _move.statement);
         std::swap(pdf_invoices, _move.pdf_invoices);
         std::swap(flags, _move.flags);
@@ -43,6 +49,45 @@ data::pdf_statement& data::pdf_statement::operator= (pdf_statement&& _move)
 bool data::pdf_statement::is_valid() const
 {
 	return check_flags();
+}
+
+void data::pdf_statement::set_number(const std::string& _number)
+{
+
+        if (!_number.empty())
+        {
+                set_flag(FLAG::NUMBER);
+                std::lock_guard<std::mutex> guard(this->data_mutex);
+                this->number = std::move(_number);
+        }
+        else
+        {
+                clear_flag(FLAG::NUMBER);
+	}
+}
+
+std::string data::pdf_statement::get_number() const
+{
+	return this->number;
+}
+
+void data::pdf_statement::set_date(const std::string& _date)
+{
+        if (!_date.empty())
+        {
+                set_flag(FLAG::DATE);
+                std::lock_guard<std::mutex> guard(this->data_mutex);
+                this->date = std::move(_date);
+        }
+        else
+        {
+                clear_flag(FLAG::DATE);
+	}
+}
+
+std::string data::pdf_statement::get_date() const
+{
+	return this->date;
 }
 
 void data::pdf_statement::set_statement(const data::statement& _statement)

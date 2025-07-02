@@ -536,6 +536,9 @@
                                     <property name="child">
                                       <object class="GtkListView" id="statement-list-view"/>
                                     </property>
+                                    <property name="vadjustment">
+                                      <object class="GtkAdjustment" id="statement-list-view-vadjustment"/>
+                                    </property>
                                     <layout>
                                       <property name="column">2</property>
                                       <property name="column-span">2</property>
@@ -1060,5 +1063,4 @@
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkButton"/>
 </interface>

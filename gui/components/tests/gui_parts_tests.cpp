@@ -539,15 +539,15 @@ TEST(pdf_window_test, generate_window_with_good_document)
 
 
 
-/**********************************GUI PART LIST_VIEW TEST LIST**************
+/*****************************GUI PART INVOICE LIST_VIEW TEST LIST**************
  * 1) Create the list view. (Done)
- * 3) Extract data from the list view.
- * 4) Populate the list view.
- * 5) Clear the list view.
- * 6) Ensure the list view is valid.
- * 7) Add a column to the list view.
- * 8) Add a single data line to the list view.
- * 9) Populate the list view based on a search.
+ * 3) Extract data from the list view. (Done)
+ * 4) Populate the list view. (Done)
+ * 5) Clear the list view. (Done)
+ * 6) Ensure the list view is valid. (Done)
+ * 7) Add a column to the list view. (Done)
+ * 8) Add a single data line to the list view. (Done)
+ * 9) Populate the list view based on a search. (Done)
  ******************************************************************************/
 TEST_GROUP(invoice_pdf_view_test)
 {
@@ -620,6 +620,114 @@ TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
 	CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
 }
 
+
+
+
+
+/*************************GUI PART STATEMENT LIST_VIEW TEST LIST****************
+ * 1) Create the list view.
+ * 3) Extract data from the list view.
+ * 4) Populate the list view.
+ * 5) Clear the list view.
+ * 6) Ensure the list view is valid.
+ * 7) Add a column to the list view.
+ * 8) Add a single data line to the list view.
+ * 9) Populate the list view based on a search.
+ ******************************************************************************/
+TEST_GROUP(statement_pdf_view_test)
+{
+	feature::client_statement client_statement{};
+        Glib::RefPtr<Gtk::Builder> builder{};
+        Glib::RefPtr<Gtk::Application> app{};
+        gui::part::statement::statement_pdf_view statement_pdf_view{"statement-list-view", "statement-list-view-vadjustment"};
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+	}
+
+	void teardown()
+	{
+                app.reset();
+	}
+};
+
+TEST(statement_pdf_view_test, statement_pdf_view_create_unsuccessfully)
+{
+        CHECK_EQUAL(false, statement_pdf_view.create(nullptr));
+}
+
+TEST(statement_pdf_view_test, create_successfully)
+{
+        CHECK_EQUAL(true, statement_pdf_view.create(builder));
+}
+
+TEST(statement_pdf_view_test, view_is_not_valid)
+{
+        CHECK_EQUAL(true, statement_pdf_view.is_not_valid());
+}
+
+TEST(statement_pdf_view_test, view_is_valid)
+{
+        (void) statement_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, statement_pdf_view.is_not_valid());
+}
+
+TEST(statement_pdf_view_test, populate_view_without_being_created)
+{
+	std::vector<std::any> statements{};
+
+        CHECK_EQUAL(false, statement_pdf_view.populate(statements));
+}
+
+TEST(statement_pdf_view_test, populate_view_with_empty_data)
+{
+	std::vector<std::any> empty_data{};
+        (void) statement_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, statement_pdf_view.populate(empty_data));
+}
+
+TEST(statement_pdf_view_test, populate_statement_view_successfully)
+{
+	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	(void) statement_pdf_view.create(builder);
+
+	CHECK_EQUAL(true, statement_pdf_view.populate(statements));
+}
+
+TEST(statement_pdf_view_test, clear_statement_view_before_creation)
+{
+	CHECK_EQUAL(false, statement_pdf_view.clear());
+}
+
+TEST(statement_pdf_view_test, clear_statement_view)
+{
+	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	(void) statement_pdf_view.create(builder);
+	(void) statement_pdf_view.populate(statements);
+
+	CHECK_EQUAL(true, statement_pdf_view.clear());
+}
+
+TEST(statement_pdf_view_test, extract_statement_view_data_before_creation)
+{
+	std::vector<std::any> records{statement_pdf_view.extract()};
+
+	CHECK_EQUAL(1, records.size());
+}
+
+TEST(statement_pdf_view_test, extract_statement_view_data_after_creation)
+{
+	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	(void) statement_pdf_view.create(builder);
+	(void) statement_pdf_view.populate(statements);
+	std::vector<std::any> records{statement_pdf_view.extract()};
+
+	CHECK_EQUAL(false, records.empty());
+}
 
 
 

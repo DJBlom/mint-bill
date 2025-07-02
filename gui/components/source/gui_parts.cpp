@@ -618,6 +618,17 @@ gui::part::statement::rows::invoice_pdf_entries::create(const data::pdf_invoice&
 }
 
 
+Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
+	gui::part::statement::rows::statement_pdf_entries::create()
+{
+        return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries());
+}
+
+Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
+gui::part::statement::rows::statement_pdf_entries::create(const data::pdf_statement& _pdf_statement)
+{
+        return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries(_pdf_statement));
+}
 
 
 /***************************************************************************
@@ -1156,6 +1167,263 @@ void gui::part::statement::invoice_pdf_view::teardown(const Glib::RefPtr<Gtk::Li
         }
 }
 
+
+
+
+
+gui::part::statement::statement_pdf_view::statement_pdf_view(const std::string& _name, const std::string& _vadjustment)
+	: name{_name}, vadjustment_name{_vadjustment}
+{
+        name.shrink_to_fit();
+	vadjustment_name.shrink_to_fit();
+}
+
+gui::part::statement::statement_pdf_view::~statement_pdf_view() {}
+
+bool gui::part::statement::statement_pdf_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+        bool success{false};
+        if (!_ui_builder)
+        {
+                syslog(LOG_CRIT, "The UI builder is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+        }
+        else
+        {
+		this->view = std::unique_ptr<Gtk::ListView>{
+			_ui_builder->get_widget<Gtk::ListView>(this->name)};
+		this->store = std::shared_ptr<Gio::ListStore<rows::statement_pdf_entries>>{
+			Gio::ListStore<rows::statement_pdf_entries>::create()};
+		this->vadjustment = std::shared_ptr<Gtk::Adjustment>{
+			_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment_name)};
+		Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
+		Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
+		if (!this->view || !this->store || !model || !factory)
+                {
+                        syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
+                                         "filename %s, line number %d", __FILE__, __LINE__);
+                }
+                else
+                {
+			success = true;
+                        this->view->set_model(model);
+			this->view->set_factory(factory);
+			this->view->set_single_click_activate(false);
+			this->view->signal_activate().connect(sigc::mem_fun(*this, &statement_pdf_view::display_statement));
+			factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &statement_pdf_view::setup)));
+			factory->signal_bind().connect(sigc::mem_fun(*this, &statement_pdf_view::bind));
+			factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &statement_pdf_view::teardown)));
+		}
+	}
+
+        return success;
+}
+
+bool gui::part::statement::statement_pdf_view::is_not_valid() const
+{
+	return !(this->view || this->store);
+}
+
+bool gui::part::statement::statement_pdf_view::populate(const std::vector<std::any>& _statements)
+{
+	bool success{false};
+	if (_statements.empty() == true)
+	{
+		syslog(LOG_CRIT, "The _data is empty - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->store->remove_all();
+		for (const std::any& statement : _statements)
+		{
+			data::pdf_statement data{std::any_cast<data::pdf_statement> (statement)};
+			if (data.is_valid() == false)
+			{
+				success = false;
+				syslog(LOG_CRIT, "The _data is not valid - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+				break;
+			}
+			else
+			{
+				success = true;
+				this->store->append(rows::statement_pdf_entries::create(data));
+				Glib::signal_timeout().connect_once([this]() {
+					this->vadjustment->set_value(this->vadjustment->get_upper());
+				}, 30);
+			}
+		}
+	}
+
+	return success;
+}
+
+bool gui::part::statement::statement_pdf_view::clear()
+{
+	bool success{false};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The view or store is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->store->remove_all();
+		if (this->store->property_n_items() <= 0)
+		{
+			success = true;
+		}
+	}
+
+	return success;
+}
+
+std::vector<std::any> gui::part::statement::statement_pdf_view::extract()
+{
+	std::vector<std::any> records{};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The view or store is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		for (guint i = 0; i < store->get_n_items(); ++i)
+		{
+			auto item = this->store->get_item(i);
+			if (!item)
+			{
+				syslog(LOG_CRIT, "The item is not valid - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				break;
+			}
+			else
+			{
+				data::pdf_statement data{item->pdf_statement};
+				records.push_back(data);
+			}
+		}
+	}
+
+	return records;
+}
+
+void gui::part::statement::statement_pdf_view::display_statement(uint _position)
+{
+	(void) _position;
+	/*       auto item = this->store->get_item(_position);*/
+	/*       if (!item)*/
+	/*       {*/
+	/*               syslog(LOG_CRIT, "The item is not valid - "*/
+	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*               return;*/
+	/*       }*/
+	/**/
+	/*       auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(item);*/
+	/*       if (!data)*/
+	/*       {*/
+	/*               syslog(LOG_CRIT, "The data is not valid - "*/
+	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*               return;*/
+	/*       }*/
+	/**/
+	/*       data::pdf_invoice pdf_invoice{data->pdf_invoice};*/
+	/*       if (pdf_invoice.is_valid() == false)*/
+	/*       {*/
+	/*               syslog(LOG_CRIT, "The invoice data is not valid - "*/
+	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*               return;*/
+	/*       }*/
+	/**/
+	/*feature::pdf pdf{};*/
+	/*std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};*/
+	/*if (!document)*/
+	/*{*/
+	/*               syslog(LOG_CRIT, "The poppler document is not valid - "*/
+	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*	return;*/
+	/*}*/
+	/**/
+	/*pdf_window pdf_window{"Invoice"};*/
+	/*if (pdf_window.generate(document) == false)*/
+	/*{*/
+	/*               syslog(LOG_CRIT, "Failed generate pdf_window - "*/
+	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
+	/*	return;*/
+	/*}*/
+}
+
+void gui::part::statement::statement_pdf_view::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		auto label = Gtk::make_managed<Gtk::Label>("");
+		if (!label)
+		{
+			syslog(LOG_CRIT, "The label is not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+			return;
+		}
+
+		label->set_xalign(0.50);
+		label->set_hexpand(true);
+		label->set_halign(Gtk::Align::START);
+		_item->set_child(*label);
+	}
+}
+
+void gui::part::statement::statement_pdf_view::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The _item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	auto data = std::dynamic_pointer_cast<rows::statement_pdf_entries>(_item->get_item());
+	if (!data)
+	{
+		syslog(LOG_CRIT, "The data is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	data::pdf_statement pdf_statement{data->pdf_statement};
+	data::pdf_invoice pdf_invoice{(pdf_statement.get_pdf_invoices()).front()};
+	data::client client{pdf_invoice.get_client()};
+	std::string details{"# " + pdf_statement.get_number() + ", " + client.get_business_name() + ", " + pdf_statement.get_date()};
+	label->set_text(details);
+}
+
+void gui::part::statement::statement_pdf_view::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
+{
+        if (!_item)
+        {
+                syslog(LOG_CRIT, "The list_item is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+        else
+        {
+                _item->unset_child();
+        }
+}
 
 
 /***************************************************************************

@@ -5,6 +5,7 @@
 #include <syslog.h>
 #include <unordered_map>
 #include <pdf_invoice_data.h>
+#include <pdf_statement_data.h>
 #include <poppler/cpp/poppler-page.h>
 #include <poppler/cpp/poppler-image.h>
 #include <poppler/cpp/poppler-document.h>
@@ -207,6 +208,19 @@ protected:
 public:
 	data::pdf_invoice pdf_invoice{};
 };
+
+struct statement_pdf_entries : public Glib::Object {
+public:
+        static Glib::RefPtr<statement_pdf_entries> create();
+        static Glib::RefPtr<statement_pdf_entries> create(const data::pdf_statement&);
+
+protected:
+        statement_pdf_entries() = default;
+        explicit statement_pdf_entries(const data::pdf_statement& _pdf_statement): pdf_statement{_pdf_statement} {}
+
+public:
+	data::pdf_statement pdf_statement{};
+};
 }
 
 class pdf_window {
@@ -288,6 +302,40 @@ private:
         std::unique_ptr<Gtk::ListView> view{};
 	std::shared_ptr<Gtk::Adjustment> vadjustment{};
         std::shared_ptr<Gio::ListStore<rows::invoice_pdf_entries>> store{};
+
+	enum DURATION {
+		MS_30 = 30
+	};
+};
+
+class statement_pdf_view : public interface::list_view {
+public:
+        statement_pdf_view() = delete;
+        explicit statement_pdf_view(const std::string&, const std::string&);
+        statement_pdf_view(const statement_pdf_view&) = delete;
+        statement_pdf_view(statement_pdf_view&&) = delete;
+        statement_pdf_view& operator= (const statement_pdf_view&) = delete;
+        statement_pdf_view& operator= (statement_pdf_view&&) = delete;
+        virtual ~statement_pdf_view() override;
+
+        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool is_not_valid() const override;
+        [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
+        [[nodiscard]] virtual bool clear() override;
+        [[nodiscard]] virtual std::vector<std::any> extract() override;
+
+private:
+	void display_statement(uint);
+	void setup(const Glib::RefPtr<Gtk::ListItem>&);
+	void bind(const Glib::RefPtr<Gtk::ListItem>&);
+	void teardown(const Glib::RefPtr<Gtk::ListItem>&);
+
+private:
+        std::string name{""};
+        std::string vadjustment_name{""};
+        std::unique_ptr<Gtk::ListView> view{};
+	std::shared_ptr<Gtk::Adjustment> vadjustment{};
+        std::shared_ptr<Gio::ListStore<rows::statement_pdf_entries>> store{};
 
 	enum DURATION {
 		MS_30 = 30

@@ -86,6 +86,8 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 			statement.set_price("R123" + std::to_string(i) + ".00");
 
 			data::pdf_statement pdf_statement_data{};
+			pdf_statement_data.set_number(std::to_string(i));
+			pdf_statement_data.set_date("02/24/2025");
 			pdf_statement_data.set_statement(statement);
 			pdf_statement_data.set_pdf_invoices(pdf_invoices);
 

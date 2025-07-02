@@ -24,27 +24,27 @@ extern "C"
  *    statement.
  * 3)
  ******************************************************************************/
-/*TEST_GROUP(statement_page_test)*/
-/*{*/
-/*	gui::part::stack stack{"business-stack"};*/
-/*        gui::part::search_bar search_bar{"business-name-search"};*/
-/*        gui::statement_page page;*/
-/*        Glib::RefPtr<Gtk::Builder> builder;*/
-/*        Glib::RefPtr<Gtk::Application> app;*/
-/*	void setup()*/
-/*	{*/
-/*                app = Gtk::Application::create("org.testing");*/
-/*                builder = Gtk::Builder::create();*/
-/*                builder->add_from_file("../gui/admin-system.ui");*/
-/*		(void) search_bar.create(builder, stack);*/
-/*	}*/
-/**/
-/*	void teardown()*/
-/*	{*/
-/*	}*/
-/*};*/
-/**/
-/*TEST(statement_page_test, create_statement_page)*/
-/*{*/
-/*        CHECK_EQUAL(true, page.create(builder, search_bar));*/
-/*}*/
+TEST_GROUP(statement_page_test)
+{
+	gui::part::stack stack{"business-stack"};
+        gui::part::search_bar search_bar{"business-name-search"};
+        gui::statement_page page;
+        Glib::RefPtr<Gtk::Builder> builder;
+        Glib::RefPtr<Gtk::Application> app;
+	void setup()
+	{
+                app = Gtk::Application::create("org.testing");
+                builder = Gtk::Builder::create();
+                builder->add_from_file("../gui/admin-system.ui");
+		(void) search_bar.create(builder);
+	}
+
+	void teardown()
+	{
+	}
+};
+
+TEST(statement_page_test, create_statement_page)
+{
+        CHECK_EQUAL(true, page.create(builder));
+}
