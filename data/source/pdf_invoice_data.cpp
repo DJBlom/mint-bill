@@ -20,9 +20,9 @@ data::pdf_invoice::pdf_invoice(const pdf_invoice& _copy)
 }
 
 data::pdf_invoice::pdf_invoice(pdf_invoice&& _move)
-        : client{_move.client}, invoice{_move.invoice},
-          business{_move.business}, flags{_move.flags},
-          data_mutex{}, mask{_move.mask}
+        : client{std::move(_move.client)}, invoice{std::move(_move.invoice)},
+          business{std::move(_move.business)}, flags{std::move(_move.flags)},
+          data_mutex{}, mask{std::move(_move.mask)}
 {
         _move.client = client;
         _move.invoice = invoice;
@@ -71,7 +71,7 @@ void data::pdf_invoice::set_client(const data::client& _client)
 
 data::client data::pdf_invoice::get_client() const
 {
-        return std::move(this->client);
+        return this->client;
 }
 
 void data::pdf_invoice::set_invoice(const data::invoice& _invoice)
@@ -90,7 +90,7 @@ void data::pdf_invoice::set_invoice(const data::invoice& _invoice)
 
 data::invoice data::pdf_invoice::get_invoice() const
 {
-        return std::move(this->invoice);
+        return this->invoice;
 }
 
 void data::pdf_invoice::set_business(const data::business& _business)
@@ -109,7 +109,7 @@ void data::pdf_invoice::set_business(const data::business& _business)
 
 data::business data::pdf_invoice::get_business() const
 {
-        return std::move(this->business);
+        return this->business;
 }
 
 bool data::pdf_invoice::check_flags() const

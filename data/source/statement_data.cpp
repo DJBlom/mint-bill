@@ -79,7 +79,7 @@ void data::statement::set_invoice_number(const std::string& _invoice_number)
 
 std::string data::statement::get_invoice_number() const
 {
-        return std::move(this->invoice_number);
+        return this->invoice_number;
 }
 
 void data::statement::set_date(const std::string& _date)
@@ -98,7 +98,7 @@ void data::statement::set_date(const std::string& _date)
 
 std::string data::statement::get_date() const
 {
-        return std::move(this->date);
+        return this->date;
 }
 
 void data::statement::set_order_number(const std::string& _order_number)
@@ -117,7 +117,7 @@ void data::statement::set_order_number(const std::string& _order_number)
 
 std::string data::statement::get_order_number() const
 {
-        return std::move(this->order_number);
+        return this->order_number;
 }
 
 void data::statement::set_paid_status(const std::string& _paid_status)
@@ -136,7 +136,7 @@ void data::statement::set_paid_status(const std::string& _paid_status)
 
 std::string data::statement::get_paid_status() const
 {
-        return std::move(this->paid_status);
+        return this->paid_status;
 }
 
 void data::statement::set_price(const std::string& _price)
@@ -155,7 +155,7 @@ void data::statement::set_price(const std::string& _price)
 
 std::string data::statement::get_price() const
 {
-        return std::move(this->price);
+        return this->price;
 }
 
 bool data::statement::check_flags() const

@@ -23,9 +23,9 @@ data::column::column(const column& _copy)
           mask{_copy.mask} {}
 
 data::column::column(column&& _move)
-        : quantity{_move.quantity}, description{_move.description},
-          amount{_move.amount}, flags{_move.flags}, column_data{},
-          mask{_move.mask}
+        : quantity{std::move(_move.quantity)}, description{std::move(_move.description)},
+          amount{std::move(_move.amount)}, flags{std::move(_move.flags)}, column_data{},
+          mask{std::move(_move.mask)}
 {
         _move.quantity = 0;
         _move.description.clear();
@@ -77,7 +77,7 @@ void data::column::set_quantity(const unsigned int& _quantity)
 
 unsigned int data::column::get_quantity() const
 {
-        return std::move(this->quantity);
+        return this->quantity;
 }
 
 void data::column::set_description(const std::string& _description)
@@ -96,7 +96,7 @@ void data::column::set_description(const std::string& _description)
 
 std::string data::column::get_description() const
 {
-        return std::move(this->description);
+        return this->description;
 }
 
 void data::column::set_amount(const double& _amount)
@@ -119,7 +119,7 @@ void data::column::set_amount(const double& _amount)
 
 double data::column::get_amount() const
 {
-        return std::move(this->amount);
+        return this->amount;
 }
 
 bool data::column::check_flags() const

@@ -21,8 +21,9 @@ data::email::email(const email& _copy)
 }
 
 data::email::email(email&& _move)
-        : attachments{_move.attachments}, client{_move.client}, business{_move.business},
-          subject{_move.subject}, flags{_move.flags}, email_data{}, mask{_move.mask}
+        : attachments{std::move(_move.attachments)}, client{std::move(_move.client)},
+	  business{std::move(_move.business)}, subject{std::move(_move.subject)},
+	  flags{std::move(_move.flags)}, email_data{}, mask{std::move(_move.mask)}
 {
         _move.attachments.clear();
         _move.client = client;
@@ -75,7 +76,7 @@ void data::email::set_attachments(const std::vector<std::string>& _attachments)
 
 std::vector<std::string> data::email::get_attachments() const
 {
-        return std::move(this->attachments);
+        return this->attachments;
 }
 
 void data::email::set_client(const data::client& _client)
@@ -94,7 +95,7 @@ void data::email::set_client(const data::client& _client)
 
 data::client data::email::get_client() const
 {
-        return std::move(this->client);
+        return this->client;
 }
 
 void data::email::set_business(const data::business& _business)
@@ -113,7 +114,7 @@ void data::email::set_business(const data::business& _business)
 
 data::business data::email::get_business() const
 {
-        return std::move(this->business);
+        return this->business;
 }
 
 void data::email::set_subject(const std::string& _subject)
@@ -132,7 +133,7 @@ void data::email::set_subject(const std::string& _subject)
 
 std::string data::email::get_subject() const
 {
-        return std::move(this->subject);
+        return this->subject;
 }
 
 bool data::email::check_flags() const

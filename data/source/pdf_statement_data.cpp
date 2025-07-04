@@ -14,9 +14,9 @@ data::pdf_statement::pdf_statement(const pdf_statement& _copy)
 }
 
 data::pdf_statement::pdf_statement(pdf_statement&& _move)
-	: number{_move.number}, date{_move.date},
-	  statement{_move.statement}, pdf_invoices{_move.pdf_invoices},
-	  data_mutex{}, flags{_move.flags}, mask{_move.mask}
+	: number{std::move(_move.number)}, date{std::move(_move.date)},
+	  statement{std::move(_move.statement)}, pdf_invoices{std::move(_move.pdf_invoices)},
+	  data_mutex{}, flags{std::move(_move.flags)}, mask{std::move(_move.mask)}
 {
         _move.number = number;
         _move.date = date;

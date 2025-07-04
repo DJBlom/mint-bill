@@ -22,10 +22,10 @@ data::client::client(const client& _copy)
 }
 
 data::client::client(client&& _move)
-        : business_name{_move.business_name}, business_address{_move.business_address},
-          business_area_code{_move.business_area_code}, business_town_name{_move.business_town_name},
-          cellphone_number{_move.cellphone_number}, emails{_move.emails}, vat_number{_move.vat_number},
-          statement_schedule{_move.statement_schedule}, flags{_move.flags}, client_data{}, mask{_move.mask}
+        : business_name{std::move(_move.business_name)}, business_address{std::move(_move.business_address)},
+          business_area_code{std::move(_move.business_area_code)}, business_town_name{std::move(_move.business_town_name)},
+          cellphone_number{std::move(_move.cellphone_number)}, emails{std::move(_move.emails)}, vat_number{std::move(_move.vat_number)},
+          statement_schedule{std::move(_move.statement_schedule)}, flags{std::move(_move.flags)}, client_data{}, mask{std::move(_move.mask)}
 {
         _move.business_name.clear();
         _move.business_address.clear();
@@ -84,7 +84,7 @@ void data::client::set_business_name(const std::string& _name)
 
 std::string data::client::get_business_name() const
 {
-        return std::move(this->business_name);
+        return this->business_name;
 }
 
 void data::client::set_business_address(const std::string& _address)
@@ -103,7 +103,7 @@ void data::client::set_business_address(const std::string& _address)
 
 std::string data::client::get_business_address() const
 {
-        return std::move(this->business_address);
+        return this->business_address;
 }
 
 void data::client::set_business_area_code(const std::string& _code)
@@ -122,7 +122,7 @@ void data::client::set_business_area_code(const std::string& _code)
 
 std::string data::client::get_business_area_code() const
 {
-        return std::move(this->business_area_code);
+        return this->business_area_code;
 }
 
 void data::client::set_business_town_name(const std::string& _town_name)
@@ -141,7 +141,7 @@ void data::client::set_business_town_name(const std::string& _town_name)
 
 std::string data::client::get_business_town_name() const
 {
-        return std::move(this->business_town_name);
+        return this->business_town_name;
 }
 
 void data::client::set_cellphone_number(const std::string& _number)
@@ -160,7 +160,7 @@ void data::client::set_cellphone_number(const std::string& _number)
 
 std::string data::client::get_cellphone_number() const
 {
-        return std::move(this->cellphone_number);
+        return this->cellphone_number;
 }
 
 void data::client::set_email(const std::string& _emails)
@@ -181,7 +181,7 @@ void data::client::set_email(const std::string& _emails)
 
 std::string data::client::get_email() const
 {
-        return std::move(this->emails);
+        return this->emails;
 }
 
 void data::client::set_vat_number(const std::string& _vat_number)
@@ -200,7 +200,7 @@ void data::client::set_vat_number(const std::string& _vat_number)
 
 std::string data::client::get_vat_number() const
 {
-        return std::move(this->vat_number);
+        return this->vat_number;
 }
 
 void data::client::set_statement_schedule(const std::string& _statement_schedule)
@@ -221,7 +221,7 @@ void data::client::set_statement_schedule(const std::string& _statement_schedule
 
 std::string data::client::get_statement_schedule() const
 {
-        return std::move(this->statement_schedule);
+        return this->statement_schedule;
 }
 
 bool data::client::email_address_good(const std::vector<std::string>& _emails)
