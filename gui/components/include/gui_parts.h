@@ -383,11 +383,16 @@ public:
 
         [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
         [[nodiscard]] virtual bool is_not_valid() const override;
-        [[nodiscard]] virtual bool connect() const override;
-        virtual void show() const override;
+	[[nodiscard]] virtual bool connect(const std::function<void(const int&)>&) override;
+        [[nodiscard]] virtual bool show() const override;
+	[[nodiscard]] virtual bool hide() const override;
+
+private:
+	void on_response(int response);
 
 private:
         std::string name{""};
+	std::function<void(const int&)> callback{};
         std::unique_ptr<Gtk::MessageDialog> gui_dialog{};
 };
 

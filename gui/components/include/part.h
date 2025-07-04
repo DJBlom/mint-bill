@@ -50,8 +50,9 @@ public:
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
 	[[nodiscard]] virtual bool is_not_valid() const = 0;
-	[[nodiscard]] virtual bool connect() const = 0;
-	virtual void show() const = 0;
+	[[nodiscard]] virtual bool connect(const std::function<void(const int&)>&) = 0;
+	[[nodiscard]] virtual bool show() const = 0;
+	[[nodiscard]] virtual bool hide() const = 0;
 };
 
 class button {

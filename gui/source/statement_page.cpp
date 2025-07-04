@@ -19,37 +19,15 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 	bool created{false};
         if (_ui_builder)
         {
-                // save
-                if (this->save_dialog.create(_ui_builder) == false)
-                {
-                        return created;
-                }
+		if (this->no_item_selected.create(_ui_builder) == false)
+		{
+			return created;
+		}
 
-                if (this->save_dialog.connect() == false)
-                {
-                        return created;
-                }
-
-                // print
-                if (this->print_dialog.create(_ui_builder) == false)
-                {
-                        return created;
-                }
-
-                if (this->print_dialog.connect() == false)
-                {
-                        return created;
-                }
-
-                if (this->email_dialog.create(_ui_builder) == false)
-                {
-                        return created;
-                }
-
-                if (this->email_dialog.connect() == false)
-                {
-                        return created;
-                }
+		(void) this->no_item_selected.connect([this] (const int& response) {
+			std::cout << "Response: " << std::to_string(response) << std::endl;
+			(void) this->no_item_selected.hide();
+		});
 
 		if (this->statement_view.create(_ui_builder) == false)
 		{
@@ -146,27 +124,19 @@ bool gui::statement_page::search(const std::string& _keyword)
 
 bool gui::statement_page::print()
 {
+	(void) this->no_item_selected.show();
 	return false;
 }
 
 bool gui::statement_page::email()
 {
+	(void) this->no_item_selected.show();
 	return false;
 }
 
 bool gui::statement_page::save()
 {
 	bool success{false};
-	if (this->save_dialog.is_not_valid())
-	{
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		success = true;
-		this->save_dialog.show();
-	}
 
 	return success;
 }

@@ -10,7 +10,7 @@ test/objs
 test/lib
 test/coverage
 test/*.pdf
-test/admin-system
+test/mint-bill
 
 # Doxygen
 docs/doxydoc

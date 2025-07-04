@@ -48,7 +48,7 @@ TEST_GROUP(gui_part_search_bar)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 		callback_result.clear();
 	}
 
@@ -163,6 +163,10 @@ TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
 }
 
 
+static void dialog_callback_function(const int response)
+{
+	std::cout << "Response: " << std::to_string(response) << std::endl;
+}
 
 
 /**********************************GUI PART DIALOG TEST LIST*******************
@@ -175,14 +179,14 @@ TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
  ******************************************************************************/
 TEST_GROUP(gui_part_dialog)
 {
-        gui::part::dialog gui_dialog{"statement-save-button-alert"};
+        gui::part::dialog gui_dialog{"statement-no-item-selected-alert"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
 	void setup()
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -203,23 +207,38 @@ TEST(gui_part_dialog, dialog_is_valid)
         CHECK_EQUAL(false, gui_dialog.is_not_valid());
 }
 
-TEST(gui_part_dialog, dialog_connect_successfully)
+TEST(gui_part_dialog, connect_unsuccessfully)
+{
+        CHECK_EQUAL(false, gui_dialog.connect(nullptr));
+}
+
+TEST(gui_part_dialog, connect_successfully)
+{
+        CHECK_EQUAL(true, gui_dialog.connect(dialog_callback_function));
+}
+
+TEST(gui_part_dialog, dialog_show_unsuccessfully)
+{
+        CHECK_EQUAL(false, gui_dialog.show());
+}
+
+TEST(gui_part_dialog, dialog_show_successfully)
 {
         (void) gui_dialog.create(builder);
 
-        CHECK_EQUAL(true, gui_dialog.connect());
+        CHECK_EQUAL(true, gui_dialog.show());
 }
 
-TEST(gui_part_dialog, dialog_connect_unsuccessfully)
+TEST(gui_part_dialog, dialog_hide_unsuccessfully)
 {
-        CHECK_EQUAL(false, gui_dialog.connect());
+        CHECK_EQUAL(false, gui_dialog.hide());
 }
 
-TEST(gui_part_dialog, dialog_show)
+TEST(gui_part_dialog, dialog_hide_successfully)
 {
-        CHECK_EQUAL(true, gui_dialog.create(builder));
-        CHECK_EQUAL(true, gui_dialog.connect());
-        gui_dialog.show();
+        (void) gui_dialog.create(builder);
+
+        CHECK_EQUAL(true, gui_dialog.hide());
 }
 
 
@@ -245,7 +264,7 @@ TEST_GROUP(sub_button_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -301,14 +320,14 @@ TEST(sub_button_test, sub_button_is_valid)
 TEST_GROUP(gui_part_button)
 {
         gui::part::button gui_button{"save-button"};
-        gui::part::dialog dialog{"statement-save-button-alert"};
+        gui::part::dialog dialog{"statement-no-item-selected-alert"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
 	void setup()
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -376,7 +395,7 @@ TEST_GROUP(statement_page_column_view_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 		(void) date.create("Date");
 		(void) price.create("Price");
 		(void) paid_status.create("Paid Status");
@@ -507,7 +526,7 @@ TEST_GROUP(pdf_window_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -559,7 +578,7 @@ TEST_GROUP(invoice_pdf_view_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -620,6 +639,38 @@ TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
 	CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
 }
 
+TEST(invoice_pdf_view_test, clear_invoice_view_unsuccessfully)
+{
+	// std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
+	// data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	// std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
+	// std::vector<std::any> invoices{};
+	// for (const data::pdf_invoice& inv : temp_invoices)
+	// {
+	// 	invoices.emplace_back(inv);
+	// }
+	// (void) invoice_pdf_view.create(builder);
+	// (void) invoice_pdf_view.populate(invoices);
+
+	CHECK_EQUAL(false, invoice_pdf_view.clear());
+}
+
+TEST(invoice_pdf_view_test, clear_invoice_view_successfully)
+{
+	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
+	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
+	std::vector<std::any> invoices{};
+	for (const data::pdf_invoice& inv : temp_invoices)
+	{
+		invoices.emplace_back(inv);
+	}
+	(void) invoice_pdf_view.create(builder);
+	(void) invoice_pdf_view.populate(invoices);
+
+	CHECK_EQUAL(true, invoice_pdf_view.clear());
+}
+
 
 
 
@@ -644,7 +695,7 @@ TEST_GROUP(statement_pdf_view_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 	}
 
 	void teardown()
@@ -767,7 +818,7 @@ TEST_GROUP(statement_columns_test)
 	{
 		app = Gtk::Application::create("org.testing");
 		builder = Gtk::Builder::create();
-		builder->add_from_file("../gui/admin-system.ui");
+		builder->add_from_file("../gui/mint-bill.ui");
 		view = std::unique_ptr<Gtk::ColumnView>{
 			builder->get_widget<Gtk::ColumnView>("statement-column-view")};
 		store = Gio::ListStore<gui::part::statement::columns::entries>::create();

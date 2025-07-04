@@ -8,23 +8,19 @@
 ##############################################################
 PROJECT_DIR :=$(realpath ..)
 TEST_DIR :=$(realpath .)
-TEST_TARGET := admin-system
+TEST_TARGET := mint-bill
 CPPUTEST_EXE_FLAGS +=-c -v
 
-########################################################################
-# Uncomment to exclude the email_test group from being tested.
-#
-# NOTE: Ensure this line is uncommented when pushing code to the remote.
-# 
-# CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
+CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
-# CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
+CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"
 # CPPUTEST_EXE_FLAGS +=-sg "stack_test"
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_search_bar"
+# CPPUTEST_EXE_FLAGS +=-sg "gui_part_button"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 

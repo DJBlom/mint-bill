@@ -29,9 +29,7 @@ public:
 	[[nodiscard]] virtual bool save() override;
 
 private:
-        part::dialog save_dialog{"statement-save-button-alert"};
-        part::dialog print_dialog{"statement-print-alert"};
-        part::dialog email_dialog{"statement-email-alert"};
+        part::dialog no_item_selected{"statement-no-item-selected-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};
 	part::statement::columns::paid_status paid_status{};

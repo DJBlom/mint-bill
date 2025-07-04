@@ -4,7 +4,7 @@
   <!-- interface-name invoice-system.ui -->
   <requires lib="gtk" version="4.14"/>
   <object class="GtkWindow" id="main-window">
-    <property name="default-height">512</property>
+    <property name="default-height">680</property>
     <property name="default-width">1024</property>
     <property name="destroy-with-parent">True</property>
     <property name="icon-name">application-x-executable</property>
@@ -490,6 +490,8 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="statement-saved-label">
+                                    <property name="halign">start</property>
+                                    <property name="justify">center</property>
                                     <property name="label">Gestoorde State</property>
                                     <layout>
                                       <property name="column">2</property>
@@ -560,6 +562,7 @@
                         <property name="child">
                           <object class="GtkBox" id="register-box">
                             <property name="halign">center</property>
+                            <property name="homogeneous">True</property>
                             <property name="margin-bottom">50</property>
                             <property name="margin-end">50</property>
                             <property name="margin-start">50</property>
@@ -598,7 +601,7 @@
                                 <child>
                                   <object class="GtkEntry" id="register-town-name-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Dorp se naam...</property>
+                                    <property name="placeholder-text">Dorp naam...</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">10</property>
@@ -690,26 +693,25 @@
                         <property name="child">
                           <object class="GtkBox" id="business-page-box">
                             <property name="halign">center</property>
+                            <property name="homogeneous">True</property>
                             <property name="margin-bottom">50</property>
-                            <property name="margin-end">120</property>
-                            <property name="margin-start">100</property>
+                            <property name="margin-end">50</property>
+                            <property name="margin-start">50</property>
                             <property name="margin-top">50</property>
-                            <property name="orientation">vertical</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkGrid" id="business-page-grid">
-                                <property name="column-spacing">10</property>
+                              <object class="GtkGrid" id="business-common-information-grid">
                                 <property name="hexpand">True</property>
-                                <property name="margin-end">50</property>
-                                <property name="margin-start">50</property>
+                                <property name="margin-end">25</property>
+                                <property name="margin-start">25</property>
                                 <property name="row-spacing">10</property>
                                 <child>
                                   <object class="GtkEntry" id="business-page-name-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Besigheid se naam . . .</property>
+                                    <property name="placeholder-text">Besigheid naam...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">1</property>
                                     </layout>
                                   </object>
@@ -717,10 +719,10 @@
                                 <child>
                                   <object class="GtkEntry" id="business-page-address-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Straat adres . . .</property>
+                                    <property name="placeholder-text">Straat adres...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">2</property>
                                       <property name="row-span">1</property>
                                     </layout>
@@ -729,10 +731,10 @@
                                 <child>
                                   <object class="GtkEntry" id="business-page-town-name-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Dorp se naam . . .</property>
+                                    <property name="placeholder-text">Dorp naam...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">4</property>
                                     </layout>
                                   </object>
@@ -740,70 +742,11 @@
                                 <child>
                                   <object class="GtkEntry" id="business-page-cell-number-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Kontak nommer . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">5</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-page-bank-name-entry">
-                                    <property name="max-length">50</property>
-                                    <property name="placeholder-text">Bank se naam . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">9</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-page-account-number-entry">
-                                    <property name="max-length">50</property>
-                                    <property name="placeholder-text">Rekeningnommer . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">11</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-page-branch-code-entry">
-                                    <property name="max-length">50</property>
-                                    <property name="placeholder-text">Tak se kode . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">10</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkEntry" id="business-page-client-message-entry">
-                                    <property name="max-length">100</property>
-                                    <property name="placeholder-text">Boodskap vir kliënt . . .</property>
-                                    <layout>
-                                      <property name="column">0</property>
-                                      <property name="column-span">10</property>
-                                      <property name="row">12</property>
-                                    </layout>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="business-page-bank-label">
-                                    <property name="can-focus">False</property>
-                                    <property name="can-target">False</property>
-                                    <property name="ellipsize">middle</property>
-                                    <property name="focus-on-click">False</property>
-                                    <property name="justify">center</property>
-                                    <property name="label">Bank Inligting</property>
+                                    <property name="placeholder-text">Kontak nommer...</property>
                                     <layout>
                                       <property name="column">0</property>
                                       <property name="column-span">3</property>
-                                      <property name="row">8</property>
+                                      <property name="row">5</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -815,10 +758,10 @@
                                     <property name="focus-on-click">False</property>
                                     <property name="justify">center</property>
                                     <property name="label">Algemene Inligting</property>
-                                    <property name="margin-bottom">19</property>
+                                    <property name="margin-bottom">20</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">3</property>
+                                      <property name="column-span">2</property>
                                       <property name="row">0</property>
                                     </layout>
                                   </object>
@@ -826,10 +769,10 @@
                                 <child>
                                   <object class="GtkEntry" id="business-page-email-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">E-pos . . .</property>
+                                    <property name="placeholder-text">E-pos...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">6</property>
                                     </layout>
                                   </object>
@@ -837,10 +780,10 @@
                                 <child>
                                   <object class="GtkEntry" id="business-page-area-code-entry">
                                     <property name="max-length">50</property>
-                                    <property name="placeholder-text">Area kode . . .</property>
+                                    <property name="placeholder-text">Area kode...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">3</property>
                                     </layout>
                                   </object>
@@ -848,11 +791,81 @@
                                 <child>
                                   <object class="GtkPasswordEntry" id="business-page-email-password-entry">
                                     <property name="activates-default">True</property>
-                                    <property name="placeholder-text">E-pos wagwoord . . .</property>
+                                    <property name="placeholder-text">E-pos wagwoord...</property>
                                     <layout>
                                       <property name="column">0</property>
-                                      <property name="column-span">10</property>
+                                      <property name="column-span">3</property>
                                       <property name="row">7</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkGrid" id="business-bank-information-grid">
+                                <property name="column-homogeneous">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-end">25</property>
+                                <property name="margin-start">25</property>
+                                <property name="row-spacing">10</property>
+                                <child>
+                                  <object class="GtkLabel" id="business-page-bank-label">
+                                    <property name="can-focus">False</property>
+                                    <property name="can-target">False</property>
+                                    <property name="ellipsize">middle</property>
+                                    <property name="focus-on-click">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="justify">center</property>
+                                    <property name="label">Bank Inligting</property>
+                                    <property name="margin-bottom">20</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">2</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-page-bank-name-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Bank naam...</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">1</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-page-branch-code-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Tak kode...</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">2</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-page-account-number-entry">
+                                    <property name="max-length">50</property>
+                                    <property name="placeholder-text">Rekeningnommer...</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">3</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="business-page-client-message-entry">
+                                    <property name="max-length">100</property>
+                                    <property name="placeholder-text">Boodskap vir kliënt...</property>
+                                    <layout>
+                                      <property name="column">0</property>
+                                      <property name="column-span">3</property>
+                                      <property name="row">4</property>
                                     </layout>
                                   </object>
                                 </child>
@@ -1005,34 +1018,6 @@
     <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="statement-save-button-alert">
-    <property name="accessible-role">dialog</property>
-    <property name="buttons">yes-no</property>
-    <property name="message-type">question</property>
-    <property name="modal">True</property>
-    <property name="text">Is u seker u wil die inligting stoor?</property>
-    <property name="transient-for">main-window</property>
-  </object>
-  <object class="GtkMessageDialog" id="statement-save-wrong-info-alert">
-    <property name="accessible-role">dialog</property>
-    <property name="buttons">yes-no</property>
-    <property name="message-type">question</property>
-    <property name="modal">True</property>
-    <property name="text">Is u seker u wil die inligting stoor?</property>
-    <property name="transient-for">main-window</property>
-  </object>
-  <object class="GtkMessageDialog" id="statement-print-alert">
-    <property name="accessible-role">dialog</property>
-    <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
-    <property name="message-type">question</property>
-    <property name="modal">True</property>
-    <property name="text">Is u seker u wil die faktuur print?</property>
-    <property name="title">Waarskuwing</property>
-    <property name="transient-for">main-window</property>
-  </object>
   <object class="GtkMessageDialog" id="statement-email-no-internet-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
@@ -1051,16 +1036,14 @@
     <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="statement-email-alert">
-    <property name="accessible-role">dialog</property>
-    <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
-    <property name="message-type">question</property>
-    <property name="modal">True</property>
-    <property name="text">Is u seker u wil die faktuur e-pos?</property>
-    <property name="title">Waarskuwing</property>
+  <object class="GtkMessageDialog" id="invoice-no-item-selected-alert">
+    <property name="buttons">close</property>
+    <property name="text">Kies asseblief 'n faktuur om te e-pos of te print</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-no-item-selected-alert">
+    <property name="buttons">close</property>
+    <property name="text">Kies asseblief 'n staat om te e-pos of te print.</property>
     <property name="transient-for">main-window</property>
   </object>
 </interface>

@@ -6,15 +6,15 @@
  * NOTE:
  *******************************************************/
 #include <syslog.h>
+#include <mint_bill.h>
 #include <main_window.h>
-#include <admin_system.h>
 #include <invoice_page.h>
 #include <business_page.h>
 #include <statement_page.h>
 #include <client_register_page.h>
 
 
-void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
+void app::mint_bill::start(const Glib::RefPtr<Gtk::Application>& app)
 {
         Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
         syslog(LOG_INFO, "Starting...");
@@ -205,13 +205,13 @@ void app::admin_system::start(const Glib::RefPtr<Gtk::Application>& app)
         }
 }
 
-bool app::admin_system::load_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
+bool app::mint_bill::load_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
         bool verified{false};
         try
         {
                 verified = true;
-                ui_builder->add_from_file("gui/admin-system.ui");
+                ui_builder->add_from_file("gui/mint-bill.ui");
         }
         catch(const Glib::FileError& ex)
         {

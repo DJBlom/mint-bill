@@ -17,14 +17,14 @@
 #include <client_register_page.h>
 
 namespace app {
-        class admin_system {
+        class mint_bill {
                 public:
-                        admin_system() = default;
-                        admin_system(const admin_system&) = delete;
-                        admin_system(admin_system&&) = delete;
-                        admin_system& operator= (const admin_system&) = delete;
-                        admin_system& operator= (admin_system&&) = delete;
-                        ~admin_system() = default;
+                        mint_bill() = default;
+                        mint_bill(const mint_bill&) = delete;
+                        mint_bill(mint_bill&&) = delete;
+                        mint_bill& operator= (const mint_bill&) = delete;
+                        mint_bill& operator= (mint_bill&&) = delete;
+                        ~mint_bill() = default;
 
                         void start(const Glib::RefPtr<Gtk::Application>&);
                         [[nodiscard]] bool load_ui_file(const Glib::RefPtr<Gtk::Builder>&);

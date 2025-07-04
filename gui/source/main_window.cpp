@@ -32,7 +32,7 @@ bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, cons
 void gui::main_window::setup_css()
 {
         Glib::RefPtr<Gtk::CssProvider> css_provider = Gtk::CssProvider::create();
-        css_provider->load_from_path("gui/admin-system.css");
+        css_provider->load_from_path("gui/mint-bill.css");
         Glib::RefPtr<Gdk::Display> display = Gdk::Display::get_default();
         if (!display)
         {

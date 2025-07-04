@@ -1571,9 +1571,15 @@ bool gui::part::dialog::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         {
                 this->gui_dialog = std::unique_ptr<Gtk::MessageDialog>{
                         _ui_builder->get_widget<Gtk::MessageDialog>(this->name)};
-                if (this->gui_dialog)
+		if (this->is_not_valid())
+		{
+			syslog(LOG_CRIT, "The gui_dialog is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
                 {
                         success = true;
+			this->gui_dialog->signal_response().connect(sigc::mem_fun(*this, &dialog::on_response));
                 }
         }
 
@@ -1585,41 +1591,61 @@ bool gui::part::dialog::is_not_valid() const
         return !(this->gui_dialog);
 }
 
-bool gui::part::dialog::connect() const
+bool gui::part::dialog::connect(const std::function<void(const int&)>& _callback)
 {
-        bool success{false};
-        if (this->is_not_valid())
-        {
-                syslog(LOG_CRIT, "The dialog is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                success = true;
-                this->gui_dialog->signal_response().connect([this] (int response) {
-                        switch (response)
-                        {
-                                case GTK_RESPONSE_YES:
-                                        this->gui_dialog->hide();
-                                        break;
-                                case GTK_RESPONSE_NO:
-                                        this->gui_dialog->hide();
-                                        break;
-                                default:
-                                        this->gui_dialog->hide();
-                                        break;
-                        }
-                });
-        }
+	bool success{false};
+	if (!_callback)
+	{
+		syslog(LOG_CRIT, "The _callback is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->callback = std::move(_callback);
+	}
 
-        return success;
+	return success;
 }
 
-void gui::part::dialog::show() const
+bool gui::part::dialog::show() const
 {
-        this->gui_dialog->show();
+	bool success{false};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The gui_dialog is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->gui_dialog->show();
+	}
+
+	return success;
 }
 
+bool gui::part::dialog::hide() const
+{
+	bool success{false};
+	if (this->is_not_valid())
+	{
+		syslog(LOG_CRIT, "The gui_dialog is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->gui_dialog->hide();
+	}
+
+	return success;
+}
+
+void gui::part::dialog::on_response(int response)
+{
+	this->callback(response);
+}
 
 
 

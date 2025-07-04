@@ -35,7 +35,7 @@ TEST_GROUP(statement_page_test)
 	{
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/admin-system.ui");
+                builder->add_from_file("../gui/mint-bill.ui");
 		(void) search_bar.create(builder);
 	}
 
