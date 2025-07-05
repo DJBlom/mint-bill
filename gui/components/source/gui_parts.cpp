@@ -1,6 +1,6 @@
 
 #include <gui_parts.h>
-#include <pdf.h>
+#include <invoice_pdf.h>
 #include <sql.h>
 #include <errors.h>
 #include <iostream>
@@ -1078,8 +1078,8 @@ void gui::part::statement::invoice_pdf_view::display_invoice(uint _position)
                 return;
         }
 
-	feature::pdf pdf{};
-	std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};
+	feature::invoice_pdf invoice_pdf{};
+	std::shared_ptr<poppler::document> document{invoice_pdf.generate_for_print(pdf_invoice)};
 	if (!document)
 	{
                 syslog(LOG_CRIT, "The poppler document is not valid - "

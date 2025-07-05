@@ -10,7 +10,7 @@
 
 
 
-#include <pdf.h>
+#include <invoice_pdf.h>
 #include <gtkmm.h>
 #include <iostream>
 #include <stack.h>
@@ -519,7 +519,7 @@ TEST(statement_page_column_view_test, extract_data_from_store)
  ******************************************************************************/
 TEST_GROUP(pdf_window_test)
 {
-	feature::pdf pdf{};
+	feature::invoice_pdf invoice_pdf{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
 	void setup()
@@ -550,7 +550,7 @@ TEST(pdf_window_test, generate_window_with_good_document)
 	pdf_invoice.set_client(retrieve_client_data());
 	pdf_invoice.set_invoice(retrieve_invoice_data());
 	gui::part::statement::pdf_window pdf_window{"Invoice"};
-	std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};
+	std::shared_ptr<poppler::document> document{invoice_pdf.generate_for_print(pdf_invoice)};
 
 	CHECK_EQUAL(true, pdf_window.generate(document));
 }

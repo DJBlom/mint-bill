@@ -1,11 +1,11 @@
 /********************************************************
- * Contents: PDF implementation
+ * Contents: invoice_pdf implementation
  * Author: Dawid J. Blom
  * Date: December 23, 2024
  *
  * NOTE:
  *******************************************************/
-#include <pdf.h>
+#include <invoice_pdf.h>
 
 namespace font_size {
         constexpr double header{50.0};
@@ -37,27 +37,29 @@ namespace height {
 }
 
 
-feature::pdf::pdf() {}
+feature::invoice_pdf::invoice_pdf() {}
 
-feature::pdf::~pdf() {}
+feature::invoice_pdf::~invoice_pdf() {}
 
-std::string feature::pdf::generate_for_email(const data::pdf_invoice& _data)
+std::string feature::invoice_pdf::generate_for_email(const std::any& _data)
 {
         std::string pdf_document{""};
-        if (_data.is_valid())
+	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
+        if (data.is_valid())
         {
-                pdf_document = generate(_data);
+                pdf_document = generate(data);
         }
 
         return pdf_document;
 }
 
-std::shared_ptr<poppler::document> feature::pdf::generate_for_print(const data::pdf_invoice& _data)
+std::shared_ptr<poppler::document> feature::invoice_pdf::generate_for_print(const std::any& _data)
 {
         std::shared_ptr<poppler::document> pdf_document{};
-        if (_data.is_valid())
+	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
+        if (data.is_valid())
         {
-                std::string raw_pdf = this->generate(_data);
+                std::string raw_pdf = this->generate(data);
                 std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
                 poppler::byte_array byte_array{byte_vector};
                 poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
@@ -71,7 +73,7 @@ std::shared_ptr<poppler::document> feature::pdf::generate_for_print(const data::
         return pdf_document;
 }
 
-std::string feature::pdf::generate(const data::pdf_invoice& _data)
+std::string feature::invoice_pdf::generate(const data::pdf_invoice& _data)
 {
         std::ostringstream final_pdf{};
         if (_data.is_valid())
@@ -128,7 +130,7 @@ std::string feature::pdf::generate(const data::pdf_invoice& _data)
         return final_pdf.str();
 }
 
-bool feature::pdf::add_header(const std::string& _data)
+bool feature::invoice_pdf::add_header(const std::string& _data)
 {
         align_to_top_border();
         align_to_left_border();
@@ -142,7 +144,7 @@ bool feature::pdf::add_header(const std::string& _data)
         return this->context_ok();
 }
 
-bool feature::pdf::add_information(const data::pdf_invoice& _data)
+bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
 {
         data::business business{_data.get_business()};
         data::client client{_data.get_client()};
@@ -194,7 +196,7 @@ bool feature::pdf::add_information(const data::pdf_invoice& _data)
         return true;
 }
 
-bool feature::pdf::add_invoice(const data::invoice& _data)
+bool feature::invoice_pdf::add_invoice(const data::invoice& _data)
 {
         align_to_left_border();
         add_new_section();
@@ -222,7 +224,7 @@ bool feature::pdf::add_invoice(const data::invoice& _data)
         return true;
 }
 
-bool feature::pdf::add_labor(const data::invoice& _data)
+bool feature::invoice_pdf::add_labor(const data::invoice& _data)
 {
         align_to_left_border();
         add_new_section();
@@ -251,7 +253,7 @@ bool feature::pdf::add_labor(const data::invoice& _data)
         return true;
 }
 
-bool feature::pdf::add_material(const data::invoice& _data)
+bool feature::invoice_pdf::add_material(const data::invoice& _data)
 {
         align_to_left_border();
         add_new_section();
@@ -280,7 +282,7 @@ bool feature::pdf::add_material(const data::invoice& _data)
         return true;
 }
 
-bool feature::pdf::add_items(const std::vector<data::column>& _data)
+bool feature::invoice_pdf::add_items(const std::vector<data::column>& _data)
 {
         add_new_line();
         for (const auto& column : _data)
@@ -303,7 +305,7 @@ bool feature::pdf::add_items(const std::vector<data::column>& _data)
         return true;
 }
 
-bool feature::pdf::add_item_description(const data::column& _data)
+bool feature::invoice_pdf::add_item_description(const data::column& _data)
 {
         std::vector<std::string> sliced_data{this->slicer.slice(_data.get_description())};
         if (sliced_data.size() >= 2)
@@ -331,7 +333,7 @@ bool feature::pdf::add_item_description(const data::column& _data)
         return true;
 }
 
-bool feature::pdf::add_grand_total(const data::invoice& _data)
+bool feature::invoice_pdf::add_grand_total(const data::invoice& _data)
 {
         align_to_right_border();
         add_new_section();
@@ -343,7 +345,7 @@ bool feature::pdf::add_grand_total(const data::invoice& _data)
         return true;
 }
 
-bool feature::pdf::add_payment_method(const data::business& _data)
+bool feature::invoice_pdf::add_payment_method(const data::business& _data)
 {
         align_to_left_border();
         add_new_section();
@@ -375,7 +377,7 @@ bool feature::pdf::add_payment_method(const data::business& _data)
         return true;
 }
 
-bool feature::pdf::write_to_pdf(const std::string& _data, const double& _font_size)
+bool feature::invoice_pdf::write_to_pdf(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
         Cairo::TextExtents extent;
@@ -386,7 +388,7 @@ bool feature::pdf::write_to_pdf(const std::string& _data, const double& _font_si
         return this->context_ok();
 }
 
-bool feature::pdf::write_to_pdf_in_center(const std::string& _data, const double& _font_size)
+bool feature::invoice_pdf::write_to_pdf_in_center(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
         Cairo::TextExtents extent;
@@ -398,7 +400,7 @@ bool feature::pdf::write_to_pdf_in_center(const std::string& _data, const double
         return this->context_ok();
 }
 
-bool feature::pdf::write_to_pdf_from_right(const std::string& _data, const double& _font_size)
+bool feature::invoice_pdf::write_to_pdf_from_right(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
         Cairo::TextExtents extent;
@@ -410,7 +412,7 @@ bool feature::pdf::write_to_pdf_from_right(const std::string& _data, const doubl
         return this->context_ok();
 }
 
-bool feature::pdf::write_to_pdf_from_right_information(const std::string& _data, const double& _font_size)
+bool feature::invoice_pdf::write_to_pdf_from_right_information(const std::string& _data, const double& _font_size)
 {
         this->context->set_font_size(_font_size);
         Cairo::TextExtents extent;
@@ -422,7 +424,7 @@ bool feature::pdf::write_to_pdf_from_right_information(const std::string& _data,
         return this->context_ok();
 }
 
-bool feature::pdf::draw_line()
+bool feature::invoice_pdf::draw_line()
 {
         this->current_height += height::line_offset;
         this->context->set_line_width(1.5);
@@ -433,12 +435,12 @@ bool feature::pdf::draw_line()
         return this->context_ok();
 }
 
-bool feature::pdf::context_ok()
+bool feature::invoice_pdf::context_ok()
 {
         return (context->get_target()->get_status() == CAIRO_STATUS_SUCCESS);
 }
 
-void feature::pdf::add_new_line()
+void feature::invoice_pdf::add_new_line()
 {
 	double next_line = this->current_height + height::text_offset;
 	if (next_line >= (height::page_height - height::top_border)) {
@@ -451,53 +453,53 @@ void feature::pdf::add_new_line()
 	this->current_height += height::text_offset;
 }
 
-void feature::pdf::add_new_section()
+void feature::invoice_pdf::add_new_section()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
         this->current_height += height::space_offset;
         this->current_height += height::space_offset;
 }
 
-void feature::pdf::align_to_left_border()
+void feature::invoice_pdf::align_to_left_border()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
         this->current_width = width::left_border;
 }
 
-void feature::pdf::align_to_right_border()
+void feature::invoice_pdf::align_to_right_border()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
         this->current_width = width::right_border;
 }
 
-void feature::pdf::align_information_section()
+void feature::invoice_pdf::align_information_section()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
         this->current_width = width::information_left;
 }
 
-void feature::pdf::align_to_top_border()
+void feature::invoice_pdf::align_to_top_border()
 {
         std::lock_guard<std::mutex> guard(this->pdf_mutex);
         this->current_height = height::top_border;
 }
 
-void feature::pdf::align_to_right(const Cairo::TextExtents& _extent)
+void feature::invoice_pdf::align_to_right(const Cairo::TextExtents& _extent)
 {
         this->current_width = (width::right_border - (_extent.width + _extent.x_bearing));
 }
 
-void feature::pdf::align_to_right_information(const Cairo::TextExtents& _extent)
+void feature::invoice_pdf::align_to_right_information(const Cairo::TextExtents& _extent)
 {
         this->current_width = (width::information_right - (_extent.width + _extent.x_bearing));
 }
 
-void feature::pdf::align_to_center(const cairo_text_extents_t& _extent)
+void feature::invoice_pdf::align_to_center(const cairo_text_extents_t& _extent)
 {
         this->current_width = ((this->width / 2) - ((_extent.width / 2) + _extent.x_bearing));
 }
 
-void feature::pdf::adjust_height()
+void feature::invoice_pdf::adjust_height()
 {
         if (this->current_height >= (height::page_height - (height::top_border)))
         {
@@ -506,7 +508,7 @@ void feature::pdf::adjust_height()
         }
 }
 
-void feature::pdf::adjust_payment_height()
+void feature::invoice_pdf::adjust_payment_height()
 {
         double future_height{this->current_height + (height::space_offset * 5) + (height::text_offset * 2)};
         if (future_height >= (height::page_height - (height::top_border)))

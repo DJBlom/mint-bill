@@ -9,7 +9,7 @@
 #define _INVOICE_PAGE_H_
 #include <gui.h>
 #include <sql.h>
-#include <pdf.h>
+#include <invoice_pdf.h>
 #include <mutex>
 #include <regex>
 #include <thread>
@@ -175,7 +175,7 @@ namespace gui {
 
                 private: // Member features
                         storage::sql db{};
-                        feature::pdf pdf{};
+                        feature::invoice_pdf invoice_pdf{};
                         int number_of_pages{0};
                         bool print_success{false};
                         bool email_success{false};

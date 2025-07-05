@@ -992,7 +992,7 @@ void gui::invoice_page::compute_number_of_pages(const std::vector<data::invoice>
         std::vector<data::pdf_invoice> invoices_to_print{client_invoice.create_pdf_to_print(_data)};
         for (const data::pdf_invoice& invoice_to_print : invoices_to_print)
         {
-                std::shared_ptr<poppler::document> doc{this->pdf.generate_for_print(invoice_to_print)};
+                std::shared_ptr<poppler::document> doc{this->invoice_pdf.generate_for_print(invoice_to_print)};
                 if (!doc)
                 {
                         continue;

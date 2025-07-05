@@ -8,7 +8,7 @@
 #include <client_invoice.h>
 #include <client_data.h>
 #include <iostream>
-#include <pdf.h>
+#include <invoice_pdf.h>
 
 feature::invoice::~invoice() {}
 
@@ -141,7 +141,7 @@ bool feature::invoice::send_email(const std::vector<data::invoice>& _data)
         std::future<bool> sent{};
         if (!_data.empty())
         {
-                feature::pdf pdf{};
+                feature::invoice_pdf invoice_pdf{};
                 data::client client_data{};
                 data::business business_data{};
                 std::vector<std::string> pdf_data{};
@@ -175,7 +175,7 @@ bool feature::invoice::send_email(const std::vector<data::invoice>& _data)
                                 business_data.set_password("bxwx eaku ndjj ltda");
                                 pdf_invoice_data.set_business(business_data);
 
-                                pdf_data.push_back(pdf.generate_for_email(pdf_invoice_data));
+                                pdf_data.push_back(invoice_pdf.generate_for_email(pdf_invoice_data));
                         }
                 }
 
@@ -199,7 +199,7 @@ std::vector<data::pdf_invoice> feature::invoice::create_pdf_to_print(const std::
         std::vector<data::pdf_invoice> pdf_invoices;
         if (!_data.empty())
         {
-                feature::pdf pdf{};
+                feature::invoice_pdf invoice_pdf{};
                 data::client client_data{};
                 data::business business_data{};
                 data::pdf_invoice pdf_invoice_data{};
