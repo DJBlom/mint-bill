@@ -1029,11 +1029,10 @@ std::vector<std::any> gui::part::statement::invoice_pdf_view::extract()
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
-		return records;
 	}
 	else
 	{
-		for (guint i = 0; i < store->get_n_items(); ++i)
+		for (guint i = 0; i < this->store->get_n_items(); ++i)
 		{
 			auto item = this->store->get_item(i);
 			if (!item)

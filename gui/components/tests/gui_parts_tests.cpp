@@ -667,23 +667,28 @@ TEST(invoice_pdf_view_test, extract_invoice_view_data_unsuccessfully)
 	CHECK_COMPARE(2, >=, result.size());
 }
 
-// TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)
-// {
-// 	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
-// 	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
-// 	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
-// 	std::vector<std::any> invoices{};
-// 	for (const data::pdf_invoice& inv : temp_invoices)
-// 	{
-// 		invoices.emplace_back(inv);
-// 	}
-// 	(void) invoice_pdf_view.create(builder);
-// 	(void) invoice_pdf_view.populate(invoices);
-// 	std::vector<std::any> result{invoice_pdf_view.extract()};
-// 	data::pdf_invoice data = std::move(std::any_cast<data::pdf_invoice> (result.front()));
-//
-// 	CHECK_EQUAL(true, data.is_valid());
-// }
+TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)
+{
+	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
+	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
+	std::vector<std::any> invoices{};
+	for (const data::pdf_invoice& inv : temp_invoices)
+	{
+		invoices.emplace_back(inv);
+	}
+	(void) invoice_pdf_view.create(builder);
+	(void) invoice_pdf_view.populate(invoices);
+	std::vector<std::any> result{invoice_pdf_view.extract()};
+	data::pdf_invoice data{};
+	for (const std::any& invoice : invoice_pdf_view.extract())
+	{
+		data = std::move(std::any_cast<data::pdf_invoice> (invoice));
+		break;
+	}
+
+	CHECK_EQUAL(true, data.is_valid());
+}
 
 
 
