@@ -67,7 +67,6 @@ TEST(generate_invoice_pdf_test, generate_invoice_pdf_for_lower_bounds)
         data::invoice invoice_data{test::generate_invoice_data(short_description)};
         pdf_data.set_invoice(invoice_data);
         std::string pdf_file_data{invoice_pdf.generate_for_email(pdf_data)};
-
         bool result{test::generate_invoice_pdf(pdf_file_data, "2")};
 
         CHECK_EQUAL(true, result);
@@ -84,7 +83,6 @@ TEST(generate_invoice_pdf_test, generate_invoice_pdf_for_no_data)
         data::invoice invoice_data{};
         pdf_data.set_invoice(invoice_data);
         std::string pdf_file_data{invoice_pdf.generate_for_email(pdf_data)};
-
         bool result{test::generate_invoice_pdf(pdf_file_data, "3")};
 
         CHECK_EQUAL(false, result);

@@ -11,7 +11,6 @@
 
 #include <vector>
 #include <iostream>
-#include <statement_data.h>
 #include <pdf_statement_data.h>
 #include <client_statement.h>
 extern "C"
@@ -37,11 +36,11 @@ TEST_GROUP(client_statement_feature_test)
 
 TEST(client_statement_feature_test, load_data_from_db)
 {
-	std::vector<data::statement> result{};
+	std::vector<data::pdf_statement> result{};
 	for (const std::any& data : statement.load("test_business"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-		result.emplace_back(pdf_statement.get_statement());
+		result.emplace_back(pdf_statement);
 	}
 
 	CHECK_EQUAL(false, result.empty());

@@ -7,7 +7,6 @@
  *******************************************************/
 #ifndef _PDF_STATEMENT_DATA_H_
 #define _PDF_STATEMENT_DATA_H_
-#include <statement_data.h>
 #include <pdf_invoice_data.h>
 
 namespace data {
@@ -25,8 +24,8 @@ public:
 	[[nodiscard]] virtual std::string get_number() const;
 	virtual void set_date(const std::string&);
 	[[nodiscard]] virtual std::string get_date() const;
-	virtual void set_statement(const data::statement&);
-	[[nodiscard]] virtual data::statement get_statement() const;
+	virtual void set_total(const std::string&);
+	[[nodiscard]] virtual std::string get_total() const;
 	virtual void set_pdf_invoices(const std::vector<data::pdf_invoice>&);
 	[[nodiscard]] virtual std::vector<data::pdf_invoice> get_pdf_invoices() const;
 
@@ -40,15 +39,15 @@ private:
 
 	std::string number{""};
 	std::string date{""};
-	data::statement statement{};
+	std::string total{""};
 	std::vector<data::pdf_invoice> pdf_invoices{};
 	std::mutex data_mutex{};
 	mask_type flags{0x0};
 	mask_type mask{0xF};
 	enum FLAG {
-		NUMBER,
+		NUMBER = 0,
 		DATE,
-		STATEMENT,
+		TOTAL,
 		PDF_INVOICE
 	};
 

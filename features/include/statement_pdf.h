@@ -31,10 +31,10 @@ public:
 	statement_pdf(statement_pdf&&) = delete;
 	statement_pdf& operator = (const statement_pdf&) = delete;
 	statement_pdf& operator = (statement_pdf&&) = delete;
-	virtual ~statement_pdf();
+	virtual ~statement_pdf() override;
 
-	[[nodiscard]] virtual std::string generate_for_email(const std::any&);
-	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&);
+	[[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
+	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
 
 private:
 	[[nodiscard]] std::string generate(const data::pdf_invoice&);

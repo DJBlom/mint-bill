@@ -30,6 +30,7 @@ data::invoice feature::invoice::load(const std::string& business_name, const int
                 std::string order_number{"order number 123"};
                 std::string card_number{"24/md"};
                 std::string date{"2023-09-04"};
+                std::string paid_status{"Not Paid"};
                 std::string description_total{"1234.00"};
                 std::string material_total{"1234.00"};
                 std::string grand_total{"2468.00"};
@@ -38,6 +39,7 @@ data::invoice feature::invoice::load(const std::string& business_name, const int
                 data.set_business_name(business_name);
                 data.set_invoice_number(number);
                 data.set_invoice_date(date);
+                data.set_paid_status(paid_status);
                 data.set_job_card_number(card_number);
                 data.set_order_number(order_number);
                 data.set_description_total(description_total);

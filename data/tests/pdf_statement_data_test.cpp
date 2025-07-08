@@ -9,10 +9,6 @@
 #include "CppUTestExt/MockSupport.h"
 
 
-/*#include <client_data.h>*/
-/*#include <invoice_data.h>*/
-/*#include <business_data.h>*/
-#include <statement_data.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 #include <mock_pdf_invoice_data.h>
@@ -25,14 +21,17 @@ extern "C"
 /**********************************TEST LIST************************************
  * 1) The data must be thread safe. (Done)
  * 2) The data must contain both the pdf_invoice_data and the statement data.
- *    The ratio is a many pdf_invoice_data for one statment_data.
+ *    The ratio is a many pdf_invoice_data for one statment_data. (Done)
  * 3) Ensure that the user can copy the information. (Done)
  * 4) Ensure that the user can move the data somewhere. (Done)
  * 5) The user should be able to assign and retrieve the data. (Done)
+ * 6) Asisgn and retrieve the statement price total.
  ******************************************************************************/
 TEST_GROUP(pdf_statement_data_test)
 {
-        data::statement statement_data{};
+	std::string statement_number{"# 1"};
+	std::string statement_date{"2025-05-31"};
+	std::string statement_total{"R 1234.00"};
 	data::pdf_statement pdf_statement{};
 	void setup()
 	{
@@ -43,29 +42,25 @@ TEST_GROUP(pdf_statement_data_test)
 	}
 };
 
-TEST(pdf_statement_data_test, assign_and_retrieve_bad_statement_data)
+TEST(pdf_statement_data_test, assign_and_retrieve_statement_number)
 {
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
 
-        CHECK_EQUAL(false, pdf_statement.is_valid());
+        CHECK_EQUAL(statement_number, pdf_statement.get_number());
 }
 
-TEST(pdf_statement_data_test, assign_and_retrieve_good_statement_data)
+TEST(pdf_statement_data_test, assign_and_retrieve_statement_date)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
-	pdf_statement.set_statement(statement_data);
-	data::statement result{pdf_statement.get_statement()};
+	pdf_statement.set_date(statement_date);
 
-        CHECK_EQUAL(true, result.is_valid());
+        CHECK_EQUAL(statement_date, pdf_statement.get_date());
+}
+
+TEST(pdf_statement_data_test, assign_and_retrieve_price_total)
+{
+	pdf_statement.set_total(statement_total);
+
+        CHECK_EQUAL(statement_total, pdf_statement.get_total());
 }
 
 TEST(pdf_statement_data_test, assign_and_retrieve_bad_pdf_invoice_data)
@@ -76,7 +71,7 @@ TEST(pdf_statement_data_test, assign_and_retrieve_bad_pdf_invoice_data)
         CHECK_EQUAL(false, pdf_statement.is_valid());
 }
 
-TEST(pdf_statement_data_test, assign_and_retrieve_good_pdf_invoice_data)
+TEST(pdf_statement_data_test, assign_and_retrieve_pdf_invoice_data)
 {
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
@@ -90,12 +85,12 @@ TEST(pdf_statement_data_test, assign_and_retrieve_good_pdf_invoice_data)
         CHECK_EQUAL(true, result[0].is_valid());
 }
 
-TEST(pdf_statement_data_test, check_in_valid_data)
+TEST(pdf_statement_data_test, check_invalid_data)
 {
 	std::vector<data::pdf_invoice> pdf_invoices{};
 	pdf_statement.set_number("");
 	pdf_statement.set_date("");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(false, pdf_statement.is_valid());
@@ -103,25 +98,15 @@ TEST(pdf_statement_data_test, check_in_valid_data)
 
 TEST(pdf_statement_data_test, ensure_that_the_data_is_valid)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(true, pdf_statement.is_valid());
@@ -129,17 +114,6 @@ TEST(pdf_statement_data_test, ensure_that_the_data_is_valid)
 
 TEST(pdf_statement_data_test, ensure_a_ratio_of_many_to_one)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
-	pdf_statement.set_statement(statement_data);
 	std::vector<data::pdf_invoice> pdf_invoices{};
 	for (int i = 0; i < 10; ++i)
 	{
@@ -149,8 +123,9 @@ TEST(pdf_statement_data_test, ensure_a_ratio_of_many_to_one)
 		pdf_invoice.set_business(retrieve_business_data());
 		pdf_invoices.push_back(pdf_invoice);
 	}
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(true, pdf_statement.is_valid());
@@ -158,25 +133,15 @@ TEST(pdf_statement_data_test, ensure_a_ratio_of_many_to_one)
 
 TEST(pdf_statement_data_test, ensure_copy_constructable)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result(pdf_statement);
 
@@ -185,25 +150,15 @@ TEST(pdf_statement_data_test, ensure_copy_constructable)
 
 TEST(pdf_statement_data_test, ensure_copy_assignmentable)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result;
 	result = pdf_statement;
@@ -213,25 +168,15 @@ TEST(pdf_statement_data_test, ensure_copy_assignmentable)
 
 TEST(pdf_statement_data_test, ensure_move_constructable)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result{pdf_statement};
 
@@ -240,25 +185,15 @@ TEST(pdf_statement_data_test, ensure_move_constructable)
 
 TEST(pdf_statement_data_test, ensure_move_assignmentable)
 {
-        std::string invoice_number{"1234"};
-        std::string date{"12/04/2025"};
-        std::string order_number{"123 mdb"};
-        std::string paid_status{"Yes"};
-        std::string price{"R1234.00"};
 	data::pdf_invoice pdf_invoice{};
 	std::vector<data::pdf_invoice> pdf_invoices{};
-        statement_data.set_invoice_number(invoice_number);
-        statement_data.set_date(date);
-        statement_data.set_order_number(order_number);
-        statement_data.set_paid_status(paid_status);
-        statement_data.set_price(price);
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
-	pdf_statement.set_number("1");
-	pdf_statement.set_date("3/14/2025");
-	pdf_statement.set_statement(statement_data);
+	pdf_statement.set_number(statement_number);
+	pdf_statement.set_date(statement_date);
+	pdf_statement.set_total(statement_total);
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result;
 	result = std::move(pdf_statement);

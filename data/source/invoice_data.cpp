@@ -11,6 +11,7 @@
 namespace upper_bound {
         constexpr std::uint8_t name_length{50};
         constexpr std::uint8_t string_length{20};
+        constexpr std::uint8_t paid_status_length{10};
         constexpr std::uint8_t invoice_number_length{8};
 }
 
@@ -25,7 +26,8 @@ data::invoice::~invoice()
 }
 
 data::invoice::invoice(const invoice& _copy)
-        : business_name{_copy.business_name}, invoice_number{_copy.invoice_number}, invoice_date{_copy.invoice_date},
+        : business_name{_copy.business_name}, invoice_number{_copy.invoice_number},
+	  invoice_date{_copy.invoice_date}, paid_status{_copy.paid_status},
           job_card_number{_copy.job_card_number}, order_number{_copy.order_number},
           description_total{_copy.description_total}, material_total{_copy.material_total},
           grand_total{_copy.grand_total}, description_column{_copy.description_column},
@@ -36,15 +38,17 @@ data::invoice::invoice(const invoice& _copy)
 
 data::invoice::invoice(invoice&& _move)
         : business_name{std::move(_move.business_name)}, invoice_number{std::move(_move.invoice_number)},
-	  invoice_date{std::move(_move.invoice_date)}, job_card_number{std::move(_move.job_card_number)},
-	  order_number{std::move(_move.order_number)}, description_total{std::move(_move.description_total)},
-	  material_total{std::move(_move.material_total)}, grand_total{std::move(_move.grand_total)},
-	  description_column{std::move(_move.description_column)}, material_column{std::move(_move.material_column)},
-	  flags{std::move(_move.flags)}, invoice_data{}, mask{std::move(_move.mask)}
+	  invoice_date{std::move(_move.invoice_date)}, paid_status{std::move(_move.paid_status)},
+	  job_card_number{std::move(_move.job_card_number)}, order_number{std::move(_move.order_number)},
+	  description_total{std::move(_move.description_total)}, material_total{std::move(_move.material_total)},
+	  grand_total{std::move(_move.grand_total)}, description_column{std::move(_move.description_column)},
+	  material_column{std::move(_move.material_column)}, flags{std::move(_move.flags)},
+	  invoice_data{}, mask{std::move(_move.mask)}
 {
         _move.business_name.clear();
         _move.invoice_number.clear();
         _move.invoice_date.clear();
+        _move.paid_status.clear();
         _move.job_card_number.clear();
         _move.order_number.clear();
         _move.description_total.clear();
@@ -69,6 +73,7 @@ data::invoice& data::invoice::operator= (invoice&& _move)
         std::swap(business_name, _move.business_name);
         std::swap(invoice_number, _move.invoice_number);
         std::swap(invoice_date, _move.invoice_date);
+        std::swap(paid_status, _move.paid_status);
         std::swap(job_card_number, _move.job_card_number);
         std::swap(order_number, _move.order_number);
         std::swap(description_total, _move.description_total);
@@ -141,7 +146,26 @@ void data::invoice::set_invoice_date(const std::string& _date)
 
 std::string data::invoice::get_invoice_date() const
 {
-        return std::move(this->invoice_date);
+        return this->invoice_date;
+}
+
+void data::invoice::set_paid_status(const std::string& _date)
+{
+        if (!_date.empty() && (_date.length() <= upper_bound::paid_status_length))
+        {
+                set_flag(FLAG::PAID);
+                std::lock_guard<std::mutex> guard(this->invoice_data);
+                this->paid_status = std::move(_date);
+        }
+        else
+        {
+                clear_flag(FLAG::PAID);
+        }
+}
+
+std::string data::invoice::get_paid_status() const
+{
+        return this->paid_status;
 }
 
 void data::invoice::set_job_card_number(const std::string& _card_number)

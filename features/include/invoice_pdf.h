@@ -32,10 +32,10 @@ public:
 	invoice_pdf(invoice_pdf&&) = delete;
 	invoice_pdf& operator = (const invoice_pdf&) = delete;
 	invoice_pdf& operator = (invoice_pdf&&) = delete;
-	virtual ~invoice_pdf();
+	virtual ~invoice_pdf() override;
 
-	[[nodiscard]] virtual std::string generate_for_email(const std::any&);
-	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&);
+	[[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
+	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
 
 private:
 	[[nodiscard]] std::string generate(const data::pdf_invoice&);

@@ -5,7 +5,6 @@
 #include <errors.h>
 #include <iostream>
 #include <invoice_data.h>
-#include <statement_data.h>
 
 
 
@@ -711,7 +710,7 @@ bool gui::part::statement::column_view::populate(const std::vector<std::any>& _s
 		this->store->remove_all();
 		for (const std::any& statement : _statements)
 		{
-			data::statement data{std::any_cast<data::statement>(statement)};
+			data::pdf_statement data{std::any_cast<data::pdf_statement>(statement)};
 			if (data.is_valid() == false)
 			{
 				syslog(LOG_CRIT, "The data is not valid - "
@@ -719,13 +718,7 @@ bool gui::part::statement::column_view::populate(const std::vector<std::any>& _s
 			}
 			else
 			{
-				this->store->append(statement::columns::entries::create(
-					data.get_invoice_number(),
-					data.get_date(),
-					data.get_order_number(),
-					data.get_paid_status(),
-					data.get_price()
-				));
+				// this->store->append(statement::columns::entries::create(data.));
 				Glib::signal_timeout().connect_once([this]() {
 					this->adjustment->set_value(this->adjustment->get_upper());
 				}, DURATION::MS_30);
@@ -780,12 +773,7 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 			}
 			else
 			{
-				data::statement data;
-				data.set_invoice_number(item->invoice_number);
-				data.set_date(item->date);
-				data.set_order_number(item->order_number);
-				data.set_paid_status(item->paid_status);
-				data.set_price(item->price);
+				data::pdf_invoice data{};
 				records.push_back(data);
 			}
 		}

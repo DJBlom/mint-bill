@@ -11,10 +11,11 @@ TEST_DIR :=$(realpath .)
 TEST_TARGET := mint-bill
 CPPUTEST_EXE_FLAGS +=-c -v
 
-CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
-CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
+# CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
+# CPPUTEST_EXE_FLAGS +=-sg "invoice_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"

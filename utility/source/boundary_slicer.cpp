@@ -5,7 +5,7 @@
  *
  * NOTE: This utility handles the splitting of words or
  * the placing of words on a new line depending on their
- * length. 
+ * length.
  *******************************************************/
 #include <boundary_slicer.h>
 
@@ -14,11 +14,11 @@ utility::boundary_slicer::~boundary_slicer() {}
 
 std::vector<std::string> utility::boundary_slicer::slice(const std::string& _data)
 {
-        std::string word{};
         this->sliced_data.clear();
         this->current_line.clear();
         if (!_data.empty())
         {
+		std::string word{};
                 std::istringstream stream{_data};
                 while (stream >> word)
                 {
@@ -39,7 +39,7 @@ std::vector<std::string> utility::boundary_slicer::slice(const std::string& _dat
         }
 
         return this->sliced_data;
-} 
+}
 
 bool utility::boundary_slicer::word_does_not_exceed_max(const std::string& _word)
 {
@@ -69,7 +69,7 @@ void utility::boundary_slicer::add_word_to_current_line(const std::string& _word
 void utility::boundary_slicer::handle_large_word(const std::string& _word)
 {
         size_t pos{0};
-        while (pos < _word.size()) 
+        while (pos < _word.size())
         {
                 size_t len = std::min(this->max, _word.size() - pos);
                 this->sliced_data.emplace_back(_word.substr(pos, len));

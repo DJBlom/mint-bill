@@ -47,6 +47,7 @@ data::invoice retrieve_invoice_data()
         expected.set_business_name("Test Business");
         expected.set_invoice_number("134");
         expected.set_invoice_date("2023-09-04");
+        expected.set_paid_status("Not Paid");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");
         expected.set_description_total("1234.00");
@@ -74,6 +75,7 @@ data::invoice retrieve_bad_invoice_data()
         expected.set_business_name("");
         expected.set_invoice_number("134");
         expected.set_invoice_date("2023-09-04");
+        expected.set_paid_status("Not Paid");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");
         expected.set_description_total("1234.00");

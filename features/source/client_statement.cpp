@@ -6,7 +6,6 @@
  * NOTE:
  *******************************************************/
 #include <client_statement.h>
-#include <statement_data.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 
@@ -77,18 +76,10 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 				pdf_invoice_data.set_invoice(invoice_data);
 				pdf_invoices.push_back(pdf_invoice_data);
 			}
-
-			data::statement statement{};
-			statement.set_invoice_number("INV-" + std::to_string(i));
-			statement.set_date("2025/06/14");
-			statement.set_order_number("MD 1234");
-			statement.set_paid_status("paid");
-			statement.set_price("R123" + std::to_string(i) + ".00");
-
 			data::pdf_statement pdf_statement_data{};
 			pdf_statement_data.set_number(std::to_string(i));
 			pdf_statement_data.set_date("02/24/2025");
-			pdf_statement_data.set_statement(statement);
+			pdf_statement_data.set_total("2056.00");
 			pdf_statement_data.set_pdf_invoices(pdf_invoices);
 
 			temp.push_back(pdf_statement_data);

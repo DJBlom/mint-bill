@@ -95,7 +95,8 @@ bool gui::statement_page::search(const std::string& _keyword)
 		for (const std::any& data : pdf_statements)
 		{
 			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-			statements.emplace_back(pdf_statement.get_statement());
+			(void) pdf_statement;
+			// statements.emplace_back(pdf_statement.get_statement());
 			const std::vector<data::pdf_invoice>& pdf_invoices = pdf_statement.get_pdf_invoices();
 			std::transform(pdf_invoices.begin(), pdf_invoices.end(), std::back_inserter(invoices),
 				[](const data::pdf_invoice& invoice) {

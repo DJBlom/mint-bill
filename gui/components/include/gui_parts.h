@@ -232,9 +232,7 @@ public:
 	bool generate(const std::shared_ptr<poppler::document>&);
 
 private:
-
 	std::string title{""};
-	Glib::RefPtr<Gtk::Window> window;
 	enum WINDOW_SIZE {
 		WIDTH = 595,
 		HEIGHT = 515

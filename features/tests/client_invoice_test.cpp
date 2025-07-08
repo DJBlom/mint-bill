@@ -59,6 +59,7 @@ TEST(client_invoice_test, send_invoice_to_client)
         std::string order_number{"order number 123"};
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
+        std::string paid_status{"Not Paid"};
         std::string name{"Test Business"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
@@ -72,6 +73,7 @@ TEST(client_invoice_test, send_invoice_to_client)
 		invoice.set_business_name(name);
 		invoice.set_invoice_number(number);
 		invoice.set_invoice_date(date);
+		invoice.set_paid_status(paid_status);
 		invoice.set_job_card_number(card_number);
 		invoice.set_order_number(order_number);
 		invoice.set_description_total(description_total);

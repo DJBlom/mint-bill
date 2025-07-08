@@ -96,6 +96,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string order_number{"order number 123"};
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
+        std::string paid_status{"Not Paid"};
         std::string name{"Test Business"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
@@ -106,6 +107,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         expected.set_business_name(name);
         expected.set_invoice_number(number);
         expected.set_invoice_date(date);
+        expected.set_paid_status(paid_status);
         expected.set_job_card_number(card_number);
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);
