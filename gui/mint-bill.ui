@@ -891,9 +891,7 @@
   <object class="GtkMessageDialog" id="business-save-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
@@ -901,7 +899,9 @@
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="business-wrong-info-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="message-type">warning</property>
     <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
@@ -913,9 +913,7 @@
   <object class="GtkMessageDialog" id="client-save-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
@@ -923,7 +921,9 @@
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="client-wrong-info-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="message-type">warning</property>
     <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
@@ -939,9 +939,7 @@
   <object class="GtkMessageDialog" id="invoice-save-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die inligting stoor?</property>
@@ -949,7 +947,9 @@
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-wrong-info-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="message-type">warning</property>
     <property name="modal">True</property>
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
@@ -965,9 +965,7 @@
   <object class="GtkMessageDialog" id="invoice-print-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die faktuur print?</property>
@@ -977,24 +975,25 @@
   <object class="GtkMessageDialog" id="invoice-email-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
-    <property name="message-type">question</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u wil die faktuur e-pos?</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-data-in-quantity-column-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="modal">True</property>
     <property name="text">Hierdie kolom kan slegs syfers bevat.</property>
     <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-data-in-amount-column-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="modal">True</property>
     <property name="text">Hierdie kolom kan slegs syfers en punte bevat.</property>
     <property name="title">Informasie</property>
@@ -1003,9 +1002,7 @@
   <object class="GtkMessageDialog" id="invoice-email-no-internet-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="modal">True</property>
     <property name="text">Maak asseblief seker dat u internettoegang het.
 </property>
@@ -1013,7 +1010,9 @@
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-print-no-printer-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
     <property name="transient-for">main-window</property>
@@ -1021,9 +1020,7 @@
   <object class="GtkMessageDialog" id="statement-email-no-internet-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
-    <property name="deletable">False</property>
     <property name="destroy-with-parent">True</property>
-    <property name="hide-on-close">True</property>
     <property name="modal">True</property>
     <property name="text">Maak asseblief seker dat u internettoegang het.
 </property>
@@ -1031,19 +1028,51 @@
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="statement-print-no-printer-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
     <property name="modal">True</property>
     <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="invoice-no-item-selected-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
     <property name="text">Kies asseblief 'n faktuur om te e-pos of te print</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="statement-no-item-selected-alert">
+    <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
     <property name="text">Kies asseblief 'n staat om te e-pos of te print.</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-save-button-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u wil die informasie stoor?</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-print-button-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u wil die staat of state print?</property>
+    <property name="transient-for">main-window</property>
+  </object>
+  <object class="GtkMessageDialog" id="statement-email-button-alert">
+    <property name="accessible-role">dialog</property>
+    <property name="buttons">yes-no</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="modal">True</property>
+    <property name="text">Is u seker u wil die staat of state e-pos?</property>
     <property name="transient-for">main-window</property>
   </object>
 </interface>

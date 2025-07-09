@@ -179,6 +179,7 @@ namespace gui {
                         int number_of_pages{0};
                         bool print_success{false};
                         bool email_success{false};
+                        std::string paid_status{"Not Paid"};
                         std::string grand_total{""};
 			std::string business_name{""};
                         data::invoice invoice_edit{};

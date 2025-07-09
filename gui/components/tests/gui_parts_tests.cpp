@@ -311,63 +311,6 @@ TEST(sub_button_test, sub_button_is_valid)
 
 
 
-/**********************************GUI PART BUTTON TEST LIST*******************
- * 1) create the button. (Done)
- * 2) connect the button. (Done)
- * 3) disable and enable the button. (Done)
- ******************************************************************************/
-TEST_GROUP(gui_part_button)
-{
-        gui::part::button gui_button{"save-button"};
-        gui::part::dialog dialog{"statement-no-item-selected-alert"};
-        Glib::RefPtr<Gtk::Builder> builder;
-        Glib::RefPtr<Gtk::Application> app;
-	void setup()
-	{
-                app = Gtk::Application::create("org.testing");
-                builder = Gtk::Builder::create();
-                builder->add_from_file("../gui/mint-bill.ui");
-	}
-
-	void teardown()
-	{
-                app.reset();
-	}
-};
-
-TEST(gui_part_button, button_create)
-{
-        CHECK_EQUAL(true, gui_button.create(builder));
-}
-
-TEST(gui_part_button, button_connect)
-{
-        CHECK_EQUAL(true, dialog.create(builder));
-        CHECK_EQUAL(true, gui_button.create(builder));
-        CHECK_EQUAL(true, gui_button.connect(dialog));
-}
-
-TEST(gui_part_button, button_disable)
-{
-        CHECK_EQUAL(true, dialog.create(builder));
-        CHECK_EQUAL(true, gui_button.create(builder));
-        CHECK_EQUAL(true, gui_button.connect(dialog));
-        gui_button.disable();
-}
-
-TEST(gui_part_button, button_enable)
-{
-        CHECK_EQUAL(true, dialog.create(builder));
-        CHECK_EQUAL(true, gui_button.create(builder));
-        CHECK_EQUAL(true, gui_button.connect(dialog));
-        gui_button.enable();
-}
-
-
-
-
-
-
 
 
 /**********************************GUI PART COLUMN_VIEW TEST LIST**************
@@ -463,11 +406,14 @@ TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
 TEST(statement_page_column_view_test, column_view_clear_successful)
 {
         feature::client_statement client_statement{};
-	std::vector<std::any> statements{};
+	std::vector<std::any> invoices{};
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-		statements.emplace_back(pdf_statement);
+		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
+		{
+			invoices.emplace_back(pdf_invoice.get_invoice());
+		}
 	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
@@ -476,33 +422,36 @@ TEST(statement_page_column_view_test, column_view_clear_successful)
         (void) column_view.add_column(order_number);
         (void) column_view.add_column(paid_status);
         (void) column_view.add_column(price);
-        (void) column_view.populate(statements);
+        (void) column_view.populate(invoices);
 
         CHECK_EQUAL(true, column_view.clear());
 }
 
-// TEST(statement_page_column_view_test, extract_data_from_store)
-// {
-//         feature::client_statement client_statement{};
-// 	std::vector<std::any> statements{};
-// 	for (const std::any& data : client_statement.load("Test Business Name"))
-// 	{
-// 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-// 		(void) pdf_statement;
-// 		// statements.emplace_back(pdf_statement.get_statement());
-// 	}
-//         (void) column_view.create(builder);
-//         (void) column_view.is_not_valid();
-//         (void) column_view.add_column(invoice_number);
-//         (void) column_view.add_column(date);
-//         (void) column_view.add_column(order_number);
-//         (void) column_view.add_column(paid_status);
-//         (void) column_view.add_column(price);
-//         (void) column_view.populate(statements);
-// 	std::vector<std::any> records(column_view.extract());
-//
-//         CHECK_EQUAL(100, records.size());
-// }
+TEST(statement_page_column_view_test, extract_data_from_store)
+{
+        feature::client_statement client_statement{};
+	std::vector<std::any> invoices{};
+	for (const std::any& data : client_statement.load("Test Business Name"))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
+		{
+			invoices.emplace_back(pdf_invoice.get_invoice());
+		}
+	}
+        (void) column_view.create(builder);
+        (void) column_view.is_not_valid();
+        (void) column_view.add_column(invoice_number);
+        (void) column_view.add_column(date);
+        (void) column_view.add_column(order_number);
+        (void) column_view.add_column(paid_status);
+        (void) column_view.add_column(price);
+        (void) column_view.populate(invoices);
+	std::vector<std::any> records(column_view.extract());
+	data::invoice result{std::any_cast<data::invoice> (records[0])};
+
+        CHECK_EQUAL(true, result.is_valid());
+}
 
 
 
@@ -814,11 +763,7 @@ TEST(statement_pdf_view_test, extract_statement_view_data_after_creation)
   ******************************************************************************/
 TEST_GROUP(statement_columns_test)
 {
-	std::string invoice_number{"INV-200"};
-	std::string date{"2025-06-14"};
-	std::string order_number{"MD-4"};
-	std::string paid_status{"paid"};
-	std::string price{"R1234.00"};
+	data::invoice invoice{};
 	std::string price_title{"price"};
 	std::string date_title{"date"};
 	std::string order_number_title{"order number"};
@@ -836,17 +781,14 @@ TEST_GROUP(statement_columns_test)
 	Glib::RefPtr<Gio::ListStore<gui::part::statement::columns::entries>> store{};
 	void setup()
 	{
+		invoice = std::move(retrieve_invoice_data());
 		app = Gtk::Application::create("org.testing");
 		builder = Gtk::Builder::create();
 		builder->add_from_file("../gui/mint-bill.ui");
 		view = std::unique_ptr<Gtk::ColumnView>{
 			builder->get_widget<Gtk::ColumnView>("statement-column-view")};
 		store = Gio::ListStore<gui::part::statement::columns::entries>::create();
-		store->append(gui::part::statement::columns::entries::create(invoice_number,
-							       date,
-							       order_number,
-							       paid_status,
-							       price));
+		store->append(gui::part::statement::columns::entries::create(invoice));
 		selection = Gtk::SingleSelection::create(store);
 		view->set_model(selection);
 		(void) date_column.create(date_title);
@@ -908,11 +850,11 @@ TEST(statement_columns_test, retrieve_value)
         view->append_column(order_number_column.retrieve_item());
         view->append_column(paid_status_column.retrieve_item());
         view->append_column(price_column.retrieve_item());
-        std::string expected_invoice_number{invoice_number};
-        std::string expected_date{date};
-        std::string expected_order_number{order_number};
-        std::string expected_paid_status{paid_status};
-        std::string expected_price{price};
+        std::string expected_invoice_number{invoice.get_invoice_number()};
+        std::string expected_date{invoice.get_invoice_date()};
+        std::string expected_order_number{invoice.get_order_number()};
+        std::string expected_paid_status{invoice.get_paid_status()};
+        std::string expected_price{invoice.get_grand_total()};
 
         CHECK_EQUAL(expected_invoice_number, invoice_number_column.retrieve_value());
         CHECK_EQUAL(expected_date, date_column.retrieve_value());

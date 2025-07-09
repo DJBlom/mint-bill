@@ -18,31 +18,14 @@ namespace columns {
 struct entries : public Glib::Object {
 public:
         static Glib::RefPtr<entries> create();
-        static Glib::RefPtr<entries> create(const std::string&,
-                                            const std::string&,
-                                            const std::string&,
-                                            const std::string&,
-                                            const std::string&);
+        static Glib::RefPtr<entries> create(const data::invoice&);
 
 protected:
         entries() = default;
-        explicit entries(const std::string& _invoice_number,
-                                const std::string& _date,
-                                const std::string& _order_number,
-                                const std::string& _paid_status,
-                                const std::string& _price)
-                : invoice_number{_invoice_number},
-                  date{_date},
-                  order_number{_order_number},
-                  paid_status{_paid_status},
-                  price{_price} {}
+        explicit entries(const data::invoice& _invoice) : invoice{_invoice} {}
 
 public:
-        std::string invoice_number{""};
-        std::string date{""};
-        std::string order_number{""};
-        std::string paid_status{""};
-        std::string price{""};
+	data::invoice invoice;
 };
 
 class invoice_number : public interface::column_item {
@@ -306,7 +289,7 @@ private:
 	};
 };
 
-class statement_pdf_view : public interface::list_view {
+class statement_pdf_view : public interface::list_view_callback {
 public:
         statement_pdf_view() = delete;
         explicit statement_pdf_view(const std::string&, const std::string&);
@@ -321,9 +304,12 @@ public:
         [[nodiscard]] virtual bool populate(const std::vector<std::any>&) override;
         [[nodiscard]] virtual bool clear() override;
         [[nodiscard]] virtual std::vector<std::any> extract() override;
+	[[nodiscard]] virtual bool double_click(std::function<void(const std::any&)>) override;
+	[[nodiscard]] virtual bool single_click(std::function<void(const std::vector<std::any>&)>) override;
 
 private:
-	void display_statement(uint);
+	void edit_statement(uint);
+	void selected_statement(uint, uint);
 	void setup(const Glib::RefPtr<Gtk::ListItem>&);
 	void bind(const Glib::RefPtr<Gtk::ListItem>&);
 	void teardown(const Glib::RefPtr<Gtk::ListItem>&);
@@ -334,6 +320,8 @@ private:
         std::unique_ptr<Gtk::ListView> view{};
 	std::shared_ptr<Gtk::Adjustment> vadjustment{};
         std::shared_ptr<Gio::ListStore<rows::statement_pdf_entries>> store{};
+	std::function<void(const std::any&)> double_click_callback{};
+	std::function<void(const std::vector<std::any>&)> single_click_callback{};
 
 	enum DURATION {
 		MS_30 = 30
@@ -392,28 +380,6 @@ private:
         std::string name{""};
 	std::function<void(const int&)> callback{};
         std::unique_ptr<Gtk::MessageDialog> gui_dialog{};
-};
-
-
-class button : public interface::button {
-public:
-        button() = delete;
-        explicit button(const std::string&);
-        button(const button&) = delete;
-        button(button&&) = delete;
-        button& operator= (const button&) = delete;
-        button& operator= (button&&) = delete;
-        virtual ~button() override;
-
-        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
-        [[nodiscard]] virtual bool connect(const interface::dialog&) override;
-        virtual void disable() override;
-        virtual void enable() override;
-
-
-private:
-        std::string name{""};
-        std::unique_ptr<Gtk::Button> gui_button{};
 };
 
 class sub_button : public interface::dispatcher {

@@ -855,6 +855,7 @@ data::invoice gui::invoice_page::extract_invoice_data()
         data.set_business_name(this->business_name);
         data.set_invoice_number(this->invoice_number->get_text());
         data.set_invoice_date(this->invoice_date->get_text());
+        data.set_paid_status(this->paid_status);
         data.set_job_card_number(this->job_card->get_text());
         data.set_order_number(this->order_number->get_text());
         data.set_description_total(this->description_total);

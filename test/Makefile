@@ -14,7 +14,6 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
-# CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
@@ -22,7 +21,10 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "stack_test"
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_search_bar"
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_button"
+# CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
+CPPUTEST_EXE_FLAGS +=-sg "statement_page_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_page_column_view_test"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 
 CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)

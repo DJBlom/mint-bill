@@ -44,6 +44,19 @@ public:
 	[[nodiscard]] virtual std::vector<std::any> extract() = 0;
 };
 
+class list_view_callback {
+public:
+	virtual ~list_view_callback() = default;
+
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
+	[[nodiscard]] virtual bool is_not_valid() const = 0;
+	[[nodiscard]] virtual bool populate(const std::vector<std::any>&) = 0;
+	[[nodiscard]] virtual bool clear() = 0;
+	[[nodiscard]] virtual std::vector<std::any> extract() = 0;
+	[[nodiscard]] virtual bool double_click(std::function<void(const std::any&)>) = 0;
+	[[nodiscard]] virtual bool single_click(std::function<void(const std::vector<std::any>&)>) = 0;
+};
+
 class dialog {
 public:
 	virtual ~dialog() = default;
@@ -53,26 +66,6 @@ public:
 	[[nodiscard]] virtual bool connect(const std::function<void(const int&)>&) = 0;
 	[[nodiscard]] virtual bool show() const = 0;
 	[[nodiscard]] virtual bool hide() const = 0;
-};
-
-class button {
-public:
-	virtual ~button() = default;
-
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-	[[nodiscard]] virtual bool connect(const interface::dialog&) = 0;
-	virtual void disable() = 0;
-	virtual void enable() = 0;
-};
-
-class test_button {
-public:
-	virtual ~test_button() = default;
-
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) = 0;
-	[[nodiscard]] virtual bool is_not_valid() const = 0;
-	[[nodiscard]] virtual bool subscribe(const std::string&,
-				      std::function<void(void)>) const = 0;
 };
 
 class observer {

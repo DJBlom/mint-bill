@@ -1,4 +1,3 @@
-
 #include <gui_parts.h>
 #include <invoice_pdf.h>
 #include <sql.h>
@@ -12,21 +11,16 @@
 /***************************************************************************
  * Column Entries
  **************************************************************************/
-Glib::RefPtr<gui::part::statement::columns::entries>
+	Glib::RefPtr<gui::part::statement::columns::entries>
 gui::part::statement::columns::entries::create()
 {
-        return Glib::make_refptr_for_instance<entries>(new entries());
+	return Glib::make_refptr_for_instance<entries>(new entries());
 }
 
-Glib::RefPtr<gui::part::statement::columns::entries>
-gui::part::statement::columns::entries::create(const std::string& _invoice_number,
-                                               const std::string& _date,
-                                               const std::string& _order_number,
-                                               const std::string& _paid_status,
-                                               const std::string& _price)
+	Glib::RefPtr<gui::part::statement::columns::entries>
+gui::part::statement::columns::entries::create(const data::invoice& _invoice)
 {
-        return Glib::make_refptr_for_instance<entries>(new entries(
-                _invoice_number, _date, _order_number, _paid_status, _price));
+	return Glib::make_refptr_for_instance<entries>(new entries(_invoice));
 }
 
 
@@ -37,363 +31,363 @@ gui::part::statement::columns::invoice_number::~invoice_number() {}
 
 bool gui::part::statement::columns::invoice_number::create(const std::string& _title)
 {
-        this->factory = Gtk::SignalListItemFactory::create();
-        if (!this->factory)
-        {
-                syslog(LOG_CRIT, "The factory is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->factory = Gtk::SignalListItemFactory::create();
+	if (!this->factory)
+	{
+		syslog(LOG_CRIT, "The factory is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
-        if (!this->column)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+	if (!this->column)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column->set_expand(true);
-        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_number::setup)));
-        this->factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_number::bind));
-        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_number::teardown)));
+	this->column->set_expand(true);
+	this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &invoice_number::setup)));
+	this->factory->signal_bind().connect(sigc::mem_fun(*this, &invoice_number::bind));
+	this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &invoice_number::teardown)));
 
 	return true;
 }
 
 bool gui::part::statement::columns::invoice_number::is_not_valid() const
 {
-        return !(this->column || this->factory);
+	return !(this->column || this->factory);
 }
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::invoice_number::retrieve_item() const
 {
-        return this->column;
+	return this->column;
 }
 
 std::string gui::part::statement::columns::invoice_number::retrieve_value() const
 {
-        return this->value;
+	return this->value;
 }
 
 void gui::part::statement::columns::invoice_number::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
 		auto label = Gtk::make_managed<Gtk::Label>("Paid");
 		if (!label)
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
 
-		label->set_xalign(0.50);                 // 0.0 = left, 1.0 = right
-		label->set_hexpand(true);               // let it fill the header area
+		label->set_xalign(0.50);
+		label->set_hexpand(true);
 		label->set_halign(Gtk::Align::START);
-                _item->set_child(*label);
-        }
+		_item->set_child(*label);
+	}
 }
 
 void gui::part::statement::columns::invoice_number::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
-        if (!col)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+	if (!col)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
-        if (!label)
-        {
-                syslog(LOG_CRIT, "The label is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        this->value.clear();
-        this->value = col->invoice_number;
-        this->value.shrink_to_fit();
-        label->set_text(col->invoice_number);
+	this->value.clear();
+	this->value = col->invoice.get_invoice_number();
+	this->value.shrink_to_fit();
+	label->set_text(this->value);
 }
 
 void gui::part::statement::columns::invoice_number::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 gui::part::statement::columns::date::~date() {}
 
 bool gui::part::statement::columns::date::create(const std::string& _title)
 {
-        this->factory = Gtk::SignalListItemFactory::create();
-        if (!this->factory)
-        {
-                syslog(LOG_CRIT, "The factory is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->factory = Gtk::SignalListItemFactory::create();
+	if (!this->factory)
+	{
+		syslog(LOG_CRIT, "The factory is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
-        if (!this->column)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+	if (!this->column)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column->set_expand(true);
-        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &date::setup)));
-        this->factory->signal_bind().connect(sigc::mem_fun(*this, &date::bind));
-        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &date::teardown)));
+	this->column->set_expand(true);
+	this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &date::setup)));
+	this->factory->signal_bind().connect(sigc::mem_fun(*this, &date::bind));
+	this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &date::teardown)));
 
 	return true;
 }
 
 bool gui::part::statement::columns::date::is_not_valid() const
 {
-        return !(this->column || this->factory);
+	return !(this->column || this->factory);
 }
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::date::retrieve_item() const
 {
-        return this->column;
+	return this->column;
 }
 
 std::string gui::part::statement::columns::date::retrieve_value() const
 {
-        return this->value;
+	return this->value;
 }
 
 void gui::part::statement::columns::date::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
 		auto label = Gtk::make_managed<Gtk::Label>("Date");
 		if (!label)
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
 
 		label->set_xalign(0.50);                 // 0.0 = left, 1.0 = right
 		label->set_hexpand(true);               // let it fill the header area
 		label->set_halign(Gtk::Align::START);
-                _item->set_child(*label);
-        }
+		_item->set_child(*label);
+	}
 }
 
 void gui::part::statement::columns::date::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
-        if (!col)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+	if (!col)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
-        if (!label)
-        {
-                syslog(LOG_CRIT, "The label is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        this->value.clear();
-        this->value = col->date;
-        this->value.shrink_to_fit();
-        label->set_text(col->date);
+	this->value.clear();
+	this->value = col->invoice.get_invoice_date();
+	this->value.shrink_to_fit();
+	label->set_text(this->value);
 }
 
 void gui::part::statement::columns::date::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 gui::part::statement::columns::order_number::~order_number() {}
 
 bool gui::part::statement::columns::order_number::create(const std::string& _title)
 {
-        this->factory = Gtk::SignalListItemFactory::create();
-        if (!this->factory)
-        {
-                syslog(LOG_CRIT, "The factory is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->factory = Gtk::SignalListItemFactory::create();
+	if (!this->factory)
+	{
+		syslog(LOG_CRIT, "The factory is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
-        if (!this->column)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+	if (!this->column)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column->set_expand(true);
-        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &order_number::setup)));
-        this->factory->signal_bind().connect(sigc::mem_fun(*this, &order_number::bind));
-        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &order_number::teardown)));
+	this->column->set_expand(true);
+	this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &order_number::setup)));
+	this->factory->signal_bind().connect(sigc::mem_fun(*this, &order_number::bind));
+	this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &order_number::teardown)));
 
 	return true;
 }
 
 bool gui::part::statement::columns::order_number::is_not_valid() const
 {
-        return !(this->column || this->factory);
+	return !(this->column || this->factory);
 }
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::order_number::retrieve_item() const
 {
-        return this->column;
+	return this->column;
 }
 
 std::string gui::part::statement::columns::order_number::retrieve_value() const
 {
-        return this->value;
+	return this->value;
 }
 
 void gui::part::statement::columns::order_number::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
 		auto label = Gtk::make_managed<Gtk::Label>("Order Number");
 		if (!label)
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
 
-		label->set_xalign(0.5);                 // 0.0 = left, 1.0 = right
-		label->set_hexpand(true);               // let it fill the header area
+		label->set_xalign(0.5);
+		label->set_hexpand(true);
 		label->set_halign(Gtk::Align::START);
-                _item->set_child(*label);
-        }
+		_item->set_child(*label);
+	}
 }
 
 void gui::part::statement::columns::order_number::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
-        if (!col)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+	if (!col)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
-        if (!label)
-        {
-                syslog(LOG_CRIT, "The label is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        this->value.clear();
-        this->value = col->order_number;
-        this->value.shrink_to_fit();
-        label->set_text(col->order_number);
+	this->value.clear();
+	this->value = col->invoice.get_order_number();
+	this->value.shrink_to_fit();
+	label->set_text(this->value);
 }
 
 void gui::part::statement::columns::order_number::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 bool gui::part::statement::columns::paid_status::create(const std::string& _title)
 {
-        this->factory = Gtk::SignalListItemFactory::create();
-        if (!this->factory)
-        {
-                syslog(LOG_CRIT, "The factory is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->factory = Gtk::SignalListItemFactory::create();
+	if (!this->factory)
+	{
+		syslog(LOG_CRIT, "The factory is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
-        if (!this->column)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+	if (!this->column)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column->set_expand(true);
-        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &paid_status::setup)));
-        this->factory->signal_bind().connect(sigc::mem_fun(*this, &paid_status::bind));
-        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &paid_status::teardown)));
+	this->column->set_expand(true);
+	this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &paid_status::setup)));
+	this->factory->signal_bind().connect(sigc::mem_fun(*this, &paid_status::bind));
+	this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &paid_status::teardown)));
 
 	return true;
 }
@@ -402,231 +396,231 @@ gui::part::statement::columns::paid_status::~paid_status() {}
 
 bool gui::part::statement::columns::paid_status::is_not_valid() const
 {
-        return !(this->column || this->factory);
+	return !(this->column || this->factory);
 }
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::paid_status::retrieve_item() const
 {
-        return this->column;
+	return this->column;
 }
 
 std::string gui::part::statement::columns::paid_status::retrieve_value() const
 {
-        return this->value;
+	return this->value;
 }
 
 void gui::part::statement::columns::paid_status::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                auto check_button = Gtk::make_managed<Gtk::CheckButton>();
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		auto check_button = Gtk::make_managed<Gtk::CheckButton>();
 		check_button->set_hexpand(true);
 		check_button->set_halign(Gtk::Align::START);
-		check_button->set_label("paid");
-                _item->set_child(*check_button);
-        }
+		check_button->set_label("Paid");
+		_item->set_child(*check_button);
+	}
 }
 
 void gui::part::statement::columns::paid_status::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
-        if (!col)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+	if (!col)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
 	auto check_button = static_cast<Gtk::CheckButton*>(_item->get_child());
-        if (!check_button)
-        {
-                syslog(LOG_CRIT, "The check_button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!check_button)
+	{
+		syslog(LOG_CRIT, "The check_button is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-	this->value = col->paid_status;
+	this->value = col->invoice.get_paid_status();
 	check_button->signal_toggled().connect([this, col, check_button]() {
 		if (check_button->get_active())
 		{
-			col->paid_status = "paid";
+		col->invoice.set_paid_status("Paid");
 		}
 		else
 		{
-			col->paid_status = "not paid";
+		col->invoice.set_paid_status("Not Paid");
 		}
 		this->value.clear();
-		this->value = col->paid_status;
+		this->value = col->invoice.get_paid_status();
 		this->value.shrink_to_fit();
 	});
 }
 
 void gui::part::statement::columns::paid_status::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 gui::part::statement::columns::price::~price() {}
 
 bool gui::part::statement::columns::price::create(const std::string& _title)
 {
-        this->factory = Gtk::SignalListItemFactory::create();
-        if (!this->factory)
-        {
-                syslog(LOG_CRIT, "The factory is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->factory = Gtk::SignalListItemFactory::create();
+	if (!this->factory)
+	{
+		syslog(LOG_CRIT, "The factory is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
-        if (!this->column)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	this->column = Gtk::ColumnViewColumn::create(_title, this->factory);
+	if (!this->column)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return false;
-        }
+	}
 
-        this->column->set_expand(true);
-        this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &price::setup)));
-        this->factory->signal_bind().connect(sigc::mem_fun(*this, &price::bind));
-        this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &price::teardown)));
+	this->column->set_expand(true);
+	this->factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &price::setup)));
+	this->factory->signal_bind().connect(sigc::mem_fun(*this, &price::bind));
+	this->factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &price::teardown)));
 
 	return true;
 }
 
 bool gui::part::statement::columns::price::is_not_valid() const
 {
-        return !(this->column || this->factory);
+	return !(this->column || this->factory);
 }
 
 Glib::RefPtr<Gtk::ColumnViewColumn> gui::part::statement::columns::price::retrieve_item() const
 {
-        return this->column;
+	return this->column;
 }
 
 std::string gui::part::statement::columns::price::retrieve_value() const
 {
-        return this->value;
+	return this->value;
 }
 
 void gui::part::statement::columns::price::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
 		auto label = Gtk::make_managed<Gtk::Label>("Price");
 		if (!label)
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
 
 		label->set_xalign(0.5);
 		label->set_hexpand(true);
 		label->set_halign(Gtk::Align::START);
-                _item->set_child(*label);
-        }
+		_item->set_child(*label);
+	}
 }
 
 void gui::part::statement::columns::price::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
-        if (!col)
-        {
-                syslog(LOG_CRIT, "The column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto col = std::dynamic_pointer_cast<entries>(_item->get_item());
+	if (!col)
+	{
+		syslog(LOG_CRIT, "The column is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
-        if (!label)
-        {
-                syslog(LOG_CRIT, "The label is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        this->value.clear();
-        this->value = col->price;
-        this->value.shrink_to_fit();
-        label->set_text(col->price);
+	this->value.clear();
+	this->value = col->invoice.get_grand_total();
+	this->value.shrink_to_fit();
+	label->set_text(this->value);
 }
 
 void gui::part::statement::columns::price::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 /***************************************************************************
  * Row Item
  **************************************************************************/
-Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
-	gui::part::statement::rows::invoice_pdf_entries::create()
+	Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
+gui::part::statement::rows::invoice_pdf_entries::create()
 {
-        return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries());
+	return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries());
 }
 
-Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
+	Glib::RefPtr<gui::part::statement::rows::invoice_pdf_entries>
 gui::part::statement::rows::invoice_pdf_entries::create(const data::pdf_invoice& _pdf_invoice)
 {
-        return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries(_pdf_invoice));
+	return Glib::make_refptr_for_instance<invoice_pdf_entries>(new invoice_pdf_entries(_pdf_invoice));
 }
 
 
-Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
-	gui::part::statement::rows::statement_pdf_entries::create()
+	Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
+gui::part::statement::rows::statement_pdf_entries::create()
 {
-        return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries());
+	return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries());
 }
 
-Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
+	Glib::RefPtr<gui::part::statement::rows::statement_pdf_entries>
 gui::part::statement::rows::statement_pdf_entries::create(const data::pdf_statement& _pdf_statement)
 {
-        return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries(_pdf_statement));
+	return Glib::make_refptr_for_instance<statement_pdf_entries>(new statement_pdf_entries(_pdf_statement));
 }
 
 
@@ -636,7 +630,7 @@ gui::part::statement::rows::statement_pdf_entries::create(const data::pdf_statem
 gui::part::statement::column_view::column_view(const std::string& _name, const std::string& _vadjustment)
 	: name{_name}, vadjustment{_vadjustment}
 {
-        name.shrink_to_fit();
+	name.shrink_to_fit();
 	vadjustment.shrink_to_fit();
 }
 
@@ -644,107 +638,106 @@ gui::part::statement::column_view::~column_view() {}
 
 bool gui::part::statement::column_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->view = std::unique_ptr<Gtk::ColumnView>{
-                        _ui_builder->get_widget<Gtk::ColumnView>(this->name)};
-                this->store = std::shared_ptr<Gio::ListStore<statement::columns::entries>>{
-	                       Gio::ListStore<statement::columns::entries>::create()};
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->view = std::unique_ptr<Gtk::ColumnView>{
+			_ui_builder->get_widget<Gtk::ColumnView>(this->name)};
+		this->store = std::shared_ptr<Gio::ListStore<statement::columns::entries>>{
+			Gio::ListStore<statement::columns::entries>::create()};
 		this->adjustment = std::shared_ptr<Gtk::Adjustment>{
-					_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment)};
-                Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
-                if (!this->view || !this->store || !model)
-                {
-                        syslog(LOG_CRIT, "The view, store, or model are not valid - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                }
-                else
-                {
-                        success = true;
-                        this->view->set_model(model);
-                }
-        }
+			_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment)};
+		Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
+		if (!this->view || !this->store || !model)
+		{
+			syslog(LOG_CRIT, "The view, store, or model are not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+			this->view->set_model(model);
+		}
+	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::statement::column_view::is_not_valid() const
 {
-        return !(this->view || this->store);
+	return !(this->view || this->store);
 }
 
 bool gui::part::statement::column_view::add_column(const interface::column_item& _item)
 {
-        bool added{false};
-        if (_item.is_not_valid())
-        {
-                syslog(LOG_CRIT, "The item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->view->append_column(_item.retrieve_item());
-                added = true;
-        }
+	bool added{false};
+	if (_item.is_not_valid())
+	{
+		syslog(LOG_CRIT, "The item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		added = true;
+		this->view->append_column(_item.retrieve_item());
+	}
 
-        return added;
+	return added;
 }
 
-bool gui::part::statement::column_view::populate(const std::vector<std::any>& _statements)
+bool gui::part::statement::column_view::populate(const std::vector<std::any>& _invoices)
 {
 	bool success{false};
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return success;
 	}
 	else
 	{
+		success = true;
 		this->store->remove_all();
-		for (const std::any& statement : _statements)
+		for (const std::any& invoice : _invoices)
 		{
-			data::pdf_statement data{std::any_cast<data::pdf_statement>(statement)};
+			data::invoice data{std::any_cast<data::invoice>(invoice)};
 			if (data.is_valid() == false)
 			{
 				syslog(LOG_CRIT, "The data is not valid - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
+						"filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
-				// this->store->append(statement::columns::entries::create(data.));
+				this->store->append(statement::columns::entries::create(data));
 				Glib::signal_timeout().connect_once([this]() {
 					this->adjustment->set_value(this->adjustment->get_upper());
 				}, DURATION::MS_30);
 			}
 		}
-		success = true;
 	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::statement::column_view::clear()
 {
-	bool success{true};
+	bool success{false};
 	if (is_not_valid() == true)
 	{
 		syslog(LOG_CRIT, "The column_view is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-		success = false;
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		this->store->remove_all();
-		if (this->store->property_n_items() > 0)
+		if (this->store->property_n_items() <= 0)
 		{
-			success = false;
+			success = true;
 		}
 	}
 
@@ -757,8 +750,7 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-		return records;
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -768,13 +760,12 @@ std::vector<std::any> gui::part::statement::column_view::extract()
 			if (!item)
 			{
 				syslog(LOG_CRIT, "The item is not valid - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
+						"filename %s, line number %d", __FILE__, __LINE__);
 				break;
 			}
 			else
 			{
-				data::pdf_invoice data{};
-				records.push_back(data);
+				records.emplace_back(std::any(item->invoice));
 			}
 		}
 	}
@@ -799,7 +790,7 @@ bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::d
 	if (!_document)
 	{
 		syslog(LOG_CRIT, "The poppler document is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -809,18 +800,18 @@ bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::d
 		if (!(window || scroller || vbox))
 		{
 			syslog(LOG_CRIT, "The window, scroller, or vbox is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
-
+			success = true;
 			for (int i = 0; i < _document->pages(); ++i)
 			{
 				auto page_view = Gtk::make_managed<pdf_draw>(_document, i);
 				if (!page_view)
 				{
 					syslog(LOG_CRIT, "The page_view is not valid - "
-							 "filename %s, line number %d", __FILE__, __LINE__);
+							"filename %s, line number %d", __FILE__, __LINE__);
 					break;
 				}
 				page_view->set_content_width(PAGE_WIDTH);
@@ -835,7 +826,6 @@ bool gui::part::statement::pdf_window::generate(const std::shared_ptr<poppler::d
 			window->set_child(*scroller);
 			window->set_modal(true);
 			window->present();
-			success = true;
 		}
 	}
 
@@ -856,16 +846,16 @@ void gui::part::statement::pdf_draw::on_draw(const Cairo::RefPtr<Cairo::Context>
 {
 	if (!this->document)
 	{
-                syslog(LOG_CRIT, "The poppler document is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The poppler document is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
 	auto page = this->document->create_page(this->page_number);
 	if (!page)
 	{
-                syslog(LOG_CRIT, "The poppler document page is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The poppler document page is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
@@ -877,16 +867,16 @@ void gui::part::statement::pdf_draw::on_draw(const Cairo::RefPtr<Cairo::Context>
 	auto image = renderer.render_page(page, target_dpi, target_dpi);
 	if (!image.is_valid())
 	{
-                syslog(LOG_CRIT, "The poppler image is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The poppler image is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
 	auto surface = Cairo::ImageSurface::create(
-		reinterpret_cast<unsigned char*>(image.data()),
-		Cairo::Surface::Format::ARGB32,
-		image.width(), image.height(),
-		image.bytes_per_row());
+			reinterpret_cast<unsigned char*>(image.data()),
+			Cairo::Surface::Format::ARGB32,
+			image.width(), image.height(),
+			image.bytes_per_row());
 
 	const double scale_x = (static_cast<double>(_width) / image.width());
 	const double scale_y = (static_cast<double>(_height) / image.height());
@@ -906,7 +896,7 @@ void gui::part::statement::pdf_draw::on_draw(const Cairo::RefPtr<Cairo::Context>
 gui::part::statement::invoice_pdf_view::invoice_pdf_view(const std::string& _name, const std::string& _vadjustment)
 	: name{_name}, vadjustment_name{_vadjustment}
 {
-        name.shrink_to_fit();
+	name.shrink_to_fit();
 	vadjustment_name.shrink_to_fit();
 }
 
@@ -914,31 +904,31 @@ gui::part::statement::invoice_pdf_view::~invoice_pdf_view() {}
 
 bool gui::part::statement::invoice_pdf_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->view = std::unique_ptr<Gtk::ListView>{
-                        _ui_builder->get_widget<Gtk::ListView>(this->name)};
-                this->store = std::shared_ptr<Gio::ListStore<rows::invoice_pdf_entries>>{
-	                       Gio::ListStore<rows::invoice_pdf_entries>::create()};
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->view = std::unique_ptr<Gtk::ListView>{
+			_ui_builder->get_widget<Gtk::ListView>(this->name)};
+		this->store = std::shared_ptr<Gio::ListStore<rows::invoice_pdf_entries>>{
+			Gio::ListStore<rows::invoice_pdf_entries>::create()};
 		this->vadjustment = std::shared_ptr<Gtk::Adjustment>{
-					_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment_name)};
-                Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
+			_ui_builder->get_object<Gtk::Adjustment>(this->vadjustment_name)};
+		Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
 		Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
-                if (!this->view || !this->store || !model || !factory)
-                {
-                        syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                }
-                else
-                {
+		if (!this->view || !this->store || !model || !factory)
+		{
+			syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
 			success = true;
-                        this->view->set_model(model);
+			this->view->set_model(model);
 			this->view->set_factory(factory);
 			this->view->set_single_click_activate(false);
 			this->view->signal_activate().connect(sigc::mem_fun(*this, &invoice_pdf_view::display_invoice));
@@ -948,7 +938,7 @@ bool gui::part::statement::invoice_pdf_view::create(const Glib::RefPtr<Gtk::Buil
 		}
 	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::statement::invoice_pdf_view::is_not_valid() const
@@ -961,8 +951,8 @@ bool gui::part::statement::invoice_pdf_view::populate(const std::vector<std::any
 	bool success{false};
 	if (_invoices.empty() == true)
 	{
-                syslog(LOG_CRIT, "The _data is empty - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The _data is empty - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -995,7 +985,7 @@ bool gui::part::statement::invoice_pdf_view::clear()
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 		success = false;
 	}
 	else
@@ -1016,7 +1006,7 @@ std::vector<std::any> gui::part::statement::invoice_pdf_view::extract()
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1026,13 +1016,12 @@ std::vector<std::any> gui::part::statement::invoice_pdf_view::extract()
 			if (!item)
 			{
 				syslog(LOG_CRIT, "The item is not valid - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
+						"filename %s, line number %d", __FILE__, __LINE__);
 				break;
 			}
 			else
 			{
-				data::pdf_invoice data{item->pdf_invoice};
-				records.push_back(data);
+				records.push_back(item->pdf_invoice);
 			}
 		}
 	}
@@ -1042,116 +1031,115 @@ std::vector<std::any> gui::part::statement::invoice_pdf_view::extract()
 
 void gui::part::statement::invoice_pdf_view::display_invoice(uint _position)
 {
-        auto item = this->store->get_item(_position);
-        if (!item)
-        {
-                syslog(LOG_CRIT, "The item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto item = this->store->get_item(_position);
+	if (!item)
+	{
+		syslog(LOG_CRIT, "The item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(item);
-        if (!data)
-        {
-                syslog(LOG_CRIT, "The data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(item);
+	if (!data)
+	{
+		syslog(LOG_CRIT, "The data is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        data::pdf_invoice pdf_invoice{data->pdf_invoice};
-        if (pdf_invoice.is_valid() == false)
-        {
-                syslog(LOG_CRIT, "The invoice data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	data::pdf_invoice pdf_invoice{data->pdf_invoice};
+	if (pdf_invoice.is_valid() == false)
+	{
+		syslog(LOG_CRIT, "The invoice data is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
 	feature::invoice_pdf invoice_pdf{};
 	std::shared_ptr<poppler::document> document{invoice_pdf.generate_for_print(pdf_invoice)};
 	if (!document)
 	{
-                syslog(LOG_CRIT, "The poppler document is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The poppler document is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 
 	pdf_window pdf_window{"Invoice"};
 	if (pdf_window.generate(document) == false)
 	{
-                syslog(LOG_CRIT, "Failed generate pdf_window - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "Failed generate pdf_window - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 		return;
 	}
 }
 
 void gui::part::statement::invoice_pdf_view::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+	else
+	{
 		auto label = Gtk::make_managed<Gtk::Label>("");
 		if (!label)
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 			return;
 		}
 
 		label->set_xalign(0.50);
 		label->set_hexpand(true);
 		label->set_halign(Gtk::Align::START);
-                _item->set_child(*label);
-        }
+		_item->set_child(*label);
+	}
 }
 
 void gui::part::statement::invoice_pdf_view::bind(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The _item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The _item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(_item->get_item());
-        if (!data)
-        {
-                syslog(LOG_CRIT, "The data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(_item->get_item());
+	if (!data)
+	{
+		syslog(LOG_CRIT, "The data is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
-        if (!label)
-        {
-                syslog(LOG_CRIT, "The label is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
+	auto label = dynamic_cast<Gtk::Label*>(_item->get_child());
+	if (!label)
+	{
+		syslog(LOG_CRIT, "The label is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
 
-        data::pdf_invoice pdf_invoice{data->pdf_invoice};
+	data::pdf_invoice pdf_invoice{data->pdf_invoice};
 	data::invoice invoice{pdf_invoice.get_invoice()};
-        std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
-        label->set_text(details);
+	std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+	label->set_text(details);
 }
 
 void gui::part::statement::invoice_pdf_view::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 
@@ -1161,7 +1149,7 @@ void gui::part::statement::invoice_pdf_view::teardown(const Glib::RefPtr<Gtk::Li
 gui::part::statement::statement_pdf_view::statement_pdf_view(const std::string& _name, const std::string& _vadjustment)
 	: name{_name}, vadjustment_name{_vadjustment}
 {
-        name.shrink_to_fit();
+	name.shrink_to_fit();
 	vadjustment_name.shrink_to_fit();
 }
 
@@ -1169,14 +1157,14 @@ gui::part::statement::statement_pdf_view::~statement_pdf_view() {}
 
 bool gui::part::statement::statement_pdf_view::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
 		this->view = std::unique_ptr<Gtk::ListView>{
 			_ui_builder->get_widget<Gtk::ListView>(this->name)};
 		this->store = std::shared_ptr<Gio::ListStore<rows::statement_pdf_entries>>{
@@ -1186,24 +1174,25 @@ bool gui::part::statement::statement_pdf_view::create(const Glib::RefPtr<Gtk::Bu
 		Glib::RefPtr<Gtk::MultiSelection> model = Gtk::MultiSelection::create(this->store);
 		Glib::RefPtr<Gtk::SignalListItemFactory> factory = Gtk::SignalListItemFactory::create();
 		if (!this->view || !this->store || !model || !factory)
-                {
-                        syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                }
-                else
-                {
+		{
+			syslog(LOG_CRIT, "The view, store, model, or facotry are not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
 			success = true;
-                        this->view->set_model(model);
+			this->view->set_model(model);
 			this->view->set_factory(factory);
 			this->view->set_single_click_activate(false);
-			this->view->signal_activate().connect(sigc::mem_fun(*this, &statement_pdf_view::display_statement));
+			this->view->signal_activate().connect(sigc::mem_fun(*this, &statement_pdf_view::edit_statement));
+			model->signal_selection_changed().connect(sigc::mem_fun(*this, &statement_pdf_view::selected_statement));
 			factory->signal_setup().connect(sigc::bind(sigc::mem_fun(*this, &statement_pdf_view::setup)));
 			factory->signal_bind().connect(sigc::mem_fun(*this, &statement_pdf_view::bind));
 			factory->signal_teardown().connect(sigc::bind(sigc::mem_fun(*this, &statement_pdf_view::teardown)));
 		}
 	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::statement::statement_pdf_view::is_not_valid() const
@@ -1217,7 +1206,7 @@ bool gui::part::statement::statement_pdf_view::populate(const std::vector<std::a
 	if (_statements.empty() == true)
 	{
 		syslog(LOG_CRIT, "The _data is empty - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1252,7 +1241,7 @@ bool gui::part::statement::statement_pdf_view::clear()
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1272,7 +1261,7 @@ std::vector<std::any> gui::part::statement::statement_pdf_view::extract()
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The view or store is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1282,13 +1271,12 @@ std::vector<std::any> gui::part::statement::statement_pdf_view::extract()
 			if (!item)
 			{
 				syslog(LOG_CRIT, "The item is not valid - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
+						"filename %s, line number %d", __FILE__, __LINE__);
 				break;
 			}
 			else
 			{
-				data::pdf_statement data{item->pdf_statement};
-				records.push_back(data);
+				records.push_back(item->pdf_statement);
 			}
 		}
 	}
@@ -1296,49 +1284,97 @@ std::vector<std::any> gui::part::statement::statement_pdf_view::extract()
 	return records;
 }
 
-void gui::part::statement::statement_pdf_view::display_statement(uint _position)
+bool gui::part::statement::statement_pdf_view::double_click(std::function<void(const std::any&)> _callback)
+{
+	bool success{false};
+	if (!_callback)
+	{
+		syslog(LOG_CRIT, "The _callback is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->double_click_callback = std::move(_callback);
+	}
+
+	return success;
+}
+
+bool gui::part::statement::statement_pdf_view::single_click(std::function<void(const std::vector<std::any>&)> _callback)
+{
+	bool success{false};
+	if (!_callback)
+	{
+		syslog(LOG_CRIT, "The _callback is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->single_click_callback = std::move(_callback);
+	}
+
+	return success;
+}
+
+void gui::part::statement::statement_pdf_view::edit_statement(uint _position)
+{
+	auto item = this->store->get_item(_position);
+	if (!item)
+	{
+		syslog(LOG_CRIT, "The item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	auto data = std::dynamic_pointer_cast<rows::statement_pdf_entries>(item);
+	if (!data)
+	{
+		syslog(LOG_CRIT, "The data is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	this->double_click_callback(std::any(data->pdf_statement));
+}
+
+void gui::part::statement::statement_pdf_view::selected_statement(uint _position, uint _items_selected)
 {
 	(void) _position;
-	/*       auto item = this->store->get_item(_position);*/
-	/*       if (!item)*/
-	/*       {*/
-	/*               syslog(LOG_CRIT, "The item is not valid - "*/
-	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*               return;*/
-	/*       }*/
-	/**/
-	/*       auto data = std::dynamic_pointer_cast<rows::invoice_pdf_entries>(item);*/
-	/*       if (!data)*/
-	/*       {*/
-	/*               syslog(LOG_CRIT, "The data is not valid - "*/
-	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*               return;*/
-	/*       }*/
-	/**/
-	/*       data::pdf_invoice pdf_invoice{data->pdf_invoice};*/
-	/*       if (pdf_invoice.is_valid() == false)*/
-	/*       {*/
-	/*               syslog(LOG_CRIT, "The invoice data is not valid - "*/
-	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*               return;*/
-	/*       }*/
-	/**/
-	/*feature::pdf pdf{};*/
-	/*std::shared_ptr<poppler::document> document{pdf.generate_for_print(pdf_invoice)};*/
-	/*if (!document)*/
-	/*{*/
-	/*               syslog(LOG_CRIT, "The poppler document is not valid - "*/
-	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*	return;*/
-	/*}*/
-	/**/
-	/*pdf_window pdf_window{"Invoice"};*/
-	/*if (pdf_window.generate(document) == false)*/
-	/*{*/
-	/*               syslog(LOG_CRIT, "Failed generate pdf_window - "*/
-	/*                                "filename %s, line number %d", __FILE__, __LINE__);*/
-	/*	return;*/
-	/*}*/
+	(void) _items_selected;
+
+	Glib::RefPtr<Gtk::SelectionModel> model = this->view->get_model();
+	if (!model)
+	{
+		syslog(LOG_CRIT, "The model is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+		return;
+	}
+
+	std::vector<std::any> selected_pdf_statements{};
+	Glib::RefPtr<const Gtk::Bitset> items_list{model->get_selection()};
+	for (guint index : *items_list)
+	{
+		auto item = this->store->get_item(index);
+		if (!item)
+		{
+			syslog(LOG_CRIT, "The item is not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+			break;
+		}
+		auto data = std::dynamic_pointer_cast<rows::statement_pdf_entries>(item);
+		if (!data)
+		{
+			syslog(LOG_CRIT, "The data is not valid - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+			break;
+		}
+
+		selected_pdf_statements.emplace_back(data->pdf_statement);
+	}
+
+	this->single_click_callback(selected_pdf_statements);
 }
 
 void gui::part::statement::statement_pdf_view::setup(const Glib::RefPtr<Gtk::ListItem>& _item)
@@ -1346,8 +1382,7 @@ void gui::part::statement::statement_pdf_view::setup(const Glib::RefPtr<Gtk::Lis
 	if (!_item)
 	{
 		syslog(LOG_CRIT, "The list_item is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-		return;
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1356,13 +1391,14 @@ void gui::part::statement::statement_pdf_view::setup(const Glib::RefPtr<Gtk::Lis
 		{
 			syslog(LOG_CRIT, "The label is not valid - "
 					"filename %s, line number %d", __FILE__, __LINE__);
-			return;
 		}
-
-		label->set_xalign(0.50);
-		label->set_hexpand(true);
-		label->set_halign(Gtk::Align::START);
-		_item->set_child(*label);
+		else
+		{
+			label->set_xalign(0.50);
+			label->set_hexpand(true);
+			label->set_halign(Gtk::Align::START);
+			_item->set_child(*label);
+		}
 	}
 }
 
@@ -1400,16 +1436,15 @@ void gui::part::statement::statement_pdf_view::bind(const Glib::RefPtr<Gtk::List
 
 void gui::part::statement::statement_pdf_view::teardown(const Glib::RefPtr<Gtk::ListItem>& _item)
 {
-        if (!_item)
-        {
-                syslog(LOG_CRIT, "The list_item is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-        else
-        {
-                _item->unset_child();
-        }
+	if (!_item)
+	{
+		syslog(LOG_CRIT, "The list_item is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		_item->unset_child();
+	}
 }
 
 
@@ -1419,7 +1454,7 @@ void gui::part::statement::statement_pdf_view::teardown(const Glib::RefPtr<Gtk::
 gui::part::search_bar::search_bar(const std::string& _search_bar_name)
 	: search_bar_name{_search_bar_name}
 {
-        search_bar_name.shrink_to_fit();
+	search_bar_name.shrink_to_fit();
 
 }
 
@@ -1427,20 +1462,20 @@ gui::part::search_bar::~search_bar() {}
 
 bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->gui_search_bar = std::unique_ptr<Gtk::SearchEntry>{
 			_ui_builder->get_widget<Gtk::SearchEntry>(this->search_bar_name)};
 		if (this->is_not_valid())
 		{
 			syslog(LOG_CRIT, "The gui_search_bar is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
@@ -1448,22 +1483,22 @@ bool gui::part::search_bar::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 			this->gui_search_bar->signal_search_changed()
 				.connect(sigc::mem_fun(*this, &search_bar::on_search_changed));
 		}
-        }
+	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::search_bar::update(const std::string& _current_stack_page_name)
 {
-	bool updated{true};
+	bool updated{false};
 	if (_current_stack_page_name.empty())
 	{
 		syslog(LOG_CRIT, "The _current_stack_page_name is empty - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-		updated = false;
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
+		updated = true;
 		this->gui_search_bar->set_text("");
 		this->stack_page_name = _current_stack_page_name;
 	}
@@ -1473,25 +1508,25 @@ bool gui::part::search_bar::update(const std::string& _current_stack_page_name)
 
 bool gui::part::search_bar::is_not_valid() const
 {
-        return !(this->gui_search_bar);
+	return !(this->gui_search_bar);
 }
 
 bool gui::part::search_bar::subscribe(const std::string& _page_name,
-			      std::function<void(const std::string&)> _callback) const
+		std::function<void(const std::string&)> _callback) const
 {
 	bool success{false};
 	if (_page_name.empty() || !_callback)
 	{
 		syslog(LOG_CRIT, "The _page_name or _callback is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		std::pair<
-		std::unordered_map<
-		std::string,
-		std::function<void(const std::string&)>>::iterator,
-		bool> result{this->subscribers.emplace(_page_name, _callback)};
+			std::unordered_map<
+			std::string,
+			std::function<void(const std::string&)>>::iterator,
+			bool> result{this->subscribers.emplace(_page_name, _callback)};
 		if (result.second)
 		{
 			success = true;
@@ -1507,20 +1542,20 @@ bool gui::part::search_bar::subscribe(const std::string& _page_name,
 
 void gui::part::search_bar::on_search_changed()
 {
-	const std::string keyword{this->gui_search_bar->get_text()};
-	if (keyword.empty())
+	if (this->is_not_valid())
 	{
-		syslog(LOG_CRIT, "The keyword is empty, nothing to notify about - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The search_bar is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
+		const std::string keyword{this->gui_search_bar->get_text()};
 		for (const auto& [key, callback] : this->subscribers)
 		{
 			if (!callback)
 			{
 				syslog(LOG_CRIT, "The subscriber has not been registered - "
-						  "filename %s, line number %d", __FILE__, __LINE__);
+						"filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
@@ -1541,41 +1576,41 @@ void gui::part::search_bar::on_search_changed()
  **************************************************************************/
 gui::part::dialog::dialog(const std::string& _name) : name{_name}
 {
-        name.shrink_to_fit();
+	name.shrink_to_fit();
 }
 
 gui::part::dialog::~dialog() {}
 
 bool gui::part::dialog::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->gui_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                        _ui_builder->get_widget<Gtk::MessageDialog>(this->name)};
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->gui_dialog = std::unique_ptr<Gtk::MessageDialog>{
+			_ui_builder->get_widget<Gtk::MessageDialog>(this->name)};
 		if (this->is_not_valid())
 		{
 			syslog(LOG_CRIT, "The gui_dialog is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
+					"filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
-                {
-                        success = true;
+		{
+			success = true;
 			this->gui_dialog->signal_response().connect(sigc::mem_fun(*this, &dialog::on_response));
-                }
-        }
+		}
+	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::dialog::is_not_valid() const
 {
-        return !(this->gui_dialog);
+	return !(this->gui_dialog);
 }
 
 bool gui::part::dialog::connect(const std::function<void(const int&)>& _callback)
@@ -1584,7 +1619,7 @@ bool gui::part::dialog::connect(const std::function<void(const int&)>& _callback
 	if (!_callback)
 	{
 		syslog(LOG_CRIT, "The _callback is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1601,7 +1636,7 @@ bool gui::part::dialog::show() const
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The gui_dialog is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1618,7 +1653,7 @@ bool gui::part::dialog::hide() const
 	if (this->is_not_valid())
 	{
 		syslog(LOG_CRIT, "The gui_dialog is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1638,77 +1673,13 @@ void gui::part::dialog::on_response(int response)
 
 
 
-
-
-/***************************************************************************
- * Button
- **************************************************************************/
-gui::part::button::button(const std::string& _name) : name{_name}
-{
-        name.shrink_to_fit();
-}
-
-gui::part::button::~button() {}
-
-bool gui::part::button::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-{
-        bool created{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                this->gui_button = std::unique_ptr<Gtk::Button>{
-                        _ui_builder->get_widget<Gtk::Button>(this->name)};
-                if (this->gui_button != nullptr)
-                {
-                        created = true;
-                }
-        }
-
-        return created;
-}
-
-bool gui::part::button::connect(const interface::dialog& _dialog)
-{
-        bool success{false};
-        if (_dialog.is_not_valid())
-        {
-                syslog(LOG_CRIT, "The dialog is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
-                success = true;
-                this->gui_button->signal_clicked().connect([&] () {
-                        _dialog.show();
-                });
-        }
-
-        return success;
-}
-
-void gui::part::button::disable()
-{
-        this->gui_button->set_sensitive(false);
-}
-
-void gui::part::button::enable()
-{
-        this->gui_button->set_sensitive(true);
-}
-
-
-
 /****************************************************************************************
- * Test
+ * Sub button
  ***************************************************************************************/
 gui::part::sub_button::sub_button(const std::string& _button_name)
 	: button_name{_button_name}
 {
-        button_name.shrink_to_fit();
+	button_name.shrink_to_fit();
 
 }
 
@@ -1716,26 +1687,26 @@ gui::part::sub_button::~sub_button() {}
 
 bool gui::part::sub_button::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool success{false};
-        if (!_ui_builder)
-        {
-                syslog(LOG_CRIT, "The UI builder or stack is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else
-        {
+	bool success{false};
+	if (!_ui_builder)
+	{
+		syslog(LOG_CRIT, "The UI builder or stack is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
 		success = true;
 		this->button = std::unique_ptr<Gtk::Button>{_ui_builder->get_widget<Gtk::Button>(this->button_name)};
 		this->button->signal_clicked()
 			.connect(sigc::mem_fun(*this, &sub_button::on_clicked));
-        }
+	}
 
-        return success;
+	return success;
 }
 
 bool gui::part::sub_button::is_not_valid() const
 {
-        return !(this->button);
+	return !(this->button);
 }
 
 bool gui::part::sub_button::subscribe(std::function<void(void)> _callback)
@@ -1743,8 +1714,8 @@ bool gui::part::sub_button::subscribe(std::function<void(void)> _callback)
 	bool success{false};
 	if (!_callback)
 	{
-                syslog(LOG_CRIT, "The _callback is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The _callback is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -1760,13 +1731,13 @@ bool gui::part::sub_button::disable()
 	bool success{false};
 	if (is_not_valid())
 	{
-                syslog(LOG_CRIT, "The button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The button is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		success = true;
-                this->button->set_sensitive(false);
+		this->button->set_sensitive(false);
 	}
 
 	return success;
@@ -1777,13 +1748,13 @@ bool gui::part::sub_button::enable()
 	bool success{false};
 	if (is_not_valid())
 	{
-                syslog(LOG_CRIT, "The button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The button is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		success = true;
-                this->button->set_sensitive(true);
+		this->button->set_sensitive(true);
 	}
 
 	return success;
@@ -1793,8 +1764,8 @@ void gui::part::sub_button::on_clicked()
 {
 	if (this->is_not_valid())
 	{
-                syslog(LOG_CRIT, "The button is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		syslog(LOG_CRIT, "The button is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{

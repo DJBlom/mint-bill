@@ -29,7 +29,11 @@ public:
 	[[nodiscard]] virtual bool save() override;
 
 private:
+	std::vector<data::pdf_statement> selected_pdf_statements{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
+        part::dialog email_alert{"statement-email-button-alert"};
+        part::dialog print_alert{"statement-print-button-alert"};
+        part::dialog save_alert{"statement-save-button-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};
 	part::statement::columns::paid_status paid_status{};

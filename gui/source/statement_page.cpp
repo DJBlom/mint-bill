@@ -24,9 +24,81 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			return created;
 		}
 
+		if (this->email_alert.create(_ui_builder) == false)
+		{
+			return created;
+		}
+
+		if (this->print_alert.create(_ui_builder) == false)
+		{
+			return created;
+		}
+
+		if (this->save_alert.create(_ui_builder) == false)
+		{
+			return created;
+		}
+
+		(void) this->print_alert.connect([this] (const int& response) {
+			switch (response)
+			{
+				case GTK_RESPONSE_YES:
+					(void) this->print_alert.hide();
+					break;
+				case GTK_RESPONSE_NO:
+					(void) this->print_alert.hide();
+					break;
+				default:
+					(void) this->print_alert.hide();
+					break;
+			}
+		});
+
+		(void) this->email_alert.connect([this] (const int& response) {
+			switch (response)
+			{
+				case GTK_RESPONSE_YES:
+					(void) this->email_alert.hide();
+					break;
+				case GTK_RESPONSE_NO:
+					(void) this->email_alert.hide();
+					break;
+				default:
+					(void) this->email_alert.hide();
+					break;
+			}
+		});
+
+		(void) this->save_alert.connect([this] (const int& response) {
+			switch (response)
+			{
+				case GTK_RESPONSE_YES:
+					(void) this->save_alert.hide();
+					for (const std::any& data : this->statement_view.extract())
+					{
+						data::invoice invoice{std::any_cast<data::invoice> (data)};
+						std::cout << "Invoice paid_status: " << invoice.get_paid_status() << std::endl;
+					}
+					break;
+				case GTK_RESPONSE_NO:
+					(void) this->save_alert.hide();
+					break;
+				default:
+					(void) this->save_alert.hide();
+					break;
+			}
+		});
+
 		(void) this->no_item_selected.connect([this] (const int& response) {
-			std::cout << "Response: " << std::to_string(response) << std::endl;
-			(void) this->no_item_selected.hide();
+			switch (response)
+			{
+				case GTK_RESPONSE_CLOSE:
+					(void) this->no_item_selected.hide();
+					break;
+				default:
+					(void) this->no_item_selected.hide();
+					break;
+			}
 		});
 
 		if (this->statement_view.create(_ui_builder) == false)
@@ -71,6 +143,49 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
                         return created;
 		}
 
+		(void) this->statement_pdf_view.double_click([this] (const std::any& _data) {
+			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement> (_data)};
+			if (pdf_statement.is_valid() == false)
+			{
+				syslog(LOG_CRIT, "The pdf_statement data is not valid - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return false;
+			}
+			else
+			{
+				std::vector<std::any> invoices{};
+				std::vector<std::any> pdf_invoices{};
+				for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
+				{
+					if (pdf_invoice.is_valid() == false)
+					{
+						syslog(LOG_CRIT, "The pdf_invoice data is not valid - "
+								 "filename %s, line number %d", __FILE__, __LINE__);
+					}
+					else
+					{
+						invoices.emplace_back(pdf_invoice.get_invoice());
+						pdf_invoices.emplace_back(pdf_invoice);
+					}
+				}
+				(void) this->statement_view.populate(invoices);
+				(void) this->invoice_pdf_view.populate(pdf_invoices);
+			}
+
+			return true;
+		});
+
+		(void) this->statement_pdf_view.single_click([this] (const std::vector<std::any>& _pdf_statements) {
+			this->selected_pdf_statements.clear();
+			for (const std::any& pdf_statement : _pdf_statements)
+			{
+				this->selected_pdf_statements.emplace_back(std::any_cast<data::pdf_statement> (pdf_statement));
+				this->selected_pdf_statements.shrink_to_fit();
+			}
+
+			return true;
+		});
+
 		created = true;
         }
 
@@ -80,64 +195,106 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 bool gui::statement_page::search(const std::string& _keyword)
 {
         bool searched{true};
-        if (_keyword.empty())
-        {
-                syslog(LOG_CRIT, "The _keywword is empty - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+	if (_keyword.empty())
+	{
 		searched = false;
-        }
-        else
-        {
+		syslog(LOG_CRIT, "The _keyword is empty, clearing all entries - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		this->selected_pdf_statements.clear();
+		if (this->statement_view.clear() == false)
+		{
+			syslog(LOG_CRIT, "Could not clear statement_view - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+
+		if (this->invoice_pdf_view.clear() == false)
+		{
+			syslog(LOG_CRIT, "Could not clear invoice_pdf_view - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+
+		if (this->statement_pdf_view.clear() == false)
+		{
+			syslog(LOG_CRIT, "Could not clear statement_pdf_view - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+	}
+	else
+	{
 		feature::client_statement client_statement{};
-		std::vector<std::any> invoices{};
-		std::vector<std::any> statements{};
 		std::vector<std::any> pdf_statements = client_statement.load(_keyword);
 		for (const std::any& data : pdf_statements)
 		{
 			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-			(void) pdf_statement;
-			// statements.emplace_back(pdf_statement.get_statement());
-			const std::vector<data::pdf_invoice>& pdf_invoices = pdf_statement.get_pdf_invoices();
-			std::transform(pdf_invoices.begin(), pdf_invoices.end(), std::back_inserter(invoices),
-				[](const data::pdf_invoice& invoice) {
-				return std::any{invoice};
-			});
-		}
-
-		if (this->statement_view.populate(statements) == false)
-		{
-			searched = false;
-		}
-
-		if (this->invoice_pdf_view.populate(invoices) == false)
-		{
-			searched = false;
 		}
 
 		if (this->statement_pdf_view.populate(pdf_statements) == false)
 		{
 			searched = false;
 		}
-        }
+	}
 
         return searched;
 }
 
 bool gui::statement_page::print()
 {
-	(void) this->no_item_selected.show();
-	return false;
+	bool success{false};
+	if (this->selected_pdf_statements.empty())
+	{
+		if (this->no_item_selected.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show no_item_selected dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+	}
+	else
+	{
+		if (this->print_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show print dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+		}
+	}
+
+	return success;
 }
 
 bool gui::statement_page::email()
 {
-	(void) this->no_item_selected.show();
-	return false;
+	bool success{false};
+	if (this->selected_pdf_statements.empty())
+	{
+		if (this->no_item_selected.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show no_item_selected dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+	}
+	else
+	{
+		if (this->email_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show email dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+		}
+	}
+
+	return success;
 }
 
 bool gui::statement_page::save()
 {
 	bool success{false};
+	(void) this->save_alert.show();
 
 	return success;
 }
