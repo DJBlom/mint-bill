@@ -99,6 +99,8 @@ namespace gui {
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
 			[[nodiscard]] virtual bool save() override;
+			virtual void email_operation_notify() const override;
+			virtual void print_operation_notify() const override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);
@@ -114,7 +116,6 @@ namespace gui {
 
                 private: // Email events
                         void connect_email_alert();
-                        /*void connect_email_button();*/
                         void connect_no_internet_alert();
                         void send_email(const std::vector<data::invoice>&);
                         void email_sent();
@@ -124,7 +125,6 @@ namespace gui {
                         void compute_number_of_pages(const std::vector<data::invoice>&);
                         void print_invoice(const std::vector<data::invoice>&);
                         void connect_print_alert();
-                        /*void connect_print_button();*/
                         void connect_no_printer_alert();
                         void on_draw_page(const Glib::RefPtr<Gtk::PrintContext>&, int);
                         void on_printoperation_done(Gtk::PrintOperation::Result, const Glib::RefPtr<Gtk::PrintOperation>&);

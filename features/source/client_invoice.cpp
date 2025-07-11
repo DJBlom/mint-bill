@@ -114,6 +114,7 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
 
                         std::string order_number{"order number 123"};
                         std::string card_number{"24/md"};
+                        std::string paid_status{"Not Paid"};
                         std::string date{"2023-09-04"};
                         std::string description_total{"1234.00"};
                         std::string material_total{"1234.00"};
@@ -123,6 +124,7 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
                         _invoice.set_business_name(business_name);
                         _invoice.set_invoice_number(number);
                         _invoice.set_invoice_date(date);
+                        _invoice.set_paid_status(paid_status);
                         _invoice.set_job_card_number(card_number);
                         _invoice.set_order_number(order_number);
                         _invoice.set_description_total(description_total);

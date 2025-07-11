@@ -15,7 +15,7 @@
 namespace gui {
 class statement_page : public interface::operations_page {
 public:
-        statement_page() = default;
+        statement_page();
         statement_page(const statement_page&) = delete;
         statement_page(statement_page&&) = delete;
         statement_page& operator= (const statement_page&) = delete;
@@ -27,8 +27,12 @@ public:
 	[[nodiscard]] virtual bool print() override;
 	[[nodiscard]] virtual bool email() override;
 	[[nodiscard]] virtual bool save() override;
+        virtual void email_operation_notify() const override;
+        virtual void print_operation_notify() const override;
 
 private:
+	Glib::Dispatcher print_dispatcher{};
+	Glib::Dispatcher email_dispatcher{};
 	std::vector<data::pdf_statement> selected_pdf_statements{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};

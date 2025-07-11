@@ -119,6 +119,8 @@ private:
         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
 
 private:
+        const std::string paid{"Paid"};
+        const std::string not_paid{"Not Paid"};
         std::string value{""};
         Glib::RefPtr<Gtk::ColumnViewColumn> column{};
         Glib::RefPtr<Gtk::SignalListItemFactory> factory{};

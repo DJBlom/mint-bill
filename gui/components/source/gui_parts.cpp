@@ -453,14 +453,23 @@ void gui::part::statement::columns::paid_status::bind(const Glib::RefPtr<Gtk::Li
 	}
 
 	this->value = col->invoice.get_paid_status();
+	if (this->value == this->paid)
+	{
+		check_button->set_active(true);
+	}
+	else
+	{
+		check_button->set_active(false);
+	}
+
 	check_button->signal_toggled().connect([this, col, check_button]() {
 		if (check_button->get_active())
 		{
-		col->invoice.set_paid_status("Paid");
+			col->invoice.set_paid_status(this->paid);
 		}
 		else
 		{
-		col->invoice.set_paid_status("Not Paid");
+			col->invoice.set_paid_status(this->not_paid);
 		}
 		this->value.clear();
 		this->value = col->invoice.get_paid_status();

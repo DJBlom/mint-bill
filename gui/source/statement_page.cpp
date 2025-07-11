@@ -12,6 +12,12 @@
 
 #include <iostream>
 
+gui::statement_page::statement_page()
+{
+        this->email_dispatcher.connect(sigc::mem_fun(*this, &statement_page::email_operation_notify));
+        this->print_dispatcher.connect(sigc::mem_fun(*this, &statement_page::print_operation_notify));
+}
+
 gui::statement_page::~statement_page() {}
 
 bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -297,4 +303,14 @@ bool gui::statement_page::save()
 	(void) this->save_alert.show();
 
 	return success;
+}
+
+void gui::statement_page::email_operation_notify() const
+{
+        this->email_dispatcher.emit();
+}
+
+void gui::statement_page::print_operation_notify() const
+{
+        this->print_dispatcher.emit();
 }

@@ -22,7 +22,8 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_search_bar"
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_button"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
-CPPUTEST_EXE_FLAGS +=-sg "statement_page_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_page_test"
+CPPUTEST_EXE_FLAGS +=-sg "printer_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_page_column_view_test"
 

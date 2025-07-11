@@ -66,7 +66,7 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 				invoice_data.set_business_name(_business_name);
 				invoice_data.set_invoice_number(std::to_string(j));
 				invoice_data.set_invoice_date("2023-09-04");
-				invoice_data.set_paid_status("Not Paid");
+				invoice_data.set_paid_status("Paid");
 				invoice_data.set_job_card_number("24/md");
 				invoice_data.set_order_number("order 123");
 				invoice_data.set_description_total("1234.00");

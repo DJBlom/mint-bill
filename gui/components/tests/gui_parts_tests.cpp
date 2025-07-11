@@ -382,8 +382,7 @@ TEST(statement_page_column_view_test, column_view_populate)
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-		(void) pdf_statement;
-		// statements.emplace_back(pdf_statement.get_statement());
+		statements.emplace_back(pdf_statement);
 	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();
