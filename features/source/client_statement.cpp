@@ -58,7 +58,7 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 					data::column invoice_column_data{};
 					invoice_column_data.set_quantity(k);
 					invoice_column_data.set_description("machining");
-					invoice_column_data.set_amount(55 + k + .0);
+					invoice_column_data.set_amount(55554 + k + .0);
 					vec.push_back(invoice_column_data);
 				}
 
@@ -69,9 +69,9 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 				invoice_data.set_paid_status("Paid");
 				invoice_data.set_job_card_number("24/md");
 				invoice_data.set_order_number("order 123");
-				invoice_data.set_description_total("1234.00");
-				invoice_data.set_material_total("1234.00");
-				invoice_data.set_grand_total("2468.00");
+				invoice_data.set_description_total("1235.00");
+				invoice_data.set_material_total("1237.00");
+				invoice_data.set_grand_total(std::to_string(vec[j].get_amount()));
 				invoice_data.set_material_column(vec);
 				invoice_data.set_description_column(vec);
 				pdf_invoice_data.set_invoice(invoice_data);

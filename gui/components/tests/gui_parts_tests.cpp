@@ -382,7 +382,10 @@ TEST(statement_page_column_view_test, column_view_populate)
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-		statements.emplace_back(pdf_statement);
+		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
+		{
+			statements.emplace_back(pdf_invoice.get_invoice());
+		}
 	}
         (void) column_view.create(builder);
         (void) column_view.is_not_valid();

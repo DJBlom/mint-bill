@@ -14,7 +14,30 @@ bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string&
         bool generated{false};
         if (!_pdf_data.empty())
         {
-                std::ofstream file("test" + _suffix + ".pdf", std::ios::binary);
+                std::ofstream file("invoice_pdf_test" + _suffix + ".pdf", std::ios::binary);
+                if (!file.is_open()) {
+                        return generated;
+                }
+
+                file.write(_pdf_data.data(), static_cast<std::streamsize> (_pdf_data.size()));
+                if (file.fail()) {
+                        file.close();
+                        return generated;
+                }
+
+                file.close();
+                generated = true;
+        }
+
+        return generated;
+}
+
+bool test::generate_statement_pdf(const std::string& _pdf_data, const std::string& _suffix)
+{
+        bool generated{false};
+        if (!_pdf_data.empty())
+        {
+                std::ofstream file("statement_pdf_test" + _suffix + ".pdf", std::ios::binary);
                 if (!file.is_open()) {
                         return generated;
                 }
@@ -112,7 +135,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);
         expected.set_material_total(material_total);
-        expected.set_grand_total(grand_total);
+        expected.set_grand_total(std::to_string(vec[0].get_amount()));
         expected.set_material_column(vec);
         expected.set_description_column(vec);
 
@@ -147,7 +170,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc, const int& n
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);
         expected.set_material_total(material_total);
-        expected.set_grand_total(grand_total);
+        expected.set_grand_total(std::to_string(vec[0].get_amount()));
         expected.set_material_column(vec);
         expected.set_description_column(vec);
 
