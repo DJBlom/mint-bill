@@ -15,14 +15,16 @@ if(${FILES_IN_DIR} GREATER 0)
 
         add_library(components
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
                 ${PROJECT_SOURCE_DIR}/source/stack.cpp
+                ${PROJECT_SOURCE_DIR}/source/printer.cpp
+                ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
         )
 
         target_include_directories(components
                 PRIVATE
                 ${GTKMM_INCLUDE_DIRS}
-                ${PROJECT_SOURCE_DIR}/include/
+                ${PROJECT_SOURCE_DIR}/include
+                ${CMAKE_SOURCE_DIR}/gui/include
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include

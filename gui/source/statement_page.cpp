@@ -6,9 +6,10 @@
  * NOTE:
  *******************************************************/
 #include <statement_page.h>
-#include <client_invoice.h>
-#include <client_statement.h>
+// #include <client_invoice.h>
 #include <pdf_statement_data.h>
+#include <future>
+#include <printer.h>
 
 #include <iostream>
 
@@ -26,6 +27,11 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         if (_ui_builder)
         {
 		if (this->no_item_selected.create(_ui_builder) == false)
+		{
+			return created;
+		}
+
+		if (this->no_printer_alert.create(_ui_builder) == false)
 		{
 			return created;
 		}
@@ -50,6 +56,29 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			{
 				case GTK_RESPONSE_YES:
 					(void) this->print_alert.hide();
+					{
+						std::vector<std::shared_ptr<poppler::document>> statements{};
+						for (const std::any& data : client_statement.load("Test Business Name"))
+						{
+							data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+							statements.emplace_back(this->statement_pdf.generate_for_print(pdf_statement));
+						}
+						gui::part::printer printer{"statement", statements};
+						// if (printer.is_connected())
+						// {
+							// std::future<bool> printed{std::async(std::launch::async, [&printer, this] () {
+								syslog(LOG_CRIT, "Printing... - "
+										 "filename %s, line number %d", __FILE__, __LINE__);
+								// return printer.print(*this);
+								(void) printer.print(*this);
+							// })};
+						// }
+						// else
+						// {
+						// 	syslog(LOG_CRIT, "No printer connected - "
+						// 			 "filename %s, line number %d", __FILE__, __LINE__);
+						// }
+					}
 					break;
 				case GTK_RESPONSE_NO:
 					(void) this->print_alert.hide();

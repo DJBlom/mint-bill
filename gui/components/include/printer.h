@@ -3,47 +3,59 @@
 #include <gui.h>
 #include <part.h>
 #include <syslog.h>
+#include <poppler/cpp/poppler-page.h>
+#include <poppler/cpp/poppler-image.h>
+#include <poppler/cpp/poppler-document.h>
+#include <poppler/cpp/poppler-page-renderer.h>
 
 namespace gui {
 namespace part {
-struct page_range {
-public:
-	page_range() = delete;
-	explicit page_range(int& _start_page, int& _page_count, size_t& _document_index)
-		: start_page{_start_page}, page_count{_page_count}, document_index{_document_index} {}
-	page_range(const page_range&) = default;
-	page_range(page_range&&) = default;
-	page_range& operator= (const page_range&) = default;
-	page_range& operator= (page_range&&) = default;
-	virtual ~page_range() = default;
-
-public:
-	int start_page{0};
-	int page_count{0};
-	size_t document_index{0};
-};
-
+struct page_range;
 class printer {
 public:
 	printer() = delete;
-	explicit printer(const std::string&);
+	explicit printer(const std::string&, const std::vector<std::shared_ptr<poppler::document>>&);
 	printer(const printer&) = delete;
 	printer(printer&&) = delete;
 	printer& operator= (const printer&) = delete;
 	printer& operator= (printer&&) = delete;
 	~printer() = default;
 
-	[[nodiscard]] virtual bool is_connected();
-	[[nodiscard]] virtual bool print(const interface::operations_page&, const std::vector<std::any>&);
+	[[nodiscard]] virtual bool is_connected() const;
+	[[nodiscard]] virtual bool print(const interface::operations_page&) const;
 
 protected:
-	void draw_page(const std::shared_ptr<Gtk::PrintContext>&, int);
-	void print_operation_done(const Gtk::PrintOperation::Result&);
+	void draw_page(const std::shared_ptr<Gtk::PrintContext>&, int) const;
+	void print_operation_done(const Gtk::PrintOperation::Result&) const;
+	void number_of_pages_to_print();
 
 private:
+        int total_pages{0};
+	std::vector<page_range> page_ranges{};
 	std::shared_ptr<Gtk::PageSetup> page_setup{};
 	std::shared_ptr<Gtk::PrintSettings> print_settings{};
         std::shared_ptr<Gtk::PrintOperation> print_operation{};
+	std::vector<std::shared_ptr<poppler::document>> documents{};
+};
+
+struct page_range {
+public:
+	page_range() = delete;
+	explicit page_range(int&, int&, int&);
+	page_range(const page_range&) = default;
+	page_range(page_range&&) = default;
+	page_range& operator= (const page_range&) = default;
+	page_range& operator= (page_range&&) = default;
+	virtual ~page_range() = default;
+
+	[[nodiscard]] virtual bool check(int&) const;
+	[[nodiscard]] virtual int local_page(int&) const;
+	[[nodiscard]] virtual int current_document() const;
+
+private:
+	int first_page{0};
+	int number_of_pages{0};
+	int document_index{0};
 };
 }
 }

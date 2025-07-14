@@ -909,7 +909,6 @@ void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
                 bool success = client_invoice.send_email(_data);
                 this->email_success = success;
 		this->email_operation_notify();
-                // this->email_dispatcher.emit();
         }).detach();
 }
 

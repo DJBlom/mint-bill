@@ -10,6 +10,8 @@
 #include <gui.h>
 #include <syslog.h>
 #include <gui_parts.h>
+#include <statement_pdf.h>
+#include <client_statement.h>
 
 
 namespace gui {
@@ -31,12 +33,15 @@ public:
         virtual void print_operation_notify() const override;
 
 private:
+	feature::client_statement client_statement{};
+	feature::statement_pdf statement_pdf{};
 	Glib::Dispatcher print_dispatcher{};
 	Glib::Dispatcher email_dispatcher{};
 	std::vector<data::pdf_statement> selected_pdf_statements{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};
+        part::dialog no_printer_alert{"statement-print-no-printer-alert"};
         part::dialog save_alert{"statement-save-button-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};

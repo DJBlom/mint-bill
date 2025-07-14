@@ -18,6 +18,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/email.cpp
                 ${PROJECT_SOURCE_DIR}/source/invoice_pdf.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_pdf.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_info.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
