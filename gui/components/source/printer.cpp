@@ -3,8 +3,7 @@
 #include <iostream>
 
 
-gui::part::printer::printer(const std::string& _job_name, const std::vector<std::shared_ptr<poppler::document>>& _documents)
-	: documents{_documents}
+gui::part::printer::printer(const std::string& _job_name)
 {
         this->page_setup = Gtk::PageSetup::create();
         if (!this->page_setup)
@@ -46,7 +45,7 @@ gui::part::printer::printer(const std::string& _job_name, const std::vector<std:
         }
 	else
 	{
-		this->print_operation->set_allow_async(true);
+		this->print_operation->set_allow_async(false);
 		this->print_operation->set_job_name(_job_name);
 		this->print_operation->set_use_full_page(true);
 		this->print_operation->set_show_progress(true);
@@ -54,13 +53,11 @@ gui::part::printer::printer(const std::string& _job_name, const std::vector<std:
 		this->print_operation->set_unit(Gtk::Unit::POINTS);
 		this->print_operation->set_print_settings(this->print_settings);
 		this->print_operation->set_default_page_setup(this->page_setup);
+		this->print_operation->signal_draw_page().connect(
+				sigc::mem_fun(*this, &printer::draw_page));
+		this->print_operation->signal_done().connect(
+				sigc::mem_fun(*this, &printer::print_operation_done));
 	}
-
-	number_of_pages_to_print();
-	this->print_operation->signal_draw_page().connect(
-			sigc::mem_fun(*this, &printer::draw_page));
-	this->print_operation->signal_done().connect(
-			sigc::mem_fun(*this, &printer::print_operation_done));
 }
 
 bool gui::part::printer::is_connected() const
@@ -69,10 +66,10 @@ bool gui::part::printer::is_connected() const
 	return !has_printer.empty();
 }
 
-bool gui::part::printer::print(const interface::operations_page& _page) const
+bool gui::part::printer::print(const std::vector<std::shared_ptr<poppler::document>>& _documents)
 {
 	bool success{false};
-	if (this->documents.empty())
+	if (_documents.empty())
 	{
                 syslog(LOG_CRIT, "No _data to print - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
@@ -80,9 +77,9 @@ bool gui::part::printer::print(const interface::operations_page& _page) const
 	else
 	{
 		success = true;
+		number_of_pages_to_print(_documents);
 		this->print_operation->set_n_pages(this->total_pages);
 		this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
-		_page.print_operation_notify();
 	}
 
 	return success;
@@ -101,11 +98,11 @@ void gui::part::printer::draw_page(const std::shared_ptr<Gtk::PrintContext>& _co
                 {
                         std::shared_ptr<poppler::document> document{this->documents[range.current_document()]};
                         if (!document)
-                                return;
+				break;
 
                         auto page = document->create_page(range.local_page(_page_number));
                         if (!page)
-                                return;
+				break;
 
                         poppler::page_renderer renderer;
                         renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
@@ -117,7 +114,7 @@ void gui::part::printer::draw_page(const std::shared_ptr<Gtk::PrintContext>& _co
 
                         auto image = renderer.render_page(page, target_dpi, target_dpi);
                         if (!image.is_valid())
-                                return;
+				break;
 
                         auto cairo_surface = Cairo::ImageSurface::create(
                                         reinterpret_cast<unsigned char*> (image.data()), Cairo::Surface::Format::ARGB32,
@@ -133,7 +130,7 @@ void gui::part::printer::draw_page(const std::shared_ptr<Gtk::PrintContext>& _co
                         cr->set_source(cairo_surface, 0, 0);
                         cr->paint();
                         cr->restore();
-                        return;
+                        // return;
                 }
         }
 }
@@ -163,12 +160,13 @@ void gui::part::printer::print_operation_done(const Gtk::PrintOperation::Result&
 	}
 }
 
-void gui::part::printer::number_of_pages_to_print()
+void gui::part::printer::number_of_pages_to_print(const std::vector<std::shared_ptr<poppler::document>>& _documents)
 {
         int index{0};
         this->total_pages = 0;
+	this->documents.clear();
         this->page_ranges.clear();
-        for (const std::shared_ptr<poppler::document>& document : this->documents)
+        for (const std::shared_ptr<poppler::document>& document : _documents)
         {
                 if (!document)
                 {

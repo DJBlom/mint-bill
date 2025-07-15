@@ -908,7 +908,7 @@ void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
         std::thread([this, _data] () {
                 bool success = client_invoice.send_email(_data);
                 this->email_success = success;
-		this->email_operation_notify();
+		this->email_dispatcher.emit();
         }).detach();
 }
 
@@ -1043,8 +1043,7 @@ void gui::invoice_page::print_invoice(const std::vector<data::invoice>& _data)
                         print_operation->set_n_pages(this->number_of_pages);
                         print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
                 }
-		this->print_operation_notify();
-                // this->print_dispatcher.emit();
+		this->print_dispatcher.emit();
         }).detach();
 }
 
@@ -1400,16 +1399,6 @@ void gui::invoice_page::printed()
                 syslog(LOG_INFO, "User printed an invoice - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
-}
-
-void gui::invoice_page::email_operation_notify() const
-{
-	this->email_dispatcher.emit();
-}
-
-void gui::invoice_page::print_operation_notify() const
-{
-	this->print_dispatcher.emit();
 }
 
 void gui::invoice_page::populate_description_store(const data::invoice& _invoice)

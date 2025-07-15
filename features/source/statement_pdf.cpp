@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <statement_pdf.h>
+#include <future>
 
 namespace font_size {
         constexpr double header{50.0};

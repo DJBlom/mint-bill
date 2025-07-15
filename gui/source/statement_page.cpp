@@ -6,18 +6,13 @@
  * NOTE:
  *******************************************************/
 #include <statement_page.h>
-// #include <client_invoice.h>
 #include <pdf_statement_data.h>
 #include <future>
 #include <printer.h>
 
 #include <iostream>
 
-gui::statement_page::statement_page()
-{
-        this->email_dispatcher.connect(sigc::mem_fun(*this, &statement_page::email_operation_notify));
-        this->print_dispatcher.connect(sigc::mem_fun(*this, &statement_page::print_operation_notify));
-}
+gui::statement_page::statement_page() {}
 
 gui::statement_page::~statement_page() {}
 
@@ -57,27 +52,8 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 				case GTK_RESPONSE_YES:
 					(void) this->print_alert.hide();
 					{
-						std::vector<std::shared_ptr<poppler::document>> statements{};
-						for (const std::any& data : client_statement.load("Test Business Name"))
-						{
-							data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-							statements.emplace_back(this->statement_pdf.generate_for_print(pdf_statement));
-						}
-						gui::part::printer printer{"statement", statements};
-						// if (printer.is_connected())
-						// {
-							// std::future<bool> printed{std::async(std::launch::async, [&printer, this] () {
-								syslog(LOG_CRIT, "Printing... - "
-										 "filename %s, line number %d", __FILE__, __LINE__);
-								// return printer.print(*this);
-								(void) printer.print(*this);
-							// })};
-						// }
-						// else
-						// {
-						// 	syslog(LOG_CRIT, "No printer connected - "
-						// 			 "filename %s, line number %d", __FILE__, __LINE__);
-						// }
+						gui::part::printer printer{"statement"};
+						(void)printer.print(documents);
 					}
 					break;
 				case GTK_RESPONSE_NO:
@@ -211,12 +187,28 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 		});
 
 		(void) this->statement_pdf_view.single_click([this] (const std::vector<std::any>& _pdf_statements) {
-			this->selected_pdf_statements.clear();
+			std::vector<std::future<std::shared_ptr<poppler::document>>> futures;
 			for (const std::any& pdf_statement : _pdf_statements)
 			{
-				this->selected_pdf_statements.emplace_back(std::any_cast<data::pdf_statement> (pdf_statement));
-				this->selected_pdf_statements.shrink_to_fit();
+				futures.emplace_back(std::async(std::launch::async, [pdf_statement] {
+					feature::statement_pdf pdf;
+					return pdf.generate_for_print(pdf_statement);
+				}));
 			}
+
+			this->documents.clear();
+			for (auto& future : futures)
+			{
+				this->documents.emplace_back(future.get());
+			}
+			syslog(LOG_CRIT, "Finished generating the poppler pdf documents");
+			// for (const std::any& pdf_statement : _pdf_statements)
+			// {
+			// 	this->documents.emplace_back(
+			// 			this->statement_pdf.generate_for_print(
+			// 				std::any_cast<data::pdf_statement> (pdf_statement)));
+			// 	this->documents.shrink_to_fit();
+			// }
 
 			return true;
 		});
@@ -235,7 +227,7 @@ bool gui::statement_page::search(const std::string& _keyword)
 		searched = false;
 		syslog(LOG_CRIT, "The _keyword is empty, clearing all entries - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
-		this->selected_pdf_statements.clear();
+		this->documents.clear();
 		if (this->statement_view.clear() == false)
 		{
 			syslog(LOG_CRIT, "Could not clear statement_view - "
@@ -256,11 +248,11 @@ bool gui::statement_page::search(const std::string& _keyword)
 	}
 	else
 	{
-		feature::client_statement client_statement{};
-		std::vector<std::any> pdf_statements = client_statement.load(_keyword);
-		for (const std::any& data : pdf_statements)
+		std::vector<std::any> pdf_statements{};
+		for (const std::any& data : this->client_statement.load(_keyword))
 		{
 			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+			pdf_statements.emplace_back(pdf_statement);
 		}
 
 		if (this->statement_pdf_view.populate(pdf_statements) == false)
@@ -275,7 +267,7 @@ bool gui::statement_page::search(const std::string& _keyword)
 bool gui::statement_page::print()
 {
 	bool success{false};
-	if (this->selected_pdf_statements.empty())
+	if (this->documents.empty())
 	{
 		if (this->no_item_selected.show() == false)
 		{
@@ -302,7 +294,7 @@ bool gui::statement_page::print()
 bool gui::statement_page::email()
 {
 	bool success{false};
-	if (this->selected_pdf_statements.empty())
+	if (this->documents.empty())
 	{
 		if (this->no_item_selected.show() == false)
 		{
@@ -332,14 +324,4 @@ bool gui::statement_page::save()
 	(void) this->save_alert.show();
 
 	return success;
-}
-
-void gui::statement_page::email_operation_notify() const
-{
-        this->email_dispatcher.emit();
-}
-
-void gui::statement_page::print_operation_notify() const
-{
-        this->print_dispatcher.emit();
 }

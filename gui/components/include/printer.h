@@ -14,7 +14,7 @@ struct page_range;
 class printer {
 public:
 	printer() = delete;
-	explicit printer(const std::string&, const std::vector<std::shared_ptr<poppler::document>>&);
+	explicit printer(const std::string&);
 	printer(const printer&) = delete;
 	printer(printer&&) = delete;
 	printer& operator= (const printer&) = delete;
@@ -22,12 +22,12 @@ public:
 	~printer() = default;
 
 	[[nodiscard]] virtual bool is_connected() const;
-	[[nodiscard]] virtual bool print(const interface::operations_page&) const;
+	[[nodiscard]] virtual bool print(const std::vector<std::shared_ptr<poppler::document>>&);
 
 protected:
 	void draw_page(const std::shared_ptr<Gtk::PrintContext>&, int) const;
 	void print_operation_done(const Gtk::PrintOperation::Result&) const;
-	void number_of_pages_to_print();
+	void number_of_pages_to_print(const std::vector<std::shared_ptr<poppler::document>>&);
 
 private:
         int total_pages{0};

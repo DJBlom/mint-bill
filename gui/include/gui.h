@@ -36,8 +36,6 @@ public:
         [[nodiscard]] virtual bool print() = 0;
         [[nodiscard]] virtual bool email() = 0;
         [[nodiscard]] virtual bool save() = 0;
-        virtual void email_operation_notify() const = 0;
-        virtual void print_operation_notify() const = 0;
 };
 }
 #endif

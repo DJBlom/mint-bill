@@ -29,15 +29,11 @@ public:
 	[[nodiscard]] virtual bool print() override;
 	[[nodiscard]] virtual bool email() override;
 	[[nodiscard]] virtual bool save() override;
-        virtual void email_operation_notify() const override;
-        virtual void print_operation_notify() const override;
 
 private:
-	feature::client_statement client_statement{};
 	feature::statement_pdf statement_pdf{};
-	Glib::Dispatcher print_dispatcher{};
-	Glib::Dispatcher email_dispatcher{};
-	std::vector<data::pdf_statement> selected_pdf_statements{};
+	feature::client_statement client_statement{};
+	std::vector<std::shared_ptr<poppler::document>> documents{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};

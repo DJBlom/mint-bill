@@ -99,8 +99,6 @@ namespace gui {
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
 			[[nodiscard]] virtual bool save() override;
-			virtual void email_operation_notify() const override;
-			virtual void print_operation_notify() const override;
 
                 private: // GUI creations
                         void create_views(const Glib::RefPtr<Gtk::Builder>&);

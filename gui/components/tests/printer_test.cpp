@@ -30,9 +30,7 @@ extern "C"
 TEST_GROUP(printer_test)
 {
         feature::client_statement client_statement{};
-	std::vector<std::shared_ptr<poppler::document>> statements{};
 	feature::statement_pdf statement_pdf{};
-	gui::statement_page statement_page{};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
 	void setup()
@@ -40,12 +38,6 @@ TEST_GROUP(printer_test)
                 app = Gtk::Application::create("org.testing");
                 builder = Gtk::Builder::create();
                 builder->add_from_file("../gui/mint-bill.ui");
-		(void) statement_page.create(builder);
-		for (const std::any& data : client_statement.load("Test Business Name"))
-		{
-			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-			statements.emplace_back(statement_pdf.generate_for_print(pdf_statement));
-		}
 	}
 
 	void teardown()
@@ -56,8 +48,7 @@ TEST_GROUP(printer_test)
 
 TEST(printer_test, printer_is_not_connected)
 {
-	std::vector<std::shared_ptr<poppler::document>> vec{};
-        gui::part::printer printer{"statement", vec};
+        gui::part::printer printer{"statement"};
 
 	CHECK_EQUAL(false, printer.is_connected());
 }
@@ -65,16 +56,22 @@ TEST(printer_test, printer_is_not_connected)
 TEST(printer_test, fail_to_print_all_documents)
 {
 	std::vector<std::shared_ptr<poppler::document>> vec{};
-        gui::part::printer printer{"statement", vec};
+        gui::part::printer printer{"statement"};
 
-	CHECK_EQUAL(false, printer.print(statement_page));
+	CHECK_EQUAL(false, printer.print(vec));
 }
 
 TEST(printer_test, print_all_documents)
 {
-        gui::part::printer printer{"statement", statements};
+	std::vector<std::shared_ptr<poppler::document>> statements{};
+	for (const std::any& data : client_statement.load("Test Business Name"))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		statements.emplace_back(statement_pdf.generate_for_print(pdf_statement));
+	}
+        gui::part::printer printer{"statement"};
 
-	CHECK_EQUAL(true, printer.print(statement_page));
+	CHECK_EQUAL(true, printer.print(statements));
 }
 
 
