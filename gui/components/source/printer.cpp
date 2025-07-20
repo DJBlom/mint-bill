@@ -89,12 +89,7 @@ void gui::part::printer::draw_page(const std::shared_ptr<Gtk::PrintContext>& _co
 {
         for (const page_range& range : this->page_ranges)
         {
-		if (range.check(_page_number) == false)
-		{
-			syslog(LOG_CRIT, "The _page_number is out of range, cannot print it - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-		}
-		else
+		if (range.check(_page_number) == true)
                 {
                         std::shared_ptr<poppler::document> document{this->documents[range.current_document()]};
                         if (!document)
