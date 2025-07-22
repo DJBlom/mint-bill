@@ -31,9 +31,8 @@ public:
 	[[nodiscard]] virtual bool save() override;
 
 private:
-	feature::statement_pdf statement_pdf{};
+	std::vector<std::string> documents{};
 	feature::client_statement client_statement{};
-	std::vector<std::shared_ptr<poppler::document>> documents{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};

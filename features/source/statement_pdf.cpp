@@ -6,7 +6,6 @@
  * NOTE:
  *******************************************************/
 #include <statement_pdf.h>
-#include <future>
 
 namespace font_size {
         constexpr double header{50.0};
@@ -37,43 +36,50 @@ feature::statement_pdf::statement_pdf() {}
 
 feature::statement_pdf::~statement_pdf() {}
 
-std::string feature::statement_pdf::generate_for_email(const std::any& _data)
-{
-        std::string pdf_document{""};
-	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
-        if (data.is_valid())
-        {
-                pdf_document = generate(data);
-        }
+// std::string feature::statement_pdf::generate_for_email(const std::any& _data)
+// {
+//         std::string pdf_document{""};
+// 	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
+//         if (data.is_valid())
+//         {
+//                 pdf_document = generate(data);
+//         }
+//
+//
+//         return pdf_document;
+// }
+//
+// std::shared_ptr<poppler::document> feature::statement_pdf::generate_for_print(const std::any& _data)
+// {
+//         std::shared_ptr<poppler::document> pdf_document{};
+// 	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
+//         if (data.is_valid())
+//         {
+//                 std::string raw_pdf = this->generate(data);
+//                 std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
+//                 poppler::byte_array byte_array{byte_vector};
+//                 poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
+//                 pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
+//                         if (ptr) {
+//                                 delete ptr;
+//                         }
+//                 });
+//         }
+//
+//         return pdf_document;
+// }
 
-
-        return pdf_document;
-}
-
-std::shared_ptr<poppler::document> feature::statement_pdf::generate_for_print(const std::any& _data)
-{
-        std::shared_ptr<poppler::document> pdf_document{};
-	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
-        if (data.is_valid())
-        {
-                std::string raw_pdf = this->generate(data);
-                std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
-                poppler::byte_array byte_array{byte_vector};
-                poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
-                pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
-                        if (ptr) {
-                                delete ptr;
-                        }
-                });
-        }
-
-        return pdf_document;
-}
-
-std::string feature::statement_pdf::generate(const data::pdf_statement& _data)
+//std::string feature::statement_pdf::generate(const data::pdf_statement& _data)
+std::string feature::statement_pdf::generate(const std::any& _data)
 {
         std::ostringstream final_pdf{};
-        if (_data.is_valid())
+	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
+        if (data.is_valid() == false)
+	{
+                syslog(LOG_CRIT, "Data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
         {
                 this->surface = Cairo::PdfSurface::create_for_stream(
                         [&, this](const unsigned char* _data, unsigned int _length) -> cairo_status_t {
@@ -93,27 +99,27 @@ std::string feature::statement_pdf::generate(const data::pdf_statement& _data)
                 if (add_header("Statement") == false)
                         return "";
 
-		data::client client{(_data.get_pdf_invoices())[0].get_client()};
-		data::business business{(_data.get_pdf_invoices())[0].get_business()};
+		data::client client{(data.get_pdf_invoices())[0].get_client()};
+		data::business business{(data.get_pdf_invoices())[0].get_business()};
                 if (add_information(client, business) == false)
                         return "";
 
-                if (add_statement_information(_data) == false)
+                if (add_statement_information(data) == false)
                         return "";
 
                 if (draw_line() == false)
                         return "";
 
-                if (add_statements(_data) == false)
+                if (add_statements(data) == false)
                         return "";
 
                 if (draw_line() == false)
                         return "";
 
-                if (add_grand_total(_data) == false)
+                if (add_grand_total(data) == false)
                         return "";
 
-                if (add_payment_method((_data.get_pdf_invoices())[0].get_business()) == false)
+                if (add_payment_method((data.get_pdf_invoices())[0].get_business()) == false)
                         return "";
 
                 this->context->show_page();
@@ -253,7 +259,7 @@ bool feature::statement_pdf::add_items(const std::vector<data::pdf_invoice>& _da
                 if (write_to_pdf_in_second_quarter(invoice.get_paid_status() , font_size::information) == false)
 			break;
 
-                if (write_to_pdf_from_right("R " + invoice.get_grand_total() , font_size::information) == false)
+                if (write_to_pdf_from_right("R " + invoice.get_grand_total(), font_size::information) == false)
 			break;
 
 		std::vector<std::string> sliced_data{this->slicer.slice(invoice.get_order_number())};

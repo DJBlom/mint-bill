@@ -22,12 +22,13 @@ public:
 	~printer() = default;
 
 	[[nodiscard]] virtual bool is_connected() const;
-	[[nodiscard]] virtual bool print(const std::vector<std::shared_ptr<poppler::document>>&);
+	[[nodiscard]] virtual bool print(const std::vector<std::string>&);
 
 protected:
+	[[nodiscard]] bool render_poppler_documents(const std::vector<std::string>&);
+	[[nodiscard]] bool number_of_pages_to_print();
 	void draw_page(const std::shared_ptr<Gtk::PrintContext>&, int) const;
 	void print_operation_done(const Gtk::PrintOperation::Result&) const;
-	void number_of_pages_to_print(const std::vector<std::shared_ptr<poppler::document>>&);
 
 private:
         int total_pages{0};

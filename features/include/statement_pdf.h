@@ -11,6 +11,7 @@
 #include <mutex>
 #include <string>
 #include <vector>
+#include <syslog.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -21,20 +22,22 @@
 #include <poppler/cpp/poppler-document.h>
 
 namespace feature {
-class statement_pdf : public interface::pdf {
+// class statement_pdf : public interface::pdf {
+class statement_pdf {
 public:
 	statement_pdf();
 	statement_pdf(const statement_pdf&) = delete;
 	statement_pdf(statement_pdf&&) = delete;
 	statement_pdf& operator = (const statement_pdf&) = delete;
 	statement_pdf& operator = (statement_pdf&&) = delete;
-	virtual ~statement_pdf() override;
+	// virtual ~statement_pdf() override;
+	virtual ~statement_pdf() ;
 
-	[[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
-	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
+	[[nodiscard]] std::string generate(const std::any&);
+	// [[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
+	// [[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
 
 private:
-	[[nodiscard]] std::string generate(const data::pdf_statement&);
 	[[nodiscard]] bool add_header(const std::string&);
 	[[nodiscard]] bool add_information(const data::client&, const data::business&);
 	[[nodiscard]] bool add_statement_information(const data::pdf_statement&);

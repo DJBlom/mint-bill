@@ -55,7 +55,7 @@ TEST(printer_test, printer_is_not_connected)
 
 TEST(printer_test, fail_to_print_all_documents)
 {
-	std::vector<std::shared_ptr<poppler::document>> vec{};
+	std::vector<std::string> vec{};
         gui::part::printer printer{"statement"};
 
 	CHECK_EQUAL(false, printer.print(vec));
@@ -63,11 +63,12 @@ TEST(printer_test, fail_to_print_all_documents)
 
 TEST(printer_test, print_all_documents)
 {
-	std::vector<std::shared_ptr<poppler::document>> statements{};
+	std::vector<std::string> statements{};
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-		statements.emplace_back(statement_pdf.generate_for_print(pdf_statement));
+		statements.emplace_back(statement_pdf.generate(pdf_statement));
+		break;
 	}
         gui::part::printer printer{"statement"};
 

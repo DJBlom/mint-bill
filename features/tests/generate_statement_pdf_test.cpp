@@ -60,7 +60,7 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_upper_bounds)
 	pdf_statement.set_date("2025-06-14");
 	pdf_statement.set_total("1234567898.00");
 	pdf_statement.set_pdf_invoices(pdf_invoices);
-        std::string pdf_file_data{statement_pdf.generate_for_email(pdf_statement)};
+        std::string pdf_file_data{statement_pdf.generate(pdf_statement)};
         bool result{test::generate_statement_pdf(pdf_file_data, "1")};
 
         CHECK_EQUAL(true, result);
@@ -86,8 +86,8 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_lower_bounds)
 	pdf_statement.set_date("2025-06-14");
 	pdf_statement.set_total("1234567898.00");
 	pdf_statement.set_pdf_invoices(pdf_invoices);
-        std::string pdf_file_data{statement_pdf.generate_for_email(pdf_statement)};
-        bool result{test::generate_invoice_pdf(pdf_file_data, "2")};
+        std::string pdf_file_data{statement_pdf.generate(pdf_statement)};
+        bool result{test::generate_statement_pdf(pdf_file_data, "2")};
 
         CHECK_EQUAL(true, result);
 }
@@ -109,8 +109,8 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_no_data)
 	pdf_statement.set_date("");
 	pdf_statement.set_total("1234567898.00");
 	pdf_statement.set_pdf_invoices(pdf_invoices);
-        std::string pdf_file_data{statement_pdf.generate_for_email(pdf_statement)};
-        bool result{test::generate_invoice_pdf(pdf_file_data, "3")};
+        std::string pdf_file_data{statement_pdf.generate(pdf_statement)};
+        bool result{test::generate_statement_pdf(pdf_file_data, "3")};
 
         CHECK_EQUAL(false, result);
 }

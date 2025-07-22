@@ -293,7 +293,7 @@ bool feature::invoice_pdf::add_items(const std::vector<data::column>& _data)
 
                 std::ostringstream amount{""};
                 amount << std::fixed << std::setprecision(2) << column.get_amount();
-                if (write_to_pdf_from_right("R " + amount.str() , font_size::information) == false)
+                if (write_to_pdf_from_right("R " + amount.str(), font_size::information) == false)
                         return false;
 
                 if (add_item_description(column) == false)

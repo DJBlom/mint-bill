@@ -1,6 +1,12 @@
 #include <printer.h>
 #include <errors.h>
+#include <future>
+#include <algorithm>
+
+
+
 #include <iostream>
+
 
 
 gui::part::printer::printer(const std::string& _job_name)
@@ -66,7 +72,7 @@ bool gui::part::printer::is_connected() const
 	return !has_printer.empty();
 }
 
-bool gui::part::printer::print(const std::vector<std::shared_ptr<poppler::document>>& _documents)
+bool gui::part::printer::print(const std::vector<std::string>& _documents)
 {
 	bool success{false};
 	if (_documents.empty())
@@ -76,10 +82,87 @@ bool gui::part::printer::print(const std::vector<std::shared_ptr<poppler::docume
 	}
 	else
 	{
+		if (render_poppler_documents(_documents) == true)
+		{
+			if (number_of_pages_to_print())
+			{
+				success = true;
+				this->print_operation->set_n_pages(this->total_pages);
+				this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
+			}
+		}
+	}
+
+	return success;
+}
+
+bool gui::part::printer::render_poppler_documents(const std::vector<std::string>& _documents)
+{
+	bool success{false};
+	if (_documents.empty())
+	{
+                syslog(LOG_CRIT, "There are no documents available - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		std::vector<std::future<std::shared_ptr<poppler::document>>> pdf_documents;
+		std::transform(_documents.cbegin(),
+				_documents.cend(),
+				std::back_inserter(pdf_documents),
+				[] (const std::string& _document) {
+					return std::async(std::launch::async, [&_document] {
+						std::vector<char> byte_vector{_document.begin(), _document.end()};
+						poppler::byte_array byte_array{byte_vector};
+						poppler::document* raw_doc{poppler::document::load_from_data(&byte_array)};
+						return std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
+							if (ptr) {
+								delete ptr;
+								ptr = nullptr;
+							}
+						});
+					});
+				});
+
+		this->documents.clear();
+		for (std::future<std::shared_ptr<poppler::document>>& pdf_document : pdf_documents)
+		{
+			this->documents.emplace_back(pdf_document.get());
+		}
+
 		success = true;
-		number_of_pages_to_print(_documents);
-		this->print_operation->set_n_pages(this->total_pages);
-		this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
+	}
+
+	return success;
+}
+
+bool gui::part::printer::number_of_pages_to_print()
+{
+	bool success{false};
+	if (this->documents.empty())
+	{
+                syslog(LOG_CRIT, "There are no documents available - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		int index{0};
+		this->total_pages = 0;
+		this->page_ranges.clear();
+		for (const std::shared_ptr<poppler::document>& document : this->documents)
+		{
+			if (!document)
+			{
+				continue;
+			}
+
+			int page_count = document->pages();
+			this->page_ranges.push_back(page_range{this->total_pages, page_count, index});
+			this->total_pages += page_count;
+			++index;
+		}
+
+		success = true;
 	}
 
 	return success;
@@ -125,7 +208,7 @@ void gui::part::printer::draw_page(const std::shared_ptr<Gtk::PrintContext>& _co
                         cr->set_source(cairo_surface, 0, 0);
                         cr->paint();
                         cr->restore();
-                        // return;
+			break;
                 }
         }
 }
@@ -153,27 +236,6 @@ void gui::part::printer::print_operation_done(const Gtk::PrintOperation::Result&
 		syslog(LOG_CRIT, "No printer is connected - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
-}
-
-void gui::part::printer::number_of_pages_to_print(const std::vector<std::shared_ptr<poppler::document>>& _documents)
-{
-        int index{0};
-        this->total_pages = 0;
-	this->documents.clear();
-        this->page_ranges.clear();
-        for (const std::shared_ptr<poppler::document>& document : _documents)
-        {
-                if (!document)
-                {
-                        continue;
-                }
-
-                int page_count = document->pages();
-                this->documents.push_back(document);
-                this->page_ranges.push_back(page_range{this->total_pages, page_count, index});
-                this->total_pages += page_count;
-                ++index;
-        }
 }
 
 

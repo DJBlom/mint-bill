@@ -8,6 +8,7 @@
 #include <statement_page.h>
 #include <pdf_statement_data.h>
 #include <future>
+#include <algorithm>
 #include <printer.h>
 
 #include <iostream>
@@ -53,7 +54,7 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 					(void) this->print_alert.hide();
 					{
 						gui::part::printer printer{"statement"};
-						(void)printer.print(documents);
+						(void)printer.print(this->documents);
 					}
 					break;
 				case GTK_RESPONSE_NO:
@@ -187,28 +188,23 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 		});
 
 		(void) this->statement_pdf_view.single_click([this] (const std::vector<std::any>& _pdf_statements) {
-			std::vector<std::future<std::shared_ptr<poppler::document>>> futures;
-			for (const std::any& pdf_statement : _pdf_statements)
-			{
-				futures.emplace_back(std::async(std::launch::async, [pdf_statement] {
-					feature::statement_pdf pdf;
-					return pdf.generate_for_print(pdf_statement);
-				}));
-			}
+			std::vector<std::future<std::string>> pdf_documents;
+			std::transform(_pdf_statements.cbegin(),
+					_pdf_statements.cend(),
+					std::back_inserter(pdf_documents),
+					[] (const std::any& _pdf_statement) {
+						return std::async(std::launch::async, [&_pdf_statement] {
+							feature::statement_pdf pdf{};
+							return pdf.generate(_pdf_statement);
+						});
+					});
 
 			this->documents.clear();
-			for (auto& future : futures)
+			for (std::future<std::string>& pdf_document : pdf_documents)
 			{
-				this->documents.emplace_back(future.get());
+				this->documents.emplace_back(pdf_document.get());
 			}
 			syslog(LOG_CRIT, "Finished generating the poppler pdf documents");
-			// for (const std::any& pdf_statement : _pdf_statements)
-			// {
-			// 	this->documents.emplace_back(
-			// 			this->statement_pdf.generate_for_print(
-			// 				std::any_cast<data::pdf_statement> (pdf_statement)));
-			// 	this->documents.shrink_to_fit();
-			// }
 
 			return true;
 		});

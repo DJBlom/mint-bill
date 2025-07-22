@@ -71,7 +71,10 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 				invoice_data.set_order_number("order 123");
 				invoice_data.set_description_total("1235.00");
 				invoice_data.set_material_total("1237.00");
-				invoice_data.set_grand_total(std::to_string(vec[j].get_amount()));
+
+				std::ostringstream price{""};
+				price << std::fixed << std::setprecision(2) << vec[j].get_amount();
+				invoice_data.set_grand_total(price.str());
 				invoice_data.set_material_column(vec);
 				invoice_data.set_description_column(vec);
 				pdf_invoice_data.set_invoice(invoice_data);
