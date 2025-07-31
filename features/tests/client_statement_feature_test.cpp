@@ -24,7 +24,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(client_statement_feature_test)
 {
-	feature::client_statement statement{};
+	controller::client_statement statement{};
 	void setup()
 	{
 	}

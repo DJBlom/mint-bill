@@ -26,8 +26,10 @@ gui::invoice_page::~invoice_page()
 
 }
 
-bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
+			       const std::shared_ptr<Gtk::Window>& _main_window)
 {
+	(void) _main_window;
         bool created{true};
         if (!_ui_builder)
         {

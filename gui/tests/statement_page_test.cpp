@@ -11,6 +11,7 @@
 
 #include <gtkmm.h>
 #include <stack.h>
+#include <main_window.h>
 #include <statement_page.h>
 extern "C"
 {
@@ -26,11 +27,12 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(statement_page_test)
 {
-	gui::part::stack stack{"business-stack"};
-        gui::part::search_bar search_bar{"business-name-search"};
         gui::statement_page page;
+	std::shared_ptr<Gtk::Window> window{nullptr};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
+	gui::part::stack stack{"business-stack"};
+        gui::part::search_bar search_bar{"business-name-search"};
 	void setup()
 	{
                 app = Gtk::Application::create("org.testing");
@@ -46,5 +48,5 @@ TEST_GROUP(statement_page_test)
 
 TEST(statement_page_test, create_statement_page)
 {
-        CHECK_EQUAL(true, page.create(builder));
+        CHECK_EQUAL(true, page.create(builder, window));
 }

@@ -7,27 +7,26 @@
  *******************************************************/
 #include <statement_page.h>
 #include <pdf_statement_data.h>
-#include <future>
+#include <email.h>
 #include <algorithm>
 #include <printer.h>
 
 #include <iostream>
 
-gui::statement_page::statement_page() {}
+gui::statement_page::statement_page()
+{
+        this->email_dispatcher.connect(sigc::mem_fun(*this, &statement_page::email_sent));
+}
 
 gui::statement_page::~statement_page() {}
 
-bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
+				 const std::shared_ptr<Gtk::Window>& _main_window)
 {
 	bool created{false};
         if (_ui_builder)
         {
 		if (this->no_item_selected.create(_ui_builder) == false)
-		{
-			return created;
-		}
-
-		if (this->no_printer_alert.create(_ui_builder) == false)
 		{
 			return created;
 		}
@@ -47,14 +46,19 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			return created;
 		}
 
-		(void) this->print_alert.connect([this] (const int& response) {
+		(void) this->print_alert.connect([this, _main_window] (const int& response) {
 			switch (response)
 			{
 				case GTK_RESPONSE_YES:
-					(void) this->print_alert.hide();
+					if (this->print_alert.hide() == false)
 					{
+
+					}
+					else
+					{
+						std::vector<std::string> data{this->client_statement.prepare_for_print(this->documents)};
 						gui::part::printer printer{"statement"};
-						(void)printer.print(this->documents);
+						(void) printer.print(data, _main_window);
 					}
 					break;
 				case GTK_RESPONSE_NO:
@@ -70,7 +74,20 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			switch (response)
 			{
 				case GTK_RESPONSE_YES:
-					(void) this->email_alert.hide();
+					if (this->email_alert.hide() == false)
+					{
+
+					}
+					else
+					{
+						this->email_future = std::move(std::async(std::launch::async, [this] () {
+							data::email data{this->client_statement.prepare_for_email(this->documents)};
+							feature::email email;
+							bool result{email.send(data)};
+							this->email_dispatcher.emit();
+							return result;
+						}));
+					}
 					break;
 				case GTK_RESPONSE_NO:
 					(void) this->email_alert.hide();
@@ -128,18 +145,22 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 		{
                         return created;
 		}
+
 		if (this->statement_view.add_column(date) == false)
 		{
                         return created;
 		}
+
 		if (this->statement_view.add_column(order_number) == false)
 		{
                         return created;
 		}
+
 		if (this->statement_view.add_column(paid_status) == false)
 		{
                         return created;
 		}
+
 		if (this->statement_view.add_column(price) == false)
 		{
                         return created;
@@ -188,24 +209,8 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 		});
 
 		(void) this->statement_pdf_view.single_click([this] (const std::vector<std::any>& _pdf_statements) {
-			std::vector<std::future<std::string>> pdf_documents;
-			std::transform(_pdf_statements.cbegin(),
-					_pdf_statements.cend(),
-					std::back_inserter(pdf_documents),
-					[] (const std::any& _pdf_statement) {
-						return std::async(std::launch::async, [&_pdf_statement] {
-							feature::statement_pdf pdf{};
-							return pdf.generate(_pdf_statement);
-						});
-					});
-
 			this->documents.clear();
-			for (std::future<std::string>& pdf_document : pdf_documents)
-			{
-				this->documents.emplace_back(pdf_document.get());
-			}
-			syslog(LOG_CRIT, "Finished generating the poppler pdf documents");
-
+			this->documents = _pdf_statements;
 			return true;
 		});
 
@@ -320,4 +325,19 @@ bool gui::statement_page::save()
 	(void) this->save_alert.show();
 
 	return success;
+}
+
+void gui::statement_page::email_sent()
+{
+	if (this->email_future.get() == false)
+	{
+		syslog(LOG_CRIT, "Failed to send the email - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		// No internet;
+	}
+	else
+	{
+		syslog(LOG_CRIT, "Email successfully sent - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
 }

@@ -21,8 +21,8 @@ public:
 	printer& operator= (printer&&) = delete;
 	~printer() = default;
 
-	[[nodiscard]] virtual bool is_connected() const;
-	[[nodiscard]] virtual bool print(const std::vector<std::string>&);
+	[[nodiscard]] virtual bool print(const std::vector<std::string>&,
+					 const std::shared_ptr<Gtk::Window>&);
 
 protected:
 	[[nodiscard]] bool render_poppler_documents(const std::vector<std::string>&);

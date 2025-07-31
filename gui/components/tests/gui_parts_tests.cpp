@@ -377,7 +377,7 @@ TEST(statement_page_column_view_test, column_view_add_column)
 
 TEST(statement_page_column_view_test, column_view_populate)
 {
-        feature::client_statement client_statement{};
+        controller::client_statement client_statement{};
 	std::vector<std::any> statements{};
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
@@ -400,14 +400,14 @@ TEST(statement_page_column_view_test, column_view_populate)
 
 TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
 {
-        feature::client_statement client_statement{};
+        controller::client_statement client_statement{};
 
         CHECK_EQUAL(false, column_view.clear());
 }
 
 TEST(statement_page_column_view_test, column_view_clear_successful)
 {
-        feature::client_statement client_statement{};
+        controller::client_statement client_statement{};
 	std::vector<std::any> invoices{};
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
@@ -431,7 +431,7 @@ TEST(statement_page_column_view_test, column_view_clear_successful)
 
 TEST(statement_page_column_view_test, extract_data_from_store)
 {
-        feature::client_statement client_statement{};
+        controller::client_statement client_statement{};
 	std::vector<std::any> invoices{};
 	for (const std::any& data : client_statement.load("Test Business Name"))
 	{
@@ -522,7 +522,7 @@ TEST(pdf_window_test, generate_window_with_good_document)
  ******************************************************************************/
 TEST_GROUP(invoice_pdf_view_test)
 {
-	feature::client_statement client_statement{};
+	controller::client_statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::invoice_pdf_view invoice_pdf_view{"statement-invoice-list-view", "statement-invoice-list-view-vadjustment"};
@@ -658,7 +658,7 @@ TEST(invoice_pdf_view_test, populate_view_without_being_created)
  ******************************************************************************/
 TEST_GROUP(statement_pdf_view_test)
 {
-	feature::client_statement client_statement{};
+	controller::client_statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::statement_pdf_view statement_pdf_view{"statement-list-view", "statement-list-view-vadjustment"};

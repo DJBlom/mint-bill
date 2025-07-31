@@ -8,8 +8,11 @@
 #ifndef _STATEMENT_PAGE_H_
 #define _STATEMENT_PAGE_H_
 #include <gui.h>
+#include <thread>
+#include <future>
 #include <syslog.h>
 #include <gui_parts.h>
+#include <email_data.h>
 #include <statement_pdf.h>
 #include <client_statement.h>
 
@@ -24,19 +27,30 @@ public:
         statement_page& operator= (statement_page&&) = delete;
         ~statement_page() override;
 
-	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&,
+					  const std::shared_ptr<Gtk::Window>& _main_window) override;
 	[[nodiscard]] virtual bool search(const std::string&) override;
 	[[nodiscard]] virtual bool print() override;
 	[[nodiscard]] virtual bool email() override;
 	[[nodiscard]] virtual bool save() override;
 
+protected:
+	void email_sent();
+	// void print_done();
+
+private: // Threads
+	std::future<bool> email_future;
+	Glib::Dispatcher email_dispatcher{};
+
+
 private:
-	std::vector<std::string> documents{};
-	feature::client_statement client_statement{};
+	std::vector<std::any> documents{};
+	controller::client_statement client_statement{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};
-        part::dialog no_printer_alert{"statement-print-no-printer-alert"};
+	std::unique_ptr<Gtk::Stack> main_window_access;
+        // part::dialog no_printer_alert{"statement-print-no-printer-alert"};
         part::dialog save_alert{"statement-save-button-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};

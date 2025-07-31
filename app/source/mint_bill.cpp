@@ -60,14 +60,14 @@ void app::mint_bill::start(const Glib::RefPtr<Gtk::Application>& app)
                         return;
                 }
 
-                if (this->invoice_page.create(ui_builder) == false)
+                if (this->invoice_page.create(ui_builder, this->main_window.retrieve()) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the invoice page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);
                         return;
                 }
 
-                if (this->statement_page.create(ui_builder) == false)
+                if (this->statement_page.create(ui_builder, this->main_window.retrieve()) == false)
                 {
                         syslog(LOG_CRIT, "Failed to create the statement page - "
                                          "filename %s, line number %d", __FILE__, __LINE__);

@@ -21,12 +21,13 @@ public:
 	virtual ~main_window() = default;
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
+	[[nodiscard]] virtual std::shared_ptr<Gtk::Window> retrieve();
 
 private:
 	void setup_css();
 
 private:
-	std::unique_ptr<Gtk::Window> window{};
+	std::shared_ptr<Gtk::Window> window{};
 };
 
 //GCOVR_EXCL_STOP

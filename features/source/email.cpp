@@ -7,7 +7,6 @@
  *******************************************************/
 #include <email.h>
 
-
 feature::email::email() {}
 
 feature::email::~email() {}
@@ -16,36 +15,36 @@ bool feature::email::send(const data::email& _data)
 {
         if (_data.is_valid())
         {
-                smtp::client client{this->curl};
-                if (client.connect(_data.get_business()) == false)
-                {
-                        return false;
-                }
+		smtp::client client{this->curl};
+		if (client.connect(_data.get_business()) == false)
+		{
+			return false;
+		}
 
-                smtp::header header{this->curl};
-                if (header.add(_data) == false)
-                {
-                        return false;
-                }
+		smtp::header header{this->curl};
+		if (header.add(_data) == false)
+		{
+			return false;
+		}
 
-                smtp::recipients recipients{this->curl};
-                if (recipients.add(_data.get_client()) == false)
-                {
-                        return false;
-                }
+		smtp::recipients recipients{this->curl};
+		if (recipients.add(_data.get_client()) == false)
+		{
+			return false;
+		}
 
-                smtp::parts parts{this->curl};
-                if (parts.add(_data) == false)
-                {
-                        return false;
-                }
+		smtp::parts parts{this->curl};
+		if (parts.add(_data) == false)
+		{
+			return false;
+		}
 
-                if(CURLE_OK != curl_easy_perform(this->curl.get()))
-                {
-                        return false;
-                }
+		if(CURLE_OK != curl_easy_perform(this->curl.get()))
+		{
+			return false;
+		}
 
-                return true;
+		return true;
         }
 
         return false;

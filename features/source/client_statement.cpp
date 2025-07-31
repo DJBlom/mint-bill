@@ -5,13 +5,19 @@
  *
  * NOTE:
  *******************************************************/
+#include <future>
+#include <algorithm>
+#include <statement_pdf.h>
 #include <client_statement.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 
-feature::client_statement::~client_statement() {}
 
-std::vector<std::any> feature::client_statement::load(const std::string& _business_name) const
+#include <iostream>
+
+controller::client_statement::~client_statement() {}
+
+std::vector<std::any> controller::client_statement::load(const std::string& _business_name) const
 {
 	std::vector<std::any> temp{};
 	if (_business_name.empty())
@@ -29,7 +35,7 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 			client_data.set_business_area_code("543543");
 			client_data.set_business_town_name("George");
 			client_data.set_cellphone_number("0832315944");
-			client_data.set_email("odn@gmail.com");
+			client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
 			client_data.set_vat_number("3241324321413");
 			client_data.set_statement_schedule("4,4");
 			pdf_invoice_data.set_client(client_data);
@@ -40,12 +46,12 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 			business_data.set_area_code("5432");
 			business_data.set_town("george");
 			business_data.set_cellphone("0832315944");
-			business_data.set_email("odn@gmail.com");
+			business_data.set_email("dmnsstmtest@gmail.com");
 			business_data.set_bank("Standard Bank");
 			business_data.set_branch_code("043232");
 			business_data.set_account_number("0932443824");
 			business_data.set_client_message("Thank you for your support");
-			business_data.set_password("");
+			business_data.set_password("bxwx eaku ndjj ltda");
 			pdf_invoice_data.set_business(business_data);
 
 			std::vector<data::pdf_invoice> pdf_invoices{};
@@ -91,4 +97,59 @@ std::vector<std::any> feature::client_statement::load(const std::string& _busine
 	}
 
 	return temp;
+}
+
+data::email controller::client_statement::prepare_for_email(const std::vector<std::any>& _pdf_statements) const
+{
+	data::email email_data;
+	for (const std::any& _pdf_statement : _pdf_statements)
+	{
+		data::pdf_statement pdf_statement_data{std::any_cast<data::pdf_statement> (_pdf_statement)};
+		for (const data::pdf_invoice& pdf_invoice : pdf_statement_data.get_pdf_invoices())
+		{
+			email_data.set_client(pdf_invoice.get_client());
+			email_data.set_business(pdf_invoice.get_business());
+			break;
+		}
+		break;
+	}
+	email_data.set_subject("Statement");
+	email_data.set_attachments(this->convert_pdfs_to_strings(_pdf_statements));
+	if (email_data.is_valid())
+	{
+		std::cout << "Email data is valid\n";
+	}
+
+	return email_data;
+}
+
+std::vector<std::string> controller::client_statement::prepare_for_print(const std::vector<std::any>& _pdf_statements) const
+{
+	return this->convert_pdfs_to_strings(_pdf_statements);
+}
+
+std::vector<std::string> controller::client_statement::convert_pdfs_to_strings(const std::vector<std::any>& _pdf_statements) const
+{
+	std::vector<std::future<std::string>> pdf_documents;
+	std::transform(_pdf_statements.cbegin(),
+			_pdf_statements.cend(),
+			std::back_inserter(pdf_documents),
+			[] (const std::any& _pdf_statement) {
+				return std::async(std::launch::async, [&_pdf_statement] {
+					feature::statement_pdf pdf{};
+					return pdf.generate(_pdf_statement);
+				});
+			});
+
+
+	std::vector<std::string> pdfs;
+	std::transform(
+		std::make_move_iterator(pdf_documents.begin()),
+		std::make_move_iterator(pdf_documents.end()),
+		std::back_inserter(pdfs),
+		[](std::future<std::string> _pdf) {
+			return _pdf.get();
+		});
+
+	return pdfs;
 }

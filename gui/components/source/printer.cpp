@@ -1,12 +1,8 @@
-#include <printer.h>
-#include <errors.h>
+
 #include <future>
+#include <errors.h>
 #include <algorithm>
-
-
-
-#include <iostream>
-
+#include <printer.h>
 
 
 gui::part::printer::printer(const std::string& _job_name)
@@ -36,7 +32,6 @@ gui::part::printer::printer(const std::string& _job_name)
 	}
 	else
 	{
-		this->print_settings->set_printer("");
 		this->print_settings->set_use_color(false);
 		this->print_settings->set_orientation(Gtk::PageOrientation::PORTRAIT);
 		this->print_settings->set_paper_size(Gtk::PaperSize(Gtk::PAPER_NAME_A4));
@@ -66,13 +61,7 @@ gui::part::printer::printer(const std::string& _job_name)
 	}
 }
 
-bool gui::part::printer::is_connected() const
-{
-        std::string has_printer{this->print_settings->get_printer()};
-	return !has_printer.empty();
-}
-
-bool gui::part::printer::print(const std::vector<std::string>& _documents)
+bool gui::part::printer::print(const std::vector<std::string>& _documents, const std::shared_ptr<Gtk::Window>& _main_window)
 {
 	bool success{false};
 	if (_documents.empty())
@@ -88,7 +77,7 @@ bool gui::part::printer::print(const std::vector<std::string>& _documents)
 			{
 				success = true;
 				this->print_operation->set_n_pages(this->total_pages);
-				this->print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
+				this->print_operation->run(Gtk::PrintOperation::Action::PRINT_DIALOG, *_main_window);
 			}
 		}
 	}
@@ -106,6 +95,7 @@ bool gui::part::printer::render_poppler_documents(const std::vector<std::string>
 	}
 	else
 	{
+		success = true;
 		std::vector<std::future<std::shared_ptr<poppler::document>>> pdf_documents;
 		std::transform(_documents.cbegin(),
 				_documents.cend(),
@@ -129,8 +119,6 @@ bool gui::part::printer::render_poppler_documents(const std::vector<std::string>
 		{
 			this->documents.emplace_back(pdf_document.get());
 		}
-
-		success = true;
 	}
 
 	return success;
@@ -146,23 +134,20 @@ bool gui::part::printer::number_of_pages_to_print()
 	}
 	else
 	{
+		success = true;
 		int index{0};
 		this->total_pages = 0;
 		this->page_ranges.clear();
 		for (const std::shared_ptr<poppler::document>& document : this->documents)
 		{
-			if (!document)
+			if (document)
 			{
-				continue;
+				int page_count = document->pages();
+				this->page_ranges.push_back(page_range{this->total_pages, page_count, index});
+				this->total_pages += page_count;
+				++index;
 			}
-
-			int page_count = document->pages();
-			this->page_ranges.push_back(page_range{this->total_pages, page_count, index});
-			this->total_pages += page_count;
-			++index;
 		}
-
-		success = true;
 	}
 
 	return success;
@@ -231,7 +216,8 @@ void gui::part::printer::print_operation_done(const Gtk::PrintOperation::Result&
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
 
-	if (is_connected())
+        std::string printer_name{this->print_settings->get_printer()};
+	if (printer_name.empty() == true)
 	{
 		syslog(LOG_CRIT, "No printer is connected - "
 				 "filename %s, line number %d", __FILE__, __LINE__);

@@ -12,7 +12,7 @@
 bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, const Glib::RefPtr<Gtk::Application>& app)
 {
         bool created{false};
-        this->window = std::unique_ptr<Gtk::Window> {ui_builder->get_widget<Gtk::Window>("main-window")};
+        this->window = std::shared_ptr<Gtk::Window> {ui_builder->get_widget<Gtk::Window>("main-window")};
         if (!this->window)
         {
                 syslog(LOG_CRIT, "The window is not valid - "
@@ -27,6 +27,11 @@ bool gui::main_window::create(const Glib::RefPtr<Gtk::Builder>& ui_builder, cons
         }
 
         return created;
+}
+
+std::shared_ptr<Gtk::Window> gui::main_window::retrieve()
+{
+	return this->window;
 }
 
 void gui::main_window::setup_css()
