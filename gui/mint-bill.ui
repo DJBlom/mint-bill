@@ -1027,14 +1027,6 @@
     <property name="title">Informasie</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="statement-print-no-printer-alert">
-    <property name="accessible-role">dialog</property>
-    <property name="buttons">close</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="modal">True</property>
-    <property name="text">Is u seker u het 'n printer gekoppel aan u rekenaar?</property>
-    <property name="transient-for">main-window</property>
-  </object>
   <object class="GtkMessageDialog" id="invoice-no-item-selected-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
@@ -1048,7 +1040,7 @@
     <property name="buttons">close</property>
     <property name="destroy-with-parent">True</property>
     <property name="modal">True</property>
-    <property name="text">Kies asseblief 'n staat om te e-pos of te print.</property>
+    <property name="text">Kies asseblief 'n staat om te e-pos, print, of stoor.</property>
     <property name="transient-for">main-window</property>
   </object>
   <object class="GtkMessageDialog" id="statement-save-button-alert">

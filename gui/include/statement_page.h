@@ -36,21 +36,31 @@ public:
 
 protected:
 	void email_sent();
-	// void print_done();
+	bool email_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool print_setup(const Glib::RefPtr<Gtk::Builder>&,
+			 const std::shared_ptr<Gtk::Window>&);
+	bool save_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool no_internet_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool statement_column_view_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool invoice_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
+	bool statement_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
 
-private: // Threads
+private:
 	std::future<bool> email_future;
 	Glib::Dispatcher email_dispatcher{};
+	bool on_double_click();
+	bool on_single_click();
 
 
 private:
 	std::vector<std::any> documents{};
+	std::vector<std::any> invoice_data{};
 	controller::client_statement client_statement{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};
-	std::unique_ptr<Gtk::Stack> main_window_access;
-        // part::dialog no_printer_alert{"statement-print-no-printer-alert"};
+        part::dialog no_internet_alert{"statement-email-no-internet-alert"};
         part::dialog save_alert{"statement-save-button-alert"};
 	part::statement::columns::date date{};
 	part::statement::columns::price price{};
