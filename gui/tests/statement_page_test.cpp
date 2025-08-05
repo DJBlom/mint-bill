@@ -39,6 +39,7 @@ TEST_GROUP(statement_page_test)
                 builder = Gtk::Builder::create();
                 builder->add_from_file("../gui/mint-bill.ui");
 		(void) search_bar.create(builder);
+		window = std::make_shared<Gtk::Window>();
 	}
 
 	void teardown()

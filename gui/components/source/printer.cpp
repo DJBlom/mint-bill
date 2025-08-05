@@ -64,20 +64,30 @@ gui::part::printer::printer(const std::string& _job_name)
 bool gui::part::printer::print(const std::vector<std::string>& _documents, const std::shared_ptr<Gtk::Window>& _main_window)
 {
 	bool success{false};
-	if (_documents.empty())
+	if (_documents.empty() || _main_window == nullptr)
 	{
-                syslog(LOG_CRIT, "No _data to print - "
+                syslog(LOG_CRIT, "No _documents to print or _main_window is null - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
-		if (render_poppler_documents(_documents) == true)
+		if (render_poppler_documents(_documents) == false)
 		{
-			if (number_of_pages_to_print())
+			syslog(LOG_CRIT, "Failed to render poppler documents - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			if (number_of_pages_to_print() == false)
 			{
-				success = true;
+				syslog(LOG_CRIT, "Failed to compute the number of pages to print - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+			else
+			{
 				this->print_operation->set_n_pages(this->total_pages);
 				this->print_operation->run(Gtk::PrintOperation::Action::PRINT_DIALOG, *_main_window);
+				success = true;
 			}
 		}
 	}
@@ -95,7 +105,6 @@ bool gui::part::printer::render_poppler_documents(const std::vector<std::string>
 	}
 	else
 	{
-		success = true;
 		std::vector<std::future<std::shared_ptr<poppler::document>>> pdf_documents;
 		std::transform(_documents.cbegin(),
 				_documents.cend(),
@@ -119,6 +128,7 @@ bool gui::part::printer::render_poppler_documents(const std::vector<std::string>
 		{
 			this->documents.emplace_back(pdf_document.get());
 		}
+		success = true;
 	}
 
 	return success;
@@ -134,7 +144,6 @@ bool gui::part::printer::number_of_pages_to_print()
 	}
 	else
 	{
-		success = true;
 		int index{0};
 		this->total_pages = 0;
 		this->page_ranges.clear();
@@ -148,6 +157,7 @@ bool gui::part::printer::number_of_pages_to_print()
 				++index;
 			}
 		}
+		success = true;
 	}
 
 	return success;
