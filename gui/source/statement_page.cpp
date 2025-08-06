@@ -33,41 +33,57 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         {
 		if (this->email_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup email - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->print_setup(_ui_builder, _main_window) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup print - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->save_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup save - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->no_item_selected_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup no_item_selected_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->no_internet_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup no_internet_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->invoice_pdf_view_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup invoice_pdf_view_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->statement_pdf_view_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup statement_pdf_view_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->statement_column_view_setup(_ui_builder) == false)
 		{
+			syslog(LOG_CRIT, "Failed to setup statement_column_view_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
         }
