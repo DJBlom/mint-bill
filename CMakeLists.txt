@@ -17,6 +17,7 @@ option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
 
+
 if(BUILD_PROJECT_FOR_DEPLOY)
     project(${CMAKE_PROJECT_NAME}${CMAKE_PROJECT_VERSION}${CMAKE_EXECUTABLE_SUFFIX} LANGUAGES CXX C ASM)
     message("Building the project with a version tag")
@@ -33,7 +34,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-
 if(BUILD_PROJECT)
         find_package(CURL REQUIRED)
         find_package(PkgConfig REQUIRED)
@@ -45,7 +45,12 @@ if(BUILD_PROJECT)
                 -Wall
                 -Werror
                 -Wextra
+                -Wunused
+                -Wpedantic
                 -Wconversion
+                -Wuninitialized
+                -Wredundant-move
+                -Wenum-conversion
                 $<$<CONFIG:DEBUG>:-g3>
                 $<$<CONFIG:DEBUG>:-Og>
         )
@@ -57,7 +62,7 @@ if(BUILD_PROJECT)
 
         add_executable(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/app/source/main.cpp
-                ${CMAKE_SOURCE_DIR}/app/source/admin_system.cpp
+                ${CMAKE_SOURCE_DIR}/app/source/mint_bill.cpp
         )
 
         target_include_directories(${PROJECT_NAME} PRIVATE
@@ -67,6 +72,7 @@ if(BUILD_PROJECT)
                 ${POPPLER_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
+                ${CMAKE_SOURCE_DIR}/gui/components/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
@@ -79,16 +85,16 @@ if(BUILD_PROJECT)
                 LINKER:-lrt
         )
 
-        target_link_libraries(${PROJECT_NAME} 
-                PRIVATE 
+        target_link_libraries(${PROJECT_NAME}
+                PRIVATE
                 ${CURL_LIBRARIES}
-                ${GTKMM_LIBRARIES} 
+                ${GTKMM_LIBRARIES}
                 ${CAIROMM_LIBRARIES}
                 ${POPPLER_LIBRARIES}
         )
 
-        target_link_directories(${PROJECT_NAME} 
-                PRIVATE 
+        target_link_directories(${PROJECT_NAME}
+                PRIVATE
                 ${GTKMM_LIBRARY_DIRS}
                 ${CAIROMM_LIBRARY_DIRS}
         )
@@ -100,11 +106,11 @@ if(BUILD_PROJECT)
                 message(STATUS "Directory gui, does not exist")
         endif()
 
-        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui/invoice_page)
-                add_subdirectory(${CMAKE_SOURCE_DIR}/gui/invoice_page)
-                target_link_libraries(${PROJECT_NAME} PRIVATE invoice_page)
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui/components)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/gui/components)
+                target_link_libraries(${PROJECT_NAME} PRIVATE components)
         else()
-                message(STATUS "Directory gui/invoice_page, does not exist")
+                message(STATUS "Directory components, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/data)

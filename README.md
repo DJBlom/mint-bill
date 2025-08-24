@@ -51,3 +51,13 @@
 > - All branch names shall be lower case seperated by hyphens. (e.g. feature/test-branch)
 > - All branches shall have meaningful names that describe the purpose of the branch.                        
 >   (e.g. feature/invoice-processing, feature/statement-verification)
+>
+> # App Password
+> The application requires that you create a gmail app password for the email services.    
+> This password will not be shared after you have entered into the application.  
+> The create a App password with gmail. Ensure that two-factor authentication is turned   
+> on in your gmail account. After that, navigate to the following link:   
+> - GMail documentation: https://support.google.com/mail/answer/185833?hl=en  
+> - Click on **Create and manage your app passwords**.  
+> - Enter the password for your application.  
+> - Enter the password into this application when registering a business.  

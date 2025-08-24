@@ -12,7 +12,7 @@ project(target-data VERSION 0.0.1 LANGUAGES CXX C)
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-        add_library(data 
+        add_library(data
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/email_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_data.cpp
@@ -20,9 +20,10 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/invoice_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/pdf_invoice_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/pdf_statement_data.cpp
         )
 
-        target_include_directories(data 
+        target_include_directories(data
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 PUBLIC

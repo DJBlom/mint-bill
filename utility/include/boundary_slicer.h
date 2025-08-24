@@ -3,7 +3,9 @@
  * Author: Dawid J. Blom
  * Date: December 28, 2024
  *
- * NOTE:
+ * NOTE: This utility handles the splitting of words or
+ * the placing of words on a new line depending on their
+ * length. 
  *******************************************************/
 #ifndef _BOUNDARY_SLICER_H_
 #define _BOUNDARY_SLICER_H_
@@ -27,16 +29,18 @@ namespace utility {
                         [[nodiscard]] virtual std::vector<std::string> slice(const std::string&) override;
 
                 private:
-                        void add_word_to_current_line();
-                        [[nodiscard]] bool word_does_not_exceed_max();
-                        void add_whats_left_over(std::vector<std::string>&);
-                        void add_new_current_line(std::vector<std::string>&);
+                        [[nodiscard]] bool word_does_not_exceed_max(const std::string&);
+                        [[nodiscard]] bool word_does_exceed_max(const std::string&);
+                        void add_word_to_current_line(const std::string&);
+                        void handle_large_word(const std::string&);
+                        void add_new_current_line(const std::string&);
+                        void add_whats_left_over();
 
                 private:
-                        std::string word{""};
                         std::mutex data_mutex{};
                         std::string current_line{""};
                         std::string::size_type max{40};
+                        std::vector<std::string> sliced_data{};
 
                         enum DECISION {
                                 NO = 0,

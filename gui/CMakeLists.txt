@@ -15,8 +15,11 @@ if(${FILES_IN_DIR} GREATER 0)
 
         add_library(gui
                 OBJECT
+                # ${PROJECT_SOURCE_DIR}/source/gui_parts.cpp
                 ${PROJECT_SOURCE_DIR}/source/main_window.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_page.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_page.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_page.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register_page.cpp
         )
 
@@ -24,6 +27,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 PRIVATE
                 ${GTKMM_INCLUDE_DIRS}
                 ${PROJECT_SOURCE_DIR}/include/
+                ${PROJECT_SOURCE_DIR}/components/include/
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include

@@ -11,22 +11,21 @@
 #include <thread>
 #include <email.h>
 #include <invoice.h>
+#include <interfaces.h>
 #include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-document.h>
 
 namespace feature {
-        class invoice: public interface::invoice {
+	class client_invoice: public interface::operations_controller {
                 public:
-                        virtual ~invoice() override;
+                        virtual ~client_invoice() override;
 
-                        [[nodiscard]] virtual data::invoice load(const std::string&, const interface::storage&) override;
-                        [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&) override;
-                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&) override;
-                        [[nodiscard]] bool send_email(const data::invoice&);
-                        [[nodiscard]] data::pdf_invoice create_pdf_to_print(const data::invoice&);
+			[[nodiscard]] virtual std::vector<std::any> load(const std::string&) const override;
+			[[nodiscard]] virtual data::email prepare_for_email(const std::vector<std::any>&) const override;
+			[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const override;
 
-                private:
-                        [[nodiscard]] std::future<bool> sending(const data::email&);
+                        [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&);
+                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&);
 
                 private:
                         feature::email email{};

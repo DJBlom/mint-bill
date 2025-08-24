@@ -15,16 +15,17 @@ namespace limits {
 data::email::email() {}
 
 data::email::email(const email& _copy)
-        : pdf{_copy.pdf}, client{_copy.client}, business{_copy.business},
+        : attachments{_copy.attachments}, client{_copy.client}, business{_copy.business},
           subject{_copy.subject}, flags{_copy.flags}, email_data{}, mask{_copy.mask}
 {
 }
 
 data::email::email(email&& _move)
-        : pdf{_move.pdf}, client{_move.client}, business{_move.business},
-          subject{_move.subject}, flags{_move.flags}, email_data{}, mask{_move.mask}
+        : attachments{std::move(_move.attachments)}, client{std::move(_move.client)},
+	  business{std::move(_move.business)}, subject{std::move(_move.subject)},
+	  flags{std::move(_move.flags)}, email_data{}, mask{std::move(_move.mask)}
 {
-        _move.pdf.clear();
+        _move.attachments.clear();
         _move.client = client;
         _move.business = business;
         _move.subject.clear();
@@ -42,7 +43,7 @@ data::email& data::email::operator= (const email& _copy)
 
 data::email& data::email::operator= (email&& _move)
 {
-        std::swap(pdf, _move.pdf);
+        std::swap(attachments, _move.attachments);
         std::swap(client, _move.client);
         std::swap(business, _move.business);
         std::swap(subject, _move.subject);
@@ -56,22 +57,16 @@ data::email::~email(){}
 
 bool data::email::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
-void data::email::set_pdf(const std::string& _pdf)
+void data::email::set_attachments(const std::vector<std::string>& _attachments)
 {
-        if (!_pdf.empty())
+        if (!_attachments.empty())
         {
                 set_flag(FLAG::PDF);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->pdf = std::move(_pdf);
+                this->attachments = std::move(_attachments);
         }
         else
         {
@@ -79,9 +74,9 @@ void data::email::set_pdf(const std::string& _pdf)
         }
 }
 
-std::string data::email::get_pdf() const
+std::vector<std::string> data::email::get_attachments() const
 {
-        return std::move(this->pdf);
+        return this->attachments;
 }
 
 void data::email::set_client(const data::client& _client)
@@ -100,7 +95,7 @@ void data::email::set_client(const data::client& _client)
 
 data::client data::email::get_client() const
 {
-        return std::move(this->client);
+        return this->client;
 }
 
 void data::email::set_business(const data::business& _business)
@@ -119,7 +114,7 @@ void data::email::set_business(const data::business& _business)
 
 data::business data::email::get_business() const
 {
-        return std::move(this->business);
+        return this->business;
 }
 
 void data::email::set_subject(const std::string& _subject)
@@ -138,12 +133,12 @@ void data::email::set_subject(const std::string& _subject)
 
 std::string data::email::get_subject() const
 {
-        return std::move(this->subject);
+        return this->subject;
 }
 
 bool data::email::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::email::set_flag(const int& bit)
@@ -155,5 +150,5 @@ void data::email::set_flag(const int& bit)
 void data::email::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->email_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

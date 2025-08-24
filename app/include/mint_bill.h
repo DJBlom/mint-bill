@@ -1,0 +1,52 @@
+/********************************************************
+ * Contents: Admin System class definition
+ * Author: Dawid J. Blom
+ * Date: November 14, 2024
+ *
+ * NOTE:
+ *******************************************************/
+#ifndef _ADMIN_SYSTEM_H_
+#define _ADMIN_SYSTEM_H_
+#include <gtkmm.h>
+#include <stack.h>
+#include <gui_parts.h>
+#include <main_window.h>
+#include <invoice_page.h>
+#include <business_page.h>
+#include <statement_page.h>
+#include <client_register_page.h>
+
+namespace app {
+        class mint_bill {
+                public:
+                        mint_bill() = default;
+                        mint_bill(const mint_bill&) = delete;
+                        mint_bill(mint_bill&&) = delete;
+                        mint_bill& operator= (const mint_bill&) = delete;
+                        mint_bill& operator= (mint_bill&&) = delete;
+                        ~mint_bill() = default;
+
+                        void start(const Glib::RefPtr<Gtk::Application>&);
+
+		protected:
+                        [[nodiscard]] bool load_ui_file(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool stack_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool search_bar_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool print_button_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool email_button_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool save_button_setup(const Glib::RefPtr<Gtk::Builder>&);
+
+                private:
+                        gui::main_window main_window{};
+                        gui::business_page business_page{};
+                        gui::client_register_page client_register_page{};
+                        gui::invoice_page invoice_page{};
+                        gui::statement_page statement_page{};
+			gui::part::stack stack{"business-stack"};
+			gui::part::search_bar search_bar{"business-name-search"};
+			gui::part::sub_button print_button{"print-button"};
+			gui::part::sub_button email_button{"email-button"};
+			gui::part::sub_button save_button{"save-button"};
+        };
+}
+#endif

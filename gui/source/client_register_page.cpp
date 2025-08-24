@@ -5,23 +5,27 @@
  *
  * NOTE:
  *******************************************************/
-#include <client_register_page.h>
+#include <syslog.h>
 #include <client_data.h>
-#include <iostream>
+#include <client_register_page.h>
 
+//GCOVR_EXCL_START
 gui::client_register_page::~client_register_page()
 {
 }
 
 bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
-        if (verify_ui_builder(_ui_builder) == true)
+        bool created{true};
+        if (!_ui_builder)
         {
-                created = true;
+                syslog(LOG_CRIT, "The _ui_builder is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                created = false;
+        }
+        else
+        {
                 create_entries(_ui_builder);
-                connect_search();
-                connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();
         }
@@ -29,15 +33,39 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         return created;
 }
 
-bool gui::client_register_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::client_register_page::search(const std::string& _keyword)
 {
-        bool verified{false};
-        if (_ui_builder)
+        bool searched{true};
+        if (_keyword.empty())
         {
-                verified = true;
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		searched = false;
+        }
+        else
+        {
+		data::client data = this->client_register.search(_keyword, this->db);
+		display_on_ui(data);
         }
 
-        return verified;
+        return searched;
+}
+
+bool gui::client_register_page::save()
+{
+	bool success{false};
+	if (!this->save_alert_dialog)
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_alert_dialog->show();
+	}
+
+	return success;
 }
 
 void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -48,8 +76,6 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
                 _ui_builder->get_widget<Gtk::Entry>("register-cell-number-entry")};
         this->vat_number = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-vat-number-entry")};
-        this->search_entry = std::unique_ptr<Gtk::SearchEntry>{
-                _ui_builder->get_widget<Gtk::SearchEntry>("register-search-entry")};
         this->business_name = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-business-name-entry")};
         this->statment_schedule = std::unique_ptr<Gtk::Entry>{
@@ -60,42 +86,28 @@ void gui::client_register_page::create_entries(const Glib::RefPtr<Gtk::Builder>&
                 _ui_builder->get_widget<Gtk::Entry>("register-town-name-entry")};
         this->business_street_address = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("register-address-entry")};
-        this->save_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("register-save-button")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-save-button-alert")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("client-wrong-info-alert")};
 }
 
-void gui::client_register_page::connect_search()
-{
-        if (this->search_entry)
-        {
-                this->search_entry->signal_search_changed().connect([this] () {
-                                data::client data = client_register.search(this->search_entry->get_text(), this->db);
-                                display_on_ui(data);
-                });
-        }
-}
-
-void gui::client_register_page::connect_save_button()
-{
-        if (save_button)
-        {
-                save_button->signal_clicked().connect([this] () {
-                        this->save_alert_dialog->show();
-                });
-        }
-}
-
 void gui::client_register_page::connect_save_alert()
 {
+        if (!this->save_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->save_alert_dialog->signal_response().connect([this] (int response) {
                 data::client data = extract_page_entries();
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
+                                syslog(LOG_INFO, "User chose to save the client information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
                                 if (this->client_register.save(data, this->db) == false)
                                 {
                                         this->save_alert_dialog->hide();
@@ -108,6 +120,8 @@ void gui::client_register_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
+                                syslog(LOG_INFO, "User chose not to save the client information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
                         default:
@@ -119,6 +133,13 @@ void gui::client_register_page::connect_save_alert()
 
 void gui::client_register_page::connect_wrong_info_alert()
 {
+        if (!this->wrong_info_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
                 switch (response)
                 {
@@ -134,7 +155,6 @@ void gui::client_register_page::connect_wrong_info_alert()
 
 void gui::client_register_page::clear_all_entries()
 {
-        this->search_entry->set_text("");
         this->business_name->set_text("");
         this->business_street_address->set_text("");
         this->business_area_code->set_text("");
@@ -171,3 +191,5 @@ data::client gui::client_register_page::extract_page_entries()
 
         return data;
 }
+
+//GCOVR_EXCL_STOP

@@ -10,28 +10,26 @@
 #include <gtkmm.h>
 
 namespace gui {
-        class main_window {
-                public:
-                        main_window() = default;
-                        main_window(const main_window&) = delete;
-                        main_window(main_window&&) = delete;
-                        main_window& operator= (const main_window&) = delete;
-                        main_window& operator= (main_window&&) = delete;
-                        virtual ~main_window() = default;
+//GCOVR_EXCL_START
+class main_window {
+public:
+	main_window() = default;
+	main_window(const main_window&) = delete;
+	main_window(main_window&&) = delete;
+	main_window& operator= (const main_window&) = delete;
+	main_window& operator= (main_window&&) = delete;
+	virtual ~main_window() = default;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
+	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&, const Glib::RefPtr<Gtk::Application>&);
+	[[nodiscard]] virtual std::shared_ptr<Gtk::Window> retrieve();
 
-                private:
-                        void connect_exit_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_max_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void connect_min_button(const Glib::RefPtr<Gtk::Builder>&);
-                        void exit_clicked();
-                        void min_clicked();
-                        void max_clicked();
-                        void setup_css();
+private:
+	void setup_css();
 
-                private:
-                        Gtk::Window* window{nullptr};
-        };
+private:
+	std::shared_ptr<Gtk::Window> window{};
+};
+
+//GCOVR_EXCL_STOP
 }
 #endif

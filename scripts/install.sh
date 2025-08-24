@@ -2,7 +2,7 @@
 # Contents: Project Install Functions
 # Author: Dawid Blom
 # Date: September 15, 2023
-# 
+#
 # NOTE:
 ############################################################################
 #!/bin/bash
@@ -39,26 +39,17 @@ function run_install()
 
 function install_develop()
 {
-        dnf_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf gtk4 gtk4-devel
-                      libcurl libcurl-devel json-devel flatpak poppler-cpp-devel doxygen)
-        apt_packages=(git cloc lcov gcovr make cmake cppcheck dh-autoreconf automake autoconf libgtk-4-1 
-                      libgtk-4-dev gtk-4-examples flatpak gnome-software-plugin-flatpak nlohmann-json3-dev
-                      Libcurl-dev libcurl libpoppler-cpp-dev)
-
         DNF=$(which dnf)
-        APT=$(which apt)
+        dnf_packages=(python3 lcov cloc cppcheck git texinfo help2man make cmake dh-autoreconf autoconf
+                      automake binutils bison valgrind check gcovr gcc gcc-c++ glibc-devel curl gtk4
+                      gtk4-devel gtkmm4.0-devel cairomm cairomm-devel libcurl libcurl-devel poppler-cpp-devel
+                      debuginfo-install gtkmm30 glibmm24 xorg-x11-server-Xvfb)
 
         if [[ ! -z $DNF ]];
         then
                 sudo dnf update
                 sudo dnf -y install ${dnf_packages[@]}
                 sudo dnf swap libcurl-minimal libcurl
-                install_cpputest
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-        elif [[ ! -z $APT ]];
-        then
-                sudo apt -y install ${apt_packages[@]}
-                sudo apt update
                 install_cpputest
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
         else

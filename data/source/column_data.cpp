@@ -6,12 +6,13 @@
  * NOTE:
  *******************************************************/
 #include <column_data.h>
+#include <iostream>
 
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
-        constexpr std::uint8_t MAX_AMOUNT{14};
+        constexpr std::uint8_t MAX_AMOUNT{15};
 }
 
 data::column::column() {}
@@ -22,9 +23,9 @@ data::column::column(const column& _copy)
           mask{_copy.mask} {}
 
 data::column::column(column&& _move)
-        : quantity{_move.quantity}, description{_move.description},
-          amount{_move.amount}, flags{_move.flags}, column_data{},
-          mask{_move.mask}
+        : quantity{std::move(_move.quantity)}, description{std::move(_move.description)},
+          amount{std::move(_move.amount)}, flags{std::move(_move.flags)}, column_data{},
+          mask{std::move(_move.mask)}
 {
         _move.quantity = 0;
         _move.description.clear();
@@ -56,13 +57,7 @@ data::column::~column() {}
 
 bool data::column::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::column::set_quantity(const unsigned int& _quantity)
@@ -82,7 +77,7 @@ void data::column::set_quantity(const unsigned int& _quantity)
 
 unsigned int data::column::get_quantity() const
 {
-        return std::move(this->quantity);
+        return this->quantity;
 }
 
 void data::column::set_description(const std::string& _description)
@@ -101,12 +96,13 @@ void data::column::set_description(const std::string& _description)
 
 std::string data::column::get_description() const
 {
-        return std::move(this->description);
+        return this->description;
 }
 
 void data::column::set_amount(const double& _amount)
 {
-        std::ostringstream amss{std::to_string(_amount)};
+        std::ostringstream amss{};
+        amss.imbue(std::locale::classic());
         amss << std::fixed << std::setprecision(2) << _amount;
         std::string tmp{amss.str()};
         if (tmp.length() <= limit::MAX_AMOUNT)
@@ -123,12 +119,12 @@ void data::column::set_amount(const double& _amount)
 
 double data::column::get_amount() const
 {
-        return std::move(this->amount);
+        return this->amount;
 }
 
 bool data::column::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::column::set_flag(const int& bit)
@@ -140,5 +136,5 @@ void data::column::set_flag(const int& bit)
 void data::column::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->column_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

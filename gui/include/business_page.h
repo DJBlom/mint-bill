@@ -12,7 +12,8 @@
 #include <business_info.h>
 
 namespace gui {
-        class business_page : public interface::gui {
+        //GCOVR_EXCL_START
+        class business_page : public interface::register_page {
                 public:
                         business_page() = default;
                         business_page(const business_page&) = delete;
@@ -21,16 +22,16 @@ namespace gui {
                         business_page& operator= (business_page&&) = delete;
                         ~business_page() override;
 
-                        [[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool search(const std::string&) override;
+			[[nodiscard]] virtual bool save() override;
 
                 private:
-                        [[nodiscard]] bool verify_ui_builder(const Glib::RefPtr<Gtk::Builder>&);
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
                         void connect_wrong_info_alert();
                         void connect_save_alert();
-                        void connect_save_button();
                         void clear_entries();
-                        void update_business_info_with_db_data();
+                        void update_business_info_with_db_data(const std::string&);
                         data::business extract_page_entries();
 
                 private:
@@ -52,11 +53,12 @@ namespace gui {
                         std::unique_ptr<Gtk::Entry> account_number{};
                         std::unique_ptr<Gtk::Entry> client_message{};
                         std::unique_ptr<Gtk::PasswordEntry> password{};
-                        std::unique_ptr<Gtk::Button> save_button{};
 
                 private: // Dialogs
                         std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
                         std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
         };
+
+        //GCOVR_EXCL_STOP
 }
 #endif

@@ -107,3 +107,16 @@ TEST(boundary_slicer_test, empty_last_line_in_string)
                 ++i;
         }
 }
+
+TEST(boundary_slicer_test, check_the_boundary_for_400_plus_word_sizes)
+{
+        std::vector<std::string> result{slicer.slice("ddddddddddddddddddddddddddddddddddddddd\
+                                                      ddddddddddddddddddddddddddddddddddddddd\
+                                                      ddddddddddddddddddddddddddddddddddddddd\
+                                                      ddddddddddddddddddddddddddddddddddddddd")};
+
+        for (const auto& str : result)
+        {
+                STRCMP_EQUAL("ddddddddddddddddddddddddddddddddddddddd", str.c_str());
+        }
+}

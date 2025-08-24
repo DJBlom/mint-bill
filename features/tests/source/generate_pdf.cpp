@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <generate_pdf.h>
+#include <iostream>
 
 
 bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string& _suffix)
@@ -13,7 +14,30 @@ bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string&
         bool generated{false};
         if (!_pdf_data.empty())
         {
-                std::ofstream file("test" + _suffix + ".pdf", std::ios::binary);
+                std::ofstream file("invoice_pdf_test" + _suffix + ".pdf", std::ios::binary);
+                if (!file.is_open()) {
+                        return generated;
+                }
+
+                file.write(_pdf_data.data(), static_cast<std::streamsize> (_pdf_data.size()));
+                if (file.fail()) {
+                        file.close();
+                        return generated;
+                }
+
+                file.close();
+                generated = true;
+        }
+
+        return generated;
+}
+
+bool test::generate_statement_pdf(const std::string& _pdf_data, const std::string& _suffix)
+{
+        bool generated{false};
+        if (!_pdf_data.empty())
+        {
+                std::ofstream file("statement_pdf_test" + _suffix + ".pdf", std::ios::binary);
                 if (!file.is_open()) {
                         return generated;
                 }
@@ -81,7 +105,46 @@ data::client test::generate_client_data_multiple_emails()
 
 data::invoice test::generate_invoice_data(const std::string& _desc)
 {
-        const int size{5};
+        const int size{50};
+        std::vector<data::column> vec{};
+        std::string description{_desc};
+        for (unsigned int i = 0; i < size; ++i)
+        {
+                data::column expected{};
+                expected.set_quantity(i);
+                expected.set_description(description);
+                expected.set_amount(5545675 + i + .0);
+                vec.push_back(expected);
+        }
+        std::string order_number{"order number 123"};
+        std::string card_number{"24/md"};
+        std::string date{"2023-09-04"};
+        std::string paid_status{"Not Paid"};
+        std::string name{"Test Business"};
+        std::string description_total{"1234.00"};
+        std::string material_total{"1234.00"};
+        std::string grand_total{"1234.00"};
+        std::string number{"1"};
+
+        data::invoice expected;
+        expected.set_business_name(name);
+        expected.set_invoice_number(number);
+        expected.set_invoice_date(date);
+        expected.set_paid_status(paid_status);
+        expected.set_job_card_number(card_number);
+        expected.set_order_number(order_number);
+        expected.set_description_total(description_total);
+        expected.set_material_total(material_total);
+        expected.set_grand_total(std::to_string(vec[0].get_amount()));
+        expected.set_material_column(vec);
+        expected.set_description_column(vec);
+
+        return expected;
+}
+
+data::invoice test::generate_invoice_data(const std::string& _desc, const int& num)
+{
+        const int size{50};
         std::vector<data::column> vec{};
         for (unsigned int i = 0; i < size; ++i)
         {
@@ -98,17 +161,16 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
-        std::string number{"1"};
 
         data::invoice expected;
         expected.set_business_name(name);
-        expected.set_invoice_number(number);
+        expected.set_invoice_number(std::to_string(num));
         expected.set_invoice_date(date);
         expected.set_job_card_number(card_number);
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);
         expected.set_material_total(material_total);
-        expected.set_grand_total(grand_total);
+        expected.set_grand_total(std::to_string(vec[0].get_amount()));
         expected.set_material_column(vec);
         expected.set_description_column(vec);
 

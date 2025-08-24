@@ -14,16 +14,18 @@ project(target-features VERSION 0.0.1 LANGUAGES CXX C)
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-        add_library(features 
+        add_library(features
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/pdf.cpp
                 ${PROJECT_SOURCE_DIR}/source/email.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_pdf.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_pdf.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_info.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
         )
 
-        target_include_directories(features 
+        target_include_directories(features
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 ${CURL_INCLUDE_DIR}

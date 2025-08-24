@@ -39,8 +39,9 @@ TEST_GROUP(email_data_test)
 
 TEST(email_data_test, handle_the_business_name)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("TME");
         client.set_business_address("Geelsterd 8");
@@ -72,8 +73,9 @@ TEST(email_data_test, handle_the_business_name)
 
 TEST(email_data_test, handle_limits)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("TME");
         client.set_business_address("Geelsterd 8");
@@ -106,8 +108,9 @@ TEST(email_data_test, handle_limits)
 
 TEST(email_data_test, handle_bad_data)
 {
-        std::string pdf{""};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("");
         client.set_business_address("");
@@ -139,8 +142,9 @@ TEST(email_data_test, handle_bad_data)
 
 TEST(email_data_test, handle_no_data)
 {
-        std::string pdf{};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("");
+        email.set_attachments(pdf);
         data::client client{};
         email.set_client(client);
         data::business business{};
@@ -152,8 +156,9 @@ TEST(email_data_test, handle_no_data)
 
 TEST(email_data_test, ensure_copyable)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("TME");
         client.set_business_address("Geelsterd 8");
@@ -189,8 +194,9 @@ TEST(email_data_test, ensure_copyable)
 
 TEST(email_data_test, ensure_copy_constructable)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("TME");
         client.set_business_address("Geelsterd 8");
@@ -225,8 +231,9 @@ TEST(email_data_test, ensure_copy_constructable)
 
 TEST(email_data_test, ensure_moveable)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
 
         data::client client{};
         client.set_business_name("TME");
@@ -261,8 +268,9 @@ TEST(email_data_test, ensure_moveable)
 
 TEST(email_data_test, ensure_move_constructable)
 {
-        std::string pdf{"Some pdf dummy data"};
-        email.set_pdf(pdf);
+        std::vector<std::string> pdf{};
+        pdf.push_back("Some pdf dummy data");
+        email.set_attachments(pdf);
         data::client client{};
         client.set_business_name("TME");
         client.set_business_address("Geelsterd 8");

@@ -5,22 +5,26 @@
  *
  * NOTE:
  **********************************************************/
+#include <syslog.h>
 #include <business_page.h>
-
-
+//GCOVR_EXCL_START
 gui::business_page::~business_page()
 {
+
 }
 
 bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{false};
-        if (verify_ui_builder(_ui_builder) == true)
+        bool created{true};
+        if (!_ui_builder)
         {
-                created = true;
+                syslog(LOG_CRIT, "The _ui_builder is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+		created = false;
+        }
+        else
+        {
                 create_entries(_ui_builder);
-                update_business_info_with_db_data();
-                connect_save_button();
                 connect_save_alert();
                 connect_wrong_info_alert();
         }
@@ -28,43 +32,64 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         return created;
 }
 
-bool gui::business_page::verify_ui_builder(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::business_page::search(const std::string& _keyword)
 {
-        bool verified{false};
-        if (_ui_builder)
+        bool searched{false};
+        if (_keyword.empty())
         {
-                verified = true;
+                syslog(LOG_CRIT, "The _keywword is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+        }
+        else
+        {
+		searched = true;
+		update_business_info_with_db_data(_keyword);
         }
 
-        return verified;
+        return searched;
+}
+
+bool gui::business_page::save()
+{
+	bool success{false};
+	if (!this->save_alert_dialog)
+	{
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->save_alert_dialog->show();
+	}
+
+	return success;
 }
 
 void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-name-entry")};
         this->street_address = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-address-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-address-entry")};
         this->area_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-area-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-area-code-entry")};
         this->town_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-town-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-town-name-entry")};
         this->cellphone = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-cell-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-cell-number-entry")};
         this->email = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-email-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-email-entry")};
         this->bank_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-bank-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-bank-name-entry")};
         this->branch_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-branch-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-branch-code-entry")};
         this->account_number = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-account-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-account-number-entry")};
         this->client_message = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-info-client-message-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("business-page-client-message-entry")};
         this->password = std::unique_ptr<Gtk::PasswordEntry>{
-                _ui_builder->get_widget<Gtk::PasswordEntry>("business-info-email-password-entry")};
-        this->save_button = std::unique_ptr<Gtk::Button>{
-                _ui_builder->get_widget<Gtk::Button>("business-info-save-button")};
+                _ui_builder->get_widget<Gtk::PasswordEntry>("business-page-email-password-entry")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
@@ -73,25 +98,26 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
                 _ui_builder->get_widget<Gtk::Label>("organization-name")};
 }
 
-void gui::business_page::connect_save_button()
-{
-        if (save_button)
-        {
-                save_button->signal_clicked().connect([this] () {
-                        this->save_alert_dialog->show();
-                });
-        }
-}
-
 void gui::business_page::connect_save_alert()
 {
+        if (!this->save_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->save_alert_dialog->signal_response().connect([this] (int response) {
                 data::business data{extract_page_entries()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
+                                syslog(LOG_INFO, "User chose to save the business information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
                                 if (this->business_info.save(data, this->sql) == false)
                                 {
+                                        syslog(LOG_CRIT, "Failed to save the business information - "
+                                                         "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();
                                 }
@@ -103,6 +129,8 @@ void gui::business_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
+                                syslog(LOG_INFO, "User chose not to save the business information - "
+                                                 "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
                         default:
@@ -114,6 +142,13 @@ void gui::business_page::connect_save_alert()
 
 void gui::business_page::connect_wrong_info_alert()
 {
+        if (!this->wrong_info_alert_dialog)
+        {
+                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
                 switch (response)
                 {
@@ -132,9 +167,17 @@ void gui::business_page::clear_entries()
         this->password->set_text("");
 }
 
-void gui::business_page::update_business_info_with_db_data()
+void gui::business_page::update_business_info_with_db_data(const std::string& _keyword)
 {
+	(void) _keyword;
         data::business data{business_info.load(sql)};
+        if (data.is_valid() == false)
+        {
+                syslog(LOG_CRIT, "The business data is not valid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+                return;
+        }
+
         this->name->set_text(data.get_name());
         this->street_address->set_text(data.get_address());
         this->area_code->set_text(data.get_area_code());
@@ -164,3 +207,4 @@ data::business gui::business_page::extract_page_entries()
 
         return data;
 }
+//GCOVR_EXCL_STOP

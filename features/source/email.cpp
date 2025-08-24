@@ -7,7 +7,6 @@
  *******************************************************/
 #include <email.h>
 
-
 feature::email::email() {}
 
 feature::email::~email() {}
@@ -16,36 +15,36 @@ bool feature::email::send(const data::email& _data)
 {
         if (_data.is_valid())
         {
-                smtp::client client{this->curl};
-                if (client.connect(_data.get_business()) == false)
-                {
-                        return false;
-                }
+		smtp::client client{this->curl};
+		if (client.connect(_data.get_business()) == false)
+		{
+			return false;
+		}
 
-                smtp::header header{this->curl};
-                if (header.add(_data) == false)
-                {
-                        return false;
-                }
+		smtp::header header{this->curl};
+		if (header.add(_data) == false)
+		{
+			return false;
+		}
 
-                smtp::recipients recipients{this->curl};
-                if (recipients.add(_data.get_client()) == false)
-                {
-                        return false;
-                }
+		smtp::recipients recipients{this->curl};
+		if (recipients.add(_data.get_client()) == false)
+		{
+			return false;
+		}
 
-                smtp::parts parts{this->curl};
-                if (parts.add(_data) == false)
-                {
-                        return false;
-                }
+		smtp::parts parts{this->curl};
+		if (parts.add(_data) == false)
+		{
+			return false;
+		}
 
-                if(CURLE_OK != curl_easy_perform(this->curl.get()))
-                {
-                        return false;
-                }
+		if(CURLE_OK != curl_easy_perform(this->curl.get()))
+		{
+			return false;
+		}
 
-                return true;
+		return true;
         }
 
         return false;
@@ -319,16 +318,20 @@ bool smtp::parts::body()
 bool smtp::parts::attachment(const data::email& _data)
 {
         bool success{false};
-        part = curl_mime_addpart(mime.get());
-        if (part && _data.is_valid())
+        if (_data.is_valid())
         {
-                std::string attachment_name{_data.get_subject() + ".pdf"};
-                std::string pdf_data{_data.get_pdf()};
-                curl_mime_data(part, pdf_data.c_str(), pdf_data.length());
-                curl_mime_type(part, "application/pdf");
-                curl_mime_encoder(part, "base64");
-                curl_mime_filename(part, attachment_name.c_str());
-
+                for (const std::string& attachment_item : _data.get_attachments())
+                {
+                        part = curl_mime_addpart(mime.get());
+                        if (part)
+                        {
+                                std::string attachment_name{_data.get_subject() + ".pdf"};
+                                curl_mime_data(part, attachment_item.c_str(), attachment_item.length());
+                                curl_mime_type(part, "application/pdf");
+                                curl_mime_encoder(part, "base64");
+                                curl_mime_filename(part, attachment_name.c_str());
+                        }
+                }
                 success = true;
         }
 

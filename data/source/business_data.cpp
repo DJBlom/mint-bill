@@ -24,11 +24,11 @@ data::business::business(const business& _copy)
 }
 
 data::business::business(business&& _move)
-        : name{_move.name}, address{_move.address}, area_code{_move.area_code},
-          town{_move.town}, cellphone{_move.cellphone}, email{_move.email},
-          bank{_move.bank}, branch_code{_move.branch_code}, account_number{_move.account_number},
-          client_message{_move.client_message}, password{_move.password}, flags{_move.flags},
-          business_data{}, mask{_move.mask}
+        : name{std::move(_move.name)}, address{std::move(_move.address)}, area_code{std::move(_move.area_code)},
+          town{std::move(_move.town)}, cellphone{std::move(_move.cellphone)}, email{std::move(_move.email)},
+          bank{std::move(_move.bank)}, branch_code{std::move(_move.branch_code)}, account_number{std::move(_move.account_number)},
+          client_message{std::move(_move.client_message)}, password{std::move(_move.password)}, flags{std::move(_move.flags)},
+          business_data{}, mask{std::move(_move.mask)}
 {
         _move.name.clear();
         _move.address.clear();
@@ -74,13 +74,7 @@ data::business& data::business::operator= (business&& _move)
 
 bool data::business::is_valid() const
 {
-        bool is_valid{false};
-        if (this->check_flags() == true)
-        {
-                is_valid = true;
-        }
-
-        return is_valid;
+        return this->check_flags();
 }
 
 void data::business::set_name(const std::string& _name)
@@ -99,7 +93,7 @@ void data::business::set_name(const std::string& _name)
 
 std::string data::business::get_name() const
 {
-        return std::move(this->name);
+        return this->name;
 }
 
 void data::business::set_address(const std::string& _address)
@@ -118,7 +112,7 @@ void data::business::set_address(const std::string& _address)
 
 std::string data::business::get_address() const
 {
-        return std::move(this->address);
+        return this->address;
 }
 
 void data::business::set_area_code(const std::string& _code)
@@ -137,7 +131,7 @@ void data::business::set_area_code(const std::string& _code)
 
 std::string data::business::get_area_code() const
 {
-        return std::move(this->area_code);
+        return this->area_code;
 }
 
 void data::business::set_town(const std::string& _town)
@@ -156,7 +150,7 @@ void data::business::set_town(const std::string& _town)
 
 std::string data::business::get_town() const
 {
-        return std::move(this->town);
+        return this->town;
 }
 
 void data::business::set_cellphone(const std::string& _number)
@@ -175,7 +169,7 @@ void data::business::set_cellphone(const std::string& _number)
 
 std::string data::business::get_cellphone() const
 {
-        return std::move(this->cellphone);
+        return this->cellphone;
 }
 
 void data::business::set_email(const std::string& _email)
@@ -196,7 +190,7 @@ void data::business::set_email(const std::string& _email)
 
 std::string data::business::get_email() const
 {
-        return std::move(this->email);
+        return this->email;
 }
 
 void data::business::set_bank(const std::string& _bank)
@@ -215,7 +209,7 @@ void data::business::set_bank(const std::string& _bank)
 
 std::string data::business::get_bank() const
 {
-        return std::move(this->bank);
+        return this->bank;
 }
 
 void data::business::set_branch_code(const std::string& _branch_number)
@@ -234,7 +228,7 @@ void data::business::set_branch_code(const std::string& _branch_number)
 
 std::string data::business::get_branch_code() const
 {
-        return std::move(this->branch_code);
+        return this->branch_code;
 }
 
 void data::business::set_account_number(const std::string& _account_number)
@@ -253,7 +247,7 @@ void data::business::set_account_number(const std::string& _account_number)
 
 std::string data::business::get_account_number() const
 {
-        return std::move(this->account_number);
+        return this->account_number;
 }
 
 void data::business::set_client_message(const std::string& _message)
@@ -272,7 +266,7 @@ void data::business::set_client_message(const std::string& _message)
 
 std::string data::business::get_client_message() const
 {
-        return std::move(this->client_message);
+        return this->client_message;
 }
 
 void data::business::set_password(const std::string& _password)
@@ -291,12 +285,12 @@ void data::business::set_password(const std::string& _password)
 
 std::string data::business::get_password() const
 {
-        return std::move(this->password);
+        return this->password;
 }
 
 bool data::business::check_flags() const
 {
-        return ((this->flags & this->mask) == this->mask) ? true : false;
+        return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
 void data::business::set_flag(const int& bit)
@@ -308,5 +302,5 @@ void data::business::set_flag(const int& bit)
 void data::business::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
-        this->flags |= static_cast<mask_type>(BIT::UNSET << bit);
+        this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);
 }

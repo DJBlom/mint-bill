@@ -10,7 +10,10 @@ RUN dnf -y install \
     make cmake dh-autoreconf autoconf automake \
     binutils bison valgrind check gcovr gcc gcc-c++ \
     glibc-devel curl gtk4 gtk4-devel gtkmm4.0-devel \
-    libcurl libcurl-devel poppler-cpp-devel
+    cairomm cairomm-devel libcurl libcurl-devel \ 
+    poppler-cpp-devel xorg-x11-server-Xvfb dbus-daemon \
+    dbus-x11 mesa-libGLES
+    
 
 RUN dnf swap libcurl-minimal libcurl
 
@@ -23,6 +26,12 @@ RUN groupadd --gid=1002 ${USER} && \
     echo "${USER} ALL=(ALL) NOPASSWD : ALL" >> /etc/sudoers && \
     sudo -u ${USER} mkdir /home/${USER}/bin && \
     sudo -u ${USER} mkdir -p /home/${USER}/.local/bin
+
+# Setting up the GUI environment
+RUN mkdir -p /tmp/.X11-unix && \
+    chown root:root /tmp/.X11-unix && \
+    chmod 1777 /tmp/.X11-unix && \
+    dbus-uuidgen > /etc/machine-id
 
 # Setup CppUTest
 WORKDIR $HOME_DIR
@@ -41,7 +50,9 @@ ENV PATH=/home/${USER}/bin:$PATH \
     PATH=/usr/share:$PATH \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    LIBGL_ALWAYS_SOFTWARE=1
+
 
 # Finnishing off by setting the user and changing into the project directory
 WORKDIR $HOME_DIR

@@ -8,15 +8,27 @@
 ##############################################################
 PROJECT_DIR :=$(realpath ..)
 TEST_DIR :=$(realpath .)
-TEST_TARGET := admin-system
-CPPUTEST_EXE_FLAGS :=-c
+TEST_TARGET := mint-bill
+CPPUTEST_EXE_FLAGS +=-c -v
 
-########################################################################
-# Uncomment to exclude the email_test group from being tested.
-#
-# NOTE: Ensure this line is uncommented when pushing code to the remote.
-# 
-CPPUTEST_EXE_FLAGS +=-xg "email_test"
+# CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-sg "invoice_data_test"
+# CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
+# CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
+# CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"
+# CPPUTEST_EXE_FLAGS +=-sg "stack_test"
+# CPPUTEST_EXE_FLAGS +=-sg "gui_part_search_bar"
+# CPPUTEST_EXE_FLAGS +=-sg "gui_part_button"
+# CPPUTEST_EXE_FLAGS +=-sg "invoice_pdf_view_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_page_test"
+# CPPUTEST_EXE_FLAGS +=-sg "gui_part_dialog"
+# CPPUTEST_EXE_FLAGS +=-sg "page_range_test"
+# CPPUTEST_EXE_FLAGS +=-sg "generate_invoice_pdf_test"
+# CPPUTEST_EXE_FLAGS +=-sg "generate_statement_pdf_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_page_column_view_test"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 
 CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)
@@ -25,7 +37,11 @@ CPPUTEST_CFLAGS += $(shell curl-config --cflags)
 CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairomm-1.16 gtkmm-4.0 poppler-cpp)
 CPPUTEST_LDFLAGS += $(shell curl-config --libs)
 
+
 SRC_DIRS :=\
+	$(PROJECT_DIR)/app/source\
+	$(PROJECT_DIR)/gui/source\
+	$(PROJECT_DIR)/gui/components/source\
 	$(PROJECT_DIR)/data/source\
 	$(PROJECT_DIR)/utility/source\
 	$(PROJECT_DIR)/storage/source\
@@ -35,7 +51,10 @@ SRC_DIRS :=\
 INCLUDE_DIRS :=\
 	$(CPPUTEST_HOME)/include\
 	$(PROJECT_DIR)/app/include\
+	$(PROJECT_DIR)/gui/include\
+	$(PROJECT_DIR)/gui/components/include\
 	$(PROJECT_DIR)/data/include\
+	$(PROJECT_DIR)/data/mocks/include\
 	$(PROJECT_DIR)/utility/include\
 	$(PROJECT_DIR)/storage/include\
 	$(PROJECT_DIR)/storage/mocks/include\
@@ -46,6 +65,8 @@ INCLUDE_DIRS :=\
 
 TEST_SRC_DIRS :=\
 	$(TEST_DIR)\
+	$(PROJECT_DIR)/gui/tests\
+	$(PROJECT_DIR)/gui/components/tests\
 	$(PROJECT_DIR)/data/tests\
 	$(PROJECT_DIR)/utility/tests\
 	$(PROJECT_DIR)/storage/tests\
@@ -54,6 +75,9 @@ TEST_SRC_DIRS :=\
 
 
 MOCKS_SRC_DIRS := \
+	$(PROJECT_DIR)/gui/mocks/source\
+	$(PROJECT_DIR)/gui/components/mocks/source\
+	$(PROJECT_DIR)/data/mocks/source\
 	$(PROJECT_DIR)/utility/mocks/source\
 	$(PROJECT_DIR)/storage/mocks/source\
 	$(PROJECT_DIR)/features/mocks/source\

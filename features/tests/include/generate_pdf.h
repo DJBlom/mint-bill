@@ -14,9 +14,11 @@
 
 namespace test {
         bool generate_invoice_pdf(const std::string&, const std::string&);
+        bool generate_statement_pdf(const std::string&, const std::string&);
         data::business generate_business_data();
         data::client generate_client_data();
         data::client generate_client_data_multiple_emails();
         data::invoice generate_invoice_data(const std::string&);
+        data::invoice generate_invoice_data(const std::string&, const int&);
 }
 #endif

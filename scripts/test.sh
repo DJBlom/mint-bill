@@ -3,9 +3,17 @@
 # Author: Dawid Blom
 # Date: September 15, 2023
 #
-# NOTE: 
+# NOTE:
 ############################################################################
 #!/bin/bash
+
+BIN_SUFFIX=""
+CMAKE=cmake
+BUILD_TYPE="Debug"
+BUILD_DIR=build
+PROJECT_NAME=$(basename `pwd`)
+BIN_DIR=$BUILD_DIR/${PROJECT_NAME}
+SUPPORTED_BUILD_TYPES=("host" "deploy")
 
 readonly TEST_DIR=$(pwd)/test
 readonly TEST_TYPES=("sca" "coverage" "unit" "show")
@@ -54,26 +62,31 @@ function static_code_analysis()
              --check-level=exhaustive \
              -I $prj_dir/app/include \
              -I $prj_dir/gui/include \
+             -I $prj_dir/gui/components/include \
              -I $prj_dir/data/include \
              -I $prj_dir/storage/include \
+             -I $prj_dir/utility/include \
              -I $prj_dir/features/include \
-             -I $prj_dir/gui/invoice_page/include \
              $prj_dir/app/source \
              $prj_dir/gui/source \
+             $prj_dir/gui/components/source \
              $prj_dir/data/source \
              $prj_dir/storage/source \
-             $prj_dir/features/source \
-             $prj_dir/gui/invoice_page/source 
+             $prj_dir/utility/source \
+             $prj_dir/features/source
 }
 
 function code_coverage()
 {
 	local prj_dir=$(pwd)
-        local coverage_dir=$BUILD_DIR/coverage
-        mkdir -p $coverage_dir
-        make -C $TEST_DIR -s gcov
+	local coverage_dir=$BUILD_DIR/coverage
+	mkdir -p $coverage_dir
+	Xvfb :99 -screen 0 1024x768x24 &
+	local xvfb_pid=$!
+	export DISPLAY=:99
+	make -C $TEST_DIR -s gcov
 	gcovr --exclude="^[^\/]+\/mocks\/?(?:[^\/]+\/?)*$" --exclude-throw-branches -r $prj_dir \
-	--html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
+		--html-nested $coverage_dir/coverage.html  --txt $coverage_dir/coverage.txt
 
 	coverage=$(grep -F "TOTAL" $coverage_dir/coverage.txt)
 	# Extract the line coverage percentage
@@ -81,30 +94,37 @@ function code_coverage()
 	threshold=80
 	if [[ $total_coverage -lt $threshold ]];
 	then
-                $ECHO "${ERROR_COLOR}FAILED: Total coverage should be ${threshold}.0% or higher.${END_COLOR}"
-                $ECHO "${INFO_COLOR}INFO: Currently, it is ${total_coverage}.0%${END_COLOR}"
-        if [ -d $coverage_dir ];
-        then
-                rm -rf $coverage_dir
-                make -C $TEST_DIR -s clean
-        fi
-                exit 1
+		$ECHO "${ERROR_COLOR}FAILED: Total coverage should be ${threshold}.0% or higher.${END_COLOR}"
+		$ECHO "${INFO_COLOR}INFO: Currently, it is ${total_coverage}.0%${END_COLOR}"
+		if [ -d $coverage_dir ];
+		then
+			rm -rf $coverage_dir
+			make -C $TEST_DIR -s clean
+		fi
+		kill $xvfb_pid
+		exit 1
 	else
-                $ECHO "${SUCCESS_COLOR}PASS: Total coverage is: ${total_coverage}.0%${END_COLOR}"
-        if [ -d $coverage_dir ];
-        then
-                rm -rf $coverage_dir
-                make -C $TEST_DIR -s clean
-        fi
-                exit 0
+		$ECHO "${SUCCESS_COLOR}PASS: Total coverage is: ${total_coverage}.0%${END_COLOR}"
+		if [ -d $coverage_dir ];
+		then
+			rm -rf $coverage_dir
+			make -C $TEST_DIR -s clean
+		fi
+		kill $xvfb_pid
+		exit 0
 	fi
 }
 
 function unit_test()
 {
 	local prj_dir=$(pwd)
-        make -C $TEST_DIR -s
-        make -C $TEST_DIR -s clean
+	Xvfb :99 -screen 0 1024x768x24 &
+	local xvfb_pid=$!
+	export DISPLAY=:99
+	make -C $TEST_DIR -s
+	kill $xvfb_pid
+
+	make -C $TEST_DIR -s clean
 }
 
 function show_code_coverage()

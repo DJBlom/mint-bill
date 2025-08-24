@@ -9,7 +9,8 @@ build
 test/objs
 test/lib
 test/coverage
-test/admin-system
+test/*.pdf
+test/mint-bill
 
 # Doxygen
 docs/doxydoc

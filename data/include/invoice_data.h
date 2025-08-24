@@ -31,6 +31,8 @@ namespace data {
                         [[nodiscard]] std::string get_invoice_number() const;
                         virtual void set_invoice_date(const std::string&);
                         [[nodiscard]] std::string get_invoice_date() const;
+                        virtual void set_paid_status(const std::string&);
+                        [[nodiscard]] std::string get_paid_status() const;
                         virtual void set_job_card_number(const std::string&);
                         [[nodiscard]] std::string get_job_card_number() const;
                         virtual void set_order_number(const std::string&);
@@ -57,6 +59,7 @@ namespace data {
                         std::string business_name{""};
                         std::string invoice_number{""};
                         std::string invoice_date{""};
+                        std::string paid_status{""};
                         std::string job_card_number{""};
                         std::string order_number{""};
                         std::string description_total{""};
@@ -66,11 +69,12 @@ namespace data {
                         std::vector<data::column> material_column{};
                         mask_type flags{0x0};
                         std::mutex invoice_data{};
-                        mask_type mask{0x3FF};
+                        mask_type mask{0x7FF};
                         enum FLAG {
                                 NAME = 0,
                                 NUMBER,
                                 DATE,
+				PAID,
                                 JOB_CARD,
                                 ORDER_NUMBER,
                                 DESCRIPTION_TOTAL,
@@ -81,7 +85,7 @@ namespace data {
                         };
 
                         enum BIT {
-                                UNSET = 0,
+                                CLEAR = 0,
                                 SET
                         };
         };
