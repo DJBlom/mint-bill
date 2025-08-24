@@ -502,9 +502,19 @@ TEST(pdf_window_test, generate_window_with_good_document)
 	pdf_invoice.set_client(retrieve_client_data());
 	pdf_invoice.set_invoice(retrieve_invoice_data());
 	gui::part::statement::pdf_window pdf_window{"Invoice"};
-	std::shared_ptr<poppler::document> document{invoice_pdf.generate_for_print(pdf_invoice)};
+	std::string document{invoice_pdf.generate(pdf_invoice)};
+	std::shared_ptr<poppler::document> pdf_document;
+	std::vector<char> byte_vector{document.begin(), document.end()};
+	poppler::byte_array byte_array{byte_vector};
+	poppler::document* raw_doc{poppler::document::load_from_data(&byte_array)};
+	pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
+		if (ptr) {
+			delete ptr;
+			ptr = nullptr;
+		}
+	});
 
-	CHECK_EQUAL(true, pdf_window.generate(document));
+	CHECK_EQUAL(true, pdf_window.generate(pdf_document));
 }
 
 

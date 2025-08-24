@@ -41,91 +41,93 @@ feature::invoice_pdf::invoice_pdf() {}
 
 feature::invoice_pdf::~invoice_pdf() {}
 
-std::string feature::invoice_pdf::generate_for_email(const std::any& _data)
-{
-        std::string pdf_document{""};
-	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
-        if (data.is_valid())
-        {
-                pdf_document = generate(data);
-        }
+// std::string feature::invoice_pdf::generate_for_email(const std::any& _data)
+// {
+//         std::string pdf_document{""};
+// 	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
+//         if (data.is_valid())
+//         {
+//                 pdf_document = generate(data);
+//         }
+//
+//         return pdf_document;
+// }
+//
+// std::shared_ptr<poppler::document> feature::invoice_pdf::generate_for_print(const std::any& _data)
+// {
+//         std::shared_ptr<poppler::document> pdf_document{};
+// 	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
+//         if (data.is_valid())
+//         {
+//                 std::string raw_pdf = this->generate(data);
+//                 std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
+//                 poppler::byte_array byte_array{byte_vector};
+//                 poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
+//                 pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
+//                         if (ptr) {
+//                                 delete ptr;
+//                         }
+//                 });
+//         }
+//
+//         return pdf_document;
+// }
 
-        return pdf_document;
-}
-
-std::shared_ptr<poppler::document> feature::invoice_pdf::generate_for_print(const std::any& _data)
-{
-        std::shared_ptr<poppler::document> pdf_document{};
-	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
-        if (data.is_valid())
-        {
-                std::string raw_pdf = this->generate(data);
-                std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
-                poppler::byte_array byte_array{byte_vector};
-                poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
-                pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
-                        if (ptr) {
-                                delete ptr;
-                        }
-                });
-        }
-
-        return pdf_document;
-}
-
-std::string feature::invoice_pdf::generate(const data::pdf_invoice& _data)
+// std::string feature::invoice_pdf::generate(const data::pdf_invoice& _data)
+std::string feature::invoice_pdf::generate(const std::any& _data)
 {
         std::ostringstream final_pdf{};
-        if (_data.is_valid())
-        {
-                this->surface = Cairo::PdfSurface::create_for_stream(
-                        [&, this](const unsigned char* data, unsigned int length) -> cairo_status_t {
-                                final_pdf.write(reinterpret_cast<const char*>(data), length);
-                                return final_pdf.fail() ? CAIRO_STATUS_WRITE_ERROR : CAIRO_STATUS_SUCCESS;
-                        },
-                        this->width, this->height
-                );
+	data::pdf_invoice data{std::any_cast<data::pdf_invoice> (_data)};
+       if (data.is_valid())
+       {
+	       this->surface = Cairo::PdfSurface::create_for_stream(
+		       [&, this](const unsigned char* _data, unsigned int _length) -> cairo_status_t {
+			       final_pdf.write(reinterpret_cast<const char*>(_data), _length);
+			       return final_pdf.fail() ? CAIRO_STATUS_WRITE_ERROR : CAIRO_STATUS_SUCCESS;
+		       },
+		       this->width, this->height
+	       );
 
 
-                this->context = Cairo::Context::create(this->surface);
-                if (!this->context)
-                        return "";
-                else
-                        this->context->select_font_face("monospace", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
+	       this->context = Cairo::Context::create(this->surface);
+	       if (!this->context)
+		       return "";
+	       else
+		       this->context->select_font_face("monospace", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
 
-                if (add_header("Invoice") == false)
-                        return "";
+	       if (add_header("Invoice") == false)
+		       return "";
 
-                if (add_information(_data) == false)
-                        return "";
+	       if (add_information(data) == false)
+		       return "";
 
-                if (add_invoice(_data.get_invoice()) == false)
-                        return "";
+	       if (add_invoice(data.get_invoice()) == false)
+		       return "";
 
-                if (draw_line() == false)
-                        return "";
+	       if (draw_line() == false)
+		       return "";
 
-                if (add_labor(_data.get_invoice()) == false)
-                        return "";
+	       if (add_labor(data.get_invoice()) == false)
+		       return "";
 
-                if (draw_line() == false)
-                        return "";
+	       if (draw_line() == false)
+		       return "";
 
-                if (add_material(_data.get_invoice()) == false)
-                        return "";
+	       if (add_material(data.get_invoice()) == false)
+		       return "";
 
-                if (draw_line() == false)
-                        return "";
+	       if (draw_line() == false)
+		       return "";
 
-                if (add_grand_total(_data.get_invoice()) == false)
-                        return "";
+	       if (add_grand_total(data.get_invoice()) == false)
+		       return "";
 
-                if (add_payment_method(_data.get_business()) == false)
-                        return "";
+	       if (add_payment_method(data.get_business()) == false)
+		       return "";
 
-                this->context->show_page();
-                this->surface->finish();
-        }
+	       this->context->show_page();
+	       this->surface->finish();
+       }
 
         return final_pdf.str();
 }

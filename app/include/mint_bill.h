@@ -27,7 +27,14 @@ namespace app {
                         ~mint_bill() = default;
 
                         void start(const Glib::RefPtr<Gtk::Application>&);
+
+		protected:
                         [[nodiscard]] bool load_ui_file(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool stack_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool search_bar_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool print_button_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool email_button_setup(const Glib::RefPtr<Gtk::Builder>&);
+			[[nodiscard]] bool save_button_setup(const Glib::RefPtr<Gtk::Builder>&);
 
                 private:
                         gui::main_window main_window{};

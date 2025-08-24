@@ -35,6 +35,7 @@ public:
         [[nodiscard]] virtual bool search(const std::string&) = 0;
         [[nodiscard]] virtual bool print() = 0;
         [[nodiscard]] virtual bool email() = 0;
+        // [[nodiscard]] virtual bool clear() = 0;
         [[nodiscard]] virtual bool save() = 0;
 };
 }

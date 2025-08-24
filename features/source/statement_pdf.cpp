@@ -36,40 +36,6 @@ feature::statement_pdf::statement_pdf() {}
 
 feature::statement_pdf::~statement_pdf() {}
 
-// std::string feature::statement_pdf::generate_for_email(const std::any& _data)
-// {
-//         std::string pdf_document{""};
-// 	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
-//         if (data.is_valid())
-//         {
-//                 pdf_document = generate(data);
-//         }
-//
-//
-//         return pdf_document;
-// }
-//
-// std::shared_ptr<poppler::document> feature::statement_pdf::generate_for_print(const std::any& _data)
-// {
-//         std::shared_ptr<poppler::document> pdf_document{};
-// 	data::pdf_statement data{std::any_cast<data::pdf_statement> (_data)};
-//         if (data.is_valid())
-//         {
-//                 std::string raw_pdf = this->generate(data);
-//                 std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
-//                 poppler::byte_array byte_array{byte_vector};
-//                 poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
-//                 pdf_document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
-//                         if (ptr) {
-//                                 delete ptr;
-//                         }
-//                 });
-//         }
-//
-//         return pdf_document;
-// }
-
-//std::string feature::statement_pdf::generate(const data::pdf_statement& _data)
 std::string feature::statement_pdf::generate(const std::any& _data)
 {
         std::ostringstream final_pdf{};

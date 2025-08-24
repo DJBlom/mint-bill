@@ -274,6 +274,7 @@ public:
         [[nodiscard]] virtual std::vector<std::any> extract() override;
 
 private:
+
 	void display_invoice(uint);
 	void setup(const Glib::RefPtr<Gtk::ListItem>&);
 	void bind(const Glib::RefPtr<Gtk::ListItem>&);

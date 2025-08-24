@@ -16,6 +16,8 @@
 #include <vector>
 #include <iomanip>
 #include <sstream>
+#include <printer.h>
+#include <gui_parts.h>
 #include <column_data.h>
 #include <invoice_data.h>
 #include <client_invoice.h>
@@ -58,31 +60,15 @@ namespace gui {
 
         struct invoice_entries : public Glib::Object {
                 public:
-                        data::invoice invoice{};
+                        data::pdf_invoice pdf_invoice{};
 
-                        static Glib::RefPtr<invoice_entries> create(const data::invoice& _invoice)
+                        static Glib::RefPtr<invoice_entries> create(const data::pdf_invoice& _pdf_invoice)
                         {
-                                return Glib::make_refptr_for_instance<invoice_entries>(new invoice_entries(_invoice));
+                                return Glib::make_refptr_for_instance<invoice_entries>(new invoice_entries(_pdf_invoice));
                         }
 
                 protected:
-                        explicit invoice_entries(const data::invoice& _invoice) : invoice{_invoice} {}
-        };
-
-        struct page_range {
-                public:
-                        page_range() = delete;
-                        explicit page_range(int& _start_page, int& _page_count, size_t& _document_index)
-                                : start_page{_start_page}, page_count{_page_count}, document_index{_document_index} {}
-                        page_range(const page_range&) = default;
-                        page_range(page_range&&) = default;
-                        page_range& operator= (const page_range&) = default;
-                        page_range& operator= (page_range&&) = default;
-                        virtual ~page_range() = default;
-                public:
-                        int start_page{0};
-                        int page_count{0};
-                        size_t document_index{0};
+                        explicit invoice_entries(const data::pdf_invoice& _pdf_invoice) : pdf_invoice{_pdf_invoice} {}
         };
 
         class invoice_page : public interface::operations_page {
@@ -99,6 +85,7 @@ namespace gui {
 			[[nodiscard]] virtual bool search(const std::string&) override;
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
+			[[nodiscard]] virtual bool clear();
 			[[nodiscard]] virtual bool save() override;
 
                 private: // GUI creations
@@ -106,6 +93,15 @@ namespace gui {
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
                         void create_dialogs(const Glib::RefPtr<Gtk::Builder>&);
                         void create_buttons(const Glib::RefPtr<Gtk::Builder>&);
+			bool save_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool email_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool print_setup(const Glib::RefPtr<Gtk::Builder>&,
+                                               const std::shared_ptr<Gtk::Window>&);
+			bool wrong_info_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool no_internet_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool wrong_data_in_amount_column_setup(const Glib::RefPtr<Gtk::Builder>&);
+			bool wrong_data_in_quantity_column_setup(const Glib::RefPtr<Gtk::Builder>&);
 
                 private: // Button events
                         void connect_material_add_button();
@@ -114,37 +110,18 @@ namespace gui {
                         void connect_description_delete_button(const Glib::RefPtr<Gtk::MultiSelection>&);
 
                 private: // Email events
-                        void connect_email_alert();
-                        void connect_no_internet_alert();
-                        void send_email(const std::vector<data::invoice>&);
                         void email_sent();
-
-                private: // Print
-                        void setup_page();
-                        void compute_number_of_pages(const std::vector<data::invoice>&);
-                        void print_invoice(const std::vector<data::invoice>&);
-                        void connect_print_alert();
-                        void connect_no_printer_alert();
-                        void on_draw_page(const Glib::RefPtr<Gtk::PrintContext>&, int);
-                        void on_printoperation_done(Gtk::PrintOperation::Result, const Glib::RefPtr<Gtk::PrintOperation>&);
-                        void printed();
 
                 private: // Invoice
                         void populate(const std::string&);
-                        void add(const data::invoice&);
+                        void add(const data::pdf_invoice&);
                         void connect_invoice_view();
                         void invoices(const std::unique_ptr<Gtk::ListView>&);
                         void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_invoices(const Glib::RefPtr<Gtk::ListItem>&);
                         void invoice_teardown(const Glib::RefPtr<Gtk::ListItem>&);
-                        void populate_list_store(const std::vector<data::invoice>&);
+                        void populate_list_store(const std::vector<data::pdf_invoice>&);
                         void selected_invoice(uint, uint);
-
-                private: // Dialog events
-                        void connect_save_alert();
-                        void connect_wrong_info_alert();
-                        void connect_wrong_data_in_amount_column_alert();
-                        void connect_wrong_data_in_quantity_column_alert();
 
                 private: // View events
                         void connect_material_view();
@@ -174,22 +151,18 @@ namespace gui {
 
                 private: // Member features
                         storage::sql db{};
-                        feature::invoice_pdf invoice_pdf{};
                         int number_of_pages{0};
-                        bool print_success{false};
                         bool email_success{false};
+			std::future<bool> email_future;
                         std::string paid_status{"Not Paid"};
                         std::string grand_total{""};
 			std::string business_name{""};
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};
-                        feature::invoice client_invoice{};
-                        Glib::Dispatcher print_dispatcher{};
+                        feature::client_invoice client_invoice{};
                         Glib::Dispatcher email_dispatcher{};
-                        std::vector<data::invoice> invoices_selected{};
-                        std::vector<page_range> page_ranges;
-                        std::vector<std::shared_ptr<poppler::document>> documents_to_print{};
+                        std::vector<std::any> invoices_selected{};
 
                 private: // Member Entries
                         std::unique_ptr<Gtk::Entry> job_card{};
@@ -218,19 +191,18 @@ namespace gui {
                         std::unique_ptr<Gtk::Label> description_total_label{};
 
                 private: // Member Message dialogs
-                        std::unique_ptr<Gtk::MessageDialog> save_alert_dialog{};
-                        std::unique_ptr<Gtk::MessageDialog> wrong_info_alert_dialog{};
-                        std::unique_ptr<Gtk::MessageDialog> wrong_data_in_amount_column{};
-                        std::unique_ptr<Gtk::MessageDialog> wrong_data_in_quantity_column{};
+			part::dialog email_alert{"invoice-email-alert"};
+			part::dialog save_alert{"invoice-save-button-alert"};
+			part::dialog print_alert{"invoice-print-button-alert"};
+			part::dialog wrong_info_alert{"invoice-wrong-info-alert"};
+			part::dialog no_internet_alert{"invoice-email-no-internet-alert"};
+			part::dialog no_item_selected_alert{"invoice-no-item-selected-alert"};
+			part::dialog wrong_data_in_amount_column_alert{"invoice-data-in-amount-column-alert"};
+			part::dialog wrong_data_in_quantity_column_alert{"invoice-data-in-quantity-column-alert"};
 
                 private:
-                        Glib::RefPtr<Gtk::PageSetup> page_setup{};
                         std::unique_ptr<Gtk::ListView> invoice_view{};
                         std::shared_ptr<Gtk::Adjustment> invoices_adjustment{};
-                        std::unique_ptr<Gtk::MessageDialog> print_no_printer{};
-                        std::unique_ptr<Gtk::MessageDialog> email_no_internet{};
-                        std::unique_ptr<Gtk::MessageDialog> print_confirmation{};
-                        std::unique_ptr<Gtk::MessageDialog> email_confirmation{};
                         std::shared_ptr<Gio::ListStore<invoice_entries>> invoice_store{};
         };
 

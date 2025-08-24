@@ -10,49 +10,159 @@
 #include <iostream>
 #include <invoice_pdf.h>
 
-feature::invoice::~invoice() {}
+feature::client_invoice::~client_invoice() {}
 
-data::invoice feature::invoice::load(const std::string& business_name, const interface::storage& db)
+std::vector<std::any> feature::client_invoice::load(const std::string& _business_name) const
 {
-        data::invoice data{};
-        if (!business_name.empty() && db.is_open())
+	std::vector<std::any> data;
+        if (!_business_name.empty())
         {
-                const int size{50};
-                std::vector<data::column> vec{};
-                for (unsigned int i = 0; i < size; ++i)
+                for (int i = 1; i <= 50; ++i)
                 {
-                        data::column expected{};
-                        expected.set_quantity(i);
-                        expected.set_description("machining");
-                        expected.set_amount(55 + i + .0);
-                        vec.push_back(expected);
-                }
-                std::string order_number{"order number 123"};
-                std::string card_number{"24/md"};
-                std::string date{"2023-09-04"};
-                std::string paid_status{"Not Paid"};
-                std::string description_total{"1234.00"};
-                std::string material_total{"1234.00"};
-                std::string grand_total{"2468.00"};
-                std::string number{"1"};
+			data::pdf_invoice pdf_invoice_data{};
+			data::client client_data;
+			client_data.set_business_name(_business_name);
+			client_data.set_business_address("Geelsterd 8");
+			client_data.set_business_area_code("543543");
+			client_data.set_business_town_name("George");
+			client_data.set_cellphone_number("0832315944");
+			client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
+			client_data.set_vat_number("3241324321413");
+			client_data.set_statement_schedule("4,4");
+			pdf_invoice_data.set_client(client_data);
 
-                data.set_business_name(business_name);
-                data.set_invoice_number(number);
-                data.set_invoice_date(date);
-                data.set_paid_status(paid_status);
-                data.set_job_card_number(card_number);
-                data.set_order_number(order_number);
-                data.set_description_total(description_total);
-                data.set_material_total(material_total);
-                data.set_grand_total(grand_total);
-                data.set_material_column(vec);
-                data.set_description_column(vec);
+			data::business business_data;
+			business_data.set_name("T.M Engineering");
+			business_data.set_address("geelsterd 8");
+			business_data.set_area_code("5432");
+			business_data.set_town("george");
+			business_data.set_cellphone("0832315944");
+			business_data.set_email("dmnsstmtest@gmail.com");
+			business_data.set_bank("Standard Bank");
+			business_data.set_branch_code("043232");
+			business_data.set_account_number("0932443824");
+			business_data.set_client_message("Thank you for your support");
+			business_data.set_password("bxwx eaku ndjj ltda");
+			pdf_invoice_data.set_business(business_data);
+                        const int size{50};
+                        std::vector<data::column> vec{};
+                        for (unsigned int j = 0; j < size; ++j)
+                        {
+                                std::string description{"Machining"};
+                                data::column expected{};
+                                expected.set_quantity(j);
+                                expected.set_description(description);
+                                expected.set_amount(5234567 + j + .0);
+                                vec.push_back(expected);
+                        }
+
+                        std::string order_number{"order number 123"};
+                        std::string card_number{"24/md"};
+                        std::string paid_status{"Not Paid"};
+                        std::string date{"2023-09-04"};
+                        std::string description_total{"1234.00"};
+                        std::string material_total{"1234.00"};
+                        std::string grand_total{"2468.00"};
+                        std::string number{std::to_string(i)};
+
+                        data::invoice invoice_data;
+                        invoice_data.set_business_name(_business_name);
+                        invoice_data.set_invoice_number(number);
+                        invoice_data.set_invoice_date(date);
+                        invoice_data.set_paid_status(paid_status);
+                        invoice_data.set_job_card_number(card_number);
+                        invoice_data.set_order_number(order_number);
+                        invoice_data.set_description_total(description_total);
+                        invoice_data.set_material_total(material_total);
+                        invoice_data.set_grand_total(grand_total);
+                        invoice_data.set_material_column(vec);
+                        invoice_data.set_description_column(vec);
+			pdf_invoice_data.set_invoice(invoice_data);
+
+			if (pdf_invoice_data.is_valid())
+			{
+				data.push_back(pdf_invoice_data);
+			}
+			else
+			{
+				std::cout << "PDF Invoice Data is not valid\n";
+			}
+                }
         }
 
         return data;
 }
 
-bool feature::invoice::save(const data::invoice& data, const interface::storage& db)
+data::email feature::client_invoice::prepare_for_email(const std::vector<std::any>& _pdf_invoices) const
+{
+	data::email email_data;
+	for (const std::any& pdf_invoice : _pdf_invoices)
+	{
+		data::pdf_invoice pdf_invoice_data{std::any_cast<data::pdf_invoice> (pdf_invoice)};
+		email_data.set_client(pdf_invoice_data.get_client());
+		email_data.set_business(pdf_invoice_data.get_business());
+		break;
+	}
+
+	std::vector<std::future<std::string>> pdf_documents;
+	std::transform(_pdf_invoices.cbegin(),
+			_pdf_invoices.cend(),
+			std::back_inserter(pdf_documents),
+			[] (const std::any& _pdf_invoice) {
+				return std::async(std::launch::async, [&_pdf_invoice] {
+					feature::invoice_pdf pdf;
+					return pdf.generate(_pdf_invoice);
+				});
+			});
+
+
+	std::vector<std::string> pdfs;
+	std::transform(
+		std::make_move_iterator(pdf_documents.begin()),
+		std::make_move_iterator(pdf_documents.end()),
+		std::back_inserter(pdfs),
+		[](std::future<std::string> _pdf) {
+			return _pdf.get();
+		});
+
+
+	email_data.set_subject("Invoice");
+	email_data.set_attachments(pdfs);
+	if (email_data.is_valid())
+	{
+		std::cout << "Email data is valid\n";
+	}
+
+	return email_data;
+}
+
+std::vector<std::string> feature::client_invoice::prepare_for_print(const std::vector<std::any>& _pdf_invoice) const
+{
+	std::vector<std::future<std::string>> pdf_documents;
+	std::transform(_pdf_invoice.cbegin(),
+			_pdf_invoice.cend(),
+			std::back_inserter(pdf_documents),
+			[] (const std::any& _pdf_invoice) {
+				return std::async(std::launch::async, [&_pdf_invoice] {
+					feature::invoice_pdf pdf;
+					return pdf.generate(_pdf_invoice);
+				});
+			});
+
+
+	std::vector<std::string> pdfs;
+	std::transform(
+		std::make_move_iterator(pdf_documents.begin()),
+		std::make_move_iterator(pdf_documents.end()),
+		std::back_inserter(pdfs),
+		[](std::future<std::string> _pdf) {
+			return _pdf.get();
+		});
+
+	return pdfs;
+}
+
+bool feature::client_invoice::save(const data::invoice& data, const interface::storage& db)
 {
         bool updated{false};
         if (data.is_valid() && db.is_open())
@@ -92,7 +202,7 @@ bool feature::invoice::save(const data::invoice& data, const interface::storage&
         return updated;
 }
 
-std::vector<data::invoice> feature::invoice::search(const std::string& business_name, const interface::storage& db)
+std::vector<data::invoice> feature::client_invoice::search(const std::string& business_name, const interface::storage& db)
 {
         std::vector<data::invoice> data{};
         if (!business_name.empty() && db.is_open())
@@ -138,121 +248,4 @@ std::vector<data::invoice> feature::invoice::search(const std::string& business_
         }
 
         return data;
-}
-
-bool feature::invoice::send_email(const std::vector<data::invoice>& _data)
-{
-        std::future<bool> sent{};
-        if (!_data.empty())
-        {
-                feature::invoice_pdf invoice_pdf{};
-                data::client client_data{};
-                data::business business_data{};
-                std::vector<std::string> pdf_data{};
-                data::pdf_invoice pdf_invoice_data{};
-                for (const data::invoice& invoice : _data)
-                {
-                        if (invoice.is_valid())
-                        {
-                                client_data.set_business_name(invoice.get_business_name());
-                                client_data.set_business_address("Geelsterd 8");
-                                client_data.set_business_area_code("543543");
-                                client_data.set_business_town_name("George");
-                                client_data.set_cellphone_number("0832315944");
-                                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
-                                client_data.set_vat_number("3241324321413");
-                                client_data.set_statement_schedule("4,4");
-                                pdf_invoice_data.set_client(client_data);
-
-                                pdf_invoice_data.set_invoice(invoice);
-
-                                business_data.set_name("T.M Engineering");
-                                business_data.set_address("Geelsterd 8");
-                                business_data.set_area_code("6625");
-                                business_data.set_town("George");
-                                business_data.set_cellphone("0832315944");
-                                business_data.set_email("dmnsstmtest@gmail.com");
-                                business_data.set_bank("Standard Bank");
-                                business_data.set_branch_code("043232");
-                                business_data.set_account_number("0932443824");
-                                business_data.set_client_message("Thank you for your support!");
-                                business_data.set_password("bxwx eaku ndjj ltda");
-                                pdf_invoice_data.set_business(business_data);
-
-                                pdf_data.push_back(invoice_pdf.generate_for_email(pdf_invoice_data));
-                        }
-                }
-
-                data::email email_data{};
-                email_data.set_attachments(pdf_data);
-                email_data.set_client(client_data);
-                email_data.set_business(business_data);
-                email_data.set_subject("Invoice");
-                if (email_data.is_valid() == false)
-                        std::cout << "Email data is not valid\n";
-                else
-                        sent = sending(email_data);
-
-        }
-
-        return sent.get();
-}
-
-std::vector<data::pdf_invoice> feature::invoice::create_pdf_to_print(const std::vector<data::invoice>& _data)
-{
-        std::vector<data::pdf_invoice> pdf_invoices;
-        if (!_data.empty())
-        {
-                feature::invoice_pdf invoice_pdf{};
-                data::client client_data{};
-                data::business business_data{};
-                data::pdf_invoice pdf_invoice_data{};
-                for (const data::invoice& invoice : _data)
-                {
-                        if (invoice.is_valid())
-                        {
-                                client_data.set_business_name(invoice.get_business_name());
-                                client_data.set_business_address("Geelsterd 8");
-                                client_data.set_business_area_code("543543");
-                                client_data.set_business_town_name("George");
-                                client_data.set_cellphone_number("0832315944");
-                                client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
-                                client_data.set_vat_number("3241324321413");
-                                client_data.set_statement_schedule("4,4");
-                                pdf_invoice_data.set_client(client_data);
-
-                                pdf_invoice_data.set_invoice(invoice);
-
-                                business_data.set_name("T.M Engineering");
-                                business_data.set_address("Geelsterd 8");
-                                business_data.set_area_code("6625");
-                                business_data.set_town("George");
-                                business_data.set_cellphone("0832315944");
-                                business_data.set_email("dmnsstmtest@gmail.com");
-                                business_data.set_bank("Standard Bank");
-                                business_data.set_branch_code("043232");
-                                business_data.set_account_number("0932443824");
-                                business_data.set_client_message("Thank you for your support!");
-                                business_data.set_password("bxwx eaku ndjj ltda");
-                                pdf_invoice_data.set_business(business_data);
-
-                                pdf_invoices.push_back(pdf_invoice_data);
-                        }
-                }
-        }
-
-        return pdf_invoices;
-}
-
-std::future<bool> feature::invoice::sending(const data::email& _data)
-{
-       std::future<bool> sent{};
-        if (_data.is_valid())
-        {
-                sent = std::move(std::async(std::launch::async, [this, _data]() {
-                        return this->email.send(_data);
-                }));
-        }
-
-        return sent;
 }

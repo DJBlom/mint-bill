@@ -3,7 +3,7 @@
 <!-- Created with Cambalache 0.96.1 -->
 <cambalache-project version="0.96.0" target_tk="gtk-4.0">
   <css filename="mint-bill.css" is_global="1"/>
-  <ui filename="mint-bill.ui" sha256="41970ad815acb543c916dee5dca75221f6733281e35e86ccb79f900d644a0bf5">
+  <ui filename="mint-bill.ui" sha256="96038a26ff1a7c5f3fa2a507474dbfd4d85d68dd808014a3490791937829a46e">
     <css-provider>mint-bill.css</css-provider>
   </ui>
 </cambalache-project>

@@ -962,13 +962,13 @@
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="invoice-print-alert">
+  <object class="GtkMessageDialog" id="invoice-print-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
     <property name="destroy-with-parent">True</property>
     <property name="message-type">question</property>
     <property name="modal">True</property>
-    <property name="text">Is u seker u wil die faktuur print?</property>
+    <property name="text">Is u seker u wil die faktuur of fakture print?</property>
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>

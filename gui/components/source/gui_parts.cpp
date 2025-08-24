@@ -201,8 +201,8 @@ void gui::part::statement::columns::date::setup(const Glib::RefPtr<Gtk::ListItem
 			return;
 		}
 
-		label->set_xalign(0.50);                 // 0.0 = left, 1.0 = right
-		label->set_hexpand(true);               // let it fill the header area
+		label->set_xalign(0.50);
+		label->set_hexpand(true);
 		label->set_halign(Gtk::Align::START);
 		_item->set_child(*label);
 	}
@@ -1065,7 +1065,17 @@ void gui::part::statement::invoice_pdf_view::display_invoice(uint _position)
 	}
 
 	feature::invoice_pdf invoice_pdf{};
-	std::shared_ptr<poppler::document> document{invoice_pdf.generate_for_print(pdf_invoice)};
+	std::shared_ptr<poppler::document> document{};
+	std::string raw_pdf = invoice_pdf.generate(pdf_invoice);
+	std::vector<char> byte_vector{raw_pdf.begin(), raw_pdf.end()};
+	poppler::byte_array byte_array{byte_vector};
+	poppler::document* raw_doc = poppler::document::load_from_data(&byte_array);
+	document = std::shared_ptr<poppler::document>(raw_doc, [](poppler::document* ptr) {
+		if (ptr) {
+			delete ptr;
+		}
+	});
+
 	if (!document)
 	{
 		syslog(LOG_CRIT, "The poppler document is not valid - "

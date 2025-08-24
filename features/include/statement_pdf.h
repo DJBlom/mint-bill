@@ -7,11 +7,11 @@
 *******************************************************/
 #ifndef _STATEMENT_PDF_H_
 #define _STATEMENT_PDF_H_
-#include <pdf.h>
 #include <mutex>
 #include <string>
 #include <vector>
 #include <syslog.h>
+#include <interfaces.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -22,20 +22,16 @@
 #include <poppler/cpp/poppler-document.h>
 
 namespace feature {
-// class statement_pdf : public interface::pdf {
-class statement_pdf {
+class statement_pdf : public interface::pdf {
 public:
 	statement_pdf();
 	statement_pdf(const statement_pdf&) = delete;
 	statement_pdf(statement_pdf&&) = delete;
 	statement_pdf& operator = (const statement_pdf&) = delete;
 	statement_pdf& operator = (statement_pdf&&) = delete;
-	// virtual ~statement_pdf() override;
-	virtual ~statement_pdf() ;
+	virtual ~statement_pdf() override;
 
-	[[nodiscard]] std::string generate(const std::any&);
-	// [[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
-	// [[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
+	[[nodiscard]] std::string generate(const std::any&) override;
 
 private:
 	[[nodiscard]] bool add_header(const std::string&);

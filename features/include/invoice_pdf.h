@@ -7,7 +7,6 @@
 *******************************************************/
 #ifndef _INVOICE_PDF_H_
 #define _INVOICE_PDF_H_
-#include <pdf.h>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -15,6 +14,7 @@
 #include <sstream>
 #include <errors.h>
 #include <algorithm>
+#include <interfaces.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
@@ -34,11 +34,9 @@ public:
 	invoice_pdf& operator = (invoice_pdf&&) = delete;
 	virtual ~invoice_pdf() override;
 
-	[[nodiscard]] virtual std::string generate_for_email(const std::any&) override;
-	[[nodiscard]] virtual std::shared_ptr<poppler::document> generate_for_print(const std::any&) override;
+	[[nodiscard]] virtual std::string generate(const std::any&) override;
 
 private:
-	[[nodiscard]] std::string generate(const data::pdf_invoice&);
 	[[nodiscard]] bool add_header(const std::string&);
 	[[nodiscard]] bool add_information(const data::pdf_invoice&);
 	[[nodiscard]] bool add_invoice(const data::invoice&);

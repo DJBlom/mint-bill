@@ -7,7 +7,7 @@
  *******************************************************/
 #ifndef _BUSINESS_INFO_H_
 #define _BUSINESS_INFO_H_
-#include <business.h>
+#include <interfaces.h>
 
 namespace feature {
         class business: public interface::business {

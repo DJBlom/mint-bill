@@ -18,7 +18,6 @@ namespace limit {
 gui::invoice_page::invoice_page()
 {
         this->email_dispatcher.connect(sigc::mem_fun(*this, &invoice_page::email_sent));
-        this->print_dispatcher.connect(sigc::mem_fun(*this, &invoice_page::printed));
 }
 
 gui::invoice_page::~invoice_page()
@@ -29,43 +28,87 @@ gui::invoice_page::~invoice_page()
 bool gui::invoice_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
 			       const std::shared_ptr<Gtk::Window>& _main_window)
 {
-	(void) _main_window;
-        bool created{true};
         if (!_ui_builder)
         {
                 syslog(LOG_CRIT, "UI builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                created = false;
+		return false;
         }
         else
         {
                 create_views(_ui_builder);
                 create_entries(_ui_builder);
-                create_dialogs(_ui_builder);
                 create_buttons(_ui_builder);
                 connect_material_view();
                 connect_description_view();
-                connect_save_alert();
-                connect_wrong_info_alert();
-                connect_wrong_data_in_amount_column_alert();
-                connect_wrong_data_in_quantity_column_alert();
-                setup_page();
-                connect_email_alert();
-                connect_print_alert();
                 connect_invoice_view();
-                connect_no_printer_alert();
-                connect_no_internet_alert();
+
+		if (this->save_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup save - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->email_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup email - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->print_setup(_ui_builder, _main_window) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup print - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->wrong_info_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup wrong_info - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->no_internet_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup no_internet - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->no_item_selected_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup no_item_selected - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->wrong_data_in_amount_column_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup wrong_data_in_amount_column_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
+
+		if (this->wrong_data_in_quantity_column_setup(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to setup wrong_data_in_quantity_column_setup - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return false;
+		}
         }
 
-        return created;
+        return true;
 }
 
 bool gui::invoice_page::search(const std::string& _keyword)
 {
         bool searched{false};
-        if (_keyword.empty())
+        if (_keyword.empty() == true)
         {
-                syslog(LOG_CRIT, "The _keywword is empty - "
+                syslog(LOG_CRIT, "The _keyword is empty - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
         else
@@ -80,15 +123,25 @@ bool gui::invoice_page::search(const std::string& _keyword)
 bool gui::invoice_page::print()
 {
 	bool success{false};
-	if (!this->print_confirmation)
+	if (this->invoices_selected.empty() == true)
 	{
-                syslog(LOG_CRIT, "The print_confirmation is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		if (this->no_item_selected_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show no_item_selected_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
 	}
 	else
 	{
-		success = true;
-		this->print_confirmation->show();
+		if (this->print_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show print dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+		}
 	}
 
 	return success;
@@ -97,32 +150,52 @@ bool gui::invoice_page::print()
 bool gui::invoice_page::email()
 {
 	bool success{false};
-	if (!this->email_confirmation)
+	if (this->invoices_selected.empty() == true)
 	{
-                syslog(LOG_CRIT, "The email_confirmation is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		if (this->no_item_selected_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show no_item_selected_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
 	}
 	else
 	{
-		success = true;
-		this->email_confirmation->show();
+		if (this->email_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show email dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+		}
 	}
 
 	return success;
 }
 
+bool gui::invoice_page::clear()
+{
+	this->invoices_selected.clear();
+	this->invoice_store->remove_all();
+	this->material_store->remove_all();
+	this->description_store->remove_all();
+
+	return true;
+}
+
 bool gui::invoice_page::save()
 {
 	bool success{false};
-	if (!this->save_alert_dialog)
+	if (this->save_alert.is_not_valid())
 	{
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "The save_alert is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		success = true;
-		this->save_alert_dialog->show();
+		(void) this->save_alert.show();
 	}
 
 	return success;
@@ -162,26 +235,6 @@ void gui::invoice_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Entry>("new-invoice-number-entry")};
 }
 
-void gui::invoice_page::create_dialogs(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
-{
-        this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-save-button-alert")};
-        this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-wrong-info-alert")};
-        this->wrong_data_in_quantity_column = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-quantity-column-alert")};
-        this->wrong_data_in_amount_column = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-data-in-amount-column-alert")};
-        this->email_no_internet = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-no-internet-alert")};
-        this->email_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-email-alert")};
-        this->print_confirmation = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-alert")};
-        this->print_no_printer = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("invoice-print-no-printer-alert")};
-}
-
 void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->description_add_button = std::unique_ptr<Gtk::Button>{
@@ -192,6 +245,392 @@ void gui::invoice_page::create_buttons(const Glib::RefPtr<Gtk::Builder>& _ui_bui
                 _ui_builder->get_widget<Gtk::Button>("invoice-material-delete-button")};
         this->description_delete_button = std::unique_ptr<Gtk::Button>{
                 _ui_builder->get_widget<Gtk::Button>("invoice-description-delete-button")};
+}
+
+bool gui::invoice_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->save_alert.create(_ui_builder) == false)
+		{
+
+			syslog(LOG_CRIT, "Failed to create save_alert dialog - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->save_alert.connect([this] (const int& _response) {
+				data::invoice data{this->extract_invoice_data()};
+				switch(_response)
+				{
+					case GTK_RESPONSE_YES:
+						syslog(LOG_INFO, "User chose to save the information - "
+								 "filename %s, line number %d", __FILE__, __LINE__);
+						if (this->client_invoice.save(data, this->db) == false)
+						{
+							syslog(LOG_CRIT, "Failed to save the invoice information - "
+									 "filename %s, line number %d", __FILE__, __LINE__);
+							(void) this->save_alert.hide();
+							(void) this->wrong_info_alert.show();
+						}
+						else
+						{
+							// this->add(data); // This line needs to be replaced by a load from the DB.
+							(void) this->save_alert.hide();
+							this->description_store->remove_all();
+							this->material_store->remove_all();
+						}
+						break;
+					case GTK_RESPONSE_NO:
+						syslog(LOG_INFO, "User chose not to save the information - "
+								 "filename %s, line number %d", __FILE__, __LINE__);
+						(void) this->save_alert.hide();
+						break;
+					default:
+						(void) this->save_alert.hide();
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->email_alert.create(_ui_builder) == false)
+		{
+
+			syslog(LOG_CRIT, "Failed to create email_alert dialog - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->email_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_YES:
+						if (this->email_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide email_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						else
+						{
+							this->email_future = std::move(std::async(std::launch::async, [this] () {
+								data::email data{this->client_invoice.prepare_for_email(
+										 this->invoices_selected)};
+								feature::email email;
+								bool result{email.send(data)};
+								this->email_dispatcher.emit();
+								return result;
+							}));
+						}
+						break;
+					case GTK_RESPONSE_NO:
+						if (this->email_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide email_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->email_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide email_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
+				      const std::shared_ptr<Gtk::Window>& _main_window)
+{
+	bool success{false};
+	if (_ui_builder == nullptr || _main_window == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder or the _main_window is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->print_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create print dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->print_alert.connect([this, _main_window] (const int& response) {
+				switch (response)
+				{
+					case GTK_RESPONSE_YES:
+						if (this->print_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide print dialog - "
+									 "filename %s, line number %d", __FILE__, __LINE__);
+						}
+						else
+						{
+							std::vector<std::string> data{this->client_invoice.prepare_for_print(this->invoices_selected)};
+							gui::part::printer printer{"invoice"};
+							if (printer.print(data, _main_window) == false)
+							{
+								syslog(LOG_CRIT, "Failed to print documents - "
+										 "filename %s, line number %d", __FILE__, __LINE__);
+							}
+						}
+						break;
+					case GTK_RESPONSE_NO:
+						if (this->print_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide print dialog - "
+									 "filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->print_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide print dialog - "
+									 "filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::wrong_info_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->wrong_info_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create wrong_info_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->wrong_info_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_CLOSE:
+						if (this->wrong_info_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_info_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->wrong_info_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_info_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::no_internet_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->no_internet_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create no_internet_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->no_internet_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_CLOSE:
+						if (this->no_internet_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide no_internet_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->no_internet_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide no_internet_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->no_item_selected_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create no_item_selected_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->no_item_selected_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_CLOSE:
+						if (this->no_item_selected_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide no_item_selected_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->no_item_selected_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide no_item_selected_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+bool gui::invoice_page::wrong_data_in_amount_column_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->wrong_data_in_amount_column_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create wrong_data_in_amount_column_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->wrong_data_in_amount_column_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_CLOSE:
+						if (this->wrong_data_in_amount_column_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_data_in_amount_column_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->wrong_data_in_amount_column_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_data_in_amount_column_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
+}
+
+bool gui::invoice_page::wrong_data_in_quantity_column_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+{
+	bool success{false};
+	if (_ui_builder == nullptr)
+	{
+		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		if (this->wrong_data_in_quantity_column_alert.create(_ui_builder) == false)
+		{
+			syslog(LOG_CRIT, "Failed to create wrong_data_in_quantity_column_alert dialog - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = this->wrong_data_in_quantity_column_alert.connect([this] (const int& _response) {
+				switch (_response)
+				{
+					case GTK_RESPONSE_CLOSE:
+						if (this->wrong_data_in_quantity_column_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_data_in_quantity_column_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+					default:
+						if (this->wrong_data_in_quantity_column_alert.hide() == false)
+						{
+							syslog(LOG_CRIT, "Failed to hide wrong_data_in_quantity_column_alert dialog - "
+									"filename %s, line number %d", __FILE__, __LINE__);
+						}
+						break;
+				}
+			});
+		}
+	}
+
+	return success;
 }
 
 void gui::invoice_page::perform_search(const std::string& _keyword) {
@@ -296,8 +735,8 @@ void gui::invoice_page::edit_known_invoice(uint position)
                 return;
         }
 
-        data::invoice invoice{data->invoice};
-        if (invoice.is_valid() == false)
+        data::pdf_invoice pdf_invoice{data->pdf_invoice};
+        if (pdf_invoice.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The invoice data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
@@ -307,6 +746,7 @@ void gui::invoice_page::edit_known_invoice(uint position)
         syslog(LOG_INFO, "User is editing an invoice - "
                          "filename %s, line number %d", __FILE__, __LINE__);
 
+	data::invoice invoice{pdf_invoice.get_invoice()};
         this->invoice_number->set_text(invoice.get_invoice_number());
         this->invoice_date->set_text(invoice.get_invoice_date());
         this->job_card->set_text(invoice.get_job_card_number());
@@ -436,115 +876,6 @@ void gui::invoice_page::update_material_total(uint position, uint removed, uint 
         goss << std::fixed << std::setprecision(2) << this->compute_grand_total();
         this->grand_total_label->set_text("Grand Total: R " + goss.str());
         this->grand_total = goss.str();
-}
-
-void gui::invoice_page::connect_save_alert()
-{
-        if (!this->save_alert_dialog)
-        {
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::invoice data{this->extract_invoice_data()};
-                switch(response)
-                {
-                        case GTK_RESPONSE_YES:
-                                syslog(LOG_INFO, "User chose to save the information - "
-                                                 "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->client_invoice.save(data, this->db) == false)
-                                {
-                                        syslog(LOG_CRIT, "Failed to save the invoice information - "
-                                                         "filename %s, line number %d", __FILE__, __LINE__);
-                                        this->save_alert_dialog->hide();
-                                        this->wrong_info_alert_dialog->show();
-                                }
-                                else
-                                {
-                                        this->add(data); // This line needs to be replaced by a load from the DB.
-                                        this->save_alert_dialog->hide();
-                                        this->description_store->remove_all();
-                                        this->material_store->remove_all();
-                                }
-                                break;
-                        case GTK_RESPONSE_NO:
-                                syslog(LOG_INFO, "User chose not to save the information - "
-                                                 "filename %s, line number %d", __FILE__, __LINE__);
-                                this->save_alert_dialog->hide();
-                                break;
-                        default:
-                                this->save_alert_dialog->hide();
-                                break;
-                }
-        });
-}
-
-void gui::invoice_page::connect_wrong_info_alert()
-{
-        if (!this->wrong_info_alert_dialog)
-        {
-                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->wrong_info_alert_dialog->signal_response().connect([this] (int response) {
-                switch (response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                        default:
-                                this->wrong_info_alert_dialog->hide();
-                                break;
-                }
-        });
-}
-
-void gui::invoice_page::connect_wrong_data_in_amount_column_alert()
-{
-        if (!this->wrong_data_in_amount_column)
-        {
-                syslog(LOG_CRIT, "The wrong_data_in_amount_column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->wrong_data_in_amount_column->signal_response().connect([this] (int response) {
-                switch (response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->wrong_data_in_amount_column->hide();
-                                break;
-                        default:
-                                this->wrong_data_in_amount_column->hide();
-                                break;
-                }
-        });
-}
-
-void gui::invoice_page::connect_wrong_data_in_quantity_column_alert()
-{
-        if (!this->wrong_data_in_quantity_column)
-        {
-                syslog(LOG_CRIT, "The wrong_data_in_quantity_column is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->wrong_data_in_quantity_column->signal_response().connect([this] (int response) {
-                switch (response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->wrong_data_in_quantity_column->hide();
-                                break;
-                        default:
-                                this->wrong_data_in_quantity_column->hide();
-                                break;
-                }
-        });
 }
 
 void gui::invoice_page::quantity_column(const std::unique_ptr<Gtk::ColumnView>& view)
@@ -709,7 +1040,7 @@ void gui::invoice_page::bind_quantity(const Glib::RefPtr<Gtk::ListItem>& list_it
                 }
                 else
                 {
-                        this->wrong_data_in_quantity_column->show();
+                        (void) this->wrong_data_in_quantity_column_alert.show();
                         entry->select_region(0, limit::MAX_QUANTITY);
                         columns->quantity = 0;
                 }
@@ -814,7 +1145,7 @@ void gui::invoice_page::bind_amount(const Glib::RefPtr<Gtk::ListItem>& list_item
                 }
                 else
                 {
-                        this->wrong_data_in_amount_column->show();
+                        (void) this->wrong_data_in_amount_column_alert.show();
                         entry->select_region(0, limit::MAX_AMOUNT);
                         columns->amount = 0;
                 }
@@ -898,263 +1229,41 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
         return columns;
 }
 
-void gui::invoice_page::send_email(const std::vector<data::invoice>& _data)
-{
-        if (_data.empty())
-        {
-                syslog(LOG_CRIT, "The invoice data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        std::thread([this, _data] () {
-                bool success = client_invoice.send_email(_data);
-                this->email_success = success;
-		this->email_dispatcher.emit();
-        }).detach();
-}
-
-void gui::invoice_page::on_draw_page(const Glib::RefPtr<Gtk::PrintContext>& _context, int _page_nr)
-{
-        for (const auto& range : this->page_ranges)
-        {
-                if (_page_nr >= range.start_page && _page_nr < range.start_page + range.page_count)
-                {
-                        std::shared_ptr<poppler::document> document{this->documents_to_print[range.document_index]};
-                        if (!document)
-                                return;
-
-                        int local_page = _page_nr - range.start_page;
-
-                        auto page = document->create_page(local_page);
-                        if (!page)
-                                return;
-
-                        poppler::page_renderer renderer;
-                        renderer.set_render_hint(poppler::page_renderer::antialiasing, true);
-                        renderer.set_render_hint(poppler::page_renderer::text_antialiasing, true);
-
-                        double dpi_x = 190;
-                        double dpi_y = 290;
-                        const double target_dpi = std::max(dpi_x, dpi_y);
-
-                        auto image = renderer.render_page(page, target_dpi, target_dpi);
-                        if (!image.is_valid())
-                                return;
-
-                        auto cairo_surface = Cairo::ImageSurface::create(
-                                        reinterpret_cast<unsigned char*> (image.data()), Cairo::Surface::Format::ARGB32,
-                                        image.width(), image.height(),
-                                        image.bytes_per_row());
-
-                        double sx = _context->get_width() / image.width();
-                        double sy = _context->get_height() / image.height();
-                        double scale_factor = std::min(sx, sy);
-                        auto cr = _context->get_cairo_context();
-                        cr->save();
-                        cr->scale(scale_factor, scale_factor);
-                        cr->set_source(cairo_surface, 0, 0);
-                        cr->paint();
-                        cr->restore();
-                        return;
-                }
-        }
-}
-
-void gui::invoice_page::setup_page()
-{
-        this->page_setup = Gtk::PageSetup::create();
-        if (!this->page_setup)
-        {
-                syslog(LOG_CRIT, "The page_setup is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->page_setup->set_orientation(Gtk::PageOrientation::PORTRAIT);
-        this->page_setup->set_paper_size(Gtk::PaperSize(Gtk::PAPER_NAME_A4));
-        this->page_setup->set_top_margin(0, Gtk::Unit::POINTS);
-        this->page_setup->set_bottom_margin(0, Gtk::Unit::POINTS);
-        this->page_setup->set_left_margin(0, Gtk::Unit::POINTS);
-        this->page_setup->set_right_margin(0, Gtk::Unit::POINTS);
-}
-
-void gui::invoice_page::compute_number_of_pages(const std::vector<data::invoice>& _data)
-{
-        if (_data.empty())
-        {
-                syslog(LOG_CRIT, "The invoice data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        std::size_t index{0};
-        this->number_of_pages = 0;
-        this->page_ranges.clear();
-        this->documents_to_print.clear();
-        std::vector<data::pdf_invoice> invoices_to_print{client_invoice.create_pdf_to_print(_data)};
-        for (const data::pdf_invoice& invoice_to_print : invoices_to_print)
-        {
-                std::shared_ptr<poppler::document> doc{this->invoice_pdf.generate_for_print(invoice_to_print)};
-                if (!doc)
-                {
-                        continue;
-                }
-
-                int page_count = doc->pages();
-                this->documents_to_print.push_back(doc);
-
-                this->page_ranges.push_back(page_range{this->number_of_pages, page_count, index});
-                this->number_of_pages += page_count;
-                ++index;
-        }
-}
-
-void gui::invoice_page::print_invoice(const std::vector<data::invoice>& _data)
-{
-        if (_data.empty())
-        {
-                syslog(LOG_CRIT, "The invoice data is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        Glib::RefPtr<Gtk::PrintOperation> print_operation{Gtk::PrintOperation::create()};
-        if (!print_operation)
-        {
-                syslog(LOG_CRIT, "The print_operation is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        print_operation->set_default_page_setup(this->page_setup);
-        print_operation->set_unit(Gtk::Unit::POINTS);
-        print_operation->set_has_selection(false);
-        print_operation->set_job_name("Invoice");
-        print_operation->set_use_full_page(true);
-        print_operation->set_show_progress(true);
-        print_operation->set_allow_async(true);
-        print_operation->signal_draw_page().connect(
-                sigc::mem_fun(*this, &invoice_page::on_draw_page));
-        print_operation->signal_done().connect(sigc::bind(
-                sigc::mem_fun(*this, &invoice_page::on_printoperation_done), print_operation));
-        compute_number_of_pages(_data);
-        std::thread([&] () {
-                if (this->number_of_pages > 0)
-                {
-                        print_operation->set_n_pages(this->number_of_pages);
-                        print_operation->run(Gtk::PrintOperation::Action::PREVIEW);
-                }
-		this->print_dispatcher.emit();
-        }).detach();
-}
-
-void gui::invoice_page::on_printoperation_done(Gtk::PrintOperation::Result _result, const Glib::RefPtr<Gtk::PrintOperation>& _op)
-{
-        if (_result == Gtk::PrintOperation::Result::ERROR)
-        {
-                syslog(LOG_CRIT, "Failed to complete the print operation - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else if (_result == Gtk::PrintOperation::Result::CANCEL)
-        {
-                syslog(LOG_CRIT, "The print operation was canceled - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-        else if (_result == Gtk::PrintOperation::Result::IN_PROGRESS)
-        {
-                syslog(LOG_CRIT, "The print operation is in progress - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-
-        std::string has_printer{_op->get_print_settings()->get_printer()};
-        if (has_printer.empty())
-        {
-                syslog(LOG_CRIT, "No printer is connected - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-}
-
 void gui::invoice_page::populate(const std::string& _business_name)
 {
         this->invoice_store->remove_all();
         if (_business_name.empty())
         {
-		// Pop some dialog here
+                syslog(LOG_CRIT, "The _business_name is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
         }
         else
         {
-                std::vector<data::invoice> db_invoices{client_invoice.search(_business_name, this->db)};
-                populate_list_store(db_invoices);
+		std::vector<data::pdf_invoice> pdf_invoices;
+                std::vector<std::any> db_invoices = client_invoice.load(_business_name);
+		std::transform(db_invoices.cbegin(),
+				db_invoices.cend(),
+				std::back_inserter(pdf_invoices),
+				[] (const std::any& _invoice) {
+					return std::any_cast<data::pdf_invoice> (_invoice);
+				});
+                populate_list_store(pdf_invoices);
         }
 }
 
-void gui::invoice_page::add(const data::invoice& _invoice)
+void gui::invoice_page::add(const data::pdf_invoice& _pdf_invoice)
 {
-        if (!_invoice.is_valid())
+        if (!_pdf_invoice.is_valid())
         {
                 syslog(LOG_CRIT, "The invoice data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
-        this->invoice_store->append(invoice_entries::create(_invoice));
+        this->invoice_store->append(invoice_entries::create(_pdf_invoice));
         Glib::signal_timeout().connect_once([this]() {
                 this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
         }, 30);
-}
-
-void gui::invoice_page::connect_email_alert()
-{
-        if (!this->email_confirmation)
-        {
-                syslog(LOG_CRIT, "The email_confirmation is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->email_confirmation->signal_response().connect([this] (int response) {
-                std::vector<data::invoice> data{this->invoices_selected};
-                if (response == GTK_RESPONSE_YES)
-                {
-                        syslog(LOG_INFO, "User chose to email the information - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                        this->email_confirmation->hide();
-                        this->send_email(this->invoices_selected);
-                }
-                else
-                {
-                        syslog(LOG_INFO, "User chose not to email the information - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                        this->email_confirmation->hide();
-                }
-        });
-}
-
-void gui::invoice_page::connect_print_alert()
-{
-        if (!this->print_confirmation)
-        {
-                syslog(LOG_CRIT, "The print_confirmation is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->print_confirmation->signal_response().connect([this] (int response) {
-                if (response == GTK_RESPONSE_YES)
-                {
-                        syslog(LOG_INFO, "User chose to print the information - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                        this->print_confirmation->hide();
-                        print_invoice(this->invoices_selected);
-                }
-                else
-                {
-                        syslog(LOG_INFO, "User chose not to print the information - "
-                                         "filename %s, line number %d", __FILE__, __LINE__);
-                        this->print_confirmation->hide();
-                }
-        });
 }
 
 void gui::invoice_page::connect_invoice_view()
@@ -1193,50 +1302,6 @@ void gui::invoice_page::connect_invoice_view()
                         sigc::mem_fun(*this, &invoice_page::selected_invoice));
 
         invoices(this->invoice_view);
-}
-
-void gui::invoice_page::connect_no_internet_alert()
-{
-        if (!this->email_no_internet)
-        {
-                syslog(LOG_CRIT, "The email_no_internet is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->email_no_internet->signal_response().connect([this] (int response) {
-                switch(response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->email_no_internet->hide();
-                                break;
-                        default:
-                                this->email_no_internet->hide();
-                                break;
-                }
-        });
-}
-
-void gui::invoice_page::connect_no_printer_alert()
-{
-        if (!this->print_no_printer)
-        {
-                syslog(LOG_CRIT, "The print_no_printer is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-                return;
-        }
-
-        this->print_no_printer->signal_response().connect([this] (int response) {
-                switch(response)
-                {
-                        case GTK_RESPONSE_CLOSE:
-                                this->print_no_printer->hide();
-                                break;
-                        default:
-                                this->print_no_printer->hide();
-                                break;
-                }
-        });
 }
 
 void gui::invoice_page::invoices(const std::unique_ptr<Gtk::ListView>& view)
@@ -1322,25 +1387,26 @@ void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
                 return;
         }
 
-        data::invoice invoice{data->invoice};
+        data::pdf_invoice pdf_invoice{data->pdf_invoice};
+	data::invoice invoice{pdf_invoice.get_invoice()};
         std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
         label->set_text(details);
 }
 
-void gui::invoice_page::populate_list_store(const std::vector<data::invoice>& _invoices)
+void gui::invoice_page::populate_list_store(const std::vector<data::pdf_invoice>& _pdf_invoices)
 {
-        if (_invoices.empty())
+        if (_pdf_invoices.empty())
         {
                 syslog(LOG_CRIT, "The _invoices are not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
-        for (const auto& invoice : _invoices)
+        for (const auto& pdf_invoice : _pdf_invoices)
         {
-                if (invoice.is_valid())
+                if (pdf_invoice.is_valid())
                 {
-                        this->invoice_store->append(invoice_entries::create(invoice));
+                        this->invoice_store->append(invoice_entries::create(pdf_invoice));
                         Glib::signal_timeout().connect_once([this]() {
                                 this->invoices_adjustment->set_value(this->invoices_adjustment->get_upper());
                         }, 30);
@@ -1372,35 +1438,28 @@ void gui::invoice_page::selected_invoice(uint _position, uint _items_selected)
                 if (!invoice)
                         return;
 
-                data::invoice temp{invoice->invoice};
-                this->invoices_selected.push_back(invoice->invoice);
+                data::pdf_invoice temp{invoice->pdf_invoice};
+                this->invoices_selected.push_back(invoice->pdf_invoice);
         }
 }
 
 void gui::invoice_page::email_sent()
 {
-        if (this->email_success == false)
-        {
-                this->email_no_internet->show();
-        }
-        else
-        {
-                syslog(LOG_INFO, "User emailed an invoice - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
-}
-
-void gui::invoice_page::printed()
-{
-        if (this->print_success == false)
-        {
-                this->print_no_printer->show();
-        }
-        else
-        {
-                syslog(LOG_INFO, "User printed an invoice - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-        }
+	if (this->email_future.get() == false)
+	{
+		syslog(LOG_CRIT, "Failed to send the email - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+		if (this->no_internet_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "Failed to show the no_internet_alert - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+	}
+	else
+	{
+		syslog(LOG_CRIT, "Email successfully sent - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
 }
 
 void gui::invoice_page::populate_description_store(const data::invoice& _invoice)

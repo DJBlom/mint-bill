@@ -55,7 +55,7 @@ TEST(email_test, send_data_under_good_conditions)
         pdf_data.set_invoice(invoice_data);
 
         feature::invoice_pdf invoice_pdf{};
-        std::vector<std::string> pdf_file_data{invoice_pdf.generate_for_email(pdf_data)};
+        std::vector<std::string> pdf_file_data{invoice_pdf.generate(pdf_data)};
         data.set_attachments(pdf_file_data);
         data.set_client(client_data);
         data.set_business(business_data);
@@ -82,7 +82,7 @@ TEST(email_test, send_multiple_attachments)
                 std::string short_description{"Machining steel "};
                 data::invoice invoice_data{test::generate_invoice_data(short_description, i)};
                 pdf_data.set_invoice(invoice_data);
-                std::string pdf_file_data{invoice_pdf.generate_for_email(pdf_data)};
+                std::string pdf_file_data{invoice_pdf.generate(pdf_data)};
                 test::generate_invoice_pdf(pdf_file_data, std::to_string(i));
                 invoice_attachments.push_back(pdf_file_data);
         }
