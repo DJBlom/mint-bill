@@ -7,7 +7,6 @@
  *******************************************************/
 #ifndef _INVOICE_H_
 #define _INVOICE_H_
-#include <storage.h>
 #include <vector>
 #include <invoice_data.h>
 

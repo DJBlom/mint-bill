@@ -11,7 +11,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <storage.h>
 #include <email_data.h>
 
 namespace interface {
