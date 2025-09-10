@@ -162,10 +162,10 @@ std::vector<std::string> feature::client_invoice::prepare_for_print(const std::v
 	return pdfs;
 }
 
-bool feature::client_invoice::save(const data::invoice& data, const interface::storage& db)
+bool feature::client_invoice::save(const data::invoice& data)
 {
         bool updated{false};
-        if (data.is_valid() && db.is_open())
+        if (data.is_valid())
         {
                 std::cout << "Business name: " << data.get_business_name() << std::endl;
                 std::cout << "Invoice number: " << data.get_invoice_number() << std::endl;
@@ -202,10 +202,10 @@ bool feature::client_invoice::save(const data::invoice& data, const interface::s
         return updated;
 }
 
-std::vector<data::invoice> feature::client_invoice::search(const std::string& business_name, const interface::storage& db)
+std::vector<data::invoice> feature::client_invoice::search(const std::string& business_name)
 {
         std::vector<data::invoice> data{};
-        if (!business_name.empty() && db.is_open())
+        if (!business_name.empty())
         {
                 for (int i = 1; i <= 50; ++i)
                 {

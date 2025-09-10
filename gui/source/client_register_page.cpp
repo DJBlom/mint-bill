@@ -44,7 +44,7 @@ bool gui::client_register_page::search(const std::string& _keyword)
         }
         else
         {
-		data::client data = this->client_register.search(_keyword, this->db);
+		data::client data = this->client_register.search(_keyword);
 		display_on_ui(data);
         }
 
@@ -108,7 +108,7 @@ void gui::client_register_page::connect_save_alert()
                         case GTK_RESPONSE_YES:
                                 syslog(LOG_INFO, "User chose to save the client information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->client_register.save(data, this->db) == false)
+                                if (this->client_register.save(data) == false)
                                 {
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();

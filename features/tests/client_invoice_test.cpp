@@ -9,7 +9,6 @@
 #include "CppUTestExt/MockSupport.h"
 
 
-// #include <sql.h>
 #include <client_invoice.h>
 extern "C"
 {

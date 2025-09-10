@@ -37,6 +37,7 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 if(BUILD_PROJECT)
         find_package(CURL REQUIRED)
         find_package(PkgConfig REQUIRED)
+	pkg_check_modules(SQLCIPHER REQUIRED sqlcipher)
         pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
         pkg_check_modules(CAIROMM REQUIRED cairomm-1.16)
         pkg_check_modules(POPPLER REQUIRED poppler-cpp)
@@ -58,11 +59,11 @@ if(BUILD_PROJECT)
         add_compile_definitions(
                 $<$<CONFIG:DEBUG>:DEBUG>
                 $<$<CONFIG:DEBUG>:TRACE_ENABLED>
+		SQLITE_HAS_CODEC=1
         )
 
         add_executable(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/app/source/main.cpp
-                ${CMAKE_SOURCE_DIR}/app/source/mint_bill.cpp
         )
 
         target_include_directories(${PROJECT_NAME} PRIVATE
@@ -70,6 +71,7 @@ if(BUILD_PROJECT)
                 ${GTKMM_INCLUDE_DIRS}
                 ${CAIROMM_INCLUDE_DIRS}
                 ${POPPLER_INCLUDE_DIRS}
+		${SQLCIPHER_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
                 ${CMAKE_SOURCE_DIR}/gui/components/include
@@ -79,6 +81,10 @@ if(BUILD_PROJECT)
                 ${CMAKE_SOURCE_DIR}/utility/include
                 ${CMAKE_SOURCE_DIR}/gui/invoice_page/include
         )
+
+	target_compile_options(${PROJECT_NAME} PRIVATE
+		${SQLCIPHER_CFLAGS_OTHER}
+	)
 
         target_link_options(${PROJECT_NAME} PRIVATE
                 LINKER:-lpthread
@@ -91,6 +97,7 @@ if(BUILD_PROJECT)
                 ${GTKMM_LIBRARIES}
                 ${CAIROMM_LIBRARIES}
                 ${POPPLER_LIBRARIES}
+		${SQLCIPHER_LIBRARIES}
         )
 
         target_link_directories(${PROJECT_NAME}

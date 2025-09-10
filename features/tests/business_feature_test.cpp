@@ -7,7 +7,6 @@
  ******************************************************************************/
 #include <business_info.h>
 #include <business_data.h>
-#include <sql.h>
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -24,7 +23,6 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(business_feature_test)
 {
-        storage::sql sql;
         data::business business_data;
         feature::business business_feature;
 	void setup()
@@ -38,7 +36,7 @@ TEST_GROUP(business_feature_test)
 
 TEST(business_feature_test, successfully_load_data_from_database)
 {
-        data::business data = business_feature.load(sql);
+        data::business data = business_feature.load();
 
         CHECK_EQUAL(true, data.is_valid());
 }
@@ -57,7 +55,7 @@ TEST(business_feature_test, successfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(true, business_feature.save(business_data, sql));
+        CHECK_EQUAL(true, business_feature.save(business_data));
 }
 
 TEST(business_feature_test, unsuccessfully_save_the_data)
@@ -74,5 +72,5 @@ TEST(business_feature_test, unsuccessfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(false, business_feature.save(business_data, sql));
+        CHECK_EQUAL(false, business_feature.save(business_data));
 }

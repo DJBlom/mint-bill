@@ -19,8 +19,8 @@ namespace feature {
                         business& operator= (business&&) = delete;
                         virtual ~business() override;
 
-                        [[nodiscard]] virtual data::business load(const interface::storage&) override;
-                        [[nodiscard]] virtual bool save(const data::business&, const interface::storage&) override;
+                        [[nodiscard]] virtual data::business load() override;
+                        [[nodiscard]] virtual bool save(const data::business&) override;
         };
 }
 #endif

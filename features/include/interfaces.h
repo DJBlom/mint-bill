@@ -28,17 +28,17 @@ class client {
 public:
 	virtual ~client() = default;
 
-	[[nodiscard]] virtual data::client load(const std::string&, const interface::storage&) = 0;
-	[[nodiscard]] virtual bool save(const data::client&, const interface::storage&) = 0;
-	[[nodiscard]] virtual data::client search(const std::string&, const interface::storage&) = 0;
+	[[nodiscard]] virtual data::client load(const std::string&) = 0;
+	[[nodiscard]] virtual bool save(const data::client&) = 0;
+	[[nodiscard]] virtual data::client search(const std::string&) = 0;
 };
 
 class business {
 public:
 	virtual ~business() = default;
 
-	[[nodiscard]] virtual data::business load(const interface::storage&) = 0;
-	[[nodiscard]] virtual bool save(const data::business&, const interface::storage&) = 0;
+	[[nodiscard]] virtual data::business load() = 0;
+	[[nodiscard]] virtual bool save(const data::business&) = 0;
 };
 
 class pdf {

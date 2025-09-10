@@ -1,0 +1,310 @@
+/*******************************************************************************
+ * Contents: Sql unit tests
+ * Author: Dawid Blom
+ * Date: November 18, 2024
+ *
+ * Note: Refer to the TEST LIST for details on what this fixture tests.
+ ******************************************************************************/
+#include "CppUTest/TestHarness.h"
+#include "CppUTestExt/MockSupport.h"
+
+
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <variant>
+#include <string>
+#include <iomanip>
+#include <cstddef>
+#include <vector>
+#include <errors.h>
+#include <sqlite.h>
+extern "C"
+{
+
+}
+
+static std::vector<storage::database::param_values> good_params = {
+	1LL,
+	std::string("FedBank"),
+	std::string("001"),
+	std::string("123456789"),
+	std::string("s3cr3t!"),
+	std::string("Thanks for your business")
+};
+
+static std::string syntax_error_sql_query{R"SQL(
+	INSERT INTO admin (business_id, bank_name, branch_code, account_number, app_password, client_message)
+	VALUES (?,?,?,?,?,?)
+	ON CONFLICT(business_id) UPDATE SET
+		bank_name=excluded.bank_name, branch_code=excluded.branch_code,
+		account_number=excluded.account_number, app_password=excluded.app_password,
+		client_message=excluded.client_message;
+	)SQL"};
+
+static std::string good_sql_query{R"SQL(
+	INSERT INTO admin (business_id, bank_name, branch_code, account_number, app_password, client_message)
+	VALUES (?,?,?,?,?,?)
+	ON CONFLICT(business_id) DO UPDATE SET
+		bank_name=excluded.bank_name, branch_code=excluded.branch_code,
+		account_number=excluded.account_number, app_password=excluded.app_password,
+		client_message=excluded.client_message;
+	)SQL"};
+
+static std::string good_sql_query_blob_and_real_data{R"SQL(
+		INSERT INTO labor (labor_id, quantity, description, amount, invoice_id)
+		VALUES (?,?,?,?,?)
+		ON CONFLICT(labor_id) DO UPDATE SET
+			quantity=excluded.quantity, description=excluded.description,
+			amount=excluded.amount, invoice_id=excluded.invoice_id;
+		)SQL"};
+
+
+/**********************************TEST LIST************************************
+ * 1) Open connection to a SQLite3 database. (Done)
+ * 2) Close the connection to a SQLite3 database. (Done)
+ * 3) Execute any SQL queries. (Done)
+ * 4) Ensure that the database is encrypted. (Done)
+ * 5) Ensure database connection can handle multiple threads. (Done)
+ ******************************************************************************/
+TEST_GROUP(sqlite_test)
+{
+	const std::string db_file{"../storage/tests/encrypted_test.db"};
+	const std::string db_password{"123456789"};
+        storage::database::sqlite db{db_file, db_password};
+	void setup()
+	{
+	}
+
+	void teardown()
+	{
+	}
+};
+
+TEST(sqlite_test, bad_construction_throws_type)
+{
+	const std::string bad_db_password{"1234567890"};
+	CHECK_THROWS(app::errors, storage::database::sqlite("../test.db", ""));
+	CHECK_THROWS(app::errors, storage::database::sqlite("", "1234"));
+	CHECK_THROWS(app::errors, storage::database::sqlite("../test.db", db_password));
+	CHECK_THROWS(app::errors, storage::database::sqlite(db_file, bad_db_password));
+}
+
+TEST(sqlite_test, usert_empty_sql_query_parameter)
+{
+	std::string bad_sql_query{""};
+
+	CHECK_EQUAL(false, db.usert(bad_sql_query, good_params));
+}
+
+TEST(sqlite_test, usert_empty_argument_parameter)
+{
+	std::vector<storage::database::param_values> bad_params;
+
+	CHECK_EQUAL(false, db.usert(good_sql_query, bad_params));
+}
+
+TEST(sqlite_test, usert_with_select_sql_query)
+{
+	std::vector<storage::database::param_values> params = {
+		1LL
+	};
+
+	CHECK_EQUAL(false, db.usert(R"SQL(
+		SELECT bank_name FROM ADMIN where business_id = ?
+		)SQL", params));
+}
+
+TEST(sqlite_test, usert_wrong_number_of_sql_parameters)
+{
+	std::vector<storage::database::param_values> bad_params = {
+		std::string("FedBank"),
+		std::string("001"),
+		std::string("123456789"),
+		std::string("s3cr3t!"),
+		std::string("Thanks for your business")
+	};
+
+	CHECK_EQUAL(false, db.usert(good_sql_query, bad_params));
+}
+
+TEST(sqlite_test, usert_unable_to_step_and_execute_sql_query)
+{
+	std::nullptr_t business_name;
+	std::vector<storage::database::param_values> bad_params = {
+		1LL,
+		business_name,
+		std::string("001"),
+		std::string("123456789"),
+		std::string("s3cr3t!"),
+		std::string("Thanks for your business")
+	};
+
+	CHECK_EQUAL(false, db.usert(good_sql_query, bad_params));
+}
+
+TEST(sqlite_test, usert_handle_blob_and_real_data_types)
+{
+	std::vector<storage::database::param_values> params = {
+		1LL,
+		1LL,
+		storage::database::blob{std::byte{0x45}},
+		34.00,
+		1LL
+	};
+
+	CHECK_EQUAL(true, db.usert(good_sql_query_blob_and_real_data, params));
+}
+
+TEST(sqlite_test, usert_good_parameters)
+{
+	CHECK_EQUAL(true, db.usert(good_sql_query, good_params));
+}
+
+TEST(sqlite_test, select_empty_params)
+{
+	std::vector<storage::database::param_values> params;
+	storage::database::part::rows rows{db.select(R"SQL(
+		SELECT bank_name FROM ADMIN where business_id = ?
+		)SQL", params)};
+
+	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_empty_query)
+{
+	std::vector<storage::database::param_values> params = {
+		1LL
+	};
+	storage::database::part::rows rows{db.select("", params)};
+
+	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_fail_to_bind_parameters)
+{
+	std::vector<storage::database::param_values> params = {
+		1LL,
+		1LL
+	};
+	storage::database::part::rows rows{db.select(R"SQL(
+		SELECT bank_name FROM ADMIN where business_id = ?
+		)SQL", params)};
+
+	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_empty_sql_query_statement)
+{
+	std::vector<storage::database::param_values> params = {
+		 sqlite3_int64{1}
+	};
+	storage::database::part::rows rows{db.select("", params)};
+
+	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_with_good_parameters)
+{
+	std::vector<storage::database::param_values> params = {
+		 sqlite3_int64{1}
+	};
+	storage::database::part::rows rows{db.select(R"SQL(
+		  SELECT bank_name, client_message
+		  FROM admin
+		  WHERE business_id = ?
+		)SQL", params)};
+
+	CHECK_EQUAL(false, rows.empty());
+}
+
+TEST(sqlite_test, select_blob_data)
+{
+	std::vector<storage::database::param_values> params = {
+		1LL
+	};
+	storage::database::part::rows rows{db.select(R"SQL(
+		SELECT quantity, description, amount
+		FROM labor WHERE labor_id = ?
+		)SQL", params)};
+
+	CHECK_EQUAL(false, rows.empty());
+}
+
+
+
+
+
+
+
+/**********************************TEST LIST************************************
+ * 1) Prepare the sql statement on creation. (Done)
+ * 2) Bind parameters to the positional arguments. (Done)
+ * 3) execute the sql statements. (Done)
+ ******************************************************************************/
+TEST_GROUP(sql_operations_test)
+{
+	sqlite3 *database{nullptr};
+	std::string pass{"123456789"};
+	void setup()
+	{
+		sqlite3_open_v2("../storage/tests/encrypted_test.db", &database, (SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX), nullptr);
+		sqlite3_key(database, pass.data(), static_cast<int> (pass.size()));
+	}
+
+	void teardown()
+	{
+		sqlite3_close_v2(database);
+		database = nullptr;
+	}
+};
+
+TEST(sql_operations_test, prepare_sql_stmt_construction)
+{
+	CHECK_THROWS(app::errors, storage::database::part::sql_operations(nullptr, good_sql_query));
+	CHECK_THROWS(app::errors, storage::database::part::sql_operations(database, ""));
+	CHECK_THROWS(app::errors, storage::database::part::sql_operations(database, syntax_error_sql_query));
+}
+
+TEST(sql_operations_test, prepare_sql_stmt_without_assigned_values)
+{
+	std::vector<storage::database::param_values> params;
+	storage::database::part::sql_operations operations{database, good_sql_query};
+
+	CHECK_EQUAL(false, operations.bind_params(params));
+}
+
+TEST(sql_operations_test, prepare_sql_statement_and_fail_to_execute_sql_query)
+{
+	storage::database::part::sql_operations operations{database, good_sql_query};
+
+	CHECK_EQUAL(false, operations.single_execute());
+}
+
+TEST(sql_operations_test, prepare_sql_stmt_with_assigned_values)
+{
+	storage::database::part::sql_operations operations{database, good_sql_query};
+
+	CHECK_EQUAL(true, operations.bind_params(good_params));
+}
+
+TEST(sql_operations_test, prepare_sql_statement_and_execute_sql_query)
+{
+	storage::database::part::sql_operations operations{database, good_sql_query};
+	(void) operations.bind_params(good_params);
+
+	CHECK_EQUAL(true, operations.single_execute());
+}
+
+TEST(sql_operations_test, select_good_parameter)
+{
+	std::vector<storage::database::param_values> params = {
+		 sqlite3_int64{1}
+	};
+	std::string sql_query{R"SQL(SELECT bank_name, client_message FROM admin WHERE business_id = ?)SQL"};
+	storage::database::part::sql_operations operations{database, sql_query};
+	(void) operations.bind_params(params);
+	storage::database::part::rows rows{operations.multi_execute()};
+
+	CHECK_EQUAL(false, rows.empty());
+}

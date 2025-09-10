@@ -14,10 +14,10 @@ feature::client::~client()
 {
 }
 
-data::client feature::client::load(const std::string& business_name, const interface::storage& storage)
+data::client feature::client::load(const std::string& business_name)
 {
         data::client client_data{};
-        if (storage.is_open() && !business_name.empty())
+        if (!business_name.empty())
         {
                 client_data.set_business_name("Dummy");
                 client_data.set_business_address("Geelsterd 8");
@@ -32,10 +32,10 @@ data::client feature::client::load(const std::string& business_name, const inter
         return client_data;
 }
 
-bool feature::client::save(const data::client& data, const interface::storage& storage)
+bool feature::client::save(const data::client& data)
 {
         bool saved{false};
-        if (data.is_valid() && storage.is_open())
+        if (data.is_valid())
         {
                 saved = true;
                 std::cout << "Business Name: " << data.get_business_name() << std::endl;
@@ -51,10 +51,10 @@ bool feature::client::save(const data::client& data, const interface::storage& s
         return saved;
 }
 
-data::client feature::client::search(const std::string& business_name, const interface::storage& storage)
+data::client feature::client::search(const std::string& business_name)
 {
         data::client client_data{};
-        if (storage.is_open() && !business_name.empty())
+        if (!business_name.empty())
         {
                 client_data.set_business_name("Dummy Business");
                 client_data.set_business_address("Bloem Straat 7");

@@ -272,7 +272,7 @@ bool gui::invoice_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 					case GTK_RESPONSE_YES:
 						syslog(LOG_INFO, "User chose to save the information - "
 								 "filename %s, line number %d", __FILE__, __LINE__);
-						if (this->client_invoice.save(data, this->db) == false)
+						if (this->client_invoice.save(data) == false)
 						{
 							syslog(LOG_CRIT, "Failed to save the invoice information - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
