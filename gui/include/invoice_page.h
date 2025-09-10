@@ -8,7 +8,6 @@
 #ifndef _INVOICE_PAGE_H_
 #define _INVOICE_PAGE_H_
 #include <gui.h>
-#include <sql.h>
 #include <invoice_pdf.h>
 #include <mutex>
 #include <regex>
@@ -150,7 +149,6 @@ namespace gui {
                         [[nodiscard]] std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
 
                 private: // Member features
-                        storage::sql db{};
                         int number_of_pages{0};
                         bool email_success{false};
 			std::future<bool> email_future;

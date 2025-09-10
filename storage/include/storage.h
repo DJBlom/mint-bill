@@ -9,11 +9,12 @@
 #define _STORAGE_H_
 
 namespace interface {
-        class storage {
-                public:
-                        virtual ~storage() = default;
+class storage {
+public:
+	virtual ~storage() = default;
 
-                        [[nodiscard]] virtual bool is_open() const = 0;
-        };
+	// [[nodiscard]] virtual bool insert() const = 0;
+	// [[nodiscard]] virtual bool retrieve() const = 0;
+};
 }
 #endif

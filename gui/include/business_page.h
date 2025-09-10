@@ -8,7 +8,6 @@
 #ifndef _BUSINESS_PAGE_H_
 #define _BUSINESS_PAGE_H_
 #include <gui.h>
-#include <sql.h>
 #include <business_info.h>
 
 namespace gui {
@@ -35,7 +34,6 @@ namespace gui {
                         data::business extract_page_entries();
 
                 private:
-                        storage::sql sql{};
                         feature::business business_info{};
 
                 private: // Label

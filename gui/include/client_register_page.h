@@ -8,7 +8,6 @@
 #ifndef _CLIENT_REGISTER_PAGE_H_
 #define _CLIENT_REGISTER_PAGE_H_
 #include <gui.h>
-#include <sql.h>
 #include <client_register.h>
 
 namespace gui {
@@ -35,7 +34,6 @@ namespace gui {
                         data::client extract_page_entries();
 
                 private:
-                        storage::sql db{};
                         feature::client client_register{};
 
                 private:

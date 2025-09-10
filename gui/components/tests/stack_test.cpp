@@ -23,7 +23,6 @@ static std::string callback_result{""};
 static void callback_function(const std::string& _stack_page_name)
 {
 	callback_result = _stack_page_name;
-	std::cout << "Stack page name: " << _stack_page_name << std::endl;
 }
 
 /**********************************GUI PART STACK TEST LIST***************

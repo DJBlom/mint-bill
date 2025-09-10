@@ -24,8 +24,8 @@ namespace feature {
 			[[nodiscard]] virtual data::email prepare_for_email(const std::vector<std::any>&) const override;
 			[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const override;
 
-                        [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&);
-                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&);
+                        [[nodiscard]] virtual bool save(const data::invoice&);
+                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&);
 
                 private:
                         feature::email email{};

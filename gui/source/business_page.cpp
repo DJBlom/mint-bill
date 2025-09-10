@@ -114,7 +114,7 @@ void gui::business_page::connect_save_alert()
                         case GTK_RESPONSE_YES:
                                 syslog(LOG_INFO, "User chose to save the business information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->business_info.save(data, this->sql) == false)
+                                if (this->business_info.save(data) == false)
                                 {
                                         syslog(LOG_CRIT, "Failed to save the business information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
@@ -170,7 +170,7 @@ void gui::business_page::clear_entries()
 void gui::business_page::update_business_info_with_db_data(const std::string& _keyword)
 {
 	(void) _keyword;
-        data::business data{business_info.load(sql)};
+        data::business data{business_info.load()};
         if (data.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The business data is not valid - "

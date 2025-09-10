@@ -13,10 +13,12 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(storage
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/sql.cpp
+                ${PROJECT_SOURCE_DIR}/source/sqlite.cpp
         )
 
         target_include_directories(storage
+                PUBLIC
+                ${CMAKE_SOURCE_DIR}/app/include
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include
         )

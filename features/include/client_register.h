@@ -14,9 +14,9 @@ namespace feature {
                 public:
                         virtual ~client() override;
 
-                        [[nodiscard]] virtual data::client load(const std::string&, const interface::storage&) override;
-                        [[nodiscard]] virtual bool save(const data::client&, const interface::storage&) override;
-                        [[nodiscard]] virtual data::client search(const std::string&, const interface::storage&) override;
+                        [[nodiscard]] virtual data::client load(const std::string&) override;
+                        [[nodiscard]] virtual bool save(const data::client&) override;
+                        [[nodiscard]] virtual data::client search(const std::string&) override;
         };
 }
 #endif

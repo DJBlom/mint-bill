@@ -25,21 +25,23 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "statement_page_test"
 # CPPUTEST_EXE_FLAGS +=-sg "gui_part_dialog"
 # CPPUTEST_EXE_FLAGS +=-sg "page_range_test"
+# CPPUTEST_EXE_FLAGS +=-sg "sqlite_test"
+# CPPUTEST_EXE_FLAGS +=-sg "sql_operations_test"
+# CPPUTEST_EXE_FLAGS +=-sg "sql_row_processing_test"
 # CPPUTEST_EXE_FLAGS +=-sg "generate_invoice_pdf_test"
 # CPPUTEST_EXE_FLAGS +=-sg "generate_statement_pdf_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_page_column_view_test"
 
 CPPUTEST_CXXFLAGS +=-std=c++23 
-CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp)
-CPPUTEST_CFLAGS += $(shell pkg-config --cflags poppler-cpp) 
-CPPUTEST_CFLAGS += $(shell curl-config --cflags) 
-CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairomm-1.16 gtkmm-4.0 poppler-cpp)
-CPPUTEST_LDFLAGS += $(shell curl-config --libs)
+CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp sqlcipher) -DSQLITE_HAS_CODEC
+CPPUTEST_CFLAGS += $(shell pkg-config --cflags poppler-cpp sqlcipher) -DSQLITE_HAS_CODEC
+CPPUTEST_CFLAGS += $(shell curl-config --cflags)  
+CPPUTEST_LDFLAGS += $(shell pkg-config --libs cairomm-1.16 gtkmm-4.0 poppler-cpp sqlcipher)
+CPPUTEST_LDFLAGS += $(shell curl-config --libs) 
 
 
 SRC_DIRS :=\
-	$(PROJECT_DIR)/app/source\
 	$(PROJECT_DIR)/gui/source\
 	$(PROJECT_DIR)/gui/components/source\
 	$(PROJECT_DIR)/data/source\

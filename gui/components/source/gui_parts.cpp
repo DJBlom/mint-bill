@@ -1,6 +1,5 @@
 #include <gui_parts.h>
 #include <invoice_pdf.h>
-#include <sql.h>
 #include <errors.h>
 #include <iostream>
 #include <invoice_data.h>
@@ -11,13 +10,13 @@
 /***************************************************************************
  * Column Entries
  **************************************************************************/
-	Glib::RefPtr<gui::part::statement::columns::entries>
+Glib::RefPtr<gui::part::statement::columns::entries>
 gui::part::statement::columns::entries::create()
 {
 	return Glib::make_refptr_for_instance<entries>(new entries());
 }
 
-	Glib::RefPtr<gui::part::statement::columns::entries>
+Glib::RefPtr<gui::part::statement::columns::entries>
 gui::part::statement::columns::entries::create(const data::invoice& _invoice)
 {
 	return Glib::make_refptr_for_instance<entries>(new entries(_invoice));

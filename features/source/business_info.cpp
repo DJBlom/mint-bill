@@ -15,31 +15,28 @@ feature::business::~business()
 
 }
 
-data::business feature::business::load(const interface::storage& storage)
+data::business feature::business::load()
 {
         data::business business_data;
-        if (storage.is_open())
-        {
-                business_data.set_name("name");
-                business_data.set_address("address");
-                business_data.set_area_code("area code");
-                business_data.set_town("town");
-                business_data.set_cellphone("cellphone");
-                business_data.set_email("odn@gmail.com");
-                business_data.set_bank("bank");
-                business_data.set_branch_code("branch code");
-                business_data.set_account_number("account number");
-                business_data.set_password("");
-                business_data.set_client_message("client message");
-        }
+	business_data.set_name("name");
+	business_data.set_address("address");
+	business_data.set_area_code("area code");
+	business_data.set_town("town");
+	business_data.set_cellphone("cellphone");
+	business_data.set_email("odn@gmail.com");
+	business_data.set_bank("bank");
+	business_data.set_branch_code("branch code");
+	business_data.set_account_number("account number");
+	business_data.set_password("");
+	business_data.set_client_message("client message");
 
         return business_data;
 }
 
-bool feature::business::save(const data::business& data, const interface::storage& storage)
+bool feature::business::save(const data::business& data)
 {
         bool saved{false};
-        if (data.is_valid() && storage.is_open())
+        if (data.is_valid())
         {
                 saved = true;
 

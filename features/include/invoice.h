@@ -16,9 +16,9 @@ namespace interface {
                 public:
                         virtual ~invoice() = default;
 
-                        [[nodiscard]] virtual data::invoice load(const std::string&, const interface::storage&) = 0;
-                        [[nodiscard]] virtual bool save(const data::invoice&, const interface::storage&) = 0;
-                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&, const interface::storage&) = 0;
+                        [[nodiscard]] virtual data::invoice load(const std::string&) = 0;
+                        [[nodiscard]] virtual bool save(const data::invoice&) = 0;
+                        [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&) = 0;
         };
 }
 #endif
