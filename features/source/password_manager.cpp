@@ -66,15 +66,11 @@ feature::password_manager::password_manager(const std::string& _name): schema_na
 	}
 	else
 	{
-		this->schema = {
-			.name = this->schema_name.c_str(),
-			.flags = SECRET_SCHEMA_NONE,
-			.attributes = {
-				{  "number", SECRET_SCHEMA_ATTRIBUTE_INTEGER },
-				{  "even", SECRET_SCHEMA_ATTRIBUTE_BOOLEAN },
-				{  "NULL", static_cast<SecretSchemaAttributeType> (0) },
-			}
-		};
+		this->schema.name = this->schema_name.c_str();
+		this->schema.flags = SECRET_SCHEMA_NONE;
+		this->schema.attributes[0] = {"number", SECRET_SCHEMA_ATTRIBUTE_INTEGER};
+		this->schema.attributes[1] = {"even", SECRET_SCHEMA_ATTRIBUTE_BOOLEAN };
+		this->schema.attributes[2] = {nullptr, static_cast<SecretSchemaAttributeType> (0)};
 	}
 }
 
@@ -99,7 +95,7 @@ bool feature::password_manager::store_password(const std::string& _password, con
 	return success;
 }
 
-std::function<bool(const std::string&)> feature::password_manager::callback = nullptr;
+std::function<bool(const std::string&)> feature::password_manager::callback{nullptr};
 bool feature::password_manager::lookup_password(std::function<bool(const std::string&)> _callback, const int& _number)
 {
 	bool success{true};
@@ -119,8 +115,10 @@ bool feature::password_manager::lookup_password(std::function<bool(const std::st
 	return success;
 }
 
-void feature::password_manager::stored(GObject* _gobj, GAsyncResult* _result, gpointer _unused)
+void feature::password_manager::stored(GObject* _source, GAsyncResult* _result, gpointer _unused)
 {
+	(void) _source;
+	(void) _unused;
 	GError *error{nullptr};
 	secret_password_store_finish(_result, &error);
 	if (error != nullptr) //GCOVR_EXCL_START
@@ -131,10 +129,12 @@ void feature::password_manager::stored(GObject* _gobj, GAsyncResult* _result, gp
 	} //GCOVR_EXCL_STOP
 }
 
-void feature::password_manager::looked_up(GObject *source, GAsyncResult *result, gpointer unused)
+void feature::password_manager::looked_up(GObject *_source, GAsyncResult *_result, gpointer _unused)
 {
+	(void) _source;
+	(void) _unused;
 	GError *error{nullptr};
-	gchar *secret = secret_password_lookup_finish(result, &error);
+	gchar *secret = secret_password_lookup_finish(_result, &error);
 	if (error != nullptr) //GCOVR_EXCL_START
 	{
 		syslog(LOG_CRIT, "PASSWORD MANAGER: failed to look up password - "

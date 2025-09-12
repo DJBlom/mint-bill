@@ -74,8 +74,8 @@ private:
 	static void looked_up(GObject*, GAsyncResult*, gpointer);
 
 private:
-	std::string schema_name;
-	SecretSchema schema;
+	std::string schema_name{};
+	SecretSchema schema{};
 	static std::function<bool(const std::string&)> callback;
 };
 }
