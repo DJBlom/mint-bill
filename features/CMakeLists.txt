@@ -23,6 +23,8 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
+                ${PROJECT_SOURCE_DIR}/source/password_manager.cpp
         )
 
         target_include_directories(features
@@ -32,6 +34,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${GTKMM_INCLUDE_DIRS}
                 ${POPPLER_INCLUDE_DIRS}
                 ${CAIROMM_INCLUDE_DIRS}
+		${LIBSECRET_INCLUDE_DIRS}
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include

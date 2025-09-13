@@ -41,6 +41,7 @@ if(BUILD_PROJECT)
         pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
         pkg_check_modules(CAIROMM REQUIRED cairomm-1.16)
         pkg_check_modules(POPPLER REQUIRED poppler-cpp)
+	pkg_check_modules(LIBSECRET REQUIRED libsecret-1)
 
         add_compile_options(
                 -Wall
@@ -72,6 +73,7 @@ if(BUILD_PROJECT)
                 ${CAIROMM_INCLUDE_DIRS}
                 ${POPPLER_INCLUDE_DIRS}
 		${SQLCIPHER_INCLUDE_DIRS}
+		${LIBSECRET_INCLUDE_DIRS}
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
                 ${CMAKE_SOURCE_DIR}/gui/components/include
@@ -98,6 +100,7 @@ if(BUILD_PROJECT)
                 ${CAIROMM_LIBRARIES}
                 ${POPPLER_LIBRARIES}
 		${SQLCIPHER_LIBRARIES}
+		${LIBSECRET_LIBRARIES}
         )
 
         target_link_directories(${PROJECT_NAME}

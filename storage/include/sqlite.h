@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 #include <variant>
-#include <storage.h>
 #include <sqlcipher/sqlite3.h>
 
 
@@ -25,7 +24,7 @@ using column_value = param_values;
 using row = std::vector<column_value>;
 using rows = std::vector<row>;
 }
-class sqlite : public interface::storage {
+class sqlite {
 public:
 	sqlite() = delete;
 	explicit sqlite(const std::string&, const std::string&);
@@ -33,7 +32,7 @@ public:
 	sqlite(sqlite&&) = delete;
 	sqlite& operator= (const sqlite&) = delete;
 	sqlite& operator= (sqlite&&) = delete;
-	virtual ~sqlite() override;
+	virtual ~sqlite();
 
 	[[nodiscard]] virtual bool usert(const std::string&, const std::vector<param_values>&);
 	[[nodiscard]] virtual part::rows select(const std::string&, const std::vector<param_values>&);
