@@ -39,7 +39,7 @@ TEST(password_manager_test, fail_to_store_an_empty_password)
 {
 	bool expected{false};
 
-	CHECK_EQUAL(expected, password_manager.store_password("", 2));
+	CHECK_EQUAL(expected, password_manager.store_password("", 4));
 	CHECK_EQUAL(expected, password_manager.store_password(correct_password, std::numeric_limits<int>::max()));
 	CHECK_EQUAL(expected, password_manager.store_password(correct_password, std::numeric_limits<int>::min()));
 }
@@ -56,7 +56,7 @@ TEST(password_manager_test, lookup_password_in_the_secret_service_fail)
 {
 	std::string expected{""};
 
-	CHECK_EQUAL(expected, password_manager.lookup_password(2));
+	CHECK_EQUAL(expected, password_manager.lookup_password(4));
 	CHECK_EQUAL(expected, password_manager.lookup_password(std::numeric_limits<int>::max()));
 	CHECK_EQUAL(expected, password_manager.lookup_password(std::numeric_limits<int>::min()));
 }
@@ -64,6 +64,13 @@ TEST(password_manager_test, lookup_password_in_the_secret_service_fail)
 TEST(password_manager_test, lookup_password_in_the_secret_service_success)
 {
 	std::string expected{correct_password};
+	bool result{password_manager.store_password(correct_password, 1)};
 
 	CHECK_EQUAL(expected, password_manager.lookup_password(1));
+}
+
+TEST(password_manager_test, store_and_lookup_a_password_in_secret_service)
+{
+	CHECK_EQUAL(true, password_manager.store_password("password", 2));
+	CHECK_EQUAL("password", password_manager.lookup_password(2));
 }
