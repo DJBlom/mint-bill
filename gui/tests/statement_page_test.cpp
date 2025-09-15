@@ -11,7 +11,6 @@
 
 #include <gtkmm.h>
 #include <stack.h>
-#include <main_window.h>
 #include <statement_page.h>
 extern "C"
 {
@@ -23,7 +22,6 @@ extern "C"
  * 1) The statements data should be placed in columns on a single row. (Done)
  * 2) The user should be able to see the invoices associated with each
  *    statement. (Done)
- * 3)
  ******************************************************************************/
 TEST_GROUP(statement_page_test)
 {
