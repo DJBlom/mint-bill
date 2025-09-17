@@ -14,19 +14,19 @@ data::pdf_invoice::~pdf_invoice() {}
 
 data::pdf_invoice::pdf_invoice(const pdf_invoice& _copy)
         : client{_copy.client}, invoice{_copy.invoice},
-          business{_copy.business}, flags{_copy.flags},
+          admin{_copy.admin}, flags{_copy.flags},
           data_mutex{}, mask{_copy.mask}
 {
 }
 
 data::pdf_invoice::pdf_invoice(pdf_invoice&& _move)
         : client{std::move(_move.client)}, invoice{std::move(_move.invoice)},
-          business{std::move(_move.business)}, flags{std::move(_move.flags)},
+          admin{std::move(_move.admin)}, flags{std::move(_move.flags)},
           data_mutex{}, mask{std::move(_move.mask)}
 {
         _move.client = client;
         _move.invoice = invoice;
-        _move.business = business;
+        _move.admin = admin;
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -43,7 +43,7 @@ data::pdf_invoice& data::pdf_invoice::operator= (pdf_invoice&& _move)
 {
         std::swap(client, _move.client);
         std::swap(invoice, _move.invoice);
-        std::swap(business, _move.business);
+        std::swap(admin, _move.admin);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -93,23 +93,23 @@ data::invoice data::pdf_invoice::get_invoice() const
         return this->invoice;
 }
 
-void data::pdf_invoice::set_business(const data::business& _business)
+void data::pdf_invoice::set_business(const data::admin& _business)
 {
         if (_business.is_valid() == true)
         {
-                set_flag(FLAG::BUSINESS);
+                set_flag(FLAG::ADMIN);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->business = std::move(_business);
+                this->admin = std::move(_business);
         }
         else
         {
-                clear_flag(FLAG::BUSINESS);
+                clear_flag(FLAG::ADMIN);
         }
 }
 
-data::business data::pdf_invoice::get_business() const
+data::admin data::pdf_invoice::get_business() const
 {
-        return this->business;
+        return this->admin;
 }
 
 bool data::pdf_invoice::check_flags() const

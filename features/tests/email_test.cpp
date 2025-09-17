@@ -15,7 +15,7 @@
 #include <email_data.h>
 #include <client_data.h>
 #include <invoice_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 #include <pdf_invoice_data.h>
 #include <generate_pdf.h>
 extern "C"
@@ -45,7 +45,7 @@ TEST(email_test, send_data_under_good_conditions)
         std::string short_description{"Machining steel"};
         data::pdf_invoice pdf_data;
 
-        data::business business_data{test::generate_business_data()};
+        data::admin business_data{test::generate_business_data()};
         pdf_data.set_business(business_data);
 
         data::client client_data{test::generate_client_data()};
@@ -69,7 +69,7 @@ TEST(email_test, send_multiple_attachments)
 {
         data::pdf_invoice pdf_data;
 
-        data::business business_data{test::generate_business_data()};
+        data::admin business_data{test::generate_business_data()};
         pdf_data.set_business(business_data);
 
         data::client client_data{test::generate_client_data()};
@@ -101,7 +101,7 @@ TEST(email_test, send_no_data)
         std::string short_description{""};
         data::pdf_invoice pdf_data;
 
-        data::business business_data;
+        data::admin business_data;
         pdf_data.set_business(business_data);
 
         data::client client_data;

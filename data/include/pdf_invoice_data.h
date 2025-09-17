@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <client_data.h>
 #include <invoice_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 
 namespace data {
         struct pdf_invoice {
@@ -29,8 +29,8 @@ namespace data {
                         [[nodiscard]] data::client get_client() const;
                         virtual void set_invoice(const data::invoice&);
                         [[nodiscard]] data::invoice get_invoice() const;
-                        virtual void set_business(const data::business&);
-                        [[nodiscard]] data::business get_business() const;
+                        virtual void set_business(const data::admin&);
+                        [[nodiscard]] data::admin get_business() const;
 
                 private:
                         void set_flag(const int&);
@@ -42,14 +42,14 @@ namespace data {
 
                         data::client client;
                         data::invoice invoice;
-                        data::business business;
+                        data::admin admin;
                         mask_type flags{0x0};
                         std::mutex data_mutex{};
                         mask_type mask{0x7};
                         enum FLAG {
                                 CLIENT,
                                 INVOICE,
-                                BUSINESS
+				ADMIN
                         };
 
                         enum BIT {

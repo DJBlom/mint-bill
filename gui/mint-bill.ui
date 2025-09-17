@@ -691,7 +691,7 @@
                     <child>
                       <object class="GtkStackPage" id="admin-page">
                         <property name="child">
-                          <object class="GtkBox" id="business-page-box">
+                          <object class="GtkBox" id="admin-page-box">
                             <property name="halign">center</property>
                             <property name="homogeneous">True</property>
                             <property name="margin-bottom">50</property>
@@ -700,13 +700,13 @@
                             <property name="margin-top">50</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkGrid" id="business-common-information-grid">
+                              <object class="GtkGrid" id="admin-common-information-grid">
                                 <property name="hexpand">True</property>
                                 <property name="margin-end">25</property>
                                 <property name="margin-start">25</property>
                                 <property name="row-spacing">10</property>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-name-entry">
+                                  <object class="GtkEntry" id="admin-page-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Besigheid naam...</property>
                                     <layout>
@@ -717,7 +717,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-address-entry">
+                                  <object class="GtkEntry" id="admin-page-address-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Straat adres...</property>
                                     <layout>
@@ -729,7 +729,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-town-name-entry">
+                                  <object class="GtkEntry" id="admin-page-town-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Dorp naam...</property>
                                     <layout>
@@ -740,7 +740,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-cell-number-entry">
+                                  <object class="GtkEntry" id="admin-page-cell-number-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Kontak nommer...</property>
                                     <layout>
@@ -751,7 +751,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="business-page-grid-label">
+                                  <object class="GtkLabel" id="admin-page-grid-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -767,7 +767,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-email-entry">
+                                  <object class="GtkEntry" id="admin-page-email-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">E-pos...</property>
                                     <layout>
@@ -778,7 +778,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-area-code-entry">
+                                  <object class="GtkEntry" id="admin-page-area-code-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Area kode...</property>
                                     <layout>
@@ -789,7 +789,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkPasswordEntry" id="business-page-email-password-entry">
+                                  <object class="GtkPasswordEntry" id="admin-page-email-password-entry">
                                     <property name="activates-default">True</property>
                                     <property name="placeholder-text">E-pos wagwoord...</property>
                                     <layout>
@@ -802,14 +802,14 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkGrid" id="business-bank-information-grid">
+                              <object class="GtkGrid" id="admin-bank-information-grid">
                                 <property name="column-homogeneous">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="margin-end">25</property>
                                 <property name="margin-start">25</property>
                                 <property name="row-spacing">10</property>
                                 <child>
-                                  <object class="GtkLabel" id="business-page-bank-label">
+                                  <object class="GtkLabel" id="admin-page-bank-label">
                                     <property name="can-focus">False</property>
                                     <property name="can-target">False</property>
                                     <property name="ellipsize">middle</property>
@@ -826,7 +826,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-bank-name-entry">
+                                  <object class="GtkEntry" id="admin-page-bank-name-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Bank naam...</property>
                                     <layout>
@@ -837,7 +837,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-branch-code-entry">
+                                  <object class="GtkEntry" id="admin-page-branch-code-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Tak kode...</property>
                                     <layout>
@@ -848,7 +848,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-account-number-entry">
+                                  <object class="GtkEntry" id="admin-page-account-number-entry">
                                     <property name="max-length">50</property>
                                     <property name="placeholder-text">Rekeningnommer...</property>
                                     <layout>
@@ -859,7 +859,7 @@
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="business-page-client-message-entry">
+                                  <object class="GtkEntry" id="admin-page-client-message-entry">
                                     <property name="max-length">100</property>
                                     <property name="placeholder-text">Boodskap vir kliënt...</property>
                                     <layout>
@@ -888,7 +888,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkMessageDialog" id="business-save-button-alert">
+  <object class="GtkMessageDialog" id="admin-save-button-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">yes-no</property>
     <property name="destroy-with-parent">True</property>
@@ -898,7 +898,7 @@
     <property name="title">Waarskuwing</property>
     <property name="transient-for">main-window</property>
   </object>
-  <object class="GtkMessageDialog" id="business-wrong-info-alert">
+  <object class="GtkMessageDialog" id="admin-wrong-info-alert">
     <property name="accessible-role">dialog</property>
     <property name="buttons">close</property>
     <property name="destroy-with-parent">True</property>

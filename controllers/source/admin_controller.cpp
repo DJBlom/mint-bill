@@ -18,7 +18,7 @@ controller::admin::~admin()
 std::any controller::admin::load(const std::string& _keyword)
 {
 	(void) _keyword;
-        data::business business_data;
+        data::admin business_data;
 	business_data.set_name("name");
 	business_data.set_address("address");
 	business_data.set_area_code("area code");
@@ -37,7 +37,7 @@ std::any controller::admin::load(const std::string& _keyword)
 bool controller::admin::save(const std::any& _data)
 {
         bool saved{false};
-	data::business data{std::any_cast<data::business> (_data)};
+	data::admin data{std::any_cast<data::admin> (_data)};
         if (data.is_valid())
         {
                 saved = true;

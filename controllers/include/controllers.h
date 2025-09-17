@@ -44,8 +44,8 @@ class business {
 public:
 	virtual ~business() = default;
 
-	[[nodiscard]] virtual data::business load() = 0;
-	[[nodiscard]] virtual bool save(const data::business&) = 0;
+	[[nodiscard]] virtual data::admin load() = 0;
+	[[nodiscard]] virtual bool save(const data::admin&) = 0;
 };
 }
 #endif

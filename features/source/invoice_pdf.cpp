@@ -148,7 +148,7 @@ bool feature::invoice_pdf::add_header(const std::string& _data)
 
 bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
 {
-        data::business business{_data.get_business()};
+        data::admin admin{_data.get_business()};
         data::client client{_data.get_client()};
         align_information_section();
         add_new_section();
@@ -156,7 +156,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
         if (write_to_pdf(client_business_name, font_size::information) == false)
                 return false;
 
-        std::string name{business.get_name()};
+        std::string name{admin.get_name()};
         if (write_to_pdf_from_right_information(name, font_size::information) == false)
                 return false;
 
@@ -166,7 +166,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
         if (write_to_pdf(client_business_address, font_size::information) == false)
                 return false;
 
-        std::string address{business.get_address()};
+        std::string address{admin.get_address()};
         if (write_to_pdf_from_right_information(address, font_size::information) == false)
                 return false;
 
@@ -176,7 +176,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
         if (write_to_pdf(client_business_town, font_size::information) == false)
                 return false;
 
-        std::string town{business.get_town() + ", " + business.get_area_code()};
+        std::string town{admin.get_town() + ", " + admin.get_area_code()};
         if (write_to_pdf_from_right_information(town, font_size::information) == false)
                 return false;
 
@@ -186,12 +186,12 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
         if (write_to_pdf(vat_number, font_size::information) == false)
                 return false;
 
-        std::string cellphone{business.get_cellphone()};
+        std::string cellphone{admin.get_cellphone()};
         if (write_to_pdf_from_right_information(cellphone, font_size::information) == false)
                 return false;
 
         add_new_line();
-        std::string email{business.get_email()};
+        std::string email{admin.get_email()};
         if (write_to_pdf_from_right_information(email, font_size::information) == false)
                 return false;
 
@@ -347,7 +347,7 @@ bool feature::invoice_pdf::add_grand_total(const data::invoice& _data)
         return true;
 }
 
-bool feature::invoice_pdf::add_payment_method(const data::business& _data)
+bool feature::invoice_pdf::add_payment_method(const data::admin& _data)
 {
         align_to_left_border();
         add_new_section();

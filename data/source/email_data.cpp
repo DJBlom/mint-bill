@@ -15,19 +15,19 @@ namespace limits {
 data::email::email() {}
 
 data::email::email(const email& _copy)
-        : attachments{_copy.attachments}, client{_copy.client}, business{_copy.business},
+        : attachments{_copy.attachments}, client{_copy.client}, admin{_copy.admin},
           subject{_copy.subject}, flags{_copy.flags}, email_data{}, mask{_copy.mask}
 {
 }
 
 data::email::email(email&& _move)
         : attachments{std::move(_move.attachments)}, client{std::move(_move.client)},
-	  business{std::move(_move.business)}, subject{std::move(_move.subject)},
+	  admin{std::move(_move.admin)}, subject{std::move(_move.subject)},
 	  flags{std::move(_move.flags)}, email_data{}, mask{std::move(_move.mask)}
 {
         _move.attachments.clear();
         _move.client = client;
-        _move.business = business;
+        _move.admin = admin;
         _move.subject.clear();
         _move.flags = 0;
         _move.mask = this->mask;
@@ -45,7 +45,7 @@ data::email& data::email::operator= (email&& _move)
 {
         std::swap(attachments, _move.attachments);
         std::swap(client, _move.client);
-        std::swap(business, _move.business);
+        std::swap(admin, _move.admin);
         std::swap(subject, _move.subject);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
@@ -98,23 +98,23 @@ data::client data::email::get_client() const
         return this->client;
 }
 
-void data::email::set_business(const data::business& _business)
+void data::email::set_business(const data::admin& _business)
 {
         if (_business.is_valid())
         {
-                set_flag(FLAG::BUSINESS);
+                set_flag(FLAG::ADMIN);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->business = std::move(_business);
+                this->admin = std::move(_business);
         }
         else
         {
-                clear_flag(FLAG::BUSINESS);
+                clear_flag(FLAG::ADMIN);
         }
 }
 
-data::business data::email::get_business() const
+data::admin data::email::get_business() const
 {
-        return this->business;
+        return this->admin;
 }
 
 void data::email::set_subject(const std::string& _subject)

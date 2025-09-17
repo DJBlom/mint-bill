@@ -12,7 +12,7 @@
 #include <string>
 #include <cstdint>
 #include <client_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 
 namespace data {
         struct email {
@@ -29,8 +29,8 @@ namespace data {
                         [[nodiscard]] std::vector<std::string> get_attachments() const;
                         virtual void set_client(const data::client&);
                         [[nodiscard]] data::client get_client() const;
-                        virtual void set_business(const data::business&);
-                        [[nodiscard]] data::business get_business() const;
+                        virtual void set_business(const data::admin&);
+                        [[nodiscard]] data::admin get_business() const;
                         virtual void set_subject(const std::string&);
                         [[nodiscard]] std::string get_subject() const;
 
@@ -45,7 +45,7 @@ namespace data {
 
                         std::vector<std::string> attachments{""};
                         data::client client{};
-                        data::business business{};
+                        data::admin admin{};
                         std::string subject{""};
                         mask_type flags{0x0};
                         std::mutex email_data{};
@@ -53,7 +53,7 @@ namespace data {
                         enum FLAG {
                                 PDF = 0,
                                 CLIENT,
-                                BUSINESS,
+                                ADMIN,
                                 SUBJECT
                         };
 

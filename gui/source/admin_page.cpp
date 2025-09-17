@@ -1,5 +1,5 @@
 /***********************************************************
- * Contents: Business Information Page class implementation
+ * Contents: admin Information Page class implementation
  * Author: Dawid J. Blom
  * Date: November 14, 2024
  *
@@ -69,31 +69,31 @@ bool gui::admin_page::save()
 void gui::admin_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-name-entry")};
         this->street_address = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-address-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-address-entry")};
         this->area_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-area-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-area-code-entry")};
         this->town_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-town-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-town-name-entry")};
         this->cellphone = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-cell-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-cell-number-entry")};
         this->email = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-email-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-email-entry")};
         this->bank_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-bank-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-bank-name-entry")};
         this->branch_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-branch-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-branch-code-entry")};
         this->account_number = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-account-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-account-number-entry")};
         this->client_message = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-client-message-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-client-message-entry")};
         this->password = std::unique_ptr<Gtk::PasswordEntry>{
-                _ui_builder->get_widget<Gtk::PasswordEntry>("business-page-email-password-entry")};
+                _ui_builder->get_widget<Gtk::PasswordEntry>("admin-page-email-password-entry")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
+                _ui_builder->get_widget<Gtk::MessageDialog>("admin-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
+                _ui_builder->get_widget<Gtk::MessageDialog>("admin-save-button-alert")};
         this->organization_label = std::unique_ptr<Gtk::Label>{
                 _ui_builder->get_widget<Gtk::Label>("organization-name")};
 }
@@ -108,15 +108,15 @@ void gui::admin_page::connect_save_alert()
         }
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::business data{extract_page_entries()};
+                data::admin data{extract_page_entries()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
-                                syslog(LOG_INFO, "User chose to save the business information - "
+                                syslog(LOG_INFO, "User chose to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 if (this->admin_controller.save(data) == false)
                                 {
-                                        syslog(LOG_CRIT, "Failed to save the business information - "
+                                        syslog(LOG_CRIT, "Failed to save the admin information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();
@@ -129,7 +129,7 @@ void gui::admin_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
-                                syslog(LOG_INFO, "User chose not to save the business information - "
+                                syslog(LOG_INFO, "User chose not to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
@@ -171,10 +171,10 @@ void gui::admin_page::update_business_info_with_db_data(const std::string& _keyw
 {
 	(void) _keyword;
 	std::any data{admin_controller.load("tme")};
-	data::business business_data{std::any_cast<data::business> (data)};
+	data::admin business_data{std::any_cast<data::admin> (data)};
         if (business_data.is_valid() == false)
         {
-                syslog(LOG_CRIT, "The business data is not valid - "
+                syslog(LOG_CRIT, "The admin data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
@@ -191,9 +191,9 @@ void gui::admin_page::update_business_info_with_db_data(const std::string& _keyw
         this->client_message->set_text(business_data.get_client_message());
 }
 
-data::business gui::admin_page::extract_page_entries()
+data::admin gui::admin_page::extract_page_entries()
 {
-        data::business data{};
+        data::admin data{};
         data.set_name(this->name->get_text());
         data.set_address(this->street_address->get_text());
         data.set_area_code(this->area_code->get_text());

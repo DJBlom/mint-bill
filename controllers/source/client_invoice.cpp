@@ -31,7 +31,7 @@ std::vector<std::any> feature::client_invoice::load(const std::string& _business
 			client_data.set_statement_schedule("4,4");
 			pdf_invoice_data.set_client(client_data);
 
-			data::business business_data;
+			data::admin business_data;
 			business_data.set_name("T.M Engineering");
 			business_data.set_address("geelsterd 8");
 			business_data.set_area_code("5432");
@@ -167,7 +167,7 @@ bool feature::client_invoice::save(const data::invoice& data)
         bool updated{false};
         if (data.is_valid())
         {
-                std::cout << "Business name: " << data.get_business_name() << std::endl;
+                std::cout << "admin name: " << data.get_business_name() << std::endl;
                 std::cout << "Invoice number: " << data.get_invoice_number() << std::endl;
                 std::cout << "Invoice date: " << data.get_invoice_date() << std::endl;
                 std::cout << "Job card number: " << data.get_job_card_number() << std::endl;

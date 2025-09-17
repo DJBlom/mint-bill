@@ -15,7 +15,7 @@
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 #include <cairomm/cairomm.h>
 #include <boundary_slicer.h>
 #include <pdf_statement_data.h>
@@ -35,12 +35,12 @@ public:
 
 private:
 	[[nodiscard]] bool add_header(const std::string&);
-	[[nodiscard]] bool add_information(const data::client&, const data::business&);
+	[[nodiscard]] bool add_information(const data::client&, const data::admin&);
 	[[nodiscard]] bool add_statement_information(const data::pdf_statement&);
 	[[nodiscard]] bool add_statements(const data::pdf_statement&);
 	[[nodiscard]] bool add_items(const std::vector<data::pdf_invoice>&);
 	[[nodiscard]] bool add_grand_total(const data::pdf_statement&);
-	[[nodiscard]] bool add_payment_method(const data::business&);
+	[[nodiscard]] bool add_payment_method(const data::admin&);
 	[[nodiscard]] bool write_to_pdf(const std::string&, const double&);
 	[[nodiscard]] bool write_to_pdf_in_first_quarter(const std::string&, const double&);
 	[[nodiscard]] bool write_to_pdf_in_center(const std::string&, const double&);

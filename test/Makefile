@@ -15,6 +15,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_data_test"
+CPPUTEST_EXE_FLAGS +=-sg "admin_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"
@@ -49,6 +50,7 @@ SRC_DIRS :=\
 	$(PROJECT_DIR)/utility/source\
 	$(PROJECT_DIR)/storage/source\
 	$(PROJECT_DIR)/features/source\
+	$(PROJECT_DIR)/controllers/source\
 
 
 INCLUDE_DIRS :=\
@@ -64,6 +66,7 @@ INCLUDE_DIRS :=\
 	$(PROJECT_DIR)/features/include\
 	$(PROJECT_DIR)/features/mocks/include\
 	$(PROJECT_DIR)/features/tests/include\
+	$(PROJECT_DIR)/controllers/include\
 
 
 TEST_SRC_DIRS :=\
@@ -75,6 +78,7 @@ TEST_SRC_DIRS :=\
 	$(PROJECT_DIR)/storage/tests\
 	$(PROJECT_DIR)/features/tests\
 	$(PROJECT_DIR)/features/tests/source\
+	$(PROJECT_DIR)/controllers/tests/source\
 
 
 MOCKS_SRC_DIRS := \
@@ -84,6 +88,7 @@ MOCKS_SRC_DIRS := \
 	$(PROJECT_DIR)/utility/mocks/source\
 	$(PROJECT_DIR)/storage/mocks/source\
 	$(PROJECT_DIR)/features/mocks/source\
+	$(PROJECT_DIR)/controllers/mocks/source\
 
 
 CPPUTEST_USE_EXTENSIONS := Y

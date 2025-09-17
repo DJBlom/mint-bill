@@ -1,11 +1,11 @@
 /********************************************************
- * Contents: Business data implementation
+ * Contents: admin data implementation
  * Author: Dawid J. Blom
  * Date: November 18, 2024
  *
  * NOTE:
  *******************************************************/
-#include <business_data.h>
+#include <admin_data.h>
 
 
 namespace upper_bound {
@@ -14,7 +14,7 @@ namespace upper_bound {
         constexpr std::uint8_t PASSWORD_LENGTH{100};
 }
 
-data::business::business(const business& _copy)
+data::admin::admin(const admin& _copy)
         : name{_copy.name}, address{_copy.address}, area_code{_copy.area_code},
           town{_copy.town}, cellphone{_copy.cellphone}, email{_copy.email},
           bank{_copy.bank}, branch_code{_copy.branch_code}, account_number{_copy.account_number},
@@ -23,7 +23,7 @@ data::business::business(const business& _copy)
 {
 }
 
-data::business::business(business&& _move)
+data::admin::admin(admin&& _move)
         : name{std::move(_move.name)}, address{std::move(_move.address)}, area_code{std::move(_move.area_code)},
           town{std::move(_move.town)}, cellphone{std::move(_move.cellphone)}, email{std::move(_move.email)},
           bank{std::move(_move.bank)}, branch_code{std::move(_move.branch_code)}, account_number{std::move(_move.account_number)},
@@ -45,15 +45,15 @@ data::business::business(business&& _move)
         _move.mask = this->mask;
 }
 
-data::business& data::business::operator= (const business& _copy)
+data::admin& data::admin::operator= (const admin& _copy)
 {
-        business temp {_copy};
+        admin temp {_copy};
         std::swap(temp, *this);
 
         return *this;
 }
 
-data::business& data::business::operator= (business&& _move)
+data::admin& data::admin::operator= (admin&& _move)
 {
         std::swap(name, _move.name);
         std::swap(address, _move.address);
@@ -72,12 +72,12 @@ data::business& data::business::operator= (business&& _move)
         return *this;
 }
 
-bool data::business::is_valid() const
+bool data::admin::is_valid() const
 {
         return this->check_flags();
 }
 
-void data::business::set_name(const std::string& _name)
+void data::admin::set_name(const std::string& _name)
 {
         if (!_name.empty() && (_name.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -91,12 +91,12 @@ void data::business::set_name(const std::string& _name)
         }
 }
 
-std::string data::business::get_name() const
+std::string data::admin::get_name() const
 {
         return this->name;
 }
 
-void data::business::set_address(const std::string& _address)
+void data::admin::set_address(const std::string& _address)
 {
         if (!_address.empty() && (_address.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -110,12 +110,12 @@ void data::business::set_address(const std::string& _address)
         }
 }
 
-std::string data::business::get_address() const
+std::string data::admin::get_address() const
 {
         return this->address;
 }
 
-void data::business::set_area_code(const std::string& _code)
+void data::admin::set_area_code(const std::string& _code)
 {
         if (!_code.empty() && (_code.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -129,12 +129,12 @@ void data::business::set_area_code(const std::string& _code)
         }
 }
 
-std::string data::business::get_area_code() const
+std::string data::admin::get_area_code() const
 {
         return this->area_code;
 }
 
-void data::business::set_town(const std::string& _town)
+void data::admin::set_town(const std::string& _town)
 {
         if (!_town.empty() && (_town.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -148,12 +148,12 @@ void data::business::set_town(const std::string& _town)
         }
 }
 
-std::string data::business::get_town() const
+std::string data::admin::get_town() const
 {
         return this->town;
 }
 
-void data::business::set_cellphone(const std::string& _number)
+void data::admin::set_cellphone(const std::string& _number)
 {
         if (!_number.empty() && (_number.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -167,12 +167,12 @@ void data::business::set_cellphone(const std::string& _number)
         }
 }
 
-std::string data::business::get_cellphone() const
+std::string data::admin::get_cellphone() const
 {
         return this->cellphone;
 }
 
-void data::business::set_email(const std::string& _email)
+void data::admin::set_email(const std::string& _email)
 {
         std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
         bool correct_email_format{std::regex_search(_email, email_regex)};
@@ -188,12 +188,12 @@ void data::business::set_email(const std::string& _email)
         }
 }
 
-std::string data::business::get_email() const
+std::string data::admin::get_email() const
 {
         return this->email;
 }
 
-void data::business::set_bank(const std::string& _bank)
+void data::admin::set_bank(const std::string& _bank)
 {
         if (!_bank.empty() && (_bank.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -207,12 +207,12 @@ void data::business::set_bank(const std::string& _bank)
         }
 }
 
-std::string data::business::get_bank() const
+std::string data::admin::get_bank() const
 {
         return this->bank;
 }
 
-void data::business::set_branch_code(const std::string& _branch_number)
+void data::admin::set_branch_code(const std::string& _branch_number)
 {
         if (!_branch_number.empty() && (_branch_number.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -226,12 +226,12 @@ void data::business::set_branch_code(const std::string& _branch_number)
         }
 }
 
-std::string data::business::get_branch_code() const
+std::string data::admin::get_branch_code() const
 {
         return this->branch_code;
 }
 
-void data::business::set_account_number(const std::string& _account_number)
+void data::admin::set_account_number(const std::string& _account_number)
 {
         if (!_account_number.empty() && (_account_number.length() <= upper_bound::MAX_ENTRY_LENGTH))
         {
@@ -245,12 +245,12 @@ void data::business::set_account_number(const std::string& _account_number)
         }
 }
 
-std::string data::business::get_account_number() const
+std::string data::admin::get_account_number() const
 {
         return this->account_number;
 }
 
-void data::business::set_client_message(const std::string& _message)
+void data::admin::set_client_message(const std::string& _message)
 {
         if (!_message.empty() && (_message.length() <= upper_bound::MESSAGE_LENGTH))
         {
@@ -264,12 +264,12 @@ void data::business::set_client_message(const std::string& _message)
         }
 }
 
-std::string data::business::get_client_message() const
+std::string data::admin::get_client_message() const
 {
         return this->client_message;
 }
 
-void data::business::set_password(const std::string& _password)
+void data::admin::set_password(const std::string& _password)
 {
         if (_password.length() <= upper_bound::PASSWORD_LENGTH)
         {
@@ -283,23 +283,23 @@ void data::business::set_password(const std::string& _password)
         }
 }
 
-std::string data::business::get_password() const
+std::string data::admin::get_password() const
 {
         return this->password;
 }
 
-bool data::business::check_flags() const
+bool data::admin::check_flags() const
 {
         return (((this->flags & this->mask) == this->mask) && ((this->flags & ~this->mask) == 0));
 }
 
-void data::business::set_flag(const int& bit)
+void data::admin::set_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
         this->flags |= static_cast<mask_type>(BIT::SET << bit);
 }
 
-void data::business::clear_flag(const int& bit)
+void data::admin::clear_flag(const int& bit)
 {
         std::lock_guard<std::mutex> guard(this->business_data);
         this->flags &= ~static_cast<mask_type> (BIT::CLEAR << bit);

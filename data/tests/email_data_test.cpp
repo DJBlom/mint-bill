@@ -12,7 +12,7 @@
 #include <vector>
 #include <email_data.h>
 #include <client_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 extern "C"
 {
 
@@ -20,7 +20,7 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1) Combine business data with client data. (Done)
+ * 1) Combine admin data with client data. (Done)
  * 2) Ensure data copyable. (Done)
  * 3) Ensure data moveable. (Done)
  * 4) Ensure data thread safety. (Done)
@@ -53,19 +53,19 @@ TEST(email_data_test, handle_the_business_name)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
-        email.set_business(business);
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
+        email.set_business(admin);
         email.set_subject("Invoice");
 
         CHECK_EQUAL(true, email.is_valid());
@@ -87,19 +87,19 @@ TEST(email_data_test, handle_limits)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
-        email.set_business(business);
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
+        email.set_business(admin);
         std::string file_name{"invoicetkrlsjerkwerkrlijkrldsalkrklwijcklljrewsfjkl"};
         email.set_subject(file_name);
 
@@ -122,20 +122,20 @@ TEST(email_data_test, handle_bad_data)
         client.set_statement_schedule("");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("");
-        business.set_address("");
-        business.set_area_code("");
-        business.set_town("");
-        business.set_cellphone("");
-        business.set_email("");
-        business.set_bank("");
-        business.set_branch_code("");
-        business.set_account_number("");
-        business.set_client_message("");
-        business.set_password("");
+        data::admin admin{};
+        admin.set_name("");
+        admin.set_address("");
+        admin.set_area_code("");
+        admin.set_town("");
+        admin.set_cellphone("");
+        admin.set_email("");
+        admin.set_bank("");
+        admin.set_branch_code("");
+        admin.set_account_number("");
+        admin.set_client_message("");
+        admin.set_password("");
         email.set_subject("");
-        email.set_business(business);
+        email.set_business(admin);
 
         CHECK_EQUAL(false, email.is_valid());
 }
@@ -147,8 +147,8 @@ TEST(email_data_test, handle_no_data)
         email.set_attachments(pdf);
         data::client client{};
         email.set_client(client);
-        data::business business{};
-        email.set_business(business);
+        data::admin admin{};
+        email.set_business(admin);
         email.set_subject("");
 
         CHECK_EQUAL(false, email.is_valid());
@@ -170,19 +170,19 @@ TEST(email_data_test, ensure_copyable)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
-        email.set_business(business);
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
+        email.set_business(admin);
         email.set_subject("Invoice");
 
         data::email tmp{};
@@ -208,20 +208,20 @@ TEST(email_data_test, ensure_copy_constructable)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
-        email.set_business(business);
+        email.set_business(admin);
         data::email tmp{};
         tmp = email;
 
@@ -246,20 +246,20 @@ TEST(email_data_test, ensure_moveable)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
-        email.set_business(business);
+        email.set_business(admin);
         data::email tmp{email};
 
 
@@ -282,20 +282,20 @@ TEST(email_data_test, ensure_move_constructable)
         client.set_statement_schedule("4,4");
         email.set_client(client);
 
-        data::business business{};
-        business.set_name("tme");
-        business.set_address("geelsterd 8");
-        business.set_area_code("5432");
-        business.set_town("george");
-        business.set_cellphone("0832315944");
-        business.set_email("odn@gmail.com");
-        business.set_bank("Standard Bank");
-        business.set_branch_code("043232");
-        business.set_account_number("0932443824");
-        business.set_client_message("Thank you for your support");
-        business.set_password("fadsfdsafadsf");
+        data::admin admin{};
+        admin.set_name("tme");
+        admin.set_address("geelsterd 8");
+        admin.set_area_code("5432");
+        admin.set_town("george");
+        admin.set_cellphone("0832315944");
+        admin.set_email("odn@gmail.com");
+        admin.set_bank("Standard Bank");
+        admin.set_branch_code("043232");
+        admin.set_account_number("0932443824");
+        admin.set_client_message("Thank you for your support");
+        admin.set_password("fadsfdsafadsf");
         email.set_subject("Invoice");
-        email.set_business(business);
+        email.set_business(admin);
         data::email tmp{std::move(email)};
 
 

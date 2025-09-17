@@ -55,9 +55,9 @@ bool test::generate_statement_pdf(const std::string& _pdf_data, const std::strin
         return generated;
 }
 
-data::business test::generate_business_data()
+data::admin test::generate_business_data()
 {
-        data::business expected;
+        data::admin expected;
         expected.set_name("T.M. Engineering");
         expected.set_address("Geelsterd 8");
         expected.set_area_code("5432");
@@ -76,7 +76,7 @@ data::business test::generate_business_data()
 data::client test::generate_client_data()
 {
         data::client expected;
-        expected.set_business_name("Client Business");
+        expected.set_business_name("Client admin");
         expected.set_business_address("Geelsterd 8");
         expected.set_business_area_code("543543");
         expected.set_business_town_name("George");
@@ -91,7 +91,7 @@ data::client test::generate_client_data()
 data::client test::generate_client_data_multiple_emails()
 {
         data::client expected;
-        expected.set_business_name("Client Business");
+        expected.set_business_name("Client admin");
         expected.set_business_address("Geelsterd 8");
         expected.set_business_area_code("543543");
         expected.set_business_town_name("George");
@@ -120,7 +120,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string paid_status{"Not Paid"};
-        std::string name{"Test Business"};
+        std::string name{"Test admin"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};
@@ -157,7 +157,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc, const int& n
         std::string order_number{"order number 123"};
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
-        std::string name{"Test Business"};
+        std::string name{"Test admin"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
         std::string grand_total{"1234.00"};

@@ -1,5 +1,5 @@
 /********************************************************
- * Contents: Business Information Page class definition
+ * Contents: admin Information Page class definition
  * Author: Dawid J. Blom
  * Date: November 14, 2024
  *
@@ -31,7 +31,7 @@ private:
 	void connect_save_alert();
 	void clear_entries();
 	void update_business_info_with_db_data(const std::string&);
-	data::business extract_page_entries();
+	data::admin extract_page_entries();
 
 private:
 	controller::admin admin_controller{};
