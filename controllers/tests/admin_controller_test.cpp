@@ -5,11 +5,11 @@
  *
  * Note: Refer to the TEST LIST for details on what this fixture tests.
  ******************************************************************************/
-#include <business_info.h>
-#include <business_data.h>
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
+#include <admin_controller.h>
+#include <business_data.h>
 
 extern "C"
 {
@@ -21,10 +21,10 @@ extern "C"
  * 1) Load the data from the database. (Done)
  * 2) Save the data to the database. (Done)
  ******************************************************************************/
-TEST_GROUP(business_feature_test)
+TEST_GROUP(admin_controller_test)
 {
         data::business business_data;
-        feature::business business_feature;
+        controller::admin admin;
 	void setup()
 	{
 	}
@@ -34,14 +34,14 @@ TEST_GROUP(business_feature_test)
 	}
 };
 
-TEST(business_feature_test, successfully_load_data_from_database)
+TEST(admin_controller_test, successfully_load_data_from_database)
 {
-        data::business data = business_feature.load();
+        data::business data = admin.load();
 
         CHECK_EQUAL(true, data.is_valid());
 }
 
-TEST(business_feature_test, successfully_save_the_data)
+TEST(admin_controller_test, successfully_save_the_data)
 {
         business_data.set_name("tme");
         business_data.set_address("geelsterd 8");
@@ -55,10 +55,10 @@ TEST(business_feature_test, successfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(true, business_feature.save(business_data));
+        CHECK_EQUAL(true, admin.save(business_data));
 }
 
-TEST(business_feature_test, unsuccessfully_save_the_data)
+TEST(admin_controller_test, unsuccessfully_save_the_data)
 {
         business_data.set_name("tme");
         business_data.set_address("geelsterd 8");
@@ -72,5 +72,5 @@ TEST(business_feature_test, unsuccessfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(false, business_feature.save(business_data));
+        CHECK_EQUAL(false, admin.save(business_data));
 }

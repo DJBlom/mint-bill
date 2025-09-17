@@ -1,22 +1,23 @@
 /********************************************************
- * Contents: Business info feature implementation
+ * Contents: admin info controller implementation
  * Author: Dawid J. Blom
  * Date: November 18, 2024
  *
  * NOTE:
  *******************************************************/
-#include <business_info.h>
+#include <admin_controller.h>
 #include <iostream>
 #include <string>
 
 
-feature::business::~business()
+controller::admin::~admin()
 {
 
 }
 
-data::business feature::business::load()
+std::any controller::admin::load(const std::string& _keyword)
 {
+	(void) _keyword;
         data::business business_data;
 	business_data.set_name("name");
 	business_data.set_address("address");
@@ -33,9 +34,10 @@ data::business feature::business::load()
         return business_data;
 }
 
-bool feature::business::save(const data::business& data)
+bool controller::admin::save(const std::any& _data)
 {
         bool saved{false};
+	data::business data{std::any_cast<data::business> (_data)};
         if (data.is_valid())
         {
                 saved = true;

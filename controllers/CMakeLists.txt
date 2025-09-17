@@ -16,7 +16,7 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(controllers
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/business_info.cpp
+                ${PROJECT_SOURCE_DIR}/source/admin_controller.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp

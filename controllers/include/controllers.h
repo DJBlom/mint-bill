@@ -23,6 +23,14 @@ public:
 	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const = 0;
 };
 
+class controller {
+public:
+	virtual ~controller() = default;
+
+	[[nodiscard]] virtual std::any load(const std::string&) = 0;
+	[[nodiscard]] virtual bool save(const std::any&) = 0;
+};
+
 class client {
 public:
 	virtual ~client() = default;

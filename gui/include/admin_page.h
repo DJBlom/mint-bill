@@ -8,7 +8,7 @@
 #ifndef _ADMIN_PAGE_H_
 #define _ADMIN_PAGE_H_
 #include <gui.h>
-#include <business_info.h>
+#include <admin_controller.h>
 
 namespace gui {
 //GCOVR_EXCL_START
@@ -34,7 +34,7 @@ private:
 	data::business extract_page_entries();
 
 private:
-	feature::business business_info{};
+	controller::admin admin_controller{};
 
 private: // Label
 	std::unique_ptr<Gtk::Label> organization_label{};

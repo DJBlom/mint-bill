@@ -114,7 +114,7 @@ void gui::admin_page::connect_save_alert()
                         case GTK_RESPONSE_YES:
                                 syslog(LOG_INFO, "User chose to save the business information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->business_info.save(data) == false)
+                                if (this->admin_controller.save(data) == false)
                                 {
                                         syslog(LOG_CRIT, "Failed to save the business information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
@@ -170,24 +170,25 @@ void gui::admin_page::clear_entries()
 void gui::admin_page::update_business_info_with_db_data(const std::string& _keyword)
 {
 	(void) _keyword;
-        data::business data{business_info.load()};
-        if (data.is_valid() == false)
+	std::any data{admin_controller.load("tme")};
+	data::business business_data{std::any_cast<data::business> (data)};
+        if (business_data.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The business data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
-        this->name->set_text(data.get_name());
-        this->street_address->set_text(data.get_address());
-        this->area_code->set_text(data.get_area_code());
-        this->town_name->set_text(data.get_town());
-        this->cellphone->set_text(data.get_cellphone());
-        this->email->set_text(data.get_email());
-        this->bank_name->set_text(data.get_bank());
-        this->branch_code->set_text(data.get_branch_code());
-        this->account_number->set_text(data.get_account_number());
-        this->client_message->set_text(data.get_client_message());
+        this->name->set_text(business_data.get_name());
+        this->street_address->set_text(business_data.get_address());
+        this->area_code->set_text(business_data.get_area_code());
+        this->town_name->set_text(business_data.get_town());
+        this->cellphone->set_text(business_data.get_cellphone());
+        this->email->set_text(business_data.get_email());
+        this->bank_name->set_text(business_data.get_bank());
+        this->branch_code->set_text(business_data.get_branch_code());
+        this->account_number->set_text(business_data.get_account_number());
+        this->client_message->set_text(business_data.get_client_message());
 }
 
 data::business gui::admin_page::extract_page_entries()
