@@ -66,7 +66,7 @@
                         <property name="css-name">stack_sidebar</property>
                         <property name="margin-bottom">100</property>
                         <property name="margin-top">50</property>
-                        <property name="stack">business-stack</property>
+                        <property name="stack">operations-stack</property>
                       </object>
                     </child>
                     <child>
@@ -118,7 +118,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStack" id="business-stack">
+                  <object class="GtkStack" id="operations-stack">
                     <property name="hexpand">True</property>
                     <property name="hhomogeneous">False</property>
                     <property name="interpolate-size">True</property>
@@ -689,7 +689,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage" id="business-page">
+                      <object class="GtkStackPage" id="admin-page">
                         <property name="child">
                           <object class="GtkBox" id="business-page-box">
                             <property name="halign">center</property>

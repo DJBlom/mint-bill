@@ -6,14 +6,14 @@
  * NOTE:
  **********************************************************/
 #include <syslog.h>
-#include <business_page.h>
+#include <admin_page.h>
 //GCOVR_EXCL_START
-gui::business_page::~business_page()
+gui::admin_page::~admin_page()
 {
 
 }
 
-bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::admin_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{true};
         if (!_ui_builder)
@@ -32,7 +32,7 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         return created;
 }
 
-bool gui::business_page::search(const std::string& _keyword)
+bool gui::admin_page::search(const std::string& _keyword)
 {
         bool searched{false};
         if (_keyword.empty())
@@ -49,7 +49,7 @@ bool gui::business_page::search(const std::string& _keyword)
         return searched;
 }
 
-bool gui::business_page::save()
+bool gui::admin_page::save()
 {
 	bool success{false};
 	if (!this->save_alert_dialog)
@@ -66,7 +66,7 @@ bool gui::business_page::save()
 	return success;
 }
 
-void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+void gui::admin_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->name = std::unique_ptr<Gtk::Entry>{
                 _ui_builder->get_widget<Gtk::Entry>("business-page-name-entry")};
@@ -98,7 +98,7 @@ void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_bu
                 _ui_builder->get_widget<Gtk::Label>("organization-name")};
 }
 
-void gui::business_page::connect_save_alert()
+void gui::admin_page::connect_save_alert()
 {
         if (!this->save_alert_dialog)
         {
@@ -140,7 +140,7 @@ void gui::business_page::connect_save_alert()
         });
 }
 
-void gui::business_page::connect_wrong_info_alert()
+void gui::admin_page::connect_wrong_info_alert()
 {
         if (!this->wrong_info_alert_dialog)
         {
@@ -162,12 +162,12 @@ void gui::business_page::connect_wrong_info_alert()
         });
 }
 
-void gui::business_page::clear_entries()
+void gui::admin_page::clear_entries()
 {
         this->password->set_text("");
 }
 
-void gui::business_page::update_business_info_with_db_data(const std::string& _keyword)
+void gui::admin_page::update_business_info_with_db_data(const std::string& _keyword)
 {
 	(void) _keyword;
         data::business data{business_info.load()};
@@ -190,7 +190,7 @@ void gui::business_page::update_business_info_with_db_data(const std::string& _k
         this->client_message->set_text(data.get_client_message());
 }
 
-data::business gui::business_page::extract_page_entries()
+data::business gui::admin_page::extract_page_entries()
 {
         data::business data{};
         data.set_name(this->name->get_text());
