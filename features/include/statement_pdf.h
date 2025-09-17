@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include <syslog.h>
-#include <interfaces.h>
+#include <app_features.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>

@@ -39,12 +39,5 @@ public:
 	[[nodiscard]] virtual data::business load() = 0;
 	[[nodiscard]] virtual bool save(const data::business&) = 0;
 };
-
-class pdf {
-public:
-	virtual ~pdf() = default;
-
-	[[nodiscard]] virtual std::string generate(const std::any&) = 0;
-};
 }
 #endif

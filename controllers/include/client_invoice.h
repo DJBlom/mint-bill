@@ -8,7 +8,7 @@
 #ifndef _CLIENT_INVOICE_H_
 #define _CLIENT_INVOICE_H_
 #include <future>
-#include <interfaces.h>
+#include <controllers.h>
 #include <pdf_invoice_data.h>
 
 namespace feature {
