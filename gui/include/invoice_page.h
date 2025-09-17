@@ -9,12 +9,12 @@
 #define _INVOICE_PAGE_H_
 #include <gui.h>
 #include <invoice_pdf.h>
-// #include <mutex>
 #include <regex>
 #include <thread>
 #include <vector>
 #include <iomanip>
 #include <sstream>
+#include <email.h>
 #include <printer.h>
 #include <gui_parts.h>
 #include <column_data.h>

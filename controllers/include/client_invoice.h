@@ -8,12 +8,8 @@
 #ifndef _CLIENT_INVOICE_H_
 #define _CLIENT_INVOICE_H_
 #include <future>
-#include <thread>
-#include <email.h>
-#include <invoice.h>
 #include <interfaces.h>
 #include <pdf_invoice_data.h>
-#include <poppler/cpp/poppler-document.h>
 
 namespace feature {
 	class client_invoice: public interface::operations_controller {
@@ -27,8 +23,6 @@ namespace feature {
                         [[nodiscard]] virtual bool save(const data::invoice&);
                         [[nodiscard]] virtual std::vector<data::invoice> search(const std::string&);
 
-                private:
-                        feature::email email{};
         };
 }
 #endif

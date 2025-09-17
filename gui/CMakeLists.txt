@@ -31,6 +31,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
+                ${CMAKE_SOURCE_DIR}/controllers/include
                 ${CMAKE_SOURCE_DIR}/utility/include
                 ${PROJECT_SOURCE_DIR}/invoice_page/include
         )

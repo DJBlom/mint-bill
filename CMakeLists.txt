@@ -74,14 +74,15 @@ if(BUILD_PROJECT)
                 ${POPPLER_INCLUDE_DIRS}
 		${SQLCIPHER_INCLUDE_DIRS}
 		${LIBSECRET_INCLUDE_DIRS}
+
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/gui/include
                 ${CMAKE_SOURCE_DIR}/gui/components/include
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
+                ${CMAKE_SOURCE_DIR}/controllers/include
                 ${CMAKE_SOURCE_DIR}/utility/include
-                ${CMAKE_SOURCE_DIR}/gui/invoice_page/include
         )
 
 	target_compile_options(${PROJECT_NAME} PRIVATE
@@ -135,6 +136,13 @@ if(BUILD_PROJECT)
                 target_link_libraries(${PROJECT_NAME} PRIVATE storage)
         else()
                 message(STATUS "Directory storage, does not exist")
+        endif()
+
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/controllers)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/controllers)
+                target_link_libraries(${PROJECT_NAME} PRIVATE controllers)
+        else()
+                message(STATUS "Directory controllers, does not exist")
         endif()
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/features)
