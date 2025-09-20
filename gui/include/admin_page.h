@@ -34,7 +34,7 @@ private:
 	data::admin extract_page_entries();
 
 private:
-	model::admin admin_model{};
+	model::admin admin_model{"test", "test"};
 
 private: // Label
 	std::unique_ptr<Gtk::Label> organization_label{};

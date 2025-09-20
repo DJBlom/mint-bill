@@ -6,9 +6,14 @@
  * NOTE:
  *******************************************************/
 #include <admin_model.h>
-#include <iostream>
+#include <syslog.h>
 #include <string>
 
+
+model::admin::admin(const std::string& _path_to_database_file, const std::string& _database_password)
+	: path_to_database_file{_path_to_database_file}, database_password{_database_password}
+{
+}
 
 model::admin::~admin()
 {
@@ -17,21 +22,28 @@ model::admin::~admin()
 
 std::any model::admin::load(const std::string& _keyword)
 {
-	(void) _keyword;
-        data::admin business_data;
-	business_data.set_name("name");
-	business_data.set_address("address");
-	business_data.set_area_code("area code");
-	business_data.set_town("town");
-	business_data.set_cellphone("cellphone");
-	business_data.set_email("odn@gmail.com");
-	business_data.set_bank("bank");
-	business_data.set_branch_code("branch code");
-	business_data.set_account_number("account number");
-	business_data.set_password("");
-	business_data.set_client_message("client message");
+        data::admin admin_data;
+	if (_keyword.empty() == true)
+	{
+                syslog(LOG_CRIT, "ADMIN_MODEL: invalid argument - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		admin_data.set_name("name");
+		admin_data.set_address("address");
+		admin_data.set_area_code("area code");
+		admin_data.set_town("town");
+		admin_data.set_cellphone("cellphone");
+		admin_data.set_email("odn@gmail.com");
+		admin_data.set_bank("bank");
+		admin_data.set_branch_code("branch code");
+		admin_data.set_account_number("account number");
+		admin_data.set_password("");
+		admin_data.set_client_message("client message");
+	}
 
-        return business_data;
+        return admin_data;
 }
 
 bool model::admin::save(const std::any& _data)
@@ -42,16 +54,6 @@ bool model::admin::save(const std::any& _data)
         {
                 saved = true;
 
-                std::cout << "Name: " << data.get_name() << std::endl;
-                std::cout << "Address: " << data.get_address() << std::endl;
-                std::cout << "Area Code: " << data.get_area_code() << std::endl;
-                std::cout << "Town: " << data.get_town() << std::endl;
-                std::cout << "Cellphone: " << data.get_cellphone() << std::endl;
-                std::cout << "Email: " << data.get_email() << std::endl;
-                std::cout << "Bank: " << data.get_bank() << std::endl;
-                std::cout << "Branch Code: " << data.get_branch_code() << std::endl;
-                std::cout << "Account Number: " << data.get_account_number() << std::endl;
-                std::cout << "Client Message: " << data.get_client_message() << std::endl;
         }
 
         return saved;

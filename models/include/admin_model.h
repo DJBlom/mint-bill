@@ -12,7 +12,8 @@
 namespace model {
 class admin: public interface::model {
 public:
-	admin() = default;
+	// admin() = default;
+	explicit admin(const std::string&, const std::string&);
 	admin(const admin& new_data) = delete;
 	admin(admin&&) = default;
 	admin& operator= (const admin&) = delete;
@@ -21,6 +22,10 @@ public:
 
 	[[nodiscard]] virtual std::any load(const std::string&) override;
 	[[nodiscard]] virtual bool save(const std::any&) override;
+
+private:
+	std::string path_to_database_file{""};
+	std::string database_password{""};
 };
 }
 #endif

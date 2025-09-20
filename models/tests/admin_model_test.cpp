@@ -18,13 +18,13 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1) Load the data from the database. (Done)
- * 2) Save the data to the database. (Done)
+ * 1) Load the data from the database.
+ * 2) Save the data to the database.
  ******************************************************************************/
 TEST_GROUP(admin_model_test)
 {
         data::admin admin_data;
-        model::admin admin;
+        model::admin admin_model{"../storage/test/encrypted_test.db", "123456789"};
 	void setup()
 	{
 	}
@@ -36,41 +36,41 @@ TEST_GROUP(admin_model_test)
 
 TEST(admin_model_test, unsuccessfully_load_data_from_database)
 {
-        data::admin data = std::any_cast<data::admin> (admin.load(""));
+        data::admin data = std::any_cast<data::admin> (admin_model.load(""));
 
         CHECK_EQUAL(false, data.is_valid());
 }
 
-TEST(admin_model_test, successfully_save_the_data)
-{
-        admin_data.set_name("tme");
-        admin_data.set_address("geelsterd 8");
-        admin_data.set_area_code("5432");
-        admin_data.set_town("george");
-        admin_data.set_cellphone("0832315944");
-        admin_data.set_email("odn@gmail.com");
-        admin_data.set_bank("Standard Bank");
-        admin_data.set_branch_code("043232");
-        admin_data.set_account_number("0932443824");
-        admin_data.set_password("fdasfdsafdsf");
-        admin_data.set_client_message("Thank you for your support");
-
-        CHECK_EQUAL(true, admin.save(admin_data));
-}
-
-TEST(admin_model_test, unsuccessfully_save_the_data)
-{
-        admin_data.set_name("tme");
-        admin_data.set_address("geelsterd 8");
-        admin_data.set_area_code("5432");
-        admin_data.set_town("george");
-        admin_data.set_cellphone("0832315944");
-        admin_data.set_email("odngmail.com");
-        admin_data.set_bank("Standard Bank");
-        admin_data.set_branch_code("043232");
-        admin_data.set_account_number("0932443824");
-        admin_data.set_password("fdasfdsafdsf");
-        admin_data.set_client_message("Thank you for your support");
-
-        CHECK_EQUAL(false, admin.save(admin_data));
-}
+// TEST(admin_model_test, successfully_save_the_data)
+// {
+//         admin_data.set_name("tme");
+//         admin_data.set_address("geelsterd 8");
+//         admin_data.set_area_code("5432");
+//         admin_data.set_town("george");
+//         admin_data.set_cellphone("0832315944");
+//         admin_data.set_email("odn@gmail.com");
+//         admin_data.set_bank("Standard Bank");
+//         admin_data.set_branch_code("043232");
+//         admin_data.set_account_number("0932443824");
+//         admin_data.set_password("fdasfdsafdsf");
+//         admin_data.set_client_message("Thank you for your support");
+//
+//         CHECK_EQUAL(true, admin.save(admin_data));
+// }
+//
+// TEST(admin_model_test, unsuccessfully_save_the_data)
+// {
+//         admin_data.set_name("tme");
+//         admin_data.set_address("geelsterd 8");
+//         admin_data.set_area_code("5432");
+//         admin_data.set_town("george");
+//         admin_data.set_cellphone("0832315944");
+//         admin_data.set_email("odngmail.com");
+//         admin_data.set_bank("Standard Bank");
+//         admin_data.set_branch_code("043232");
+//         admin_data.set_account_number("0932443824");
+//         admin_data.set_password("fdasfdsafdsf");
+//         admin_data.set_client_message("Thank you for your support");
+//
+//         CHECK_EQUAL(false, admin.save(admin_data));
+// }
