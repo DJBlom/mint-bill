@@ -23,9 +23,9 @@ public:
 	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const = 0;
 };
 
-class controller {
+class model {
 public:
-	virtual ~controller() = default;
+	virtual ~model() = default;
 
 	[[nodiscard]] virtual std::any load(const std::string&) = 0;
 	[[nodiscard]] virtual bool save(const std::any&) = 0;

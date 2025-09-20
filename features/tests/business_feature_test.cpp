@@ -5,12 +5,12 @@
  *
  * Note: Refer to the TEST LIST for details on what this fixture tests.
  ******************************************************************************/
-#include <admin_controller.h>
-#include <admin_data.h>
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <admin_model.h>
+#include <admin_data.h>
 extern "C"
 {
 
@@ -24,7 +24,7 @@ extern "C"
 TEST_GROUP(admin_controller_test)
 {
         data::admin business_data;
-        controller::admin admin_controller;
+        model::admin admin_model;
 	void setup()
 	{
 	}
@@ -36,7 +36,7 @@ TEST_GROUP(admin_controller_test)
 
 TEST(admin_controller_test, successfully_load_data_from_database)
 {
-        data::admin data = std::any_cast<data::admin>(admin_controller.load("tme"));
+        data::admin data = std::any_cast<data::admin>(admin_model.load("tme"));
 
         CHECK_EQUAL(true, data.is_valid());
 }
@@ -55,7 +55,7 @@ TEST(admin_controller_test, successfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(true, admin_controller.save(business_data));
+        CHECK_EQUAL(true, admin_model.save(business_data));
 }
 
 TEST(admin_controller_test, unsuccessfully_save_the_data)
@@ -72,5 +72,5 @@ TEST(admin_controller_test, unsuccessfully_save_the_data)
         business_data.set_password("fdasfdsafdsf");
         business_data.set_client_message("Thank you for your support");
 
-        CHECK_EQUAL(false, admin_controller.save(business_data));
+        CHECK_EQUAL(false, admin_model.save(business_data));
 }

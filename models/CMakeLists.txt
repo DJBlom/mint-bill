@@ -8,21 +8,21 @@
 # the source and header files of the feautre sub branch.
 ############################################################################
 cmake_minimum_required(VERSION 3.25)
-project(target-controllers VERSION 0.0.1 LANGUAGES CXX C)
+project(target-models VERSION 0.0.1 LANGUAGES CXX C)
 
 
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-        add_library(controllers
+        add_library(models
                 OBJECT
-                ${PROJECT_SOURCE_DIR}/source/admin_controller.cpp
+                ${PROJECT_SOURCE_DIR}/source/admin_model.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_register.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
         )
 
-        target_include_directories(controllers
+        target_include_directories(models
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 ${CURL_INCLUDE_DIR}
@@ -38,5 +38,5 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${CMAKE_SOURCE_DIR}/features/include
         )
 else ()
-        message(STATUS "There are no files in, controllers/source.")
+        message(STATUS "There are no files in, models/source.")
 endif()

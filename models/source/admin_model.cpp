@@ -1,21 +1,21 @@
 /********************************************************
- * Contents: admin info controller implementation
+ * Contents: admin info model implementation
  * Author: Dawid J. Blom
  * Date: November 18, 2024
  *
  * NOTE:
  *******************************************************/
-#include <admin_controller.h>
+#include <admin_model.h>
 #include <iostream>
 #include <string>
 
 
-controller::admin::~admin()
+model::admin::~admin()
 {
 
 }
 
-std::any controller::admin::load(const std::string& _keyword)
+std::any model::admin::load(const std::string& _keyword)
 {
 	(void) _keyword;
         data::admin business_data;
@@ -34,7 +34,7 @@ std::any controller::admin::load(const std::string& _keyword)
         return business_data;
 }
 
-bool controller::admin::save(const std::any& _data)
+bool model::admin::save(const std::any& _data)
 {
         bool saved{false};
 	data::admin data{std::any_cast<data::admin> (_data)};

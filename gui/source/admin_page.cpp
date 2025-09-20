@@ -114,7 +114,7 @@ void gui::admin_page::connect_save_alert()
                         case GTK_RESPONSE_YES:
                                 syslog(LOG_INFO, "User chose to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->admin_controller.save(data) == false)
+                                if (this->admin_model.save(data) == false)
                                 {
                                         syslog(LOG_CRIT, "Failed to save the admin information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
@@ -170,7 +170,7 @@ void gui::admin_page::clear_entries()
 void gui::admin_page::update_business_info_with_db_data(const std::string& _keyword)
 {
 	(void) _keyword;
-	std::any data{admin_controller.load("tme")};
+	std::any data{admin_model.load("tme")};
 	data::admin business_data{std::any_cast<data::admin> (data)};
         if (business_data.is_valid() == false)
         {

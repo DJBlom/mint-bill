@@ -7,7 +7,7 @@
  *******************************************************/
 #ifndef _CLIENT_REGISTER_H_
 #define _CLIENT_REGISTER_H_
-#include <controllers.h>
+#include <models.h>
 
 namespace feature {
         class client: public interface::client {

@@ -81,7 +81,7 @@ if(BUILD_PROJECT)
                 ${CMAKE_SOURCE_DIR}/data/include
                 ${CMAKE_SOURCE_DIR}/storage/include
                 ${CMAKE_SOURCE_DIR}/features/include
-                ${CMAKE_SOURCE_DIR}/controllers/include
+                ${CMAKE_SOURCE_DIR}/models/include
                 ${CMAKE_SOURCE_DIR}/utility/include
         )
 
@@ -138,9 +138,9 @@ if(BUILD_PROJECT)
                 message(STATUS "Directory storage, does not exist")
         endif()
 
-        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/controllers)
-                add_subdirectory(${CMAKE_SOURCE_DIR}/controllers)
-                target_link_libraries(${PROJECT_NAME} PRIVATE controllers)
+        if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/models)
+                add_subdirectory(${CMAKE_SOURCE_DIR}/models)
+                target_link_libraries(${PROJECT_NAME} PRIVATE models)
         else()
                 message(STATUS "Directory controllers, does not exist")
         endif()

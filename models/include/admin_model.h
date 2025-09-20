@@ -5,12 +5,12 @@
  *
  * NOTE:
  *******************************************************/
-#ifndef _ADMIN_CONTROLLER_H_
-#define _ADMIN_CONTROLLER_H_
-#include <controllers.h>
+#ifndef _ADMIN_MODEL_H_
+#define _ADMIN_MODEL_H_
+#include <models.h>
 
-namespace controller {
-class admin: public interface::controller {
+namespace model {
+class admin: public interface::model {
 public:
 	admin() = default;
 	admin(const admin& new_data) = delete;
