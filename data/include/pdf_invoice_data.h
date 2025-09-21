@@ -26,11 +26,11 @@ namespace data {
 
                         [[nodiscard]] virtual bool is_valid() const;
                         virtual void set_client(const data::client&);
-                        [[nodiscard]] data::client get_client() const;
+                        [[nodiscard]] virtual data::client get_client() const;
                         virtual void set_invoice(const data::invoice&);
-                        [[nodiscard]] data::invoice get_invoice() const;
+                        [[nodiscard]] virtual data::invoice get_invoice() const;
                         virtual void set_business(const data::admin&);
-                        [[nodiscard]] data::admin get_business() const;
+                        [[nodiscard]] virtual data::admin get_business() const;
 
                 private:
                         void set_flag(const int&);

@@ -24,27 +24,27 @@ public:
 
 	[[nodiscard]] virtual bool is_valid() const;
 	virtual void set_name(const std::string&);
-	[[nodiscard]] std::string get_name() const;
+	[[nodiscard]] virtual std::string get_name() const;
 	virtual void set_address(const std::string&);
-	[[nodiscard]] std::string get_address() const;
+	[[nodiscard]] virtual std::string get_address() const;
 	virtual void set_area_code(const std::string&);
-	[[nodiscard]] std::string get_area_code() const;
+	[[nodiscard]] virtual std::string get_area_code() const;
 	virtual void set_town(const std::string&);
-	[[nodiscard]] std::string get_town() const;
+	[[nodiscard]] virtual std::string get_town() const;
 	virtual void set_cellphone(const std::string&);
-	[[nodiscard]] std::string get_cellphone() const;
+	[[nodiscard]] virtual std::string get_cellphone() const;
 	virtual void set_email(const std::string&);
-	[[nodiscard]] std::string get_email() const;
+	[[nodiscard]] virtual std::string get_email() const;
 	virtual void set_bank(const std::string&);
-	[[nodiscard]] std::string get_bank() const;
+	[[nodiscard]] virtual std::string get_bank() const;
 	virtual void set_branch_code(const std::string&);
-	[[nodiscard]] std::string get_branch_code() const;
+	[[nodiscard]] virtual std::string get_branch_code() const;
 	virtual void set_account_number(const std::string&);
-	[[nodiscard]] std::string get_account_number() const;
+	[[nodiscard]] virtual std::string get_account_number() const;
 	virtual void set_client_message(const std::string&);
-	[[nodiscard]] std::string get_client_message() const;
+	[[nodiscard]] virtual std::string get_client_message() const;
 	virtual void set_password(const std::string&);
-	[[nodiscard]] std::string get_password() const;
+	[[nodiscard]] virtual std::string get_password() const;
 
 private:
 	void set_flag(const int&);

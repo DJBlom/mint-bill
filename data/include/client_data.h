@@ -26,21 +26,21 @@ namespace data {
 
                         [[nodiscard]] virtual bool is_valid() const;
                         virtual void set_business_name(const std::string&);
-                        [[nodiscard]] std::string get_business_name() const;
+                        [[nodiscard]] virtual std::string get_business_name() const;
                         virtual void set_business_address(const std::string&);
-                        [[nodiscard]] std::string get_business_address() const;
+                        [[nodiscard]] virtual std::string get_business_address() const;
                         virtual void set_business_area_code(const std::string&);
-                        [[nodiscard]] std::string get_business_area_code() const;
+                        [[nodiscard]] virtual std::string get_business_area_code() const;
                         virtual void set_business_town_name(const std::string&);
-                        [[nodiscard]] std::string get_business_town_name() const;
+                        [[nodiscard]] virtual std::string get_business_town_name() const;
                         virtual void set_cellphone_number(const std::string&);
-                        [[nodiscard]] std::string get_cellphone_number() const;
+                        [[nodiscard]] virtual std::string get_cellphone_number() const;
                         virtual void set_email(const std::string&);
-                        [[nodiscard]] std::string get_email() const;
+                        [[nodiscard]] virtual std::string get_email() const;
                         virtual void set_vat_number(const std::string&);
-                        [[nodiscard]] std::string get_vat_number() const;
+                        [[nodiscard]] virtual std::string get_vat_number() const;
                         virtual void set_statement_schedule(const std::string&);
-                        [[nodiscard]] std::string get_statement_schedule() const;
+                        [[nodiscard]] virtual std::string get_statement_schedule() const;
 
                 private:
                         [[nodiscard]] bool email_address_good(const std::vector<std::string>&);

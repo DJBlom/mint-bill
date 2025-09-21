@@ -8,6 +8,7 @@
 #ifndef _ADMIN_MODEL_H_
 #define _ADMIN_MODEL_H_
 #include <models.h>
+#include <sqlite.h>
 
 namespace model {
 class admin: public interface::model {
@@ -23,8 +24,33 @@ public:
 	[[nodiscard]] virtual bool save(const std::any&) override;
 
 private:
+	using details = std::vector<std::vector<storage::database::param_values>>;
+	[[nodiscard]] data::admin extract_data(const storage::database::part::rows&);
+	[[nodiscard]] details package_data(const data::admin&);
+
+private:
 	std::string database_file{""};
 	std::string database_password{""};
+	const long long int business_id{1LL};
+
+	enum DATA_FIELDS {
+		NAME = 0,
+		EMAIL,
+		CELLPHONE,
+		ADDRESS,
+		AREA_CODE,
+		TOWN,
+		BANK,
+		BRANCH_CODE,
+		ACCOUNT_NUMBER,
+		APP_PASSWORD,
+		CLIENT_MESSAGE
+	};
+
+	enum PARAMETERS {
+		DETAILS = 0,
+		ADMIN
+	};
 };
 }
 #endif

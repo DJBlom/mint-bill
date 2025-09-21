@@ -6,10 +6,10 @@
  * NOTE:
  *******************************************************/
 #include <admin_model.h>
-#include <sqlite.h>
 #include <syslog.h>
 #include <string>
 
+#include <iostream>
 
 namespace sql {
 namespace query {
@@ -36,21 +36,22 @@ namespace query {
 				       app_password = excluded.app_password,
 				       client_message = excluded.client_message;)sql"};
 
-	constexpr const char *select{R"sql(
-		SELECT  bd.business_id,
-			bd.business_name,
-			bd.email_address,
-			bd.contact_number,
-			bd.street,
-			bd.area_code,
-			bd.town_name,
-			a.bank_name,
-			a.branch_code,
-			a.account_number,
-			a.app_password,
-				FROM admin AS a
-				JOIN business_details AS bd
-				ON a.business_id = bd.business_id;)sql"};
+	constexpr const char* select{R"sql(
+		    SELECT  bd.business_name,
+			    bd.email_address,
+			    bd.contact_number,
+			    bd.street,
+			    bd.area_code,
+			    bd.town_name,
+			    a.bank_name,
+			    a.branch_code,
+			    a.account_number,
+			    a.app_password,
+			    a.client_message
+		    FROM admin AS a
+		    JOIN business_details AS bd
+			ON a.business_id = bd.business_id
+		    WHERE a.business_id = ? AND bd.business_name = ?)sql"};
 }
 }
 
@@ -74,17 +75,10 @@ std::any model::admin::load(const std::string& _keyword)
 	}
 	else
 	{
-		admin_data.set_name("name");
-		admin_data.set_address("address");
-		admin_data.set_area_code("area code");
-		admin_data.set_town("town");
-		admin_data.set_cellphone("cellphone");
-		admin_data.set_email("odn@gmail.com");
-		admin_data.set_bank("bank");
-		admin_data.set_branch_code("branch code");
-		admin_data.set_account_number("account number");
-		admin_data.set_password("");
-		admin_data.set_client_message("client message");
+		storage::database::sqlite database{this->database_file, this->database_password};
+		std::vector<storage::database::param_values> query_argument = {this->business_id, _keyword};
+		storage::database::part::rows rows{database.select(sql::query::select, query_argument)};
+		admin_data = extract_data(rows);
 	}
 
         return admin_data;
@@ -102,30 +96,13 @@ bool model::admin::save(const std::any& _data)
 	else
         {
 		storage::database::sqlite database{this->database_file, this->database_password};
-		std::vector<storage::database::param_values> business_details_arguments = {
-			1LL,
-			data.get_name(),
-			data.get_email(),
-			data.get_cellphone(),
-			data.get_address(),
-			data.get_area_code(),
-			data.get_town()
-		};
-		std::vector<storage::database::param_values> admin_arguments = {
-			1LL,
-			data.get_bank(),
-			data.get_branch_code(),
-			data.get_account_number(),
-			data.get_password(),
-			data.get_client_message()
-		};
-
-		if (database.usert(sql::query::business_details_usert, business_details_arguments) == false)
+		details details{package_data(data)};
+		if (database.usert(sql::query::business_details_usert, details[PARAMETERS::DETAILS]) == false)
 		{
 			syslog(LOG_CRIT, "ADMIN_MODEL: failed to execute sql query - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
-		else if (database.usert(sql::query::admin_usert, admin_arguments) == false)
+		else if (database.usert(sql::query::admin_usert, details[PARAMETERS::ADMIN]) == false)
 		{
 			syslog(LOG_CRIT, "ADMIN_MODEL: failed to execute sql query - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
@@ -137,4 +114,77 @@ bool model::admin::save(const std::any& _data)
         }
 
         return saved;
+}
+
+data::admin model::admin::extract_data(const storage::database::part::rows& _rows)
+{
+	data::admin admin_data{};
+	if (_rows.empty() == true)
+	{
+		syslog(LOG_CRIT, "ADMIN_MODEL: argument is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		std::vector<std::string> data{};
+		for (const storage::database::part::row& row : _rows)
+		{
+			for (const storage::database::part::column_value& column_value : row)
+			{
+				data.emplace_back(std::visit([&admin_data] (auto&& arg) -> std::string {
+					using T = std::decay_t<decltype(arg)>;
+					std::string result{""};
+					if constexpr (std::is_same_v<T, std::string>)
+					{
+						result = arg;
+					}
+					return result;
+				}, column_value));
+			}
+		}
+
+		admin_data.set_name(data[DATA_FIELDS::NAME]);
+		admin_data.set_email(data[DATA_FIELDS::EMAIL]);
+		admin_data.set_cellphone(data[DATA_FIELDS::CELLPHONE]);
+		admin_data.set_address(data[DATA_FIELDS::ADDRESS]);
+		admin_data.set_area_code(data[DATA_FIELDS::AREA_CODE]);
+		admin_data.set_town(data[DATA_FIELDS::TOWN]);
+		admin_data.set_bank(data[DATA_FIELDS::BANK]);
+		admin_data.set_branch_code(data[DATA_FIELDS::BRANCH_CODE]);
+		admin_data.set_account_number(data[DATA_FIELDS::ACCOUNT_NUMBER]);
+		admin_data.set_password(data[DATA_FIELDS::APP_PASSWORD]);
+		admin_data.set_client_message(data[DATA_FIELDS::CLIENT_MESSAGE]);
+	}
+
+	return admin_data;
+}
+
+model::admin::details model::admin::package_data(const data::admin& _data)
+{
+	details details{2};
+	if (_data.is_valid() == false)
+	{
+		syslog(LOG_CRIT, "ADMIN_MODEL: argument is not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		details[PARAMETERS::DETAILS] = {
+			this->business_id,
+			_data.get_name(),
+			_data.get_email(),
+			_data.get_cellphone(),
+			_data.get_address(),
+			_data.get_area_code(),
+			_data.get_town()};
+		details[PARAMETERS::ADMIN] = {
+			this->business_id,
+			_data.get_bank(),
+			_data.get_branch_code(),
+			_data.get_account_number(),
+			_data.get_password(),
+			_data.get_client_message()};
+	}
+
+	return details;
 }

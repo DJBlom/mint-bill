@@ -11,6 +11,8 @@
 #include <admin_model.h>
 #include <admin_data.h>
 
+#include <iostream>
+
 extern "C"
 {
 
@@ -70,9 +72,16 @@ TEST(admin_model_test, successfully_save_the_data)
         CHECK_EQUAL(true, admin_model.save(admin_data));
 }
 
-// TEST(admin_model_test, unsuccessfully_load_data_from_database)
-// {
-//         data::admin data = std::any_cast<data::admin> (admin_model.load(""));
-//
-//         CHECK_EQUAL(false, data.is_valid());
-// }
+TEST(admin_model_test, unsuccessfully_load_data_from_database)
+{
+        data::admin data = std::any_cast<data::admin> (admin_model.load(""));
+
+        CHECK_EQUAL(false, data.is_valid());
+}
+
+TEST(admin_model_test, successfully_load_data_from_database)
+{
+        data::admin data = std::any_cast<data::admin> (admin_model.load("tme"));
+
+        CHECK_EQUAL(true, data.is_valid());
+}
