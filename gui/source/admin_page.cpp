@@ -1,19 +1,21 @@
 /***********************************************************
- * Contents: Business Information Page class implementation
+ * Contents: admin Information Page class implementation
  * Author: Dawid J. Blom
  * Date: November 14, 2024
  *
  * NOTE:
  **********************************************************/
+#include <config.h>
 #include <syslog.h>
-#include <business_page.h>
+#include <admin_page.h>
+#include <password_manager.h>
 //GCOVR_EXCL_START
-gui::business_page::~business_page()
+gui::admin_page::~admin_page()
 {
 
 }
 
-bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+bool gui::admin_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         bool created{true};
         if (!_ui_builder)
@@ -32,24 +34,44 @@ bool gui::business_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         return created;
 }
 
-bool gui::business_page::search(const std::string& _keyword)
+bool gui::admin_page::search(const std::string& _business_name)
 {
         bool searched{false};
-        if (_keyword.empty())
+        if (_business_name.empty())
         {
-                syslog(LOG_CRIT, "The _keywword is empty - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: invalid argument - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
         else
         {
-		searched = true;
-		update_business_info_with_db_data(_keyword);
+		// If the very first time the application start up.
+		if (this->database_password.empty() == true)
+		{
+			// Get the database password.
+			feature::password_manager password_manager{app::config::password_manager_schema_name};
+			this->database_password = password_manager.lookup_password(app::config::password_number);
+			if (this->database_password.empty() == true)
+			{
+				syslog(LOG_CRIT, "ADMIN_PAGE: the database_password is empty - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+			else
+			{
+				searched = true;
+				update_business_info_with_db_data(_business_name);
+			}
+		}
+		else
+		{
+			searched = true;
+			update_business_info_with_db_data(_business_name);
+		}
         }
 
         return searched;
 }
 
-bool gui::business_page::save()
+bool gui::admin_page::save()
 {
 	bool success{false};
 	if (!this->save_alert_dialog)
@@ -66,39 +88,39 @@ bool gui::business_page::save()
 	return success;
 }
 
-void gui::business_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
+void gui::admin_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
         this->name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-name-entry")};
         this->street_address = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-address-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-address-entry")};
         this->area_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-area-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-area-code-entry")};
         this->town_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-town-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-town-name-entry")};
         this->cellphone = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-cell-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-cell-number-entry")};
         this->email = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-email-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-email-entry")};
         this->bank_name = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-bank-name-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-bank-name-entry")};
         this->branch_code = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-branch-code-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-branch-code-entry")};
         this->account_number = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-account-number-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-account-number-entry")};
         this->client_message = std::unique_ptr<Gtk::Entry>{
-                _ui_builder->get_widget<Gtk::Entry>("business-page-client-message-entry")};
+                _ui_builder->get_widget<Gtk::Entry>("admin-page-client-message-entry")};
         this->password = std::unique_ptr<Gtk::PasswordEntry>{
-                _ui_builder->get_widget<Gtk::PasswordEntry>("business-page-email-password-entry")};
+                _ui_builder->get_widget<Gtk::PasswordEntry>("admin-page-email-password-entry")};
         this->wrong_info_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("business-wrong-info-alert")};
+                _ui_builder->get_widget<Gtk::MessageDialog>("admin-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
-                _ui_builder->get_widget<Gtk::MessageDialog>("business-save-button-alert")};
+                _ui_builder->get_widget<Gtk::MessageDialog>("admin-save-button-alert")};
         this->organization_label = std::unique_ptr<Gtk::Label>{
                 _ui_builder->get_widget<Gtk::Label>("organization-name")};
 }
 
-void gui::business_page::connect_save_alert()
+void gui::admin_page::connect_save_alert()
 {
         if (!this->save_alert_dialog)
         {
@@ -108,15 +130,16 @@ void gui::business_page::connect_save_alert()
         }
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::business data{extract_page_entries()};
+		model::admin admin_model{app::config::path_to_database_file, this->database_password};
+                data::admin data{extract_page_entries()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
-                                syslog(LOG_INFO, "User chose to save the business information - "
+                                syslog(LOG_INFO, "User chose to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->business_info.save(data) == false)
+                                if (admin_model.save(data) == false)
                                 {
-                                        syslog(LOG_CRIT, "Failed to save the business information - "
+                                        syslog(LOG_CRIT, "Failed to save the admin information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();
@@ -129,7 +152,7 @@ void gui::business_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
-                                syslog(LOG_INFO, "User chose not to save the business information - "
+                                syslog(LOG_INFO, "User chose not to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
@@ -140,7 +163,7 @@ void gui::business_page::connect_save_alert()
         });
 }
 
-void gui::business_page::connect_wrong_info_alert()
+void gui::admin_page::connect_wrong_info_alert()
 {
         if (!this->wrong_info_alert_dialog)
         {
@@ -162,37 +185,39 @@ void gui::business_page::connect_wrong_info_alert()
         });
 }
 
-void gui::business_page::clear_entries()
+void gui::admin_page::clear_entries()
 {
         this->password->set_text("");
 }
 
-void gui::business_page::update_business_info_with_db_data(const std::string& _keyword)
+void gui::admin_page::update_business_info_with_db_data(const std::string& _business_name)
 {
-	(void) _keyword;
-        data::business data{business_info.load()};
-        if (data.is_valid() == false)
+	model::admin admin_model{app::config::path_to_database_file, this->database_password};
+	std::any data{admin_model.load(_business_name)};
+	data::admin admin_data{std::any_cast<data::admin> (data)};
+        if (admin_data.is_valid() == false)
         {
-                syslog(LOG_CRIT, "The business data is not valid - "
+                syslog(LOG_CRIT, "The admin data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                return;
         }
-
-        this->name->set_text(data.get_name());
-        this->street_address->set_text(data.get_address());
-        this->area_code->set_text(data.get_area_code());
-        this->town_name->set_text(data.get_town());
-        this->cellphone->set_text(data.get_cellphone());
-        this->email->set_text(data.get_email());
-        this->bank_name->set_text(data.get_bank());
-        this->branch_code->set_text(data.get_branch_code());
-        this->account_number->set_text(data.get_account_number());
-        this->client_message->set_text(data.get_client_message());
+	else
+	{
+		this->name->set_text(admin_data.get_name());
+		this->street_address->set_text(admin_data.get_address());
+		this->area_code->set_text(admin_data.get_area_code());
+		this->town_name->set_text(admin_data.get_town());
+		this->cellphone->set_text(admin_data.get_cellphone());
+		this->email->set_text(admin_data.get_email());
+		this->bank_name->set_text(admin_data.get_bank());
+		this->branch_code->set_text(admin_data.get_branch_code());
+		this->account_number->set_text(admin_data.get_account_number());
+		this->client_message->set_text(admin_data.get_client_message());
+	}
 }
 
-data::business gui::business_page::extract_page_entries()
+data::admin gui::admin_page::extract_page_entries()
 {
-        data::business data{};
+        data::admin data{};
         data.set_name(this->name->get_text());
         data.set_address(this->street_address->get_text());
         data.set_area_code(this->area_code->get_text());

@@ -23,7 +23,7 @@ bool feature::password_manager::store_password(const std::string& _password, con
 	bool success{false};
 	if ((_password.empty() == true) || (_number >= std::numeric_limits<int>::max()) || (_number <= std::numeric_limits<int>::min()))
 	{
-		syslog(LOG_CRIT, "PASSWORD MANAGER: _password empty or int overflow - "
+		syslog(LOG_CRIT, "PASSWORD_MANAGER: _password empty or int overflow - "
 				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -36,7 +36,7 @@ bool feature::password_manager::store_password(const std::string& _password, con
 								        nullptr));
 		if (error != nullptr) // GCOVR_EXCL_START
 		{
-			syslog(LOG_CRIT, "PASSWORD MANAGER: failed to store password - "
+			syslog(LOG_CRIT, "PASSWORD_MANAGER: failed to store password - "
 					"filename %s, line number %d", __FILE__, __LINE__);
 			g_error_free(error);
 		}// GCOVR_EXCL_STOP
@@ -50,7 +50,7 @@ std::string feature::password_manager::lookup_password(const int& _number)
 	std::string password{""};
 	if ((_number >= std::numeric_limits<int>::max()) || (_number <= std::numeric_limits<int>::min()))
 	{
-		syslog(LOG_CRIT, "PASSWORD MANAGER: int overflow - "
+		syslog(LOG_CRIT, "PASSWORD_MANAGER: int overflow - "
 				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -62,13 +62,13 @@ std::string feature::password_manager::lookup_password(const int& _number)
 					nullptr);
 		if (error != nullptr) // GCOVR_EXCL_START
 		{
-			syslog(LOG_CRIT, "PASSWORD MANAGER: failed to look up the password - "
+			syslog(LOG_CRIT, "PASSWORD_MANAGER: failed to look up the password - "
 					"filename %s, line number %d", __FILE__, __LINE__);
 			g_error_free(error);
 		} // GCOVR_EXCL_STOP
 		else if (secret == nullptr)
 		{
-			syslog(LOG_CRIT, "PASSWORD MANAGER: secret is null - "
+			syslog(LOG_CRIT, "PASSWORD_MANAGER: secret is null - "
 					"filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else

@@ -23,6 +23,14 @@ public:
 	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const = 0;
 };
 
+class model {
+public:
+	virtual ~model() = default;
+
+	[[nodiscard]] virtual std::any load(const std::string&) = 0;
+	[[nodiscard]] virtual bool save(const std::any&) = 0;
+};
+
 class client {
 public:
 	virtual ~client() = default;
@@ -36,15 +44,8 @@ class business {
 public:
 	virtual ~business() = default;
 
-	[[nodiscard]] virtual data::business load() = 0;
-	[[nodiscard]] virtual bool save(const data::business&) = 0;
-};
-
-class pdf {
-public:
-	virtual ~pdf() = default;
-
-	[[nodiscard]] virtual std::string generate(const std::any&) = 0;
+	[[nodiscard]] virtual data::admin load() = 0;
+	[[nodiscard]] virtual bool save(const data::admin&) = 0;
 };
 }
 #endif

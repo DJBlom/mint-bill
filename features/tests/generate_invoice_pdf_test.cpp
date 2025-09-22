@@ -15,7 +15,7 @@
 #include <client_data.h>
 #include <invoice_data.h>
 #include <generate_pdf.h>
-#include <business_data.h>
+#include <admin_data.h>
 #include <pdf_invoice_data.h>
 extern "C"
 {
@@ -43,7 +43,7 @@ TEST(generate_invoice_pdf_test, generate_invoice_pdf_for_upper_bounds)
 {
         std::string long_description{"Beneath the sky so vast and blue, Where whispers weave the morning dew, The trees stand tall, their shadows play, A dance of life, a soft ballet. The river hums a timeless tune, Reflecting light from sun to moon, It carries dreams to oceans deep, A secret world where hopes may sleep. The stars ignite the velvet night, Their spark, a beacon’s gentle light. Through every breath, through joy and strife, We live, we dream—the dance of life. Forever flows this fleeting glow. Test completed, good!"};
         data::pdf_invoice pdf_data;
-        data::business business_data{test::generate_business_data()};
+        data::admin business_data{test::generate_business_data()};
         pdf_data.set_business(business_data);
         data::client client_data{test::generate_client_data()};
         pdf_data.set_client(client_data);
@@ -60,7 +60,7 @@ TEST(generate_invoice_pdf_test, generate_invoice_pdf_for_lower_bounds)
 {
         std::string short_description{"Machining steel"};
         data::pdf_invoice pdf_data;
-        data::business business_data{test::generate_business_data()};
+        data::admin business_data{test::generate_business_data()};
         pdf_data.set_business(business_data);
         data::client client_data{test::generate_client_data()};
         pdf_data.set_client(client_data);
@@ -76,7 +76,7 @@ TEST(generate_invoice_pdf_test, generate_invoice_pdf_for_no_data)
 {
         std::string short_description{"Machining steel"};
         data::pdf_invoice pdf_data;
-        data::business business_data{};
+        data::admin business_data{};
         pdf_data.set_business(business_data);
         data::client client_data{};
         pdf_data.set_client(client_data);

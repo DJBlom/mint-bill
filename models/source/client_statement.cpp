@@ -40,7 +40,7 @@ std::vector<std::any> controller::client_statement::load(const std::string& _bus
 			client_data.set_statement_schedule("4,4");
 			pdf_invoice_data.set_client(client_data);
 
-			data::business business_data;
+			data::admin business_data;
 			business_data.set_name("T.M Engineering");
 			business_data.set_address("geelsterd 8");
 			business_data.set_area_code("5432");

@@ -13,7 +13,7 @@
 #include <config.h>
 #include <gui_parts.h>
 #include <invoice_page.h>
-#include <business_page.h>
+#include <admin_page.h>
 #include <statement_page.h>
 #include <password_manager.h>
 #include <client_register_page.h>
@@ -54,11 +54,11 @@ private:
 	std::unique_ptr<Gtk::Window> database_password_window{nullptr};
 	std::unique_ptr<Gtk::Entry> database_password_entry{nullptr};
 	std::unique_ptr<Gtk::Button> database_password_button{nullptr};
-	gui::business_page business_page{};
+	gui::admin_page admin_page{};
 	gui::client_register_page client_register_page{};
 	gui::invoice_page invoice_page{};
 	gui::statement_page statement_page{};
-	gui::part::stack stack{"business-stack"};
+	gui::part::stack stack{"pages-stack"};
 	gui::part::search_bar search_bar{"business-name-search"};
 	gui::part::sub_button print_button{"print-button"};
 	gui::part::sub_button email_button{"email-button"};
@@ -68,14 +68,27 @@ private:
 
 int main(int argc, char** argv)
 {
-	mint_bill mint_bill;
-	if (mint_bill.create() == false)
+	int return_code{0};
+	try
 	{
-                syslog(LOG_CRIT, "Failed to create mint_bill application - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		mint_bill mint_bill;
+		if (mint_bill.create() == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: failed to create mint_bill application - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			return_code = mint_bill.launch(argc, argv);
+		}
+	}
+	catch (...)
+	{
+		syslog(LOG_CRIT, "MINT_BILL: failed to launch the mint_bill application - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 
-	return mint_bill.launch(argc, argv);
+	return return_code;
 }
 
 mint_bill::mint_bill()
@@ -151,7 +164,7 @@ void mint_bill::activate()
 			return;
 		}
 
-		if (this->business_page.create(ui_builder) == false)
+		if (this->admin_page.create(ui_builder) == false)
 		{
 			syslog(LOG_CRIT, "Failed to create the business page - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
@@ -292,7 +305,7 @@ bool mint_bill::stack_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 								 "filename %s, line number %d", __FILE__, __LINE__);
 					}
 				}
-				else if (_stack_page_name == "register-page" || _stack_page_name == "business-page")
+				else if (_stack_page_name == "register-page" || _stack_page_name == "admin-page")
 				{
 					if (this->print_button.disable() == false)
 					{
@@ -362,11 +375,11 @@ bool mint_bill::search_bar_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
-			else if (this->stack.current_page() == "business-page")
+			else if (this->stack.current_page() == "admin-page")
 			{
-				if (this->business_page.search(_keyword) == false)
+				if (this->admin_page.search(_keyword) == false)
 				{
-					syslog(LOG_CRIT, "MINT_BILL: failed to perform business_page search - "
+					syslog(LOG_CRIT, "MINT_BILL: failed to perform admin_page search - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
@@ -524,11 +537,11 @@ bool mint_bill::save_button_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 								 "filename %s, line number %d", __FILE__, __LINE__);
 					}
 				}
-				else if (this->stack.current_page() == "business-page")
+				else if (this->stack.current_page() == "admin-page")
 				{
-					if (this->business_page.save() == false)
+					if (this->admin_page.save() == false)
 					{
-						syslog(LOG_CRIT, "MINT_BILL: failed to perform the business_page save - "
+						syslog(LOG_CRIT, "MINT_BILL: failed to perform the admin_page save - "
 								 "filename %s, line number %d", __FILE__, __LINE__);
 					}
 				}

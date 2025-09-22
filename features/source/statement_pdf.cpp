@@ -66,8 +66,8 @@ std::string feature::statement_pdf::generate(const std::any& _data)
                         return "";
 
 		data::client client{(data.get_pdf_invoices())[0].get_client()};
-		data::business business{(data.get_pdf_invoices())[0].get_business()};
-                if (add_information(client, business) == false)
+		data::admin admin{(data.get_pdf_invoices())[0].get_business()};
+                if (add_information(client, admin) == false)
                         return "";
 
                 if (add_statement_information(data) == false)
@@ -109,7 +109,7 @@ bool feature::statement_pdf::add_header(const std::string& _data)
         return this->context_ok();
 }
 
-bool feature::statement_pdf::add_information(const data::client& _client, const data::business& _business)
+bool feature::statement_pdf::add_information(const data::client& _client, const data::admin& _business)
 {
         align_information_section();
         add_new_section();
@@ -268,7 +268,7 @@ bool feature::statement_pdf::add_grand_total(const data::pdf_statement& _data)
         return true;
 }
 
-bool feature::statement_pdf::add_payment_method(const data::business& _data)
+bool feature::statement_pdf::add_payment_method(const data::admin& _data)
 {
         align_to_left_border();
         add_new_section();

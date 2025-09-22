@@ -15,7 +15,7 @@
 #include <email_data.h>
 #include <client_data.h>
 #include <word_slicer.h>
-#include <business_data.h>
+#include <admin_data.h>
 
 
 namespace feature {
@@ -46,7 +46,7 @@ namespace smtp {
                         client& operator = (client&&) = delete;
                         virtual ~client();
 
-                        [[nodiscard]] bool connect(const data::business&);
+                        [[nodiscard]] bool connect(const data::admin&);
 
                 private:
                         std::shared_ptr<CURL> curl;

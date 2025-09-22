@@ -8,7 +8,7 @@
 #ifndef _CLIENT_STATEMENT_H_
 #define _CLIENT_STATEMENT_H_
 #include <vector>
-#include <interfaces.h>
+#include <models.h>
 
 namespace controller {
 class client_statement: public interface::operations_controller {

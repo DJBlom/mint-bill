@@ -152,7 +152,7 @@ TEST(gui_part_search_bar, reach_the_end_of_subscriber_list)
 	std::string expected{"Test Business"};
 	(void) search_bar.create(builder);
 	(void) search_bar.subscribe("statement-page", search_bar_callback);
-	auto stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto stack = builder->get_widget<Gtk::Stack>("pages-stack");
 	auto entry = builder->get_widget<Gtk::SearchEntry>("business-name-search");
 	stack->set_visible_child("statement-page", Gtk::StackTransitionType::NONE);
 	entry->set_text(expected);

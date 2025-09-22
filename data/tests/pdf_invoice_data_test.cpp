@@ -23,8 +23,8 @@ extern "C"
  * 2) Retrieve client data. (Done)
  * 3) Assign invoice data. (Done)
  * 4) Retrieve invoice data. (Done)
- * 5) Assign business data. (Done)
- * 6) Retrieve business data. (Done)
+ * 5) Assign admin data. (Done)
+ * 6) Retrieve admin data. (Done)
  * 7) Ensure thread safety. (Done)
  * 8) Ensure data copy and moveability. (Done)
  ******************************************************************************/
@@ -75,7 +75,7 @@ TEST(pdf_invoice_data_test, assign_and_retrieve_bad_invoice_data)
 TEST(pdf_invoice_data_test, assign_and_retrieve_business_data)
 {
         pdf_invoice.set_business(retrieve_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
 
 	CHECK_EQUAL(true, result.is_valid());
 }
@@ -83,7 +83,7 @@ TEST(pdf_invoice_data_test, assign_and_retrieve_business_data)
 TEST(pdf_invoice_data_test, assign_and_retrieve_bad_business_data)
 {
         pdf_invoice.set_business(retrieve_bad_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
 
 	CHECK_EQUAL(false, result.is_valid());
 }
@@ -93,7 +93,7 @@ TEST(pdf_invoice_data_test, copy_assign_data)
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
         data::pdf_invoice tmp;
         tmp = pdf_invoice;
 
@@ -123,7 +123,7 @@ TEST(pdf_invoice_data_test, move_assign_data)
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
         data::pdf_invoice tmp;
         tmp = std::move(pdf_invoice);
 
@@ -135,7 +135,7 @@ TEST(pdf_invoice_data_test, copy_construct_data)
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
         data::pdf_invoice tmp{pdf_invoice};
 
 	CHECK_EQUAL(true, tmp.is_valid());
@@ -146,7 +146,7 @@ TEST(pdf_invoice_data_test, move_construct_data)
         pdf_invoice.set_client(retrieve_client_data());
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
-        data::business result{pdf_invoice.get_business()};
+        data::admin result{pdf_invoice.get_business()};
         data::pdf_invoice tmp{std::move(pdf_invoice)};
 
 	CHECK_EQUAL(true, tmp.is_valid());

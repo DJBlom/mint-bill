@@ -44,7 +44,7 @@ data::invoice retrieve_invoice_data()
                 vec.push_back(expected);
         }
         data::invoice expected;
-        expected.set_business_name("Test Business");
+        expected.set_business_name("Test admin");
         expected.set_invoice_number("134");
         expected.set_invoice_date("2023-09-04");
         expected.set_paid_status("Not Paid");
@@ -87,9 +87,9 @@ data::invoice retrieve_bad_invoice_data()
         return expected;
 }
 
-data::business retrieve_business_data()
+data::admin retrieve_business_data()
 {
-        data::business expected;
+        data::admin expected;
         expected.set_name("tme");
         expected.set_address("geelsterd 8");
         expected.set_area_code("5432");
@@ -105,9 +105,9 @@ data::business retrieve_business_data()
         return expected;
 }
 
-data::business retrieve_bad_business_data()
+data::admin retrieve_bad_business_data()
 {
-        data::business expected;
+        data::admin expected;
         expected.set_name("");
         expected.set_address("geelsterd 8");
         expected.set_area_code("5432");

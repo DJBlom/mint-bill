@@ -14,11 +14,11 @@
 #include <sstream>
 #include <errors.h>
 #include <algorithm>
-#include <interfaces.h>
+#include <app_features.h>
 #include <cairo/cairo.h>
 #include <client_data.h>
 #include <invoice_data.h>
-#include <business_data.h>
+#include <admin_data.h>
 #include <cairomm/cairomm.h>
 #include <boundary_slicer.h>
 #include <pdf_invoice_data.h>
@@ -45,7 +45,7 @@ private:
 	[[nodiscard]] bool add_items(const std::vector<data::column>&);
 	[[nodiscard]] bool add_item_description(const data::column&);
 	[[nodiscard]] bool add_grand_total(const data::invoice&);
-	[[nodiscard]] bool add_payment_method(const data::business&);
+	[[nodiscard]] bool add_payment_method(const data::admin&);
 	[[nodiscard]] bool write_to_pdf(const std::string&, const double&);
 	[[nodiscard]] bool write_to_pdf_in_center(const std::string&, const double&);
 	[[nodiscard]] bool write_to_pdf_from_right(const std::string&, const double&);

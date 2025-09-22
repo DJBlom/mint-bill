@@ -30,7 +30,7 @@ static void callback_function(const std::string& _stack_page_name)
  ******************************************************************************/
 TEST_GROUP(stack_test)
 {
-        gui::part::stack stack{"business-stack"};
+        gui::part::stack stack{"pages-stack"};
         Glib::RefPtr<Gtk::Builder> builder;
         Glib::RefPtr<Gtk::Application> app;
 	void setup()
@@ -79,14 +79,14 @@ TEST(stack_test, subscribe_no_callback)
 {
 	(void) stack.create(builder);
 
-	CHECK_EQUAL(false, stack.subscribe("business-page", nullptr));
+	CHECK_EQUAL(false, stack.subscribe("admin-page", nullptr));
 }
 
 TEST(stack_test, subscribe_successfully)
 {
 	(void) stack.create(builder);
 
-	CHECK_EQUAL(true, stack.subscribe("business-page", callback_function));
+	CHECK_EQUAL(true, stack.subscribe("admin-page", callback_function));
 }
 
 TEST(stack_test, try_to_add_multiple_subscriber_to_the_same_page)
@@ -101,7 +101,7 @@ TEST(stack_test, changing_the_stack_page_unsuccessfully)
 {
 	(void) stack.create(builder);
 	(void) stack.subscribe("statement-page", callback_function);
-	auto temp_stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto temp_stack = builder->get_widget<Gtk::Stack>("pages-stack");
 	auto children = temp_stack->get_children();
 	temp_stack->set_visible_child(*children.front());
 	temp_stack->remove(*temp_stack->get_visible_child());
@@ -113,12 +113,12 @@ TEST(stack_test, changing_the_stack_page_successfully)
 {
 	(void) stack.create(builder);
 	(void) stack.subscribe("statement-page", callback_function);
-	auto temp_stack = builder->get_widget<Gtk::Stack>("business-stack");
+	auto temp_stack = builder->get_widget<Gtk::Stack>("pages-stack");
 	auto children = temp_stack->get_children();
 	temp_stack->set_visible_child(*children.front());
 	temp_stack->set_visible_child(*children.back());
 
-	CHECK_EQUAL("business-page", temp_stack->get_visible_child_name());
+	CHECK_EQUAL("admin-page", temp_stack->get_visible_child_name());
 }
 
 TEST(stack_test, get_current_stack_page_name_unsuccessfully)

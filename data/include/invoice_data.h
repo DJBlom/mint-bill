@@ -26,13 +26,13 @@ namespace data {
 
                         [[nodiscard]] virtual bool is_valid() const;
                         virtual void set_business_name(const std::string&);
-                        [[nodiscard]] std::string get_business_name() const;
+                        [[nodiscard]] virtual std::string get_business_name() const;
                         virtual void set_invoice_number(const std::string&);
-                        [[nodiscard]] std::string get_invoice_number() const;
+                        [[nodiscard]] virtual std::string get_invoice_number() const;
                         virtual void set_invoice_date(const std::string&);
-                        [[nodiscard]] std::string get_invoice_date() const;
+                        [[nodiscard]] virtual std::string get_invoice_date() const;
                         virtual void set_paid_status(const std::string&);
-                        [[nodiscard]] std::string get_paid_status() const;
+                        [[nodiscard]] virtual std::string get_paid_status() const;
                         virtual void set_job_card_number(const std::string&);
                         [[nodiscard]] std::string get_job_card_number() const;
                         virtual void set_order_number(const std::string&);

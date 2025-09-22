@@ -14,7 +14,7 @@
 #include <client_data.h>
 #include <invoice_data.h>
 #include <generate_pdf.h>
-#include <business_data.h>
+#include <admin_data.h>
 #include <statement_pdf.h>
 #include <pdf_statement_data.h>
 extern "C"
@@ -47,7 +47,7 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_upper_bounds)
 	for (int i = 0; i < 50; ++i)
 	{
 		data::pdf_invoice pdf_invoice;
-		data::business business_data{test::generate_business_data()};
+		data::admin business_data{test::generate_business_data()};
 		pdf_invoice.set_business(business_data);
 		data::client client_data{test::generate_client_data()};
 		pdf_invoice.set_client(client_data);
@@ -73,7 +73,7 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_lower_bounds)
 	for (int i = 0; i < 50; ++i)
 	{
 		data::pdf_invoice pdf_invoice;
-		data::business business_data{test::generate_business_data()};
+		data::admin business_data{test::generate_business_data()};
 		pdf_invoice.set_business(business_data);
 		data::client client_data{test::generate_client_data()};
 		pdf_invoice.set_client(client_data);
@@ -97,7 +97,7 @@ TEST(generate_statement_pdf_test, generate_statement_pdf_for_no_data)
         std::string short_description{"Machining steel"};
 	std::vector<data::pdf_invoice> pdf_invoices;
 	data::pdf_invoice pdf_invoice;
-        data::business business_data{};
+        data::admin business_data{};
         pdf_invoice.set_business(business_data);
         data::client client_data{};
         pdf_invoice.set_client(client_data);

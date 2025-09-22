@@ -63,7 +63,7 @@ smtp::client::client(const std::shared_ptr<CURL>& _curl)
 
 smtp::client::~client() {}
 
-bool smtp::client::connect(const data::business& _business)
+bool smtp::client::connect(const data::admin& _business)
 {
         if (_business.is_valid())
         {
@@ -132,10 +132,10 @@ bool smtp::header::add(const data::email& _data)
 [[nodiscard]] std::vector<std::string> smtp::header::generate(const data::email& _data)
 {
         data::client client{_data.get_client()};
-        data::business business{_data.get_business()};
+        data::admin admin{_data.get_business()};
         std::vector<std::string> info = {
                 "To: " + to_mail(client.get_email()),
-                "From: " + business.get_email(),
+                "From: " + admin.get_email(),
                 "Cc: " + cc_mail(client.get_email()),
                 "Subject: " + _data.get_subject()
         };
@@ -256,12 +256,12 @@ bool smtp::parts::text_body(const data::email& _data)
                 std::string text{text_file.read()};
 
                 data::client client{_data.get_client()};
-                data::business business{_data.get_business()};
+                data::admin admin{_data.get_business()};
                 text = std::move(update_dom(text, "{{CLIENT_NAME}}", client.get_business_name()));
                 text = std::move(update_dom(text, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
-                text = std::move(update_dom(text, "{{BUSINESS_CELLPHONE}}", business.get_cellphone()));
-                text = std::move(update_dom(text, "{{BUSINESS_EMAIL}}", business.get_email()));
-                text = std::move(update_dom(text, "{{BUSINESS_NAME}}", business.get_name()));
+                text = std::move(update_dom(text, "{{BUSINESS_CELLPHONE}}", admin.get_cellphone()));
+                text = std::move(update_dom(text, "{{BUSINESS_EMAIL}}", admin.get_email()));
+                text = std::move(update_dom(text, "{{BUSINESS_NAME}}", admin.get_name()));
 
                 curl_mime_data(part, text.c_str(), text.length());
                 curl_mime_type(part, "text/plain; charset=UTF-8");
@@ -282,12 +282,12 @@ bool smtp::parts::html_body(const data::email& _data)
                 std::string html{html_file.read()};
 
                 data::client client{_data.get_client()};
-                data::business business{_data.get_business()};
+                data::admin admin{_data.get_business()};
                 html = std::move(update_dom(html, "{{CLIENT_NAME}}", client.get_business_name()));
                 html = std::move(update_dom(html, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
-                html = std::move(update_dom(html, "{{BUSINESS_CELLPHONE}}", business.get_cellphone()));
-                html = std::move(update_dom(html, "{{BUSINESS_EMAIL}}", business.get_email()));
-                html = std::move(update_dom(html, "{{BUSINESS_NAME}}", business.get_name()));
+                html = std::move(update_dom(html, "{{BUSINESS_CELLPHONE}}", admin.get_cellphone()));
+                html = std::move(update_dom(html, "{{BUSINESS_EMAIL}}", admin.get_email()));
+                html = std::move(update_dom(html, "{{BUSINESS_NAME}}", admin.get_name()));
 
                 curl_mime_data(part, html.c_str(), html.length());
                 curl_mime_type(part, "text/html");

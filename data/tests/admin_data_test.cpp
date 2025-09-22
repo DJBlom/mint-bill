@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Contents: business data unit tests
+ * Contents: admin data unit tests
  * Author: Dawid Blom
  * Date: November 18, 2024
  *
@@ -9,7 +9,7 @@
 #include "CppUTestExt/MockSupport.h"
 
 
-#include <business_data.h>
+#include <admin_data.h>
 extern "C"
 {
 
@@ -26,9 +26,9 @@ extern "C"
  * 7) Verify the email to ensure it's a valid email. (Done)
  * 8) Entry fields may not hold more than 50 characters. (Done)
  ******************************************************************************/
-TEST_GROUP(business_data_test)
+TEST_GROUP(admin_data_test)
 {
-        data::business business_data;
+        data::admin business_data;
 	void setup()
 	{
 	}
@@ -38,7 +38,7 @@ TEST_GROUP(business_data_test)
 	}
 };
 
-TEST(business_data_test, the_feature_is_valid)
+TEST(admin_data_test, the_feature_is_valid)
 {
         business_data.set_name("tme");
         business_data.set_address("geelsterd 8");
@@ -55,7 +55,7 @@ TEST(business_data_test, the_feature_is_valid)
 	CHECK_EQUAL(true, business_data.is_valid());
 }
 
-TEST(business_data_test, data_is_not_valid)
+TEST(admin_data_test, data_is_not_valid)
 {
         business_data.set_name("");
         business_data.set_address("geelsterd 8");
@@ -72,7 +72,7 @@ TEST(business_data_test, data_is_not_valid)
 	CHECK_EQUAL(false, business_data.is_valid());
 }
 
-TEST(business_data_test, fail_when_no_email_is_specified)
+TEST(admin_data_test, fail_when_no_email_is_specified)
 {
         business_data.set_name("T.M Engineering");
         business_data.set_address("geelsterd 8");
@@ -88,7 +88,7 @@ TEST(business_data_test, fail_when_no_email_is_specified)
 	CHECK_EQUAL(false, business_data.is_valid());
 }
 
-TEST(business_data_test, fail_when_wrong_email_format_is_used)
+TEST(admin_data_test, fail_when_wrong_email_format_is_used)
 {
         business_data.set_name("T.M Engineering");
         business_data.set_address("geelsterd 8");
@@ -104,7 +104,7 @@ TEST(business_data_test, fail_when_wrong_email_format_is_used)
 	CHECK_EQUAL(false, business_data.is_valid());
 }
 
-TEST(business_data_test, pass_when_correct_email_format_is_used)
+TEST(admin_data_test, pass_when_correct_email_format_is_used)
 {
         business_data.set_name("T.M Engineering");
         business_data.set_address("geelsterd 8");
@@ -121,7 +121,7 @@ TEST(business_data_test, pass_when_correct_email_format_is_used)
 	CHECK_EQUAL(true, business_data.is_valid());
 }
 
-TEST(business_data_test, verify_flag_bits_are_properly_cleared)
+TEST(admin_data_test, verify_flag_bits_are_properly_cleared)
 {
         business_data.set_name("");
         business_data.set_address("");
@@ -138,7 +138,7 @@ TEST(business_data_test, verify_flag_bits_are_properly_cleared)
 	CHECK_EQUAL(false, business_data.is_valid());
 }
 
-TEST(business_data_test, get_business_name_from_structure)
+TEST(admin_data_test, get_business_name_from_structure)
 {
         std::string expected{"tme"};
         std::string name{expected};
@@ -147,7 +147,7 @@ TEST(business_data_test, get_business_name_from_structure)
         CHECK_EQUAL(expected, business_data.get_name());
 }
 
-TEST(business_data_test, get_business_address_from_structure)
+TEST(admin_data_test, get_business_address_from_structure)
 {
         std::string expected{"geelsterd 8"};
         std::string address{expected};
@@ -156,7 +156,7 @@ TEST(business_data_test, get_business_address_from_structure)
         CHECK_EQUAL(expected, business_data.get_address());
 }
 
-TEST(business_data_test, get_business_area_code_from_structure)
+TEST(admin_data_test, get_business_area_code_from_structure)
 {
         std::string expected{"5467"};
         std::string code{expected};
@@ -165,7 +165,7 @@ TEST(business_data_test, get_business_area_code_from_structure)
         CHECK_EQUAL(expected, business_data.get_area_code());
 }
 
-TEST(business_data_test, get_business_town_from_structure)
+TEST(admin_data_test, get_business_town_from_structure)
 {
         std::string expected{"george"};
         std::string town{expected};
@@ -174,7 +174,7 @@ TEST(business_data_test, get_business_town_from_structure)
         CHECK_EQUAL(expected, business_data.get_town());
 }
 
-TEST(business_data_test, get_business_cellphone_number_from_structure)
+TEST(admin_data_test, get_business_cellphone_number_from_structure)
 {
         std::string expected{"0823215944"};
         std::string cellphone{expected};
@@ -183,7 +183,7 @@ TEST(business_data_test, get_business_cellphone_number_from_structure)
         CHECK_EQUAL(expected, business_data.get_cellphone());
 }
 
-TEST(business_data_test, get_business_email_address_from_structure)
+TEST(admin_data_test, get_business_email_address_from_structure)
 {
         std::string expected{"odn@gmail.com"};
         std::string email{expected};
@@ -192,7 +192,7 @@ TEST(business_data_test, get_business_email_address_from_structure)
         CHECK_EQUAL(expected, business_data.get_email());
 }
 
-TEST(business_data_test, get_business_bank_name_from_structure)
+TEST(admin_data_test, get_business_bank_name_from_structure)
 {
         std::string expected{"Bank"};
         std::string bank{expected};
@@ -201,7 +201,7 @@ TEST(business_data_test, get_business_bank_name_from_structure)
         CHECK_EQUAL(expected, business_data.get_bank());
 }
 
-TEST(business_data_test, get_business_branch_code_from_structure)
+TEST(admin_data_test, get_business_branch_code_from_structure)
 {
         std::string expected{"123"};
         std::string code{expected};
@@ -210,7 +210,7 @@ TEST(business_data_test, get_business_branch_code_from_structure)
         CHECK_EQUAL(expected, business_data.get_branch_code());
 }
 
-TEST(business_data_test, get_business_account_number_from_structure)
+TEST(admin_data_test, get_business_account_number_from_structure)
 {
         std::string expected{"1234566"};
         std::string account{expected};
@@ -219,7 +219,7 @@ TEST(business_data_test, get_business_account_number_from_structure)
         CHECK_EQUAL(expected, business_data.get_account_number());
 }
 
-TEST(business_data_test, get_business_client_message_from_structure)
+TEST(admin_data_test, get_business_client_message_from_structure)
 {
         std::string expected{"Thank, you."};
         std::string message{expected};
@@ -228,7 +228,7 @@ TEST(business_data_test, get_business_client_message_from_structure)
         CHECK_EQUAL(expected, business_data.get_client_message());
 }
 
-TEST(business_data_test, ensure_feature_copy_ability)
+TEST(admin_data_test, ensure_feature_copy_ability)
 {
         business_data.set_name("tme");
         business_data.set_address("geelsterd 8");
@@ -242,14 +242,14 @@ TEST(business_data_test, ensure_feature_copy_ability)
         business_data.set_client_message("Thank you for your support");
         business_data.set_password("fdasfdsafdsf");
 
-        data::business tmp_feature;
+        data::admin tmp_feature;
         tmp_feature = business_data;
 
 
         CHECK_EQUAL(true, tmp_feature.is_valid());
 }
 
-TEST(business_data_test, ensure_data_move_ability)
+TEST(admin_data_test, ensure_data_move_ability)
 {
         business_data.set_name("T.M. Engineering");
         business_data.set_address("Geelsterd 8");
@@ -263,13 +263,13 @@ TEST(business_data_test, ensure_data_move_ability)
         business_data.set_client_message("Thank you for your support");
         business_data.set_password("fdasfdsafdsf");
 
-        data::business tmp_feature;
+        data::admin tmp_feature;
         tmp_feature = std::move(business_data);
 
         CHECK_EQUAL(true, tmp_feature.is_valid());
 }
 
-TEST(business_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
+TEST(admin_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
         business_data.set_name(dummy_data);
@@ -287,7 +287,7 @@ TEST(business_data_test, entry_fields_hold_less_than_or_equal_to_fifty_character
         CHECK_EQUAL(true, business_data.is_valid());
 }
 
-TEST(business_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
+TEST(admin_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
         business_data.set_name(dummy_data);
@@ -305,7 +305,7 @@ TEST(business_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
         CHECK_EQUAL(false, business_data.is_valid());
 }
 
-TEST(business_data_test, client_message_is_less_than_or_equal_to_100_characters)
+TEST(admin_data_test, client_message_is_less_than_or_equal_to_100_characters)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
         business_data.set_name(dummy_data);
@@ -323,7 +323,7 @@ TEST(business_data_test, client_message_is_less_than_or_equal_to_100_characters)
         CHECK_EQUAL(true, business_data.is_valid());
 }
 
-TEST(business_data_test, verify_data_limits)
+TEST(admin_data_test, verify_data_limits)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
         business_data.set_name(dummy_data);
