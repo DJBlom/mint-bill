@@ -65,10 +65,10 @@ model::admin::~admin()
 
 }
 
-std::any model::admin::load(const std::string& _keyword)
+std::any model::admin::load(const std::string& _business_name)
 {
         data::admin admin_data;
-	if (_keyword.empty() == true)
+	if (_business_name.empty() == true)
 	{
                 syslog(LOG_CRIT, "ADMIN_MODEL: invalid argument - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
@@ -76,7 +76,7 @@ std::any model::admin::load(const std::string& _keyword)
 	else
 	{
 		storage::database::sqlite database{this->database_file, this->database_password};
-		std::vector<storage::database::param_values> query_argument = {this->business_id, _keyword};
+		std::vector<storage::database::param_values> query_argument = {this->business_id, _business_name};
 		storage::database::part::rows rows{database.select(sql::query::select, query_argument)};
 		admin_data = extract_data(rows);
 	}

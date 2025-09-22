@@ -23,7 +23,7 @@
                 <property name="css-classes">search_bar</property>
                 <property name="hexpand">True</property>
                 <property name="placeholder-text">Soek vir besigheid...</property>
-                <property name="search-delay">200</property>
+                <property name="search-delay">1000</property>
                 <property name="vexpand">True</property>
                 <property name="vexpand-set">True</property>
               </object>

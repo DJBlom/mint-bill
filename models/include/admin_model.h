@@ -13,6 +13,7 @@
 namespace model {
 class admin: public interface::model {
 public:
+	admin() = delete;
 	explicit admin(const std::string&, const std::string&);
 	admin(const admin& new_data) = delete;
 	admin(admin&&) = default;
