@@ -5,8 +5,10 @@
  *
  * NOTE:
  **********************************************************/
+#include <config.h>
 #include <syslog.h>
 #include <admin_page.h>
+#include <password_manager.h>
 //GCOVR_EXCL_START
 gui::admin_page::~admin_page()
 {
@@ -32,18 +34,38 @@ bool gui::admin_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
         return created;
 }
 
-bool gui::admin_page::search(const std::string& _keyword)
+bool gui::admin_page::search(const std::string& _business_name)
 {
         bool searched{false};
-        if (_keyword.empty())
+        if (_business_name.empty())
         {
-                syslog(LOG_CRIT, "The _keywword is empty - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: invalid argument - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
         else
         {
-		searched = true;
-		update_business_info_with_db_data(_keyword);
+		// If the very first time the application start up.
+		if (this->database_password.empty() == true)
+		{
+			// Get the database password.
+			feature::password_manager password_manager{app::config::password_manager_schema_name};
+			this->database_password = password_manager.lookup_password(app::config::password_number);
+			if (this->database_password.empty() == true)
+			{
+				syslog(LOG_CRIT, "ADMIN_PAGE: the database_password is empty - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+			else
+			{
+				searched = true;
+				update_business_info_with_db_data(_business_name);
+			}
+		}
+		else
+		{
+			searched = true;
+			update_business_info_with_db_data(_business_name);
+		}
         }
 
         return searched;
@@ -108,13 +130,14 @@ void gui::admin_page::connect_save_alert()
         }
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
+		model::admin admin_model{app::config::path_to_database_file, this->database_password};
                 data::admin data{extract_page_entries()};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
                                 syslog(LOG_INFO, "User chose to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->admin_model.save(data) == false)
+                                if (admin_model.save(data) == false)
                                 {
                                         syslog(LOG_CRIT, "Failed to save the admin information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
@@ -167,28 +190,29 @@ void gui::admin_page::clear_entries()
         this->password->set_text("");
 }
 
-void gui::admin_page::update_business_info_with_db_data(const std::string& _keyword)
+void gui::admin_page::update_business_info_with_db_data(const std::string& _business_name)
 {
-	(void) _keyword;
-	std::any data{admin_model.load("tme")};
-	data::admin business_data{std::any_cast<data::admin> (data)};
-        if (business_data.is_valid() == false)
+	model::admin admin_model{app::config::path_to_database_file, this->database_password};
+	std::any data{admin_model.load(_business_name)};
+	data::admin admin_data{std::any_cast<data::admin> (data)};
+        if (admin_data.is_valid() == false)
         {
                 syslog(LOG_CRIT, "The admin data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-                return;
         }
-
-        this->name->set_text(business_data.get_name());
-        this->street_address->set_text(business_data.get_address());
-        this->area_code->set_text(business_data.get_area_code());
-        this->town_name->set_text(business_data.get_town());
-        this->cellphone->set_text(business_data.get_cellphone());
-        this->email->set_text(business_data.get_email());
-        this->bank_name->set_text(business_data.get_bank());
-        this->branch_code->set_text(business_data.get_branch_code());
-        this->account_number->set_text(business_data.get_account_number());
-        this->client_message->set_text(business_data.get_client_message());
+	else
+	{
+		this->name->set_text(admin_data.get_name());
+		this->street_address->set_text(admin_data.get_address());
+		this->area_code->set_text(admin_data.get_area_code());
+		this->town_name->set_text(admin_data.get_town());
+		this->cellphone->set_text(admin_data.get_cellphone());
+		this->email->set_text(admin_data.get_email());
+		this->bank_name->set_text(admin_data.get_bank());
+		this->branch_code->set_text(admin_data.get_branch_code());
+		this->account_number->set_text(admin_data.get_account_number());
+		this->client_message->set_text(admin_data.get_client_message());
+	}
 }
 
 data::admin gui::admin_page::extract_page_entries()

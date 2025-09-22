@@ -68,14 +68,27 @@ private:
 
 int main(int argc, char** argv)
 {
-	mint_bill mint_bill;
-	if (mint_bill.create() == false)
+	int return_code{0};
+	try
 	{
-                syslog(LOG_CRIT, "Failed to create mint_bill application - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
+		mint_bill mint_bill;
+		if (mint_bill.create() == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: failed to create mint_bill application - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			return_code = mint_bill.launch(argc, argv);
+		}
+	}
+	catch (...)
+	{
+		syslog(LOG_CRIT, "MINT_BILL: failed to launch the mint_bill application - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 
-	return mint_bill.launch(argc, argv);
+	return return_code;
 }
 
 mint_bill::mint_bill()
