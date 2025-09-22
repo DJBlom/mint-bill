@@ -58,7 +58,7 @@ private:
 	gui::client_register_page client_register_page{};
 	gui::invoice_page invoice_page{};
 	gui::statement_page statement_page{};
-	gui::part::stack stack{"operations-stack"};
+	gui::part::stack stack{"pages-stack"};
 	gui::part::search_bar search_bar{"business-name-search"};
 	gui::part::sub_button print_button{"print-button"};
 	gui::part::sub_button email_button{"email-button"};
@@ -362,7 +362,7 @@ bool mint_bill::search_bar_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
-			else if (this->stack.current_page() == "business-page")
+			else if (this->stack.current_page() == "admin-page")
 			{
 				if (this->admin_page.search(_keyword) == false)
 				{
@@ -524,7 +524,7 @@ bool mint_bill::save_button_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 								 "filename %s, line number %d", __FILE__, __LINE__);
 					}
 				}
-				else if (this->stack.current_page() == "business-page")
+				else if (this->stack.current_page() == "admin-page")
 				{
 					if (this->admin_page.save() == false)
 					{

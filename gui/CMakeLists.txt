@@ -26,6 +26,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${GTKMM_INCLUDE_DIRS}
                 ${PROJECT_SOURCE_DIR}/include/
                 ${PROJECT_SOURCE_DIR}/components/include/
+		${LIBSECRET_INCLUDE_DIRS}
                 PUBLIC
                 ${CMAKE_SOURCE_DIR}/app/include
                 ${CMAKE_SOURCE_DIR}/data/include
