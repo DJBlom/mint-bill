@@ -34,7 +34,7 @@ namespace gui {
                         data::client extract_page_entries();
 
                 private:
-                        model::client client_model{};
+                        model::client client_model{"test", "test"};
 
                 private:
 

@@ -9,7 +9,6 @@
 #include <syslog.h>
 #include <string>
 
-#include <iostream>
 
 namespace sql {
 namespace query {
