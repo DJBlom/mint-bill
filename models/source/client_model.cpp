@@ -5,19 +5,19 @@
  *
  * NOTE:
  *******************************************************/
-#include <client_register.h>
+#include <client_model.h>
 #include <client_data.h>
 #include <iostream>
 
 
-feature::client::~client()
+model::client::~client()
 {
 }
 
-data::client feature::client::load(const std::string& business_name)
+std::any model::client::load(const std::string& _business_name)
 {
         data::client client_data{};
-        if (!business_name.empty())
+        if (!_business_name.empty())
         {
                 client_data.set_business_name("Dummy");
                 client_data.set_business_address("Geelsterd 8");
@@ -32,9 +32,10 @@ data::client feature::client::load(const std::string& business_name)
         return client_data;
 }
 
-bool feature::client::save(const data::client& data)
+bool model::client::save(const std::any& _data)
 {
         bool saved{false};
+	data::client data = std::any_cast<data::client>(_data);
         if (data.is_valid())
         {
                 saved = true;
@@ -49,22 +50,4 @@ bool feature::client::save(const data::client& data)
         }
 
         return saved;
-}
-
-data::client feature::client::search(const std::string& business_name)
-{
-        data::client client_data{};
-        if (!business_name.empty())
-        {
-                client_data.set_business_name("Dummy Business");
-                client_data.set_business_address("Bloem Straat 7");
-                client_data.set_business_area_code("5432");
-                client_data.set_business_town_name("George");
-                client_data.set_cellphone_number("0711422488");
-                client_data.set_email("client@gmail.com");
-                client_data.set_vat_number("49204");
-                client_data.set_statement_schedule("4,4");
-        }
-
-        return client_data;
 }

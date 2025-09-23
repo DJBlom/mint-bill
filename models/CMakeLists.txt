@@ -17,8 +17,8 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(models
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/admin_model.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_model.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_register.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
         )
 

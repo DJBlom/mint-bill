@@ -10,7 +10,7 @@
 
 
 #include <client_data.h>
-#include <client_register.h>
+#include <client_model.h>
 extern "C"
 {
 
@@ -23,10 +23,10 @@ extern "C"
  * 3) Search for a client in the db.
  * 4) Ensure the parsing of the statemen
  ******************************************************************************/
-TEST_GROUP(client_feature_test)
+TEST_GROUP(client_model_test)
 {
         data::client client_data{};
-        feature::client client_register{};
+        model::client client_model{};
 	void setup()
 	{
 	}
@@ -36,7 +36,7 @@ TEST_GROUP(client_feature_test)
 	}
 };
 
-TEST(client_feature_test, save_data_to_db)
+TEST(client_model_test, save_data_to_db)
 {
         client_data.set_business_name("Dummy");
         client_data.set_business_address("Geelsterd 8");
@@ -47,21 +47,13 @@ TEST(client_feature_test, save_data_to_db)
         client_data.set_vat_number("425435");
         client_data.set_statement_schedule("4,4");
 
-        CHECK_EQUAL(true, client_register.save(client_data));
+        CHECK_EQUAL(true, client_model.save(client_data));
 }
 
-TEST(client_feature_test, load_data_from_db)
+TEST(client_model_test, load_data_from_db)
 {
         data::client tmp_data{};
-        tmp_data = client_register.load("tme");
-
-        CHECK_EQUAL(true, tmp_data.is_valid());
-}
-
-TEST(client_feature_test, search_for_data_in_db)
-{
-        data::client tmp_data{};
-        tmp_data = client_register.search("tme");
+        tmp_data = std::any_cast<data::client> (client_model.load("tme"));
 
         CHECK_EQUAL(true, tmp_data.is_valid());
 }

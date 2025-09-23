@@ -8,7 +8,7 @@
 #ifndef _CLIENT_REGISTER_PAGE_H_
 #define _CLIENT_REGISTER_PAGE_H_
 #include <gui.h>
-#include <client_register.h>
+#include <client_model.h>
 
 namespace gui {
         //GCOVR_EXCL_START
@@ -34,7 +34,7 @@ namespace gui {
                         data::client extract_page_entries();
 
                 private:
-                        feature::client client_register{};
+                        model::client client_model{};
 
                 private:
 

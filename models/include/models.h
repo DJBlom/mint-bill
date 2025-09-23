@@ -31,15 +31,6 @@ public:
 	[[nodiscard]] virtual bool save(const std::any&) = 0;
 };
 
-class client {
-public:
-	virtual ~client() = default;
-
-	[[nodiscard]] virtual data::client load(const std::string&) = 0;
-	[[nodiscard]] virtual bool save(const data::client&) = 0;
-	[[nodiscard]] virtual data::client search(const std::string&) = 0;
-};
-
 class business {
 public:
 	virtual ~business() = default;
