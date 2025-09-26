@@ -44,7 +44,7 @@ DROP TABLE IF EXISTS labor;
 
 CREATE TABLE business_details (
 	business_id		INTEGER PRIMARY KEY,
-	business_name        	TEXT NOT NULL,
+	business_name        	TEXT NOT NULL UNIQUE,
 	email_address		TEXT NOT NULL UNIQUE,
 	contact_number		TEXT NOT NULL,
 	street			TEXT NOT NULL,

@@ -27,9 +27,24 @@ public:
 
 private:
 	using details = std::vector<std::vector<storage::database::param_values>>;
+	[[nodiscard]] data::client extract_data(const storage::database::part::rows&);
+	[[nodiscard]] details package_data(const data::client&);
 
+
+private:
 	std::string database_file{""};
 	std::string database_password{""};
+
+	enum DATA_FIELDS {
+		NAME = 0,
+		ADDRESS,
+		AREA_CODE,
+		TOWN_NAME,
+		CELLPHONE_NUMBER,
+		EMAIL,
+		VAT_NUMBER,
+		STATEMENT_SCHEDULE
+	};
 
 	enum PARAMETERS {
 		DETAILS = 0,
