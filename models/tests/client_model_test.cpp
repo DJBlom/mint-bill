@@ -23,7 +23,7 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(client_model_test)
 {
-	const std::string db_file{"../storage/tests/encrypted_test.db"};
+	const std::string db_file{"../storage/tests/model_test.db"};
 	const std::string db_password{"123456789"};
         data::client client_data{};
         model::client client_model{db_file, db_password};
@@ -39,7 +39,7 @@ TEST_GROUP(client_model_test)
 TEST(client_model_test, unsuccessfully_save_data_to_database)
 {
         client_data.set_business_name("Dummy");
-        client_data.set_business_address("Geelsterd 8");
+        client_data.set_business_address("Geelsterd 12");
         client_data.set_business_area_code("");
         client_data.set_business_town_name("George");
         client_data.set_cellphone_number("0711422488");
@@ -50,7 +50,7 @@ TEST(client_model_test, unsuccessfully_save_data_to_database)
         CHECK_EQUAL(false, client_model.save(client_data));
 }
 
-TEST(client_model_test, successfully_save_data_to_database_extra_client)
+TEST(client_model_test, successfully_save_data_to_database)
 {
         data::client data{};
         data.set_business_name("Dummy");
@@ -58,14 +58,14 @@ TEST(client_model_test, successfully_save_data_to_database_extra_client)
         data.set_business_area_code("05693");
         data.set_business_town_name("George");
         data.set_cellphone_number("0711422488");
-        data.set_email("clientdummy@gmail.com");
+        data.set_email("dummy@gmail.com");
         data.set_vat_number("4254350");
         data.set_statement_schedule("1,4");
 
         CHECK_EQUAL(true, client_model.save(data));
 }
 
-TEST(client_model_test, successfully_update_data_to_database_extra_client)
+TEST(client_model_test, successfully_update_data_in_database)
 {
         data::client data{};
         data.set_business_name("Dummy");
@@ -75,21 +75,6 @@ TEST(client_model_test, successfully_update_data_to_database_extra_client)
         data.set_cellphone_number("0711422488");
         data.set_email("clientdummy@gmail.com");
         data.set_vat_number("4254350");
-        data.set_statement_schedule("1,4");
-
-        CHECK_EQUAL(true, client_model.save(data));
-}
-
-TEST(client_model_test, successfully_save_data_to_database_for_extra_client)
-{
-        data::client data{};
-        data.set_business_name("Dummy1");
-        data.set_business_address("Geelsterd 8");
-        data.set_business_area_code("05693");
-        data.set_business_town_name("George");
-        data.set_cellphone_number("0711422488");
-        data.set_email("clientdummy123@gmail.com");
-        data.set_vat_number("425435087");
         data.set_statement_schedule("4,4");
 
         CHECK_EQUAL(true, client_model.save(data));
@@ -105,8 +90,19 @@ TEST(client_model_test, unsuccessfully_load_data_from_database)
 
 TEST(client_model_test, successfully_load_data_from_database)
 {
-        data::client tmp_data{};
-        tmp_data = std::any_cast<data::client> (client_model.load(""));
+        data::client result{};
+        data::client data{};
+        data.set_business_name("Tests");
+        data.set_business_address("Geelsterd 12");
+        data.set_business_area_code("05693");
+        data.set_business_town_name("George");
+        data.set_cellphone_number("0711422488");
+        data.set_email("client@gmail.com");
+        data.set_vat_number("42543509");
+        data.set_statement_schedule("1,4");
 
-        CHECK_EQUAL(false, tmp_data.is_valid());
+	(void) client_model.save(data);
+        result = std::any_cast<data::client> (client_model.load("Tests"));
+
+        CHECK_EQUAL(true, result.is_valid());
 }

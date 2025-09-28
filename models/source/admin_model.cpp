@@ -12,28 +12,42 @@
 
 namespace sql {
 namespace query {
-	constexpr const char *business_details_usert{R"sql(
-				INSERT INTO business_details (
-				    business_id, business_name, email_address, contact_number, street, area_code, town_name
-				) VALUES (?, ?, ?, ?, ?, ?, ?)
-				ON CONFLICT(business_id) DO UPDATE SET
-				    business_name  = excluded.business_name,
-				    email_address  = excluded.email_address,
-				    contact_number = excluded.contact_number,
-				    street         = excluded.street,
-				    area_code      = excluded.area_code,
-				    town_name      = excluded.town_name;)sql"};
+	constexpr const char* business_details_usert{R"sql(
+	INSERT INTO business_details (
+		business_name,
+		email_address,
+		contact_number,
+		street,
+		area_code,
+		town_name
+	)
+	VALUES (?, ?, ?, ?, ?, ?)
+	ON CONFLICT DO UPDATE SET
+		business_name  = excluded.business_name,
+		email_address  = excluded.email_address,
+		contact_number = excluded.contact_number,
+		street         = excluded.street,
+		area_code      = excluded.area_code,
+		town_name      = excluded.town_name;
+	)sql"};
 
-	constexpr const char *admin_usert{R"sql(
-			INSERT INTO admin (
-					business_id, bank_name, branch_code, account_number, app_password, client_message
-				) VALUES (?, ?, ?, ?, ?, ?)
-			ON CONFLICT(business_id) DO UPDATE SET
-			bank_name = excluded.bank_name,
-				       branch_code = excluded.branch_code,
-				       account_number = excluded.account_number,
-				       app_password = excluded.app_password,
-				       client_message = excluded.client_message;)sql"};
+	constexpr const char* admin_usert{R"sql(
+		INSERT INTO admin (
+			business_id,
+			bank_name,
+			branch_code,
+			account_number,
+			app_password,
+			client_message
+		)
+		VALUES ((SELECT business_id FROM business_details WHERE business_name = ?), ?, ?, ?, ?, ?)
+		ON CONFLICT(business_id) DO UPDATE SET
+			bank_name      = excluded.bank_name,
+			branch_code    = excluded.branch_code,
+			account_number = excluded.account_number,
+			app_password   = excluded.app_password,
+			client_message = excluded.client_message;
+	)sql"};
 
 	constexpr const char* select{R"sql(
 		    SELECT  bd.business_name,
@@ -50,7 +64,7 @@ namespace query {
 		    FROM admin AS a
 		    JOIN business_details AS bd
 			ON a.business_id = bd.business_id
-		    WHERE a.business_id = ? AND bd.business_name = ?)sql"};
+		    WHERE bd.business_name = ?)sql"};
 }
 }
 
@@ -74,10 +88,38 @@ std::any model::admin::load(const std::string& _business_name)
 	}
 	else
 	{
+		storage::database::part::rows rows{};
 		storage::database::sqlite database{this->database_file, this->database_password};
-		std::vector<storage::database::param_values> query_argument = {this->business_id, _business_name};
-		storage::database::part::rows rows{database.select(sql::query::select, query_argument)};
-		admin_data = extract_data(rows);
+		std::vector<storage::database::param_values> query_argument = {_business_name};
+		if (database.transaction("BEGIN IMMEDIATE;") == false)
+		{
+			syslog(LOG_CRIT, "ADMIN_MODEL: failed to begin transaction - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else
+		{
+			rows = database.select(sql::query::select, query_argument);
+		}
+
+		if (database.transaction("COMMIT;") == false)
+		{
+			syslog(LOG_CRIT, "ADMIN_MODEL: failed to begin transaction - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else
+		{
+			admin_data = extract_data(rows);
+		}
 	}
 
         return admin_data;
@@ -94,17 +136,47 @@ bool model::admin::save(const std::any& _data)
 	}
 	else
         {
-		storage::database::sqlite database{this->database_file, this->database_password};
 		details details{package_data(data)};
-		if (database.usert(sql::query::business_details_usert, details[PARAMETERS::DETAILS]) == false)
+		storage::database::sqlite database{this->database_file, this->database_password};
+		if (database.transaction("BEGIN IMMEDIATE;") == false)
+		{
+			syslog(LOG_CRIT, "ADMIN_MODEL: failed to begin transaction - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else if (database.usert(sql::query::business_details_usert, details[PARAMETERS::DETAILS]) == false)
 		{
 			syslog(LOG_CRIT, "ADMIN_MODEL: failed to execute sql query - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
 		}
 		else if (database.usert(sql::query::admin_usert, details[PARAMETERS::ADMIN]) == false)
 		{
 			syslog(LOG_CRIT, "ADMIN_MODEL: failed to execute sql query - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else if (database.transaction("COMMIT;") == false)
+		{
+			syslog(LOG_CRIT, "ADMIN_MODEL: failed to commit transaction - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "ADMIN_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
 		}
 		else
 		{
@@ -169,7 +241,6 @@ model::admin::details model::admin::package_data(const data::admin& _data)
 	else
 	{
 		details[PARAMETERS::DETAILS] = {
-			this->business_id,
 			_data.get_name(),
 			_data.get_email(),
 			_data.get_cellphone(),
@@ -177,7 +248,7 @@ model::admin::details model::admin::package_data(const data::admin& _data)
 			_data.get_area_code(),
 			_data.get_town()};
 		details[PARAMETERS::ADMIN] = {
-			this->business_id,
+			_data.get_name(),
 			_data.get_bank(),
 			_data.get_branch_code(),
 			_data.get_account_number(),

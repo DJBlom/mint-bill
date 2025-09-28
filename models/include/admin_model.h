@@ -32,7 +32,6 @@ private:
 private:
 	std::string database_file{""};
 	std::string database_password{""};
-	const long long int business_id{1LL};
 
 	enum DATA_FIELDS {
 		NAME = 0,
