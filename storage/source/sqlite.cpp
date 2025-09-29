@@ -89,6 +89,23 @@ storage::database::sqlite::~sqlite()
 }
 //GCOVR_EXCL_STOP
 
+bool storage::database::sqlite::transaction(const std::string& _sql_query)
+{
+	bool success{false};
+	if (_sql_query.empty() == true)
+	{
+                syslog(LOG_CRIT, "SQLITE: invalid parameters - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		part::sql_operations sql_operations{this->database, _sql_query};
+		success = sql_operations.single_execute();
+	}
+
+	return success;
+}
+
 bool storage::database::sqlite::usert(const std::string& _sql_query, const std::vector<param_values>& _sql_query_params)
 {
 	bool success{false};

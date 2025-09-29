@@ -17,6 +17,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "admin_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "admin_model_test"
+# CPPUTEST_EXE_FLAGS +=-sg "client_model_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_statement_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"

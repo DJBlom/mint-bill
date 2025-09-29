@@ -8,7 +8,7 @@
 #ifndef _CLIENT_REGISTER_PAGE_H_
 #define _CLIENT_REGISTER_PAGE_H_
 #include <gui.h>
-#include <client_register.h>
+#include <client_model.h>
 
 namespace gui {
         //GCOVR_EXCL_START
@@ -22,6 +22,7 @@ namespace gui {
                         ~client_register_page() override;
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+			[[nodiscard]] virtual bool set_database_password(const std::string&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
 			[[nodiscard]] virtual bool save() override;
 
@@ -30,14 +31,11 @@ namespace gui {
                         void connect_save_alert();
                         void connect_wrong_info_alert();
                         void clear_all_entries();
-                        void display_on_ui(const data::client&);
+                        void display_on_ui(const std::string&);
                         data::client extract_page_entries();
 
                 private:
-                        feature::client client_register{};
-
-                private:
-
+			std::string database_password{""};
                         std::unique_ptr<Gtk::Entry> email{};
                         std::unique_ptr<Gtk::Entry> cellphone{};
                         std::unique_ptr<Gtk::Entry> vat_number{};

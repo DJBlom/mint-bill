@@ -34,6 +34,7 @@ public:
 	sqlite& operator= (sqlite&&) = delete;
 	virtual ~sqlite();
 
+	[[nodiscard]] virtual bool transaction(const std::string&);
 	[[nodiscard]] virtual bool usert(const std::string&, const std::vector<param_values>&);
 	[[nodiscard]] virtual part::rows select(const std::string&, const std::vector<param_values>&);
 
