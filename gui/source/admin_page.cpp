@@ -9,6 +9,8 @@
 #include <syslog.h>
 #include <admin_page.h>
 #include <password_manager.h>
+
+
 //GCOVR_EXCL_START
 gui::admin_page::~admin_page()
 {
@@ -17,21 +19,38 @@ gui::admin_page::~admin_page()
 
 bool gui::admin_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
-        bool created{true};
+        bool created{false};
         if (!_ui_builder)
         {
-                syslog(LOG_CRIT, "The _ui_builder is not valid - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: the _ui_builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
-		created = false;
         }
         else
         {
+		created = true;
                 create_entries(_ui_builder);
                 connect_save_alert();
                 connect_wrong_info_alert();
         }
 
         return created;
+}
+
+bool gui::admin_page::set_database_password(const std::string& _database_password)
+{
+	bool success{false};
+	if (_database_password.empty() == true)
+	{
+                syslog(LOG_CRIT, "ADMIN_PAGE: database password is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->database_password = _database_password;
+	}
+
+	return success;
 }
 
 bool gui::admin_page::search(const std::string& _business_name)
@@ -44,28 +63,8 @@ bool gui::admin_page::search(const std::string& _business_name)
         }
         else
         {
-		// If the very first time the application start up.
-		if (this->database_password.empty() == true)
-		{
-			// Get the database password.
-			feature::password_manager password_manager{app::config::password_manager_schema_name};
-			this->database_password = password_manager.lookup_password(app::config::password_number);
-			if (this->database_password.empty() == true)
-			{
-				syslog(LOG_CRIT, "ADMIN_PAGE: the database_password is empty - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
-			}
-			else
-			{
-				searched = true;
-				update_business_info_with_db_data(_business_name);
-			}
-		}
-		else
-		{
-			searched = true;
-			update_business_info_with_db_data(_business_name);
-		}
+		searched = true;
+		update_business_info_with_db_data(_business_name);
         }
 
         return searched;
@@ -76,7 +75,7 @@ bool gui::admin_page::save()
 	bool success{false};
 	if (!this->save_alert_dialog)
 	{
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: the save_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -124,7 +123,7 @@ void gui::admin_page::connect_save_alert()
 {
         if (!this->save_alert_dialog)
         {
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: the save_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
@@ -135,11 +134,11 @@ void gui::admin_page::connect_save_alert()
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
-                                syslog(LOG_INFO, "User chose to save the admin information - "
+                                syslog(LOG_INFO, "ADMIN_PAGE: user chose to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 if (admin_model.save(data) == false)
                                 {
-                                        syslog(LOG_CRIT, "Failed to save the admin information - "
+                                        syslog(LOG_CRIT, "ADMIN_PAGE: failed to save the admin information - "
                                                          "filename %s, line number %d", __FILE__, __LINE__);
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();
@@ -152,7 +151,7 @@ void gui::admin_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
-                                syslog(LOG_INFO, "User chose not to save the admin information - "
+                                syslog(LOG_INFO, "ADMIN_PAGE: user chose not to save the admin information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
@@ -167,7 +166,7 @@ void gui::admin_page::connect_wrong_info_alert()
 {
         if (!this->wrong_info_alert_dialog)
         {
-                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: the wrong_info_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
@@ -187,6 +186,16 @@ void gui::admin_page::connect_wrong_info_alert()
 
 void gui::admin_page::clear_entries()
 {
+	this->name->set_text("");
+	this->street_address->set_text("");
+	this->area_code->set_text("");
+	this->town_name->set_text("");
+	this->cellphone->set_text("");
+	this->email->set_text("");
+	this->bank_name->set_text("");
+	this->branch_code->set_text("");
+	this->account_number->set_text("");
+	this->client_message->set_text("");
         this->password->set_text("");
 }
 
@@ -197,7 +206,7 @@ void gui::admin_page::update_business_info_with_db_data(const std::string& _busi
 	data::admin admin_data{std::any_cast<data::admin> (data)};
         if (admin_data.is_valid() == false)
         {
-                syslog(LOG_CRIT, "The admin data is not valid - "
+                syslog(LOG_CRIT, "ADMIN_PAGE: the admin data is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
         }
 	else

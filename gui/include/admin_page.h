@@ -22,6 +22,7 @@ public:
 	~admin_page() override;
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&) override;
+        [[nodiscard]] virtual bool set_database_password(const std::string&) override;
 	[[nodiscard]] virtual bool search(const std::string&) override;
 	[[nodiscard]] virtual bool save() override;
 
@@ -35,7 +36,6 @@ private:
 
 private:
 	std::string database_password{""};
-	// model::admin admin_model{"test", "test"};
 
 private: // Label
 	std::unique_ptr<Gtk::Label> organization_label{};

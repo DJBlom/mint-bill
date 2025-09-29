@@ -5,6 +5,7 @@
  *
  * NOTE:
  *******************************************************/
+#include <config.h>
 #include <syslog.h>
 #include <client_data.h>
 #include <client_register_page.h>
@@ -19,7 +20,7 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         bool created{true};
         if (!_ui_builder)
         {
-                syslog(LOG_CRIT, "The _ui_builder is not valid - "
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: the _ui_builder is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 created = false;
         }
@@ -33,19 +34,35 @@ bool gui::client_register_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_bui
         return created;
 }
 
-bool gui::client_register_page::search(const std::string& _keyword)
+bool gui::client_register_page::set_database_password(const std::string& _database_password)
+{
+	bool success{false};
+	if (_database_password.empty() == true)
+	{
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: database password is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->database_password = _database_password;
+	}
+
+	return success;
+}
+
+bool gui::client_register_page::search(const std::string& _business_name)
 {
         bool searched{true};
-        if (_keyword.empty())
+        if (_business_name.empty())
         {
-                syslog(LOG_CRIT, "The _keywword is empty - "
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: business name is empty - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
 		searched = false;
         }
         else
         {
-		data::client data = std::any_cast<data::client> (this->client_model.load(_keyword));
-		display_on_ui(data);
+		display_on_ui(_business_name);
         }
 
         return searched;
@@ -56,7 +73,7 @@ bool gui::client_register_page::save()
 	bool success{false};
 	if (!this->save_alert_dialog)
 	{
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: the save_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -96,19 +113,20 @@ void gui::client_register_page::connect_save_alert()
 {
         if (!this->save_alert_dialog)
         {
-                syslog(LOG_CRIT, "The save_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: the save_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-                data::client data = extract_page_entries();
+                data::client data{extract_page_entries()};
+		model::client client_model{app::config::path_to_database_file, this->database_password};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
-                                syslog(LOG_INFO, "User chose to save the client information - "
+                                syslog(LOG_INFO, "CLIENT_REGISTER_PAGE: user chose to save the client information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
-                                if (this->client_model.save(data) == false)
+                                if (client_model.save(data) == false)
                                 {
                                         this->save_alert_dialog->hide();
                                         this->wrong_info_alert_dialog->show();
@@ -120,7 +138,7 @@ void gui::client_register_page::connect_save_alert()
                                 }
                                 break;
                         case GTK_RESPONSE_NO:
-                                syslog(LOG_INFO, "User chose not to save the client information - "
+                                syslog(LOG_INFO, "CLIENT_REGISTER_PAGE: user chose not to save the client information - "
                                                  "filename %s, line number %d", __FILE__, __LINE__);
                                 this->save_alert_dialog->hide();
                                 break;
@@ -135,7 +153,7 @@ void gui::client_register_page::connect_wrong_info_alert()
 {
         if (!this->wrong_info_alert_dialog)
         {
-                syslog(LOG_CRIT, "The wrong_info_alert_dialog is not valid - "
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: the wrong_info_alert_dialog is not valid - "
                                  "filename %s, line number %d", __FILE__, __LINE__);
                 return;
         }
@@ -165,16 +183,18 @@ void gui::client_register_page::clear_all_entries()
         this->statment_schedule->set_text("");
 }
 
-void gui::client_register_page::display_on_ui(const data::client& _data)
+void gui::client_register_page::display_on_ui(const std::string& _business_name)
 {
-        this->email->set_text(_data.get_email());
-        this->vat_number->set_text(_data.get_vat_number());
-        this->cellphone->set_text(_data.get_cellphone_number());
-        this->business_name->set_text(_data.get_business_name());
-        this->statment_schedule->set_text(_data.get_statement_schedule());
-        this->business_area_code->set_text(_data.get_business_area_code());
-        this->business_town_name->set_text(_data.get_business_town_name());
-        this->business_street_address->set_text(_data.get_business_address());
+	model::client client_model{app::config::path_to_database_file, this->database_password};
+	data::client data = std::any_cast<data::client> (client_model.load(_business_name));
+        this->email->set_text(data.get_email());
+        this->vat_number->set_text(data.get_vat_number());
+        this->cellphone->set_text(data.get_cellphone_number());
+        this->business_name->set_text(data.get_business_name());
+        this->statment_schedule->set_text(data.get_statement_schedule());
+        this->business_area_code->set_text(data.get_business_area_code());
+        this->business_town_name->set_text(data.get_business_town_name());
+        this->business_street_address->set_text(data.get_business_address());
 }
 
 data::client gui::client_register_page::extract_page_entries()

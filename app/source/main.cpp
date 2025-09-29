@@ -682,6 +682,16 @@ void mint_bill::database_password_exist()
 	}
 	else
 	{
+		if (this->admin_page.set_database_password(password) == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else if (this->client_register_page.set_database_password(password) == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+		}
 		this->database_password_window->close();
 	}
 }
