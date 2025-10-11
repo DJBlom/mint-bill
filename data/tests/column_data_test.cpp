@@ -31,7 +31,7 @@ extern "C"
  * 12) Amount column max length is (0 < length < 15)
  * 13) Ensure thread safety of the data. (Done)
  ******************************************************************************/
-TEST_GROUP(invoice_column_test)
+TEST_GROUP(column_data_test)
 {
         data::column column;
 	void setup()
@@ -43,7 +43,7 @@ TEST_GROUP(invoice_column_test)
 	}
 };
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_quantity_column)
+TEST(column_data_test, handle_assigning_and_retrieving_quantity_column)
 {
         unsigned int expected{12};
         column.set_quantity(expected);
@@ -51,7 +51,7 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_quantity_column)
         CHECK_EQUAL(expected, column.get_quantity());
 }
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_description_column)
+TEST(column_data_test, handle_assigning_and_retrieving_description_column)
 {
         std::string expected{"Machinging"};
         column.set_description(expected);
@@ -59,7 +59,7 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_description_column)
         CHECK_EQUAL(expected, column.get_description());
 }
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_amount_column)
+TEST(column_data_test, handle_assigning_and_retrieving_amount_column)
 {
         double expected{5558.99};
         column.set_amount(expected);
@@ -67,7 +67,7 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_amount_column)
         CHECK_EQUAL(expected, column.get_amount());
 }
 
-TEST(invoice_column_test, handle_data_verification)
+TEST(column_data_test, handle_data_verification)
 {
         bool expected{true};
         unsigned int quantity{12};
@@ -80,7 +80,7 @@ TEST(invoice_column_test, handle_data_verification)
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_copy_assignement)
+TEST(column_data_test, handle_data_copy_assignement)
 {
         bool expected{true};
         unsigned int quantity{12};
@@ -95,7 +95,7 @@ TEST(invoice_column_test, handle_data_copy_assignement)
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_copy_constructable)
+TEST(column_data_test, handle_data_copy_constructable)
 {
         bool expected{true};
         unsigned int quantity{12};
@@ -109,7 +109,7 @@ TEST(invoice_column_test, handle_data_copy_constructable)
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_move_assignement)
+TEST(column_data_test, handle_data_move_assignement)
 {
         bool expected{true};
         unsigned int quantity{12};
@@ -124,7 +124,7 @@ TEST(invoice_column_test, handle_data_move_assignement)
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_move_constructable)
+TEST(column_data_test, handle_data_move_constructable)
 {
         bool expected{true};
         unsigned int quantity{12};
@@ -138,7 +138,7 @@ TEST(invoice_column_test, handle_data_move_constructable)
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_quantity_data_limit)
+TEST(column_data_test, handle_quantity_data_limit)
 {
         bool expected{false};
         unsigned int quantity{UINT_MAX};
@@ -151,7 +151,7 @@ TEST(invoice_column_test, handle_quantity_data_limit)
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_description_data_limit)
+TEST(column_data_test, handle_description_data_limit)
 {
         bool expected{false};
         unsigned int quantity{45};
@@ -173,7 +173,7 @@ TEST(invoice_column_test, handle_description_data_limit)
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_amount_data_limit)
+TEST(column_data_test, handle_amount_data_limit)
 {
         bool expected{false};
         unsigned int quantity{45};
@@ -186,7 +186,7 @@ TEST(invoice_column_test, handle_amount_data_limit)
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_no_data)
+TEST(column_data_test, handle_no_data)
 {
         bool expected{false};
         unsigned int quantity;

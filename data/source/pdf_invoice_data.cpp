@@ -61,7 +61,7 @@ void data::pdf_invoice::set_client(const data::client& _client)
         {
                 set_flag(FLAG::CLIENT);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->client = _client;
+                this->client = std::move(_client);
         }
         else
         {
@@ -80,7 +80,7 @@ void data::pdf_invoice::set_invoice(const data::invoice& _invoice)
         {
                 set_flag(FLAG::INVOICE);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->invoice = _invoice;
+                this->invoice = std::move(_invoice);
         }
         else
         {
@@ -99,7 +99,7 @@ void data::pdf_invoice::set_business(const data::admin& _business)
         {
                 set_flag(FLAG::ADMIN);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->admin = _business;
+                this->admin = std::move(_business);
         }
         else
         {

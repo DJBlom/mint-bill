@@ -83,7 +83,7 @@ void data::admin::set_name(const std::string& _name)
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->name = _name;
+                this->name = std::move(_name);
         }
         else
         {
@@ -102,7 +102,7 @@ void data::admin::set_address(const std::string& _address)
         {
                 set_flag(FLAG::ADDRESS);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->address = _address;
+                this->address = std::move(_address);
         }
         else
         {
@@ -121,7 +121,7 @@ void data::admin::set_area_code(const std::string& _code)
         {
                 set_flag(FLAG::AREA_CODE);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->area_code = _code;
+                this->area_code = std::move(_code);
         }
         else
         {
@@ -140,7 +140,7 @@ void data::admin::set_town(const std::string& _town)
         {
                 set_flag(FLAG::TOWN);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->town = _town;
+                this->town = std::move(_town);
         }
         else
         {
@@ -159,7 +159,7 @@ void data::admin::set_cellphone(const std::string& _number)
         {
                 set_flag(FLAG::CELLPHONE);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->cellphone = _number;
+                this->cellphone = std::move(_number);
         }
         else
         {
@@ -180,7 +180,7 @@ void data::admin::set_email(const std::string& _email)
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->email = _email;
+                this->email = std::move(_email);
         }
         else
         {
@@ -199,7 +199,7 @@ void data::admin::set_bank(const std::string& _bank)
         {
                 set_flag(FLAG::BANK);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->bank = _bank;
+                this->bank = std::move(_bank);
         }
         else
         {
@@ -218,7 +218,7 @@ void data::admin::set_branch_code(const std::string& _branch_number)
         {
                 set_flag(FLAG::BRANCH_CODE);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->branch_code = _branch_number;
+                this->branch_code = std::move(_branch_number);
         }
         else
         {
@@ -237,7 +237,7 @@ void data::admin::set_account_number(const std::string& _account_number)
         {
                 set_flag(FLAG::ACCOUNT_NUMBER);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->account_number = _account_number;
+                this->account_number = std::move(_account_number);
         }
         else
         {
@@ -256,7 +256,7 @@ void data::admin::set_client_message(const std::string& _message)
         {
                 set_flag(FLAG::CLIENT_MESSAGE);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->client_message = _message;
+                this->client_message = std::move(_message);
         }
         else
         {
@@ -275,7 +275,7 @@ void data::admin::set_password(const std::string& _password)
         {
                 set_flag(FLAG::PASSWORD);
                 std::lock_guard<std::mutex> guard(this->business_data);
-                this->password = _password;
+                this->password = std::move(_password);
         }
         else
         {

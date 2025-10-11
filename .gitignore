@@ -17,3 +17,7 @@ docs/doxydoc
 
 # Vim .swp files
 *.swp
+
+# SQLcipher files.
+*.db-shm
+*.db-wal
