@@ -98,7 +98,7 @@ void data::invoice::set_business_name(const std::string& _name)
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->business_name = std::move(_name);
+                this->business_name = _name;
         }
         else
         {
@@ -117,7 +117,7 @@ void data::invoice::set_invoice_number(const std::string& _invoice_number)
         {
                 set_flag(FLAG::NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->invoice_number = std::move(_invoice_number);
+                this->invoice_number = _invoice_number;
         }
         else
         {
@@ -136,7 +136,7 @@ void data::invoice::set_invoice_date(const std::string& _date)
         {
                 set_flag(FLAG::DATE);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->invoice_date = std::move(_date);
+                this->invoice_date = _date;
         }
         else
         {
@@ -155,7 +155,7 @@ void data::invoice::set_paid_status(const std::string& _date)
         {
                 set_flag(FLAG::PAID);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->paid_status = std::move(_date);
+                this->paid_status = _date;
         }
         else
         {
@@ -174,7 +174,7 @@ void data::invoice::set_job_card_number(const std::string& _card_number)
         {
                 set_flag(FLAG::JOB_CARD);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->job_card_number = std::move(_card_number);
+                this->job_card_number = _card_number;
         }
         else
         {
@@ -193,7 +193,7 @@ void data::invoice::set_order_number(const std::string& _number)
         {
                 set_flag(FLAG::ORDER_NUMBER);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->order_number = std::move(_number);
+                this->order_number = _number;
         }
         else
         {
@@ -212,7 +212,7 @@ void data::invoice::set_description_total(const std::string& _total)
         {
                 set_flag(FLAG::DESCRIPTION_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->description_total = std::move(_total);
+                this->description_total = _total;
         }
         else
         {
@@ -231,7 +231,7 @@ void data::invoice::set_material_total(const std::string& _total)
         {
                 set_flag(FLAG::MATERIAL_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->material_total = std::move(_total);
+                this->material_total = _total;
         }
         else
         {
@@ -250,7 +250,7 @@ void data::invoice::set_grand_total(const std::string& _total)
         {
                 set_flag(FLAG::GRAND_TOTAL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->grand_total = std::move(_total);
+                this->grand_total = _total;
         }
         else
         {
@@ -269,7 +269,7 @@ void data::invoice::set_description_column(const std::vector<data::column>& _col
         {
                 set_flag(FLAG::DESCRIPTION_COL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->description_column = std::move(_column);
+                this->description_column = _column;
         }
         else
         {
@@ -288,7 +288,7 @@ void data::invoice::set_material_column(const std::vector<data::column>& _column
         {
                 set_flag(FLAG::MATERIAL_COL);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->material_column = std::move(_column);
+                this->material_column = _column;
         }
         else
         {

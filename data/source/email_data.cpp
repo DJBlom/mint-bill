@@ -66,7 +66,7 @@ void data::email::set_attachments(const std::vector<std::string>& _attachments)
         {
                 set_flag(FLAG::PDF);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->attachments = std::move(_attachments);
+                this->attachments = _attachments;
         }
         else
         {
@@ -85,7 +85,7 @@ void data::email::set_client(const data::client& _client)
         {
                 set_flag(FLAG::CLIENT);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->client = std::move(_client);
+                this->client = _client;
         }
         else
         {
@@ -104,7 +104,7 @@ void data::email::set_business(const data::admin& _business)
         {
                 set_flag(FLAG::ADMIN);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->admin = std::move(_business);
+                this->admin = _business;
         }
         else
         {
@@ -123,7 +123,7 @@ void data::email::set_subject(const std::string& _subject)
         {
                 set_flag(FLAG::SUBJECT);
                 std::lock_guard<std::mutex> guard(this->email_data);
-                this->subject = std::move(_subject);
+                this->subject = _subject;
         }
         else
         {

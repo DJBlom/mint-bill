@@ -74,7 +74,7 @@ void data::client::set_business_name(const std::string& _name)
         {
                 set_flag(FLAG::NAME);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->business_name = std::move(_name);
+                this->business_name = _name;
         }
         else
         {
@@ -93,7 +93,7 @@ void data::client::set_business_address(const std::string& _address)
         {
                 set_flag(FLAG::ADDRESS);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->business_address = std::move(_address);
+                this->business_address = _address;
         }
         else
         {
@@ -112,7 +112,7 @@ void data::client::set_business_area_code(const std::string& _code)
         {
                 set_flag(FLAG::AREA_CODE);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->business_area_code = std::move(_code);
+                this->business_area_code = _code;
         }
         else
         {
@@ -131,7 +131,7 @@ void data::client::set_business_town_name(const std::string& _town_name)
         {
                 set_flag(FLAG::TOWN);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->business_town_name = std::move(_town_name);
+                this->business_town_name = _town_name;
         }
         else
         {
@@ -150,7 +150,7 @@ void data::client::set_cellphone_number(const std::string& _number)
         {
                 set_flag(FLAG::CELLPHONE);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->cellphone_number = std::move(_number);
+                this->cellphone_number = _number;
         }
         else
         {
@@ -171,7 +171,7 @@ void data::client::set_email(const std::string& _emails)
         {
                 set_flag(FLAG::EMAIL);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->emails = std::move(_emails);
+                this->emails = _emails;
         }
         else
         {
@@ -190,7 +190,7 @@ void data::client::set_vat_number(const std::string& _vat_number)
         {
                 set_flag(FLAG::VAT_NUMBER);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->vat_number = std::move(_vat_number);
+                this->vat_number = _vat_number;
         }
         else
         {
@@ -211,7 +211,7 @@ void data::client::set_statement_schedule(const std::string& _statement_schedule
         {
                 set_flag(FLAG::STATMENT_SCHEDULE);
                 std::lock_guard<std::mutex> guard(this->client_data);
-                this->statement_schedule = std::move(_statement_schedule);
+                this->statement_schedule = _statement_schedule;
         }
         else
         {

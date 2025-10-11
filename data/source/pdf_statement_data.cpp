@@ -58,7 +58,7 @@ void data::pdf_statement::set_number(const std::string& _number)
         {
                 set_flag(FLAG::NUMBER);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->number = std::move(_number);
+                this->number = _number;
         }
         else
         {
@@ -77,7 +77,7 @@ void data::pdf_statement::set_date(const std::string& _date)
         {
                 set_flag(FLAG::DATE);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->date = std::move(_date);
+                this->date = _date;
         }
         else
         {
@@ -97,7 +97,7 @@ void data::pdf_statement::set_total(const std::string& _total)
         {
                 set_flag(FLAG::TOTAL);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-                this->total = std::move(_total);
+                this->total = _total;
         }
         else
         {
@@ -116,7 +116,7 @@ void data::pdf_statement::set_pdf_invoices(const std::vector<data::pdf_invoice>&
 	{
                 set_flag(FLAG::PDF_INVOICE);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
-		this->pdf_invoices = std::move(_pdf_invoices);
+		this->pdf_invoices = _pdf_invoices;
 	}
         else
         {
