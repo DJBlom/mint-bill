@@ -18,7 +18,7 @@ if(${FILES_IN_DIR} GREATER 0)
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/admin_model.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_model.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_invoice.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_model.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
         )
 

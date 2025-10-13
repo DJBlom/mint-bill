@@ -13,22 +13,22 @@
 namespace sql {
 namespace query {
 	constexpr const char* business_details_usert{R"sql(
-	INSERT INTO business_details (
-		business_name,
-		email_address,
-		contact_number,
-		street,
-		area_code,
-		town_name
-	)
-	VALUES (?, ?, ?, ?, ?, ?)
-	ON CONFLICT DO UPDATE SET
-		business_name  = excluded.business_name,
-		email_address  = excluded.email_address,
-		contact_number = excluded.contact_number,
-		street         = excluded.street,
-		area_code      = excluded.area_code,
-		town_name      = excluded.town_name;
+		INSERT INTO business_details (
+			business_name,
+			email_address,
+			contact_number,
+			street,
+			area_code,
+			town_name
+		)
+		VALUES (?, ?, ?, ?, ?, ?)
+		ON CONFLICT DO UPDATE SET
+			business_name  = excluded.business_name,
+			email_address  = excluded.email_address,
+			contact_number = excluded.contact_number,
+			street         = excluded.street,
+			area_code      = excluded.area_code,
+			town_name      = excluded.town_name;
 	)sql"};
 
 	constexpr const char* admin_usert{R"sql(
@@ -41,7 +41,8 @@ namespace query {
 			client_message
 		)
 		VALUES ((SELECT business_id FROM business_details WHERE business_name = ?), ?, ?, ?, ?, ?)
-		ON CONFLICT(business_id) DO UPDATE SET
+		ON CONFLICT(only_one) DO UPDATE SET
+			business_id    = excluded.business_id,
 			bank_name      = excluded.bank_name,
 			branch_code    = excluded.branch_code,
 			account_number = excluded.account_number,
@@ -50,21 +51,22 @@ namespace query {
 	)sql"};
 
 	constexpr const char* select{R"sql(
-		    SELECT  bd.business_name,
-			    bd.email_address,
-			    bd.contact_number,
-			    bd.street,
-			    bd.area_code,
-			    bd.town_name,
-			    a.bank_name,
-			    a.branch_code,
-			    a.account_number,
-			    a.app_password,
-			    a.client_message
-		    FROM admin AS a
-		    JOIN business_details AS bd
+		SELECT  bd.business_name,
+			bd.email_address,
+			bd.contact_number,
+			bd.street,
+			bd.area_code,
+			bd.town_name,
+			a.bank_name,
+			a.branch_code,
+			a.account_number,
+			a.app_password,
+			a.client_message
+		FROM admin AS a
+		JOIN business_details AS bd
 			ON a.business_id = bd.business_id
-		    WHERE bd.business_name = ?)sql"};
+			WHERE bd.business_name = ?;
+		)sql"};
 }
 }
 
@@ -248,6 +250,7 @@ model::admin::details model::admin::package_data(const data::admin& _data)
 			_data.get_area_code(),
 			_data.get_town()};
 		details[PARAMETERS::ADMIN] = {
+			// 1LL,
 			_data.get_name(),
 			_data.get_bank(),
 			_data.get_branch_code(),

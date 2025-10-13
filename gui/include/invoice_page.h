@@ -10,6 +10,7 @@
 #include <gui.h>
 #include <invoice_pdf.h>
 #include <regex>
+#include <future>
 #include <thread>
 #include <vector>
 #include <iomanip>
@@ -19,7 +20,7 @@
 #include <gui_parts.h>
 #include <column_data.h>
 #include <invoice_data.h>
-#include <client_invoice.h>
+#include <invoice_model.h>
 #include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-page.h>
 #include <poppler/cpp/poppler-image.h>
@@ -158,7 +159,8 @@ namespace gui {
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};
-                        feature::client_invoice client_invoice{};
+                        // feature::client_invoice client_invoice{};
+                        model::invoice client_invoice{"mint-bill.db", "temp"};
                         Glib::Dispatcher email_dispatcher{};
                         std::vector<std::any> invoices_selected{};
 

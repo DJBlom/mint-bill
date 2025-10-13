@@ -14,11 +14,12 @@
 #include <email_data.h>
 
 namespace interface {
-class operations_controller {
+class model_ops {
 public:
-	virtual ~operations_controller() = default;
+	virtual ~model_ops() = default;
 
 	[[nodiscard]] virtual std::vector<std::any> load(const std::string&) const = 0;
+	[[nodiscard]] virtual bool save(const std::any&) const = 0;
 	[[nodiscard]] virtual data::email prepare_for_email(const std::vector<std::any>&) const = 0;
 	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const = 0;
 };
@@ -31,12 +32,21 @@ public:
 	[[nodiscard]] virtual bool save(const std::any&) = 0;
 };
 
-class business {
+class operations_controller {
 public:
-	virtual ~business() = default;
+	virtual ~operations_controller() = default;
 
-	[[nodiscard]] virtual data::admin load() = 0;
-	[[nodiscard]] virtual bool save(const data::admin&) = 0;
+	[[nodiscard]] virtual std::vector<std::any> load(const std::string&) const = 0;
+	[[nodiscard]] virtual data::email prepare_for_email(const std::vector<std::any>&) const = 0;
+	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const = 0;
 };
+
+// class business {
+// public:
+// 	virtual ~business() = default;
+//
+// 	[[nodiscard]] virtual data::admin load() = 0;
+// 	[[nodiscard]] virtual bool save(const data::admin&) = 0;
+// };
 }
 #endif

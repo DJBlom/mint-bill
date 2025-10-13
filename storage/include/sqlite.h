@@ -18,6 +18,7 @@ namespace database {
 // Covers all 5 SQLite storage classes: NULL, INTEGER, REAL, TEXT, BLOB
 using blob = std::vector<std::byte>;
 using param_values = std::variant<std::nullptr_t, sqlite3_int64, double, std::string, blob>;
+using sql_parameters = std::vector<param_values>;
 
 namespace part {
 using column_value = param_values;

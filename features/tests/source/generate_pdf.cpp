@@ -6,6 +6,7 @@
  * NOTE:
  *******************************************************/
 #include <generate_pdf.h>
+#include <string>
 #include <iostream>
 
 
@@ -112,7 +113,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         {
                 data::column expected{};
                 expected.set_quantity(i);
-                expected.set_description(description);
+                expected.set_description(description + " " + std::to_string(i));
                 expected.set_amount(5545675 + i + .0);
                 vec.push_back(expected);
         }
@@ -120,11 +121,10 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string card_number{"24/md"};
         std::string date{"2023-09-04"};
         std::string paid_status{"Not Paid"};
-        std::string name{"Test admin"};
+        std::string name{"Client admin"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
-        std::string grand_total{"1234.00"};
-        std::string number{"1"};
+        std::string number{"4"};
 
         data::invoice expected;
         expected.set_business_name(name);
