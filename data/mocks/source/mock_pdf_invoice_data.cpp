@@ -4,11 +4,11 @@
 data::client retrieve_client_data()
 {
         data::client expected;
-        expected.set_business_name("TME");
-        expected.set_business_address("Geelsterd 8");
-        expected.set_business_area_code("543543");
-        expected.set_business_town_name("George");
-        expected.set_cellphone_number("0832315944");
+        expected.set_name("TME");
+        expected.set_address("Geelsterd 8");
+        expected.set_area_code("543543");
+        expected.set_town("George");
+        expected.set_cellphone("0832315944");
         expected.set_email("odn@gmail.com");
         expected.set_vat_number("3241324321413");
         expected.set_statement_schedule("4,4");
@@ -19,11 +19,11 @@ data::client retrieve_client_data()
 data::client retrieve_bad_client_data()
 {
         data::client expected;
-        expected.set_business_name("");
-        expected.set_business_address("Geelsterd 8");
-        expected.set_business_area_code("543543");
-        expected.set_business_town_name("George");
-        expected.set_cellphone_number("0832315944");
+        expected.set_name("");
+        expected.set_address("Geelsterd 8");
+        expected.set_area_code("543543");
+        expected.set_town("George");
+        expected.set_cellphone("0832315944");
         expected.set_email("odn@gmail.com");
         expected.set_vat_number("3241324321413");
         expected.set_statement_schedule("4,4");

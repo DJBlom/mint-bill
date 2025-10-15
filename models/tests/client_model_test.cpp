@@ -39,11 +39,11 @@ TEST_GROUP(client_model_test)
 TEST(client_model_test, unsuccessfully_save_data_to_database)
 {
         data::client client_data{};
-        client_data.set_business_name("Dummy");
-        client_data.set_business_address("Geelsterd 12");
-        client_data.set_business_area_code("");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0711422488");
+        client_data.set_name("Dummy");
+        client_data.set_address("Geelsterd 12");
+        client_data.set_area_code("");
+        client_data.set_town("George");
+        client_data.set_cellphone("0711422488");
         client_data.set_email("client@gmail.com");
         client_data.set_vat_number("425435");
         client_data.set_statement_schedule("4,4");
@@ -78,11 +78,11 @@ TEST(client_model_test, successfully_load_data_from_database)
 {
         data::client result{};
         data::client data{};
-        data.set_business_name("Tests");
-        data.set_business_address("Geelsterd 12");
-        data.set_business_area_code("05693");
-        data.set_business_town_name("George");
-        data.set_cellphone_number("0711422488");
+        data.set_name("Tests");
+        data.set_address("Geelsterd 12");
+        data.set_area_code("05693");
+        data.set_town("George");
+        data.set_cellphone("0711422488");
         data.set_email("client@gmail.com");
         data.set_vat_number("42543509");
         data.set_statement_schedule("1,4");

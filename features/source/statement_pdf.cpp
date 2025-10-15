@@ -113,7 +113,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 {
         align_information_section();
         add_new_section();
-        std::string client_business_name{_client.get_business_name()};
+        std::string client_business_name{_client.get_name()};
         if (write_to_pdf(client_business_name, font_size::information) == false)
                 return false;
 
@@ -123,7 +123,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 
         align_information_section();
         add_new_line();
-        std::string client_business_address{_client.get_business_address()};
+        std::string client_business_address{_client.get_address()};
         if (write_to_pdf(client_business_address, font_size::information) == false)
                 return false;
 
@@ -133,7 +133,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 
         align_information_section();
         add_new_line();
-        std::string client_business_town{_client.get_business_town_name() + ", " + _client.get_business_area_code()};
+        std::string client_business_town{_client.get_town() + ", " + _client.get_area_code()};
         if (write_to_pdf(client_business_town, font_size::information) == false)
                 return false;
 

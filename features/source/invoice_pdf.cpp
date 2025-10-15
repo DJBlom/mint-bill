@@ -152,7 +152,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
         data::client client{_data.get_client()};
         align_information_section();
         add_new_section();
-        std::string client_business_name{client.get_business_name()};
+        std::string client_business_name{client.get_name()};
         if (write_to_pdf(client_business_name, font_size::information) == false)
                 return false;
 
@@ -162,7 +162,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
 
         align_information_section();
         add_new_line();
-        std::string client_business_address{client.get_business_address()};
+        std::string client_business_address{client.get_address()};
         if (write_to_pdf(client_business_address, font_size::information) == false)
                 return false;
 
@@ -172,7 +172,7 @@ bool feature::invoice_pdf::add_information(const data::pdf_invoice& _data)
 
         align_information_section();
         add_new_line();
-        std::string client_business_town{client.get_business_town_name() + ", " + client.get_business_area_code()};
+        std::string client_business_town{client.get_town() + ", " + client.get_area_code()};
         if (write_to_pdf(client_business_town, font_size::information) == false)
                 return false;
 

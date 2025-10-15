@@ -257,7 +257,7 @@ bool smtp::parts::text_body(const data::email& _data)
 
                 data::client client{_data.get_client()};
                 data::admin admin{_data.get_business()};
-                text = std::move(update_dom(text, "{{CLIENT_NAME}}", client.get_business_name()));
+                text = std::move(update_dom(text, "{{CLIENT_NAME}}", client.get_name()));
                 text = std::move(update_dom(text, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
                 text = std::move(update_dom(text, "{{BUSINESS_CELLPHONE}}", admin.get_cellphone()));
                 text = std::move(update_dom(text, "{{BUSINESS_EMAIL}}", admin.get_email()));
@@ -283,7 +283,7 @@ bool smtp::parts::html_body(const data::email& _data)
 
                 data::client client{_data.get_client()};
                 data::admin admin{_data.get_business()};
-                html = std::move(update_dom(html, "{{CLIENT_NAME}}", client.get_business_name()));
+                html = std::move(update_dom(html, "{{CLIENT_NAME}}", client.get_name()));
                 html = std::move(update_dom(html, "{{CLIENT_DOCUMENT}}", _data.get_subject()));
                 html = std::move(update_dom(html, "{{BUSINESS_CELLPHONE}}", admin.get_cellphone()));
                 html = std::move(update_dom(html, "{{BUSINESS_EMAIL}}", admin.get_email()));

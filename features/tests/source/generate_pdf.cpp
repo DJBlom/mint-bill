@@ -77,11 +77,11 @@ data::admin test::generate_business_data()
 data::client test::generate_client_data()
 {
         data::client expected;
-        expected.set_business_name("Client admin");
-        expected.set_business_address("Geelsterd 8");
-        expected.set_business_area_code("543543");
-        expected.set_business_town_name("George");
-        expected.set_cellphone_number("0832315944");
+        expected.set_name("Client admin");
+        expected.set_address("Geelsterd 8");
+        expected.set_area_code("543543");
+        expected.set_town("George");
+        expected.set_cellphone("0832315944");
         expected.set_email("dmnsstmtest@gmail.com");
         expected.set_vat_number("3241324321413");
         expected.set_statement_schedule("4,4");
@@ -92,11 +92,11 @@ data::client test::generate_client_data()
 data::client test::generate_client_data_multiple_emails()
 {
         data::client expected;
-        expected.set_business_name("Client admin");
-        expected.set_business_address("Geelsterd 8");
-        expected.set_business_area_code("543543");
-        expected.set_business_town_name("George");
-        expected.set_cellphone_number("0832315944");
+        expected.set_name("Client admin");
+        expected.set_address("Geelsterd 8");
+        expected.set_area_code("543543");
+        expected.set_town("George");
+        expected.set_cellphone("0832315944");
         expected.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
         expected.set_vat_number("3241324321413");
         expected.set_statement_schedule("4,4");

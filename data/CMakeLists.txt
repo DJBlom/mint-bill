@@ -14,6 +14,7 @@ list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
         add_library(data
                 OBJECT
+                ${PROJECT_SOURCE_DIR}/source/business_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/admin_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/email_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_data.cpp

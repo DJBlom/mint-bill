@@ -11,9 +11,10 @@
 #include <regex>
 #include <string>
 #include <cstdint>
+#include <business_data.h>
 
 namespace data {
-struct admin {
+struct admin : public data::business {
 public:
 	admin() = default;
 	admin(const admin& new_data);
@@ -22,19 +23,19 @@ public:
 	admin& operator= (admin&&);
 	virtual ~admin() = default;
 
-	[[nodiscard]] virtual bool is_valid() const;
-	virtual void set_name(const std::string&);
-	[[nodiscard]] virtual std::string get_name() const;
-	virtual void set_address(const std::string&);
-	[[nodiscard]] virtual std::string get_address() const;
-	virtual void set_area_code(const std::string&);
-	[[nodiscard]] virtual std::string get_area_code() const;
-	virtual void set_town(const std::string&);
-	[[nodiscard]] virtual std::string get_town() const;
-	virtual void set_cellphone(const std::string&);
-	[[nodiscard]] virtual std::string get_cellphone() const;
-	virtual void set_email(const std::string&);
-	[[nodiscard]] virtual std::string get_email() const;
+	[[nodiscard]] virtual bool is_valid() const override;
+	virtual void set_name(const std::string&) override;
+	[[nodiscard]] virtual std::string get_name() const override;
+	virtual void set_address(const std::string&) override;
+	[[nodiscard]] virtual std::string get_address() const override;
+	virtual void set_area_code(const std::string&) override;
+	[[nodiscard]] virtual std::string get_area_code() const override;
+	virtual void set_town(const std::string&) override;
+	[[nodiscard]] virtual std::string get_town() const override;
+	virtual void set_cellphone(const std::string&) override;
+	[[nodiscard]] virtual std::string get_cellphone() const override;
+	virtual void set_email(const std::string&) override;
+	[[nodiscard]] virtual std::string get_email() const override;
 	virtual void set_bank(const std::string&);
 	[[nodiscard]] virtual std::string get_bank() const;
 	virtual void set_branch_code(const std::string&);
@@ -52,14 +53,8 @@ private:
 	[[nodiscard]] bool check_flags() const;
 
 private:
-	using mask_type = std::uint16_t;
+	using mask_type = std::uint8_t;
 
-	std::string name{""};
-	std::string address{""};
-	std::string area_code{""};
-	std::string town{""};
-	std::string cellphone{""};
-	std::string email{""};
 	std::string bank{""};
 	std::string branch_code{""};
 	std::string account_number{""};
@@ -67,15 +62,9 @@ private:
 	std::string password{""};
 	mask_type flags{0x0};
 	std::mutex business_data{};
-	mask_type mask{0x7FF};
+	mask_type mask{0x1F};
 	enum FLAG {
-		NAME = 0,
-		ADDRESS,
-		AREA_CODE,
-		TOWN,
-		CELLPHONE,
-		EMAIL,
-		BANK,
+		BANK = 0,
 		BRANCH_CODE,
 		ACCOUNT_NUMBER,
 		CLIENT_MESSAGE,

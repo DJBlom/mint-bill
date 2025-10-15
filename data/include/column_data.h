@@ -30,6 +30,10 @@ namespace data {
                         [[nodiscard]] virtual std::string get_description() const;
                         virtual void set_amount(const double&);
                         [[nodiscard]] virtual double get_amount() const;
+                        virtual void set_row_number(const long long&);
+                        [[nodiscard]] virtual long long get_row_number() const;
+                        virtual void set_is_description(const long long&);
+                        [[nodiscard]] virtual long long get_is_description() const;
 
                 private:
                         void set_flag(const int&);
@@ -42,14 +46,18 @@ namespace data {
                         unsigned int quantity{0};
                         std::string description{""};
                         double amount{0.0};
+                        long long row_number{0};
+                        long long is_description{0};
                         mask_type flags{0x0};
                         std::mutex column_data{};
-                        mask_type mask{0x7};
+                        mask_type mask{0x1F};
 
                         enum FLAG {
                                 QUANTITY = 0,
                                 DESCRIPTION,
-                                AMOUNT
+                                AMOUNT,
+				ROW_NUMBER,
+				IS_DESCRIPTION
                         };
 
                         enum BIT {

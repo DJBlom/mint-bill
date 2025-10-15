@@ -58,41 +58,41 @@ TEST_GROUP(client_data_test)
 TEST(client_data_test, assign_client_business_name_and_retrieve_it)
 {
         std::string expected{"tme"};
-        client_data.set_business_name(expected);
+        client_data.set_name(expected);
 
-        CHECK_EQUAL(expected, client_data.get_business_name());
+        CHECK_EQUAL(expected, client_data.get_name());
 }
 
 TEST(client_data_test, assign_client_street_address_and_retrieve_it)
 {
         std::string expected{"Geelstred 8"};
-        client_data.set_business_address(expected);
+        client_data.set_address(expected);
 
-        CHECK_EQUAL(expected, client_data.get_business_address());
+        CHECK_EQUAL(expected, client_data.get_address());
 }
 
 TEST(client_data_test, assign_client_area_code_and_retrieve_it)
 {
         std::string expected{"6547"};
-        client_data.set_business_area_code(expected);
+        client_data.set_area_code(expected);
 
-        CHECK_EQUAL(expected, client_data.get_business_area_code());
+        CHECK_EQUAL(expected, client_data.get_area_code());
 }
 
 TEST(client_data_test, assign_client_town_and_retrieve_it)
 {
         std::string expected{"George"};
-        client_data.set_business_town_name(expected);
+        client_data.set_town(expected);
 
-        CHECK_EQUAL(expected, client_data.get_business_town_name());
+        CHECK_EQUAL(expected, client_data.get_town());
 }
 
 TEST(client_data_test, assign_client_cellphone_number_and_retrieve_it)
 {
         std::string expected{"0832315944"};
-        client_data.set_cellphone_number(expected);
+        client_data.set_cellphone(expected);
 
-        CHECK_EQUAL(expected, client_data.get_cellphone_number());
+        CHECK_EQUAL(expected, client_data.get_cellphone());
 }
 
 TEST(client_data_test, assign_vat_number_and_retrieve_it)
@@ -113,11 +113,11 @@ TEST(client_data_test, assign_statement_schedule_and_retrieve_it)
 
 TEST(client_data_test, ensure_all_fields_are_filled)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -127,11 +127,11 @@ TEST(client_data_test, ensure_all_fields_are_filled)
 
 TEST(client_data_test, handle_no_fields_filled)
 {
-        client_data.set_business_name("");
-        client_data.set_business_address("");
-        client_data.set_business_area_code("");
-        client_data.set_business_town_name("");
-        client_data.set_cellphone_number("");
+        client_data.set_name("");
+        client_data.set_address("");
+        client_data.set_area_code("");
+        client_data.set_town("");
+        client_data.set_cellphone("");
         client_data.set_email("");
         client_data.set_vat_number("");
         client_data.set_statement_schedule("");
@@ -141,11 +141,11 @@ TEST(client_data_test, handle_no_fields_filled)
 
 TEST(client_data_test, handle_bad_email_format)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odngmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -155,11 +155,11 @@ TEST(client_data_test, handle_bad_email_format)
 
 TEST(client_data_test, handle_bad_schedule_format)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,9");
@@ -169,11 +169,11 @@ TEST(client_data_test, handle_bad_schedule_format)
 
 TEST(client_data_test, handle_correct_schedule_format)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -184,11 +184,11 @@ TEST(client_data_test, handle_correct_schedule_format)
 TEST(client_data_test, ensure_the_data_is_copyable)
 {
         data::client tmp_data{};
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -199,11 +199,11 @@ TEST(client_data_test, ensure_the_data_is_copyable)
 
 TEST(client_data_test, ensure_the_data_is_constructor_copyable)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -215,11 +215,11 @@ TEST(client_data_test, ensure_the_data_is_constructor_copyable)
 TEST(client_data_test, ensure_the_data_is_movable)
 {
         data::client tmp_data{};
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -230,11 +230,11 @@ TEST(client_data_test, ensure_the_data_is_movable)
 
 TEST(client_data_test, ensure_the_data_is_constructor_movable)
 {
-        client_data.set_business_name("TME");
-        client_data.set_business_address("Geelsterd 8");
-        client_data.set_business_area_code("543543");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0832315944");
+        client_data.set_name("TME");
+        client_data.set_address("Geelsterd 8");
+        client_data.set_area_code("543543");
+        client_data.set_town("George");
+        client_data.set_cellphone("0832315944");
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number("3241324321413");
         client_data.set_statement_schedule("4,4");
@@ -246,11 +246,11 @@ TEST(client_data_test, ensure_the_data_is_constructor_movable)
 TEST(client_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
-        client_data.set_business_name(dummy_data);
-        client_data.set_business_address(dummy_data);
-        client_data.set_business_area_code(dummy_data);
-        client_data.set_business_town_name(dummy_data);
-        client_data.set_cellphone_number(dummy_data);
+        client_data.set_name(dummy_data);
+        client_data.set_address(dummy_data);
+        client_data.set_area_code(dummy_data);
+        client_data.set_town(dummy_data);
+        client_data.set_cellphone(dummy_data);
         client_data.set_email(dummy_data + "odn@gmail.com");
         client_data.set_vat_number(dummy_data);
         client_data.set_statement_schedule("4,4");
@@ -261,11 +261,11 @@ TEST(client_data_test, entry_fields_cannot_hold_more_than_fifty_characters)
 TEST(client_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
-        client_data.set_business_name(dummy_data);
-        client_data.set_business_address(dummy_data);
-        client_data.set_business_area_code(dummy_data);
-        client_data.set_business_town_name(dummy_data);
-        client_data.set_cellphone_number(dummy_data);
+        client_data.set_name(dummy_data);
+        client_data.set_address(dummy_data);
+        client_data.set_area_code(dummy_data);
+        client_data.set_town(dummy_data);
+        client_data.set_cellphone(dummy_data);
         client_data.set_email("odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com odn@gmail.com");
         client_data.set_vat_number(dummy_data);
         client_data.set_statement_schedule("4,4");
@@ -276,11 +276,11 @@ TEST(client_data_test, entry_fields_hold_less_than_or_equal_to_fifty_characters)
 TEST(client_data_test, ensure_that_statement_schedule_cannot_hold_more_than_2_numbers)
 {
         std::string dummy_data{"iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"};
-        client_data.set_business_name(dummy_data);
-        client_data.set_business_address(dummy_data);
-        client_data.set_business_area_code(dummy_data);
-        client_data.set_business_town_name(dummy_data);
-        client_data.set_cellphone_number(dummy_data);
+        client_data.set_name(dummy_data);
+        client_data.set_address(dummy_data);
+        client_data.set_area_code(dummy_data);
+        client_data.set_town(dummy_data);
+        client_data.set_cellphone(dummy_data);
         client_data.set_email("odn@gmail.com");
         client_data.set_vat_number(dummy_data);
         client_data.set_statement_schedule("4,4,3");

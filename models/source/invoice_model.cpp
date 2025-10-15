@@ -188,12 +188,12 @@ std::vector<std::any> model::invoice::load(const std::string& _business_name) co
 			}
 		}
 
-		client_data.set_business_name(client_sql_data[0]);
+		client_data.set_name(client_sql_data[0]);
 		client_data.set_email(client_sql_data[1]);
-		client_data.set_business_address(client_sql_data[2]);
-		client_data.set_business_area_code(client_sql_data[3]);
-		client_data.set_business_town_name(client_sql_data[4]);
-		client_data.set_cellphone_number(client_sql_data[5]);
+		client_data.set_address(client_sql_data[2]);
+		client_data.set_area_code(client_sql_data[3]);
+		client_data.set_town(client_sql_data[4]);
+		client_data.set_cellphone(client_sql_data[5]);
 		client_data.set_vat_number(client_sql_data[6]);
 		client_data.set_statement_schedule(client_sql_data[7]);
 

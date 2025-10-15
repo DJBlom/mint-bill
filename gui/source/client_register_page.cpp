@@ -189,12 +189,12 @@ void gui::client_register_page::display_on_ui(const std::string& _business_name)
 	data::client data = std::any_cast<data::client> (client_model.load(_business_name));
         this->email->set_text(data.get_email());
         this->vat_number->set_text(data.get_vat_number());
-        this->cellphone->set_text(data.get_cellphone_number());
-        this->business_name->set_text(data.get_business_name());
+        this->cellphone->set_text(data.get_cellphone());
+        this->business_name->set_text(data.get_name());
         this->statment_schedule->set_text(data.get_statement_schedule());
-        this->business_area_code->set_text(data.get_business_area_code());
-        this->business_town_name->set_text(data.get_business_town_name());
-        this->business_street_address->set_text(data.get_business_address());
+        this->business_area_code->set_text(data.get_area_code());
+        this->business_town_name->set_text(data.get_town());
+        this->business_street_address->set_text(data.get_address());
 }
 
 data::client gui::client_register_page::extract_page_entries()
@@ -202,12 +202,12 @@ data::client gui::client_register_page::extract_page_entries()
         data::client data{};
         data.set_email(this->email->get_text());
         data.set_vat_number(this->vat_number->get_text());
-        data.set_cellphone_number(this->cellphone->get_text());
-        data.set_business_name(this->business_name->get_text());
+        data.set_cellphone(this->cellphone->get_text());
+        data.set_name(this->business_name->get_text());
         data.set_statement_schedule(this->statment_schedule->get_text());
-        data.set_business_area_code(this->business_area_code->get_text());
-        data.set_business_town_name(this->business_town_name->get_text());
-        data.set_business_address(this->business_street_address->get_text());
+        data.set_area_code(this->business_area_code->get_text());
+        data.set_town(this->business_town_name->get_text());
+        data.set_address(this->business_street_address->get_text());
 
         return data;
 }

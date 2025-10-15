@@ -5,60 +5,13 @@
  *
  * NOTE:
  *******************************************************/
-#include <client_model.h>
-#include <client_data.h>
 #include <syslog.h>
 #include <iostream>
+#include <client_data.h>
+#include <client_model.h>
+#include <client_serialize.h>
+#include <business_serialize.h>
 
-
-namespace sql {
-namespace query {
-constexpr const char *business_details_usert{R"sql(
-		INSERT INTO business_details (
-			business_name,
-			email_address,
-			contact_number,
-			street,
-			area_code,
-			town_name
-		)
-		VALUES (?, ?, ?, ?, ?, ?)
-		ON CONFLICT DO UPDATE SET
-			business_name   = excluded.business_name,
-			email_address   = excluded.email_address,
-			contact_number  = excluded.contact_number,
-			street          = excluded.street,
-			area_code       = excluded.area_code,
-			town_name       = excluded.town_name;
-	)sql"};
-
-constexpr const char *client_usert{R"sql(
-		INSERT INTO client (
-			business_id,
-			vat_number,
-			statement_schedule
-		)
-		VALUES ((SELECT business_id FROM business_details WHERE email_address = ?), ?, ?)
-		ON CONFLICT(vat_number) DO UPDATE SET
-			statement_schedule = excluded.statement_schedule;
-		)sql"};
-
-constexpr const char* select{R"sql(
-	SELECT
-		bd.business_name,
-		bd.email_address,
-		bd.contact_number,
-		bd.street,
-		bd.area_code,
-		bd.town_name,
-		c.vat_number,
-		c.statement_schedule
-	FROM business_details bd
-	LEFT JOIN client c
-		ON bd.business_id = c.business_id
-	WHERE bd.business_name = ?)sql"};
-}
-}
 
 model::client::client(const std::string& _database_file, const std::string& _database_password)
 	: database_file{_database_file}, database_password{_database_password}
@@ -94,7 +47,7 @@ std::any model::client::load(const std::string& _business_name)
 		}
 		else
 		{
-			rows = database.select(sql::query::select, query_argument);
+			rows = database.select(sql::query::client_select, query_argument);
 		}
 
 		if (database.transaction("COMMIT;") == false)
@@ -205,12 +158,12 @@ data::client model::client::extract_data(const storage::database::part::rows& _r
 			}
 		}
 
-		client_data.set_business_name(data[DATA_FIELDS::NAME]);
+		client_data.set_name(data[DATA_FIELDS::NAME]);
 		client_data.set_email(data[DATA_FIELDS::EMAIL]);
-		client_data.set_business_address(data[DATA_FIELDS::ADDRESS]);
-		client_data.set_business_area_code(data[DATA_FIELDS::AREA_CODE]);
-		client_data.set_business_town_name(data[DATA_FIELDS::TOWN_NAME]);
-		client_data.set_cellphone_number(data[DATA_FIELDS::CELLPHONE_NUMBER]);
+		client_data.set_address(data[DATA_FIELDS::ADDRESS]);
+		client_data.set_area_code(data[DATA_FIELDS::AREA_CODE]);
+		client_data.set_town(data[DATA_FIELDS::TOWN_NAME]);
+		client_data.set_cellphone(data[DATA_FIELDS::CELLPHONE_NUMBER]);
 		client_data.set_vat_number(data[DATA_FIELDS::VAT_NUMBER]);
 		client_data.set_statement_schedule(data[DATA_FIELDS::STATEMENT_SCHEDULE]);
 	}
@@ -229,12 +182,12 @@ model::client::details model::client::package_data(const data::client& _data)
 	else
 	{
 		details[PARAMETERS::DETAILS] = {
-			_data.get_business_name(),
+			_data.get_name(),
 			_data.get_email(),
-			_data.get_cellphone_number(),
-			_data.get_business_address(),
-			_data.get_business_area_code(),
-			_data.get_business_town_name()};
+			_data.get_cellphone(),
+			_data.get_address(),
+			_data.get_area_code(),
+			_data.get_town()};
 		details[PARAMETERS::CLIENT] = {
 			_data.get_email(),
 			_data.get_vat_number(),
