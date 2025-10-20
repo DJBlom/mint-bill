@@ -3,7 +3,6 @@
 #include <admin_data.h>
 #include <admin_serialize.h>
 
-
 serialize::admin::~admin() {}
 
 std::any serialize::admin::extract_data(const storage::database::part::rows& _rows)
@@ -16,25 +15,25 @@ std::any serialize::admin::extract_data(const storage::database::part::rows& _ro
 	}
 	else
 	{
-		std::vector<std::string> values{collect_values(_rows)};
-		if (values.empty() == true)
+		std::vector<std::string> admin_sql_data{collect_values(_rows)};
+		if (admin_sql_data.empty() == true)
 		{
-			syslog(LOG_CRIT, "ADMIN_SERIALIZE: values collected are empty - "
+			syslog(LOG_CRIT, "ADMIN_SERIALIZE: admin_sql_data collected are empty - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
-			admin_data.set_name(values[DATA_FIELDS::NAME]);
-			admin_data.set_address(values[DATA_FIELDS::ADDRESS]);
-			admin_data.set_area_code(values[DATA_FIELDS::AREA_CODE]);
-			admin_data.set_town(values[DATA_FIELDS::TOWN]);
-			admin_data.set_cellphone(values[DATA_FIELDS::CELLPHONE]);
-			admin_data.set_email(values[DATA_FIELDS::EMAIL]);
-			admin_data.set_bank(values[DATA_FIELDS::BANK]);
-			admin_data.set_branch_code(values[DATA_FIELDS::BRANCH_CODE]);
-			admin_data.set_account_number(values[DATA_FIELDS::ACCOUNT_NUMBER]);
-			admin_data.set_password(values[DATA_FIELDS::APP_PASSWORD]);
-			admin_data.set_client_message(values[DATA_FIELDS::CLIENT_MESSAGE]);
+			admin_data.set_name(admin_sql_data[DATA_FIELDS::NAME]);
+			admin_data.set_address(admin_sql_data[DATA_FIELDS::ADDRESS]);
+			admin_data.set_area_code(admin_sql_data[DATA_FIELDS::AREA_CODE]);
+			admin_data.set_town(admin_sql_data[DATA_FIELDS::TOWN]);
+			admin_data.set_cellphone(admin_sql_data[DATA_FIELDS::CELLPHONE]);
+			admin_data.set_email(admin_sql_data[DATA_FIELDS::EMAIL]);
+			admin_data.set_bank(admin_sql_data[DATA_FIELDS::BANK]);
+			admin_data.set_branch_code(admin_sql_data[DATA_FIELDS::BRANCH_CODE]);
+			admin_data.set_account_number(admin_sql_data[DATA_FIELDS::ACCOUNT_NUMBER]);
+			admin_data.set_password(admin_sql_data[DATA_FIELDS::APP_PASSWORD]);
+			admin_data.set_client_message(admin_sql_data[DATA_FIELDS::CLIENT_MESSAGE]);
 		}
 	}
 
@@ -65,12 +64,12 @@ storage::database::sql_parameters serialize::admin::package_data(const std::any&
 
 std::vector<std::string> serialize::admin::collect_values(const storage::database::part::rows& _rows)
 {
-	std::vector<std::string> values{};
+	std::vector<std::string> admin_sql_data{};
 	for (const storage::database::part::row& row : _rows)
 	{
 		for (const storage::database::part::column_value& column_value : row)
 		{
-			values.emplace_back(std::visit([] (auto&& value) -> std::string {
+			admin_sql_data.emplace_back(std::visit([] (auto&& value) -> std::string {
 				using T = std::decay_t<decltype(value)>;
 				std::string result{""};
 				if constexpr (std::is_same_v<T, std::string>)
@@ -83,5 +82,5 @@ std::vector<std::string> serialize::admin::collect_values(const storage::databas
 		}
 	}
 
-	return values;
+	return admin_sql_data;
 }

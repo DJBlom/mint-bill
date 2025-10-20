@@ -61,7 +61,7 @@ TEST(invoice_model_test, load_data_from_database_unsuccessfully)
 {
 	for (const std::any pdf_invoice_data : invoice_model.load(""))
 	{
-		data::pdf_invoice data = std::any_cast<data::pdf_invoice> (pdf_invoice_data);
+		data::pdf_invoice data{std::any_cast<data::pdf_invoice> (pdf_invoice_data)};
 
 		CHECK_EQUAL(false, data.is_valid());
 	}
@@ -72,8 +72,14 @@ TEST(invoice_model_test, load_data_from_database_successfully)
         data::invoice invoice_data{test::generate_invoice_data("invoice model machining")};
 	for (const std::any pdf_invoice_data : invoice_model.load(invoice_data.get_business_name()))
 	{
-		data::pdf_invoice data = std::any_cast<data::pdf_invoice> (pdf_invoice_data);
+		data::pdf_invoice data{std::any_cast<data::pdf_invoice> (pdf_invoice_data)};
+		data::admin admin_data{data.get_business()};
+		data::client client_data{data.get_client()};
+		data::invoice invoice_data{data.get_invoice()};
 
+		CHECK_EQUAL(true, admin_data.is_valid());
+		CHECK_EQUAL(true, client_data.is_valid());
+		CHECK_EQUAL(true, invoice_data.is_valid());
 		CHECK_EQUAL(true, data.is_valid());
 	}
 }

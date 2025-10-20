@@ -4,7 +4,7 @@
 #include <serialize.h>
 
 namespace serialize {
-class business : public interface::serialize {
+class business : public interface::single_serialize {
 public:
 	business() = default;
 	business(const business&) = delete;
@@ -13,8 +13,8 @@ public:
 	business& operator= (business&&) = delete;
 	virtual ~business() override;
 
-	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) override;
 	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) override;
+	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) override;
 
 private:
 	[[nodiscard]] std::vector<std::string> collect_values(const storage::database::part::rows&);

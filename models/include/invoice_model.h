@@ -27,6 +27,7 @@ public:
 	[[nodiscard]] virtual data::email prepare_for_email(const std::vector<std::any>&) const override;
 	[[nodiscard]] virtual std::vector<std::string> prepare_for_print(const std::vector<std::any>&) const override;
 
+
 private:
 	std::string database_file;
 	std::string database_password;

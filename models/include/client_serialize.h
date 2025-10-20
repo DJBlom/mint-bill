@@ -4,7 +4,7 @@
 #include <serialize.h>
 
 namespace serialize {
-class client : public interface::serialize {
+class client : public interface::single_serialize {
 public:
 	client() = default;
 	client(const client&) = delete;

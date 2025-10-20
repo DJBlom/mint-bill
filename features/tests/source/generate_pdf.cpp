@@ -7,7 +7,6 @@
  *******************************************************/
 #include <generate_pdf.h>
 #include <string>
-#include <iostream>
 
 
 bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string& _suffix)
@@ -115,7 +114,19 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
                 expected.set_quantity(i);
                 expected.set_description(description + " " + std::to_string(i));
                 expected.set_amount(5545675 + i + .0);
-                vec.push_back(expected);
+                expected.set_row_number(i);
+		if (i % 2 == 0)
+		{
+			expected.set_is_description(1);
+		}
+		else
+		{
+			expected.set_is_description(0);
+		}
+		if (expected.is_valid())
+		{
+			vec.push_back(expected);
+		}
         }
         std::string order_number{"order number 123"};
         std::string card_number{"24/md"};
@@ -124,7 +135,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string name{"Client admin"};
         std::string description_total{"1234.00"};
         std::string material_total{"1234.00"};
-        std::string number{"4"};
+        std::string number{"2"};
 
         data::invoice expected;
         expected.set_business_name(name);
@@ -152,7 +163,16 @@ data::invoice test::generate_invoice_data(const std::string& _desc, const int& n
                 expected.set_quantity(i);
                 expected.set_description(_desc);
                 expected.set_amount(5545675 + i + .0);
-                vec.push_back(expected);
+                expected.set_row_number(static_cast<long long>(i));
+		if (i % 2 == 0)
+		{
+			expected.set_is_description(1);
+		}
+		else
+		{
+			expected.set_is_description(0);
+		}
+		vec.push_back(expected);
         }
         std::string order_number{"order number 123"};
         std::string card_number{"24/md"};

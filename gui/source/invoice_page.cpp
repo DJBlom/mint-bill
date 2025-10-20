@@ -1194,15 +1194,16 @@ data::invoice gui::invoice_page::extract_invoice_data()
         data.set_description_total(this->description_total);
         data.set_material_total(this->material_total);
         data.set_grand_total(this->grand_total);
-        std::vector<data::column> description_columns{this->retrieve_column_data(this->description_store)};
+        std::vector<data::column> description_columns{this->retrieve_column_data(this->description_store, data::LOGICAL_TRUE)};
         data.set_description_column(description_columns);
-        std::vector<data::column> material_columns{this->retrieve_column_data(this->material_store)};
+        std::vector<data::column> material_columns{this->retrieve_column_data(this->material_store, data::LOGICAL_FALSE)};
         data.set_material_column(material_columns);
 
         return data;
 }
 
-std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>& store)
+std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>& store,
+								  const long long& _is_description)
 {
         std::vector<data::column> columns{};
         if (!store)
@@ -1221,6 +1222,8 @@ std::vector<data::column> gui::invoice_page::retrieve_column_data(const Glib::Re
                                 column.set_quantity(item->quantity);
                                 column.set_description(item->description);
                                 column.set_amount(item->amount);
+				column.set_row_number(static_cast<long long> (i));
+				column.set_is_description(_is_description);
                                 columns.push_back(column);
                         }
                 }

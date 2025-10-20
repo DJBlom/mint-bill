@@ -16,22 +16,22 @@ std::any serialize::client::extract_data(const storage::database::part::rows& _r
 	}
 	else
 	{
-		std::vector<std::string> values{collect_values(_rows)};
-		if (values.empty() == true)
+		std::vector<std::string> client_sql_data{collect_values(_rows)};
+		if (client_sql_data.empty() == true)
 		{
-			syslog(LOG_CRIT, "CLIENT_SERIALIZE: values collected are empty - "
+			syslog(LOG_CRIT, "CLIENT_SERIALIZE: client_sql_data collected are empty - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
-			client_data.set_name(values[DATA_FIELDS::NAME]);
-			client_data.set_address(values[DATA_FIELDS::ADDRESS]);
-			client_data.set_area_code(values[DATA_FIELDS::AREA_CODE]);
-			client_data.set_town(values[DATA_FIELDS::TOWN]);
-			client_data.set_cellphone(values[DATA_FIELDS::CELLPHONE]);
-			client_data.set_email(values[DATA_FIELDS::EMAIL]);
-			client_data.set_vat_number(values[DATA_FIELDS::VAT_NUMBER]);
-			client_data.set_statement_schedule(values[DATA_FIELDS::STATEMENT_SCHEDULE]);
+			client_data.set_name(client_sql_data[DATA_FIELDS::NAME]);
+			client_data.set_address(client_sql_data[DATA_FIELDS::ADDRESS]);
+			client_data.set_area_code(client_sql_data[DATA_FIELDS::AREA_CODE]);
+			client_data.set_town(client_sql_data[DATA_FIELDS::TOWN]);
+			client_data.set_cellphone(client_sql_data[DATA_FIELDS::CELLPHONE]);
+			client_data.set_email(client_sql_data[DATA_FIELDS::EMAIL]);
+			client_data.set_vat_number(client_sql_data[DATA_FIELDS::VAT_NUMBER]);
+			client_data.set_statement_schedule(client_sql_data[DATA_FIELDS::STATEMENT_SCHEDULE]);
 		}
 	}
 
@@ -64,12 +64,12 @@ storage::database::sql_parameters serialize::client::package_data(const std::any
 
 std::vector<std::string> serialize::client::collect_values(const storage::database::part::rows& _rows)
 {
-	std::vector<std::string> values{};
+	std::vector<std::string> client_sql_data{};
 	for (const storage::database::part::row& row : _rows)
 	{
 		for (const storage::database::part::column_value& column_value : row)
 		{
-			values.emplace_back(std::visit([] (auto&& value) -> std::string {
+			client_sql_data.emplace_back(std::visit([] (auto&& value) -> std::string {
 				using T = std::decay_t<decltype(value)>;
 				std::string result{""};
 				if constexpr (std::is_same_v<T, std::string>)
@@ -82,5 +82,5 @@ std::vector<std::string> serialize::client::collect_values(const storage::databa
 		}
 	}
 
-	return values;
+	return client_sql_data;
 }

@@ -147,7 +147,8 @@ namespace gui {
                         [[nodiscard]] double compute_grand_total();
                         [[nodiscard]] data::invoice extract_invoice_data();
                         [[nodiscard]] double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
-                        [[nodiscard]] std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
+                        [[nodiscard]] std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&,
+										     const long long&);
 
                 private: // Member features
                         int number_of_pages{0};
@@ -159,7 +160,6 @@ namespace gui {
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};
-                        // feature::client_invoice client_invoice{};
                         model::invoice client_invoice{"mint-bill.db", "temp"};
                         Glib::Dispatcher email_dispatcher{};
                         std::vector<std::any> invoices_selected{};
