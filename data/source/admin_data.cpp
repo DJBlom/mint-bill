@@ -14,6 +14,8 @@ namespace upper_bound {
         constexpr std::uint8_t PASSWORD_LENGTH{100};
 }
 
+data::admin::~admin() {}
+
 data::admin::admin(const admin& _copy)
 	: data::business{_copy}, bank{_copy.bank}, branch_code{_copy.branch_code},
 	  account_number{_copy.account_number}, client_message{_copy.client_message},
@@ -61,66 +63,6 @@ data::admin& data::admin::operator= (admin&& _move)
 bool data::admin::is_valid() const
 {
         return this->check_flags() && data::business::is_valid();
-}
-
-void data::admin::set_name(const std::string& _name)
-{
-	data::business::set_name(_name);
-}
-
-std::string data::admin::get_name() const
-{
-	return data::business::get_name();
-}
-
-void data::admin::set_address(const std::string& _address)
-{
-	data::business::set_address(_address);
-}
-
-std::string data::admin::get_address() const
-{
-	return data::business::get_address();
-}
-
-void data::admin::set_area_code(const std::string& _code)
-{
-	data::business::set_area_code(_code);
-}
-
-std::string data::admin::get_area_code() const
-{
-	return data::business::get_area_code();
-}
-
-void data::admin::set_town(const std::string& _town)
-{
-	data::business::set_town(_town);
-}
-
-std::string data::admin::get_town() const
-{
-	return data::business::get_town();
-}
-
-void data::admin::set_cellphone(const std::string& _number)
-{
-	data::business::set_cellphone(_number);
-}
-
-std::string data::admin::get_cellphone() const
-{
-	return data::business::get_cellphone();
-}
-
-void data::admin::set_email(const std::string& _email)
-{
-	data::business::set_email(_email);
-}
-
-std::string data::admin::get_email() const
-{
-	return data::business::get_email();
 }
 
 void data::admin::set_bank(const std::string& _bank)

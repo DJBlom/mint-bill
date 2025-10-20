@@ -7,25 +7,22 @@
  *******************************************************/
 #include <column_data.h>
 #include <limits>
-// #include <iostream>
+
 
 
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
         constexpr std::uint8_t MAX_AMOUNT{15};
-	constexpr std::uint8_t TRUE{1};
-	constexpr std::uint8_t FALSE{1};
-        // constexpr std::uint8_t MAX_IS_DESCRIPTION{1};
 }
 
 data::column::column() {}
 
 data::column::column(const column& _copy)
         : quantity{_copy.quantity}, description{_copy.description},
-          amount{_copy.amount}, is_description{_copy.is_description},
-	  row_number{_copy.row_number}, flags{_copy.flags}, column_data{},
-	  mask{_copy.mask} {}
+          amount{_copy.amount}, row_number{_copy.row_number},
+	  is_description{_copy.is_description}, flags{_copy.flags},
+	  column_data{}, mask{_copy.mask} {}
 
 data::column::column(column&& _move)
         : quantity{std::move(_move.quantity)}, description{std::move(_move.description)},
@@ -153,7 +150,7 @@ long long data::column::get_row_number() const
 
 void data::column::set_is_description(const long long& _is_description)
 {
-        if (_is_description == limit::FALSE || is_description == limit::TRUE)
+        if (_is_description == LOGICAL_FALSE || is_description == LOGICAL_TRUE)
         {
                 this->set_flag(FLAG::IS_DESCRIPTION);
                 std::lock_guard<std::mutex> guard(this->column_data);

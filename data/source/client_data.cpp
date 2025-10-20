@@ -13,6 +13,8 @@ namespace upper_bound {
         constexpr std::uint8_t statement_format_length{3};
 }
 
+data::client::~client() {}
+
 data::client::client(const client& _copy)
 	: data::business{_copy}, vat_number{_copy.vat_number},
 	  statement_schedule{_copy.statement_schedule}, flags{_copy.flags},
@@ -54,66 +56,6 @@ data::client& data::client::operator= (client&& _move)
 bool data::client::is_valid() const
 {
         return this->check_flags() && data::business::is_valid();
-}
-
-void data::client::set_name(const std::string& _name)
-{
-	data::business::set_name(_name);
-}
-
-std::string data::client::get_name() const
-{
-	return data::business::get_name();
-}
-
-void data::client::set_address(const std::string& _address)
-{
-	data::business::set_address(_address);
-}
-
-std::string data::client::get_address() const
-{
-	return data::business::get_address();
-}
-
-void data::client::set_area_code(const std::string& _code)
-{
-	data::business::set_area_code(_code);
-}
-
-std::string data::client::get_area_code() const
-{
-	return data::business::get_area_code();
-}
-
-void data::client::set_town(const std::string& _town_name)
-{
-	data::business::set_town(_town_name);
-}
-
-std::string data::client::get_town() const
-{
-	return data::business::get_town();
-}
-
-void data::client::set_cellphone(const std::string& _number)
-{
-	data::business::set_cellphone(_number);
-}
-
-std::string data::client::get_cellphone() const
-{
-	return data::business::get_cellphone();
-}
-
-void data::client::set_email(const std::string& _email_addresses)
-{
-	data::business::set_email(_email_addresses);
-}
-
-std::string data::client::get_email() const
-{
-	return data::business::get_email();
 }
 
 void data::client::set_vat_number(const std::string& _vat_number)
