@@ -6,12 +6,12 @@
  * NOTE:
  *******************************************************/
 #include <invoice_model.h>
-#include <client_data.h>
-#include <admin_data.h>
 #include <invoice_pdf.h>
+#include <future>
 #include <syslog.h>
 #include <sqlite.h>
-#include <future>
+#include <admin_data.h>
+#include <client_data.h>
 #include <invoice_data.h>
 #include <admin_serialize.h>
 #include <client_serialize.h>
@@ -19,16 +19,19 @@
 
 
 model::invoice::invoice(const std::string& _database_file, const std::string& _database_password)
-	: database_file{_database_file}, database_password{_database_password}
-{
-}
+	: database_file{_database_file}, database_password{_database_password} {}
 
 model::invoice::~invoice() {}
 
 std::vector<std::any> model::invoice::load(const std::string& _business_name) const
 {
 	std::vector<std::any> pdf_invoices_data{};
-        if (!_business_name.empty())
+        if (_business_name.empty())
+	{
+		syslog(LOG_CRIT, "INVOICE_MODEL: invalid argument - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
         {
 		storage::database::sqlite database{this->database_file, this->database_password};
 		serialize::admin admin_serialize{};

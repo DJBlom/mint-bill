@@ -20,6 +20,7 @@ storage::database::sql_parameters serialize::invoice::package_data(const std::an
 	}
 	else
 	{
+		params.emplace_back(static_cast<long long>(std::stoi(invoice_data.get_invoice_number())));
 		params.emplace_back(invoice_data.get_business_name());
 		params.emplace_back(invoice_data.get_order_number());
 		params.emplace_back(invoice_data.get_job_card_number());
@@ -191,35 +192,35 @@ std::vector<data::column> serialize::column::collect_values(const storage::datab
 		{
 			std::visit([&](auto&& arg) {
 				using T = std::decay_t<decltype(arg)>;
-				if (col_index == 0)
+				if (col_index == DATA_FIELDS::QUANTITY)
 				{
 					if constexpr (std::is_same_v<T, sqlite3_int64>)
 					{
 						data.set_quantity(static_cast<int> (arg));
 					}
 				}
-				else if (col_index == 1)
+				else if (col_index == DATA_FIELDS::DESCRIPTION)
 				{
 					if constexpr (std::is_same_v<T, std::string>)
 					{
 						data.set_description(arg);
 					}
 				}
-				else if (col_index == 2)
+				else if (col_index == DATA_FIELDS::AMOUNT)
 				{
 					if constexpr (std::is_same_v<T, double>)
 					{
 						data.set_amount(arg);
 					}
 				}
-				else if (col_index == 3)
+				else if (col_index == DATA_FIELDS::ROW_NUMBER)
 				{
 					if constexpr (std::is_same_v<T, sqlite3_int64>)
 					{
 						data.set_row_number(arg);
 					}
 				}
-				else if (col_index == 4)
+				else if (col_index == DATA_FIELDS::IS_DESCRIPTION)
 				{
 					if constexpr (std::is_same_v<T, sqlite3_int64>)
 					{

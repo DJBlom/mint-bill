@@ -49,6 +49,15 @@ public:
 
 private:
 	[[nodiscard]] std::vector<data::column> collect_values(const storage::database::part::rows&);
+
+private:
+	enum DATA_FIELDS {
+		QUANTITY = 0,
+		DESCRIPTION,
+		AMOUNT,
+		ROW_NUMBER,
+		IS_DESCRIPTION
+	};
 };
 }
 
@@ -57,6 +66,7 @@ namespace sql {
 namespace query {
 constexpr const char* invoice_usert{R"sql(
 	INSERT INTO invoice (
+		invoice_id,
 		business_id,
 		order_number,
 		job_card_number,
@@ -66,14 +76,16 @@ constexpr const char* invoice_usert{R"sql(
 		description_total,
 		grand_total
 	)
-	VALUES (
+	VALUES (?,
 		(SELECT c.business_id
 			FROM client c
 			JOIN business_details b ON b.business_id = c.business_id
 			WHERE b.business_name = ?),
 		?, ?, ?, ?, ?, ?, ?
 	)
-	ON CONFLICT (business_id, order_number, job_card_number) DO UPDATE SET
+	ON CONFLICT (invoice_id) DO UPDATE SET
+		order_number      = excluded.order_number,
+		job_card_number   = excluded.job_card_number,
 		date_created      = excluded.date_created,
 		paid_status       = excluded.paid_status,
 		material_total    = excluded.material_total,
