@@ -58,7 +58,8 @@ constexpr const char* admin_usert{R"sql(
 )sql"};
 
 constexpr const char* admin_select{R"sql(
-	SELECT  bd.business_name,
+	SELECT
+		bd.business_name,
 		bd.street,
 		bd.area_code,
 		bd.town_name,
