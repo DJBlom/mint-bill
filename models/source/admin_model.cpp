@@ -30,9 +30,10 @@ std::any model::admin::load(const std::string& _business_name)
 		serialize::admin admin_serialize{};
 		storage::database::sql_parameters admin_param = {_business_name};
 		storage::database::sqlite database{this->database_file, this->database_password};
-		admin_data = std::any_cast<data::admin> (
-				admin_serialize.extract_data(
-					database.select(sql::query::admin_select, admin_param)
+		admin_data = std::move(std::any_cast<data::admin> (
+					admin_serialize.extract_data(
+						database.select(sql::query::admin_select, admin_param)
+						)
 					)
 				);
 	}

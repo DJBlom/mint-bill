@@ -7,6 +7,7 @@
  *******************************************************/
 #include <generate_pdf.h>
 #include <string>
+#include <ostream>
 
 
 bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string& _suffix)
@@ -112,7 +113,7 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         {
                 data::column expected{};
                 expected.set_quantity(i);
-                expected.set_description(description + " " + std::to_string(i));
+                expected.set_description(description);
                 expected.set_amount(5545675 + i + .0);
                 expected.set_row_number(i);
 		if (i % 2 == 0)
@@ -146,7 +147,9 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);
         expected.set_material_total(material_total);
-        expected.set_grand_total(std::to_string(vec[0].get_amount()));
+	std::ostringstream goss{""};
+	goss << std::fixed << std::setprecision(2) << vec[0].get_amount();
+        expected.set_grand_total(goss.str());
         expected.set_material_column(vec);
         expected.set_description_column(vec);
 

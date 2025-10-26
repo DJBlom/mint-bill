@@ -34,14 +34,14 @@ private:
 	};
 };
 
-class column {
+class labor {
 public:
-	column() = default;
-	column(const column&) = delete;
-	column(column&&) = delete;
-	column& operator= (const column&) = delete;
-	column& operator= (column&&) = delete;
-	virtual ~column() = default;
+	labor() = default;
+	labor(const labor&) = delete;
+	labor(labor&&) = delete;
+	labor& operator= (const labor&) = delete;
+	labor& operator= (labor&&) = delete;
+	virtual ~labor() = default;
 
 	[[nodiscard]] virtual std::vector<data::column> extract_data(const storage::database::part::rows&);
 	[[nodiscard]] virtual storage::database::sql_parameters package_data(const data::column&,

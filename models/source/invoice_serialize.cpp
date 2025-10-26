@@ -5,8 +5,6 @@
 #include <invoice_serialize.h>
 
 
-#include <iostream>
-
 serialize::invoice::~invoice() {}
 
 storage::database::sql_parameters serialize::invoice::package_data(const std::any& _data)
@@ -46,7 +44,7 @@ std::vector<std::any> serialize::invoice::extract_data(const storage::database::
 	{
 		for (const data::invoice& invoice_data : collect_values(_rows))
 		{
-			any_data.emplace_back(invoice_data);
+			any_data.emplace_back(std::move(invoice_data));
 		}
 	}
 
@@ -140,23 +138,7 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 
 
 // column
-std::vector<data::column> serialize::column::extract_data(const storage::database::part::rows& _rows)
-{
-	std::vector<data::column> column_data{};
-	if (_rows.empty() == true)
-	{
-		syslog(LOG_CRIT, "COLUMN SERIALIZE: argument is not valid - "
-				"filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		column_data = std::move(collect_values(_rows));
-	}
-
-	return column_data;
-}
-
-storage::database::sql_parameters serialize::column::package_data(
+storage::database::sql_parameters serialize::labor::package_data(
 		const data::column& _column_data,
 		const data::invoice& _invoice_data)
 {
@@ -181,7 +163,23 @@ storage::database::sql_parameters serialize::column::package_data(
 	return params;
 }
 
-std::vector<data::column> serialize::column::collect_values(const storage::database::part::rows& _rows)
+std::vector<data::column> serialize::labor::extract_data(const storage::database::part::rows& _rows)
+{
+	std::vector<data::column> column_data{};
+	if (_rows.empty() == true)
+	{
+		syslog(LOG_CRIT, "COLUMN SERIALIZE: argument is not valid - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		column_data = std::move(collect_values(_rows));
+	}
+
+	return column_data;
+}
+
+std::vector<data::column> serialize::labor::collect_values(const storage::database::part::rows& _rows)
 {
 	std::vector<data::column> column_sql_data{};
 	for (const storage::database::part::row& row : _rows)

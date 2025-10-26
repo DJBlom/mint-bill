@@ -5,6 +5,9 @@
 # Build folder
 build
 
+# CTags
+tags
+
 # Created test folders
 test/objs
 test/lib

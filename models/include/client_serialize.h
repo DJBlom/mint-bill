@@ -2,6 +2,7 @@
 #ifndef _SERIALIZE_CLIENT_H_
 #define _SERIALIZE_CLIENT_H_
 #include <serialize.h>
+#include <client_data.h>
 
 namespace serialize {
 class client : public interface::single_serialize {
@@ -17,7 +18,7 @@ public:
 	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) override;
 
 private:
-	[[nodiscard]] std::vector<std::string> collect_values(const storage::database::part::rows&);
+	[[nodiscard]] data::client collect_values(const storage::database::part::rows&);
 
 private:
 	enum DATA_FIELDS {

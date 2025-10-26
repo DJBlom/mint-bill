@@ -53,7 +53,7 @@ std::vector<std::any> model::invoice::load(const std::string& _business_name) co
 			)
 		};
 
-		serialize::column column_serialize{};
+		serialize::labor labor_serialize{};
 		serialize::invoice invoice_serialize{};
 		storage::database::sql_parameters invoice_params = {_business_name};
 		for (const std::any& data : invoice_serialize.extract_data(
@@ -61,10 +61,10 @@ std::vector<std::any> model::invoice::load(const std::string& _business_name) co
 		{
 			data::invoice invoice_data{std::any_cast<data::invoice> (data)};
 			storage::database::sql_parameters column_params = {std::stoi(invoice_data.get_invoice_number())};
-			std::vector<data::column> material_column_data{column_serialize.extract_data(
+			std::vector<data::column> material_column_data{labor_serialize.extract_data(
 						database.select(sql::query::material_labor_select, column_params)
 					)};
-			std::vector<data::column> description_column_data{column_serialize.extract_data(
+			std::vector<data::column> description_column_data{labor_serialize.extract_data(
 						database.select(sql::query::description_labor_select, column_params)
 					)};
 
@@ -114,10 +114,10 @@ bool model::invoice::save(const std::any& _data) const
 			}
 		}
 
-		serialize::column column_serialize{};
+		serialize::labor labor_serialize{};
 		for (const data::column& column_data : invoice_data.get_description_column())
 		{
-			storage::database::sql_parameters description_params{column_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters description_params{labor_serialize.package_data(column_data, invoice_data)};
 			if (database.usert(sql::query::labor_usert, description_params) == false)
 			{
 				if (database.transaction("ROLLBACK;") == false)
@@ -130,7 +130,7 @@ bool model::invoice::save(const std::any& _data) const
 
 		for (const data::column& column_data : invoice_data.get_material_column())
 		{
-			storage::database::sql_parameters material_params{column_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters material_params{labor_serialize.package_data(column_data, invoice_data)};
 			if (database.usert(sql::query::labor_usert, material_params) == false)
 			{
 				if (database.transaction("ROLLBACK;") == false)

@@ -2,6 +2,7 @@
 #ifndef _SERIALIZE_ADMIN_H_
 #define _SERIALIZE_ADMIN_H_
 #include <serialize.h>
+#include <admin_data.h>
 
 namespace serialize {
 class admin : public interface::single_serialize {
@@ -17,7 +18,7 @@ public:
 	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) override;
 
 private:
-	[[nodiscard]] std::vector<std::string> collect_values(const storage::database::part::rows&);
+	[[nodiscard]] data::admin collect_values(const storage::database::part::rows&);
 
 private:
 	enum DATA_FIELDS {

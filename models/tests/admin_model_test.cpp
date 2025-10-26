@@ -12,8 +12,6 @@
 #include <admin_data.h>
 #include <generate_pdf.h>
 
-#include <iostream>
-
 extern "C"
 {
 
@@ -74,7 +72,7 @@ TEST(admin_model_test, successfully_load_data_from_database)
 {
         data::admin admin_data{test::generate_business_data()};
         (void) admin_model.save(admin_data);
-        // data::admin result{std::any_cast<data::admin> (admin_model.load(admin_data.get_name()))};
+        data::admin result{std::any_cast<data::admin> (admin_model.load(admin_data.get_name()))};
 
-        // CHECK_EQUAL(true, result.is_valid());
+        CHECK_EQUAL(true, result.is_valid());
 }

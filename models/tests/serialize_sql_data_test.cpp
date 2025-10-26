@@ -267,8 +267,8 @@ TEST(column_serialize_test, convert_data_to_sql_arguments_invalid_column_data)
 {
 	data::invoice invoice_data{test::generate_invoice_data("Serialize test")};
 	data::column column_data{};
-	serialize::column column_serialize{};
-	storage::database::sql_parameters sql_parameters{column_serialize.package_data(column_data, invoice_data)};
+	serialize::labor labor_serialize{};
+	storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
 
 	CHECK_EQUAL(true, sql_parameters.empty());
 }
@@ -277,19 +277,19 @@ TEST(column_serialize_test, convert_data_to_sql_arguments_invalid_invoice_data)
 {
 	data::column column_data{};
 	data::invoice invoice_data{test::generate_invoice_data("Serialize test")};
-	serialize::column column_serialize{};
-	storage::database::sql_parameters sql_parameters{column_serialize.package_data(column_data, invoice_data)};
+	serialize::labor labor_serialize{};
+	storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
 
 	CHECK_EQUAL(true, sql_parameters.empty());
 }
 
 TEST(column_serialize_test, convert_data_to_sql_arguments_successfully)
 {
-	serialize::column column_serialize{};
+	serialize::labor labor_serialize{};
 	data::invoice invoice_data{test::generate_invoice_data("Serialization test")};
 	for (const data::column& column_data : invoice_data.get_description_column())
 	{
-		storage::database::sql_parameters sql_parameters{column_serialize.package_data(column_data, invoice_data)};
+		storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
 
 		CHECK_EQUAL(false, sql_parameters.empty());
 	}
@@ -297,10 +297,10 @@ TEST(column_serialize_test, convert_data_to_sql_arguments_successfully)
 
 TEST(column_serialize_test, convert_sql_to_business_data_unsuccessfully)
 {
-	serialize::column column_serialize{};
+	serialize::labor labor_serialize{};
 	std::vector<storage::database::param_values> params = {};
 
-	for (const data::column& column_data : column_serialize.extract_data(
+	for (const data::column& column_data : labor_serialize.extract_data(
 				database.select(sql::query::description_labor_select, params)
 			))
 	{
@@ -310,11 +310,11 @@ TEST(column_serialize_test, convert_sql_to_business_data_unsuccessfully)
 
 TEST(column_serialize_test, convert_sql_to_business_data_successfully)
 {
-	serialize::column column_serialize{};
+	serialize::labor labor_serialize{};
 	data::invoice invoice_data{test::generate_invoice_data("Serialization test")};
 	std::vector<storage::database::param_values> params = {static_cast<long long> (std::stoi(invoice_data.get_invoice_number()))};
 
-	for (const data::column& column_data : column_serialize.extract_data(
+	for (const data::column& column_data : labor_serialize.extract_data(
 				database.select(sql::query::description_labor_select, params)))
 	{
 		CHECK_EQUAL(true, column_data.is_valid());
@@ -376,7 +376,7 @@ TEST(invoice_serialize_test, convert_sql_to_business_data_unsuccessfully)
 
 TEST(invoice_serialize_test, convert_sql_to_business_data_successfully)
 {
-	serialize::column column_serialize{};
+	serialize::labor labor_serialize{};
 	serialize::invoice invoice_serialize{};
 	data::invoice tmp_invoice_data{test::generate_invoice_data("Serialization test")};
 	storage::database::sql_parameters invoice_params = {tmp_invoice_data.get_business_name()};
@@ -385,10 +385,10 @@ TEST(invoice_serialize_test, convert_sql_to_business_data_successfully)
 	{
 		data::invoice invoice_data{std::any_cast<data::invoice> (data)};
 		storage::database::sql_parameters column_params = {std::stoi(invoice_data.get_invoice_number())};
-		std::vector<data::column> description_column_data{column_serialize.extract_data(
+		std::vector<data::column> description_column_data{labor_serialize.extract_data(
 					database.select(sql::query::description_labor_select, column_params)
 				)};
-		std::vector<data::column> material_column_data{column_serialize.extract_data(
+		std::vector<data::column> material_column_data{labor_serialize.extract_data(
 					database.select(sql::query::material_labor_select, column_params)
 				)};
 		invoice_data.set_description_column(description_column_data);
