@@ -8,16 +8,16 @@
 #include <future>
 #include <algorithm>
 #include <statement_pdf.h>
-#include <client_statement.h>
+#include <statement_model.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 
 
 #include <iostream>
 
-controller::client_statement::~client_statement() {}
+model::statement::~statement() {}
 
-std::vector<std::any> controller::client_statement::load(const std::string& _business_name) const
+std::vector<std::any> model::statement::load(const std::string& _business_name) const
 {
 	std::vector<std::any> temp{};
 	if (_business_name.empty())
@@ -99,7 +99,14 @@ std::vector<std::any> controller::client_statement::load(const std::string& _bus
 	return temp;
 }
 
-data::email controller::client_statement::prepare_for_email(const std::vector<std::any>& _pdf_statements) const
+bool model::statement::save(const std::any& _data) const
+{
+	(void)_data;
+
+	return false;
+}
+
+data::email model::statement::prepare_for_email(const std::vector<std::any>& _pdf_statements) const
 {
 	data::email email_data;
 	for (const std::any& _pdf_statement : _pdf_statements)
@@ -123,12 +130,12 @@ data::email controller::client_statement::prepare_for_email(const std::vector<st
 	return email_data;
 }
 
-std::vector<std::string> controller::client_statement::prepare_for_print(const std::vector<std::any>& _pdf_statements) const
+std::vector<std::string> model::statement::prepare_for_print(const std::vector<std::any>& _pdf_statements) const
 {
 	return this->convert_pdfs_to_strings(_pdf_statements);
 }
 
-std::vector<std::string> controller::client_statement::convert_pdfs_to_strings(const std::vector<std::any>& _pdf_statements) const
+std::vector<std::string> model::statement::convert_pdfs_to_strings(const std::vector<std::any>& _pdf_statements) const
 {
 	std::vector<std::future<std::string>> pdf_documents;
 	std::transform(_pdf_statements.cbegin(),

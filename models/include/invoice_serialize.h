@@ -3,6 +3,7 @@
 #define _SERIALIZE_INVOICE_H_
 #include <serialize.h>
 #include <column_data.h>
+#include <invoice_data.h>
 
 namespace serialize {
 class invoice : public interface::multi_serialize {

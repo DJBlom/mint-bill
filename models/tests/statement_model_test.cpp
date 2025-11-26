@@ -12,7 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <pdf_statement_data.h>
-#include <client_statement.h>
+#include <statement_model.h>
 extern "C"
 {
 
@@ -22,9 +22,9 @@ extern "C"
 /**********************************TEST LIST************************************
  * 1)
  ******************************************************************************/
-TEST_GROUP(client_statement_feature_test)
+TEST_GROUP(statement_model_test)
 {
-	controller::client_statement statement{};
+	model::statement statement{};
 	void setup()
 	{
 	}
@@ -34,7 +34,7 @@ TEST_GROUP(client_statement_feature_test)
 	}
 };
 
-TEST(client_statement_feature_test, load_data_from_db)
+TEST(statement_model_test, load_data_from_db)
 {
 	std::vector<data::pdf_statement> result{};
 	for (const std::any& data : statement.load("test_business"))

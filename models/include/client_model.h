@@ -10,7 +10,7 @@
 #include <models.h>
 
 namespace model {
-class client: public interface::model {
+class client: public interface::model_register {
 public:
 	client() = delete;
 	explicit client(const std::string&, const std::string&);

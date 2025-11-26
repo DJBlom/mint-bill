@@ -14,7 +14,7 @@
 #include <gui_parts.h>
 #include <email_data.h>
 #include <statement_pdf.h>
-#include <client_statement.h>
+#include <statement_model.h>
 
 
 namespace gui {
@@ -58,7 +58,7 @@ private:
 	std::string database_password{""};
 	std::vector<std::any> documents{};
 	std::vector<std::any> invoice_data{};
-	controller::client_statement client_statement{};
+	model::statement client_statement{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};

@@ -12,7 +12,7 @@
 #include <pdf_invoice_data.h>
 
 namespace model {
-class invoice: public interface::model_ops {
+class invoice: public interface::model_operations {
 public:
 	invoice() = delete;
 	explicit invoice(const std::string&, const std::string&);
