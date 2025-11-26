@@ -53,7 +53,9 @@ CREATE TABLE business_details (
 );
 
 CREATE TABLE admin (
-	business_id		INTEGER PRIMARY KEY
+	only_one		INTEGER NOT NULL UNIQUE DEFAULT 1
+					CHECK (only_one = 1),
+	business_id     	INTEGER NOT NULL UNIQUE
 					REFERENCES business_details(business_id)
 					ON DELETE CASCADE ON UPDATE CASCADE,
 	bank_name       	TEXT NOT NULL,
@@ -65,36 +67,40 @@ CREATE TABLE admin (
 
 CREATE TABLE client (
 	business_id		INTEGER PRIMARY KEY
-			   	     REFERENCES business_details(business_id)
-			   	     ON DELETE CASCADE ON UPDATE CASCADE,
+					REFERENCES business_details(business_id)
+					ON DELETE CASCADE ON UPDATE CASCADE,
 	vat_number         	TEXT NOT NULL UNIQUE,
 	statement_schedule 	TEXT NOT NULL
 );
 
 CREATE TABLE invoice (
 	invoice_id		INTEGER PRIMARY KEY,
-	job_card_number		TEXT NOT NULL,
+	business_id		INTEGER NOT NULL,
 	order_number		TEXT NOT NULL,
+	job_card_number		TEXT NOT NULL,
 	date_created		TEXT NOT NULL DEFAULT (date('now')),
 	paid_status		TEXT NOT NULL,
 	material_total		TEXT NOT NULL,
 	description_total	TEXT NOT NULL,
 	grand_total		TEXT NOT NULL,
-	business_id		INTEGER NOT NULL,
 	FOREIGN KEY (business_id) REFERENCES client(business_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	UNIQUE(business_id, order_number, job_card_number)
 );
 
 CREATE TABLE labor (
 	labor_id		INTEGER PRIMARY KEY,
+	invoice_id		INTEGER NOT NULL,
+	line_number		INTEGER NOT NULL,
 	quantity       		INTEGER NOT NULL,
 	description      	TEXT NOT NULL,
 	amount    		REAL NOT NULL,
-	invoice_id		INTEGER NOT NULL,
+	is_description		BOOLEAN NOT NULL
+					CHECK (is_description IN (0,1))
+					DEFAULT FALSE,
 	FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	UNIQUE(invoice_id, line_number, is_description)
 );
 
 COMMIT;

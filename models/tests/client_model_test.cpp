@@ -11,6 +11,8 @@
 
 #include <client_data.h>
 #include <client_model.h>
+#include <generate_pdf.h>
+
 extern "C"
 {
 
@@ -25,7 +27,6 @@ TEST_GROUP(client_model_test)
 {
 	const std::string db_file{"../storage/tests/model_test.db"};
 	const std::string db_password{"123456789"};
-        data::client client_data{};
         model::client client_model{db_file, db_password};
 	void setup()
 	{
@@ -38,11 +39,12 @@ TEST_GROUP(client_model_test)
 
 TEST(client_model_test, unsuccessfully_save_data_to_database)
 {
-        client_data.set_business_name("Dummy");
-        client_data.set_business_address("Geelsterd 12");
-        client_data.set_business_area_code("");
-        client_data.set_business_town_name("George");
-        client_data.set_cellphone_number("0711422488");
+        data::client client_data{};
+        client_data.set_name("Dummy");
+        client_data.set_address("Geelsterd 12");
+        client_data.set_area_code("");
+        client_data.set_town("George");
+        client_data.set_cellphone("0711422488");
         client_data.set_email("client@gmail.com");
         client_data.set_vat_number("425435");
         client_data.set_statement_schedule("4,4");
@@ -52,32 +54,17 @@ TEST(client_model_test, unsuccessfully_save_data_to_database)
 
 TEST(client_model_test, successfully_save_data_to_database)
 {
-        data::client data{};
-        data.set_business_name("Dummy");
-        data.set_business_address("Geelsterd 8");
-        data.set_business_area_code("05693");
-        data.set_business_town_name("George");
-        data.set_cellphone_number("0711422488");
-        data.set_email("dummy@gmail.com");
-        data.set_vat_number("4254350");
-        data.set_statement_schedule("1,4");
+        data::client client_data{test::generate_client_data_multiple_emails()};
 
-        CHECK_EQUAL(true, client_model.save(data));
+        CHECK_EQUAL(true, client_model.save(client_data));
 }
 
 TEST(client_model_test, successfully_update_data_in_database)
 {
-        data::client data{};
-        data.set_business_name("Dummy");
-        data.set_business_address("Geelsterd 12");
-        data.set_business_area_code("05693");
-        data.set_business_town_name("George");
-        data.set_cellphone_number("0711422488");
-        data.set_email("clientdummy@gmail.com");
-        data.set_vat_number("4254350");
-        data.set_statement_schedule("4,4");
+        data::client client_data{test::generate_client_data_multiple_emails()};
+	client_data.set_statement_schedule("2/4");
 
-        CHECK_EQUAL(true, client_model.save(data));
+        CHECK_EQUAL(true, client_model.save(client_data));
 }
 
 TEST(client_model_test, unsuccessfully_load_data_from_database)
@@ -92,11 +79,11 @@ TEST(client_model_test, successfully_load_data_from_database)
 {
         data::client result{};
         data::client data{};
-        data.set_business_name("Tests");
-        data.set_business_address("Geelsterd 12");
-        data.set_business_area_code("05693");
-        data.set_business_town_name("George");
-        data.set_cellphone_number("0711422488");
+        data.set_name("Tests");
+        data.set_address("Geelsterd 12");
+        data.set_area_code("05693");
+        data.set_town("George");
+        data.set_cellphone("0711422488");
         data.set_email("client@gmail.com");
         data.set_vat_number("42543509");
         data.set_statement_schedule("1,4");

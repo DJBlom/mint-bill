@@ -55,38 +55,80 @@ std::string feature::statement_pdf::generate(const std::any& _data)
                         this->width, this->height
                 );
 
+		if (this->surface == nullptr)
+		{
+			return "";
+		}
+		else
+		{
+			this->context = Cairo::Context::create(this->surface);
+		}
 
-                this->context = Cairo::Context::create(this->surface);
-                if (!this->context)
+                if (this->context == nullptr)
+		{
+			this->surface->finish();
                         return "";
+		}
                 else
                         this->context->select_font_face("monospace", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
 
                 if (add_header("Statement") == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
 		data::client client{(data.get_pdf_invoices())[0].get_client()};
 		data::admin admin{(data.get_pdf_invoices())[0].get_business()};
                 if (add_information(client, admin) == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (add_statement_information(data) == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (draw_line() == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (add_statements(data) == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (draw_line() == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (add_grand_total(data) == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 if (add_payment_method((data.get_pdf_invoices())[0].get_business()) == false)
-                        return "";
+		{
+			this->context->show_page();
+			this->surface->finish();
+			return "";
+		}
 
                 this->context->show_page();
                 this->surface->finish();
@@ -113,7 +155,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 {
         align_information_section();
         add_new_section();
-        std::string client_business_name{_client.get_business_name()};
+        std::string client_business_name{_client.get_name()};
         if (write_to_pdf(client_business_name, font_size::information) == false)
                 return false;
 
@@ -123,7 +165,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 
         align_information_section();
         add_new_line();
-        std::string client_business_address{_client.get_business_address()};
+        std::string client_business_address{_client.get_address()};
         if (write_to_pdf(client_business_address, font_size::information) == false)
                 return false;
 
@@ -133,7 +175,7 @@ bool feature::statement_pdf::add_information(const data::client& _client, const 
 
         align_information_section();
         add_new_line();
-        std::string client_business_town{_client.get_business_town_name() + ", " + _client.get_business_area_code()};
+        std::string client_business_town{_client.get_town() + ", " + _client.get_area_code()};
         if (write_to_pdf(client_business_town, font_size::information) == false)
                 return false;
 
@@ -226,6 +268,7 @@ bool feature::statement_pdf::add_items(const std::vector<data::pdf_invoice>& _da
 			break;
 
                 if (write_to_pdf_from_right("R " + invoice.get_grand_total(), font_size::information) == false)
+                // if (write_to_pdf_from_right("R " + goss.str(), font_size::information) == false)
 			break;
 
 		std::vector<std::string> sliced_data{this->slicer.slice(invoice.get_order_number())};

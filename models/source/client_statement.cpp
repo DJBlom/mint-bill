@@ -30,11 +30,11 @@ std::vector<std::any> controller::client_statement::load(const std::string& _bus
 		{
 			data::pdf_invoice pdf_invoice_data{};
 			data::client client_data;
-			client_data.set_business_name(_business_name);
-			client_data.set_business_address("Geelsterd 8");
-			client_data.set_business_area_code("543543");
-			client_data.set_business_town_name("George");
-			client_data.set_cellphone_number("0832315944");
+			client_data.set_name(_business_name);
+			client_data.set_address("Geelsterd 8");
+			client_data.set_area_code("543543");
+			client_data.set_town("George");
+			client_data.set_cellphone("0832315944");
 			client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
 			client_data.set_vat_number("3241324321413");
 			client_data.set_statement_schedule("4,4");

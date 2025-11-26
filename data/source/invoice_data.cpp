@@ -149,13 +149,13 @@ std::string data::invoice::get_invoice_date() const
         return this->invoice_date;
 }
 
-void data::invoice::set_paid_status(const std::string& _date)
+void data::invoice::set_paid_status(const std::string& _status)
 {
-        if (!_date.empty() && (_date.length() <= upper_bound::paid_status_length))
+        if (!_status.empty() && (_status.length() <= upper_bound::paid_status_length))
         {
                 set_flag(FLAG::PAID);
                 std::lock_guard<std::mutex> guard(this->invoice_data);
-                this->paid_status = std::move(_date);
+                this->paid_status = std::move(_status);
         }
         else
         {

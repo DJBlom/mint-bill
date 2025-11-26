@@ -1448,7 +1448,7 @@ void gui::part::statement::statement_pdf_view::bind(const Glib::RefPtr<Gtk::List
 	data::pdf_statement pdf_statement{data->pdf_statement};
 	data::pdf_invoice pdf_invoice{(pdf_statement.get_pdf_invoices()).front()};
 	data::client client{pdf_invoice.get_client()};
-	std::string details{"# " + pdf_statement.get_number() + ", " + client.get_business_name() + ", " + pdf_statement.get_date()};
+	std::string details{"# " + pdf_statement.get_number() + ", " + client.get_name() + ", " + pdf_statement.get_date()};
 	label->set_text(details);
 }
 

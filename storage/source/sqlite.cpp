@@ -154,6 +154,23 @@ storage::database::part::rows storage::database::sqlite::select(const std::strin
 	}
 
 	return rows;
+}
+
+storage::database::part::rows storage::database::sqlite::select(const std::string& _sql_query)
+{
+	part::rows rows;
+	if (_sql_query.empty())
+	{
+                syslog(LOG_CRIT, "SQLITE: invalid parameter - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		part::sql_operations sql_operations{this->database, _sql_query};
+		rows = std::move(sql_operations.multi_execute());
+	}
+
+	return rows;
 } //GCOVR_EXCL_LINE
 
 

@@ -108,7 +108,7 @@ TEST(sqlite_test, usert_empty_sql_query_parameter)
 	CHECK_EQUAL(false, db.usert(bad_sql_query, good_params));
 }
 
-TEST(sqlite_test, usert_empty_argument_parameter)
+TEST(sqlite_test, usert_empty_argument)
 {
 	std::vector<storage::database::param_values> bad_params;
 
@@ -148,11 +148,11 @@ TEST(sqlite_test, usert_good_parameters)
 	CHECK_EQUAL(true, db.usert(good_sql_query, good_params));
 }
 
-TEST(sqlite_test, select_empty_params)
+TEST(sqlite_test, select_with_empty_params)
 {
 	std::vector<storage::database::param_values> params;
 	storage::database::part::rows rows{db.select(R"SQL(
-		SELECT bank_name FROM ADMIN where business_id = ?
+		SELECT bank_name FROM ADMIN WHERE business_id = ?;
 		)SQL", params)};
 
 	CHECK_EQUAL(true, rows.empty());
@@ -189,6 +189,22 @@ TEST(sqlite_test, select_empty_sql_query_statement)
 	storage::database::part::rows rows{db.select("", params)};
 
 	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_no_params_and_query)
+{
+	storage::database::part::rows rows{db.select("")};
+
+	CHECK_EQUAL(true, rows.empty());
+}
+
+TEST(sqlite_test, select_no_params)
+{
+	storage::database::part::rows rows{db.select(R"SQL(
+		SELECT business_name FROM business_details;
+	)SQL")};
+
+	CHECK_EQUAL(false, rows.empty());
 }
 
 TEST(sqlite_test, select_with_good_parameters)

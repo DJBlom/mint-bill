@@ -5,6 +5,9 @@
 # Build folder
 build
 
+# CTags
+tags
+
 # Created test folders
 test/objs
 test/lib
@@ -17,3 +20,7 @@ docs/doxydoc
 
 # Vim .swp files
 *.swp
+
+# SQLcipher files.
+*.db-shm
+*.db-wal

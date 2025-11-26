@@ -25,11 +25,6 @@ public:
 	[[nodiscard]] virtual bool save(const std::any&) override;
 
 private:
-	using details = std::vector<std::vector<storage::database::param_values>>;
-	[[nodiscard]] data::admin extract_data(const storage::database::part::rows&);
-	[[nodiscard]] details package_data(const data::admin&);
-
-private:
 	std::string database_file{""};
 	std::string database_password{""};
 

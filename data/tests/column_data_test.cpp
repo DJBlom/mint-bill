@@ -8,6 +8,7 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
+#include <limits>
 #include <climits>
 #include <column_data.h>
 extern "C"
@@ -31,7 +32,7 @@ extern "C"
  * 12) Amount column max length is (0 < length < 15)
  * 13) Ensure thread safety of the data. (Done)
  ******************************************************************************/
-TEST_GROUP(invoice_column_test)
+TEST_GROUP(column_data_test)
 {
         data::column column;
 	void setup()
@@ -43,7 +44,23 @@ TEST_GROUP(invoice_column_test)
 	}
 };
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_quantity_column)
+TEST(column_data_test, handle_assigning_and_retrieving_row_number_of_column)
+{
+        long long expected{1};
+        column.set_row_number(expected);
+
+        CHECK_EQUAL(expected, column.get_row_number());
+}
+
+TEST(column_data_test, handle_assigning_and_retrieving_is_description_column)
+{
+        long long expected{1};
+        column.set_is_description(expected);
+
+        CHECK_EQUAL(expected, column.get_is_description());
+}
+
+TEST(column_data_test, handle_assigning_and_retrieving_quantity_column)
 {
         unsigned int expected{12};
         column.set_quantity(expected);
@@ -51,7 +68,7 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_quantity_column)
         CHECK_EQUAL(expected, column.get_quantity());
 }
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_description_column)
+TEST(column_data_test, handle_assigning_and_retrieving_description_column)
 {
         std::string expected{"Machinging"};
         column.set_description(expected);
@@ -59,7 +76,7 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_description_column)
         CHECK_EQUAL(expected, column.get_description());
 }
 
-TEST(invoice_column_test, handle_assigning_and_retrieving_amount_column)
+TEST(column_data_test, handle_assigning_and_retrieving_amount_column)
 {
         double expected{5558.99};
         column.set_amount(expected);
@@ -67,91 +84,115 @@ TEST(invoice_column_test, handle_assigning_and_retrieving_amount_column)
         CHECK_EQUAL(expected, column.get_amount());
 }
 
-TEST(invoice_column_test, handle_data_verification)
+TEST(column_data_test, handle_data_verification)
 {
         bool expected{true};
         unsigned int quantity{12};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
 
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_copy_assignement)
+TEST(column_data_test, handle_data_copy_assignement)
 {
         bool expected{true};
         unsigned int quantity{12};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
         data::column tmp;
         tmp = column;
 
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_copy_constructable)
+TEST(column_data_test, handle_data_copy_constructable)
 {
         bool expected{true};
         unsigned int quantity{12};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
         data::column tmp{column};
 
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_move_assignement)
+TEST(column_data_test, handle_data_move_assignement)
 {
         bool expected{true};
         unsigned int quantity{12};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
         data::column tmp;
         tmp = std::move(column);
 
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_data_move_constructable)
+TEST(column_data_test, handle_data_move_constructable)
 {
         bool expected{true};
         unsigned int quantity{12};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
         data::column tmp{std::move(column)};
 
         CHECK_EQUAL(expected, tmp.is_valid());
 }
 
-TEST(invoice_column_test, handle_quantity_data_limit)
+TEST(column_data_test, handle_quantity_data_limit)
 {
         bool expected{false};
         unsigned int quantity{UINT_MAX};
         std::string description{"Machinging"};
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
 
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_description_data_limit)
+TEST(column_data_test, handle_description_data_limit)
 {
         bool expected{false};
         unsigned int quantity{45};
@@ -166,36 +207,98 @@ TEST(invoice_column_test, handle_description_data_limit)
                 "unnecessary overhead, especially for d fdasfdsfadhgfdshgfdh"};
 
         double amount{5558.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
 
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_amount_data_limit)
+TEST(column_data_test, handle_amount_data_limit)
 {
         bool expected{false};
         unsigned int quantity{45};
         std::string description{"Machining"};
         double amount{99999999999999.99};
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
 
         CHECK_EQUAL(expected, column.is_valid());
 }
 
-TEST(invoice_column_test, handle_no_data)
+TEST(column_data_test, handle_row_number_max_data_limit)
+{
+        bool expected{false};
+        unsigned int quantity{45};
+        std::string description{"Machining"};
+        double amount{99999.99};
+	long long is_description{1};
+	long long row_number{std::numeric_limits<long long>::max()};
+        column.set_row_number(row_number);
+        column.set_quantity(quantity);
+        column.set_description(description);
+        column.set_amount(amount);
+        column.set_is_description(is_description);
+
+        CHECK_EQUAL(expected, column.is_valid());
+}
+
+TEST(column_data_test, handle_row_number_min_data_limit)
+{
+        bool expected{false};
+        unsigned int quantity{45};
+        std::string description{"Machining"};
+        double amount{9999999999.99};
+	long long is_description{1};
+	long long row_number{std::numeric_limits<long long>::min()};
+        column.set_row_number(row_number);
+        column.set_quantity(quantity);
+        column.set_description(description);
+        column.set_amount(amount);
+        column.set_is_description(is_description);
+
+        CHECK_EQUAL(expected, column.is_valid());
+}
+
+TEST(column_data_test, handle_is_description_max_data_limit)
+{
+        bool expected{false};
+        unsigned int quantity{45};
+        std::string description{"Machining"};
+        double amount{99999.99};
+	long long is_description{2};
+	long long row_number{1};
+        column.set_row_number(row_number);
+        column.set_quantity(quantity);
+        column.set_description(description);
+        column.set_amount(amount);
+        column.set_is_description(is_description);
+
+        CHECK_EQUAL(expected, column.is_valid());
+}
+
+TEST(column_data_test, handle_no_data)
 {
         bool expected{false};
         unsigned int quantity;
         std::string description{""};
-
         double amount;
+	long long is_description{1};
+	long long row_number{1};
+        column.set_row_number(row_number);
         column.set_quantity(quantity);
         column.set_description(description);
         column.set_amount(amount);
+        column.set_is_description(is_description);
 
         CHECK_EQUAL(expected, column.is_valid());
 }

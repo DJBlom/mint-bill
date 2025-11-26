@@ -6,7 +6,9 @@
  * NOTE:
  *******************************************************/
 #include <column_data.h>
-#include <iostream>
+#include <limits>
+
+
 
 
 namespace limit {
@@ -19,17 +21,21 @@ data::column::column() {}
 
 data::column::column(const column& _copy)
         : quantity{_copy.quantity}, description{_copy.description},
-          amount{_copy.amount}, flags{_copy.flags}, column_data{},
-          mask{_copy.mask} {}
+          amount{_copy.amount}, row_number{_copy.row_number},
+	  is_description{_copy.is_description}, flags{_copy.flags},
+	  column_data{}, mask{_copy.mask} {}
 
 data::column::column(column&& _move)
         : quantity{std::move(_move.quantity)}, description{std::move(_move.description)},
-          amount{std::move(_move.amount)}, flags{std::move(_move.flags)}, column_data{},
-          mask{std::move(_move.mask)}
+          amount{std::move(_move.amount)}, row_number{std::move(_move.row_number)},
+	  is_description{std::move(_move.is_description)}, flags{std::move(_move.flags)},
+	  column_data{}, mask{std::move(_move.mask)}
 {
         _move.quantity = 0;
         _move.description.clear();
         _move.amount = 0.0;
+        _move.is_description = 0;
+	_move.row_number = 0;
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -47,6 +53,8 @@ data::column& data::column::operator= (column&& _move)
         std::swap(quantity, _move.quantity);
         std::swap(description, _move.description);
         std::swap(amount, _move.amount);
+        std::swap(is_description, _move.is_description);
+	std::swap(row_number, _move.row_number);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -120,6 +128,44 @@ void data::column::set_amount(const double& _amount)
 double data::column::get_amount() const
 {
         return this->amount;
+}
+
+void data::column::set_row_number(const long long& _row_number)
+{
+        if (_row_number < std::numeric_limits<long long>::max() && _row_number > std::numeric_limits<long long>::min())
+        {
+                this->set_flag(FLAG::ROW_NUMBER);
+                std::lock_guard<std::mutex> guard(this->column_data);
+                this->row_number = std::move(_row_number);
+        }
+        else
+        {
+                this->clear_flag(FLAG::ROW_NUMBER);
+        }
+}
+
+long long data::column::get_row_number() const
+{
+        return this->row_number;
+}
+
+void data::column::set_is_description(const long long& _is_description)
+{
+        if (_is_description == LOGICAL_FALSE || _is_description == LOGICAL_TRUE)
+        {
+                this->set_flag(FLAG::IS_DESCRIPTION);
+                std::lock_guard<std::mutex> guard(this->column_data);
+                this->is_description = std::move(_is_description);
+        }
+        else
+        {
+                this->clear_flag(FLAG::IS_DESCRIPTION);
+        }
+}
+
+long long data::column::get_is_description() const
+{
+        return this->is_description;
 }
 
 bool data::column::check_flags() const

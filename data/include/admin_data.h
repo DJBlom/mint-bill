@@ -11,30 +11,31 @@
 #include <regex>
 #include <string>
 #include <cstdint>
+#include <business_data.h>
 
 namespace data {
-struct admin {
+struct admin : public data::business {
 public:
 	admin() = default;
 	admin(const admin& new_data);
 	admin(admin&&);
 	admin& operator= (const admin&);
 	admin& operator= (admin&&);
-	virtual ~admin() = default;
+	virtual ~admin() override;
 
-	[[nodiscard]] virtual bool is_valid() const;
-	virtual void set_name(const std::string&);
-	[[nodiscard]] virtual std::string get_name() const;
-	virtual void set_address(const std::string&);
-	[[nodiscard]] virtual std::string get_address() const;
-	virtual void set_area_code(const std::string&);
-	[[nodiscard]] virtual std::string get_area_code() const;
-	virtual void set_town(const std::string&);
-	[[nodiscard]] virtual std::string get_town() const;
-	virtual void set_cellphone(const std::string&);
-	[[nodiscard]] virtual std::string get_cellphone() const;
-	virtual void set_email(const std::string&);
-	[[nodiscard]] virtual std::string get_email() const;
+	[[nodiscard]] virtual bool is_valid() const override;
+	using data::business::set_name;
+	using data::business::get_name;
+	using data::business::set_address;
+	using data::business::get_address;
+	using data::business::set_area_code;
+	using data::business::get_area_code;
+	using data::business::set_town;
+	using data::business::get_town;
+	using data::business::set_cellphone;
+	using data::business::get_cellphone;
+	using data::business::set_email;
+	using data::business::get_email;
 	virtual void set_bank(const std::string&);
 	[[nodiscard]] virtual std::string get_bank() const;
 	virtual void set_branch_code(const std::string&);
@@ -52,14 +53,8 @@ private:
 	[[nodiscard]] bool check_flags() const;
 
 private:
-	using mask_type = std::uint16_t;
+	using mask_type = std::uint8_t;
 
-	std::string name{""};
-	std::string address{""};
-	std::string area_code{""};
-	std::string town{""};
-	std::string cellphone{""};
-	std::string email{""};
 	std::string bank{""};
 	std::string branch_code{""};
 	std::string account_number{""};
@@ -67,15 +62,9 @@ private:
 	std::string password{""};
 	mask_type flags{0x0};
 	std::mutex business_data{};
-	mask_type mask{0x7FF};
+	mask_type mask{0x1F};
 	enum FLAG {
-		NAME = 0,
-		ADDRESS,
-		AREA_CODE,
-		TOWN,
-		CELLPHONE,
-		EMAIL,
-		BANK,
+		BANK = 0,
 		BRANCH_CODE,
 		ACCOUNT_NUMBER,
 		CLIENT_MESSAGE,

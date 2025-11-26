@@ -10,6 +10,7 @@
 #include <gui.h>
 #include <invoice_pdf.h>
 #include <regex>
+#include <future>
 #include <thread>
 #include <vector>
 #include <iomanip>
@@ -19,7 +20,7 @@
 #include <gui_parts.h>
 #include <column_data.h>
 #include <invoice_data.h>
-#include <client_invoice.h>
+#include <invoice_model.h>
 #include <pdf_invoice_data.h>
 #include <poppler/cpp/poppler-page.h>
 #include <poppler/cpp/poppler-image.h>
@@ -81,6 +82,7 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&,
 							  const std::shared_ptr<Gtk::Window>&) override;
+			[[nodiscard]] virtual bool set_database_password(const std::string&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
@@ -113,7 +115,6 @@ namespace gui {
 
                 private: // Invoice
                         void populate(const std::string&);
-                        void add(const data::pdf_invoice&);
                         void connect_invoice_view();
                         void invoices(const std::unique_ptr<Gtk::ListView>&);
                         void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
@@ -130,7 +131,6 @@ namespace gui {
                         void edit_known_invoice(uint);
 
                 private: // helper
-                        void perform_search(const std::string&);
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
@@ -146,19 +146,22 @@ namespace gui {
                         [[nodiscard]] double compute_grand_total();
                         [[nodiscard]] data::invoice extract_invoice_data();
                         [[nodiscard]] double compute_total(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
-                        [[nodiscard]] std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&);
+                        [[nodiscard]] std::vector<data::column> retrieve_column_data(const Glib::RefPtr<Gio::ListStore<column_entries>>&,
+										     const long long&);
 
                 private: // Member features
+			std::string database_password{""};
                         int number_of_pages{0};
                         bool email_success{false};
 			std::future<bool> email_future;
                         std::string paid_status{"Not Paid"};
                         std::string grand_total{""};
 			std::string business_name{""};
+			data::admin admin_data{};
+			data::client client_data{};
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};
-                        feature::client_invoice client_invoice{};
                         Glib::Dispatcher email_dispatcher{};
                         std::vector<std::any> invoices_selected{};
 

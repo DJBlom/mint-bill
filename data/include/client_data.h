@@ -12,71 +12,58 @@
 #include <string>
 #include <vector>
 #include <cstdint>
-#include <word_slicer.h>
+#include <business_data.h>
 
 namespace data {
-        struct client {
-                public:
-                        client() = default;
-                        client(const client& new_data);
-                        client(client&&);
-                        client& operator= (const client&);
-                        client& operator= (client&&);
-                        virtual ~client() = default;
+struct client : public data::business {
+public:
+	client() = default;
+	client(const client& new_data);
+	client(client&&);
+	client& operator= (const client&);
+	client& operator= (client&&);
+	virtual ~client() override;
 
-                        [[nodiscard]] virtual bool is_valid() const;
-                        virtual void set_business_name(const std::string&);
-                        [[nodiscard]] virtual std::string get_business_name() const;
-                        virtual void set_business_address(const std::string&);
-                        [[nodiscard]] virtual std::string get_business_address() const;
-                        virtual void set_business_area_code(const std::string&);
-                        [[nodiscard]] virtual std::string get_business_area_code() const;
-                        virtual void set_business_town_name(const std::string&);
-                        [[nodiscard]] virtual std::string get_business_town_name() const;
-                        virtual void set_cellphone_number(const std::string&);
-                        [[nodiscard]] virtual std::string get_cellphone_number() const;
-                        virtual void set_email(const std::string&);
-                        [[nodiscard]] virtual std::string get_email() const;
-                        virtual void set_vat_number(const std::string&);
-                        [[nodiscard]] virtual std::string get_vat_number() const;
-                        virtual void set_statement_schedule(const std::string&);
-                        [[nodiscard]] virtual std::string get_statement_schedule() const;
+	[[nodiscard]] virtual bool is_valid() const override;
+	using data::business::set_name;
+	using data::business::get_name;
+	using data::business::set_address;
+	using data::business::get_address;
+	using data::business::set_area_code;
+	using data::business::get_area_code;
+	using data::business::set_town;
+	using data::business::get_town;
+	using data::business::set_cellphone;
+	using data::business::get_cellphone;
+	using data::business::set_email;
+	using data::business::get_email;
+	virtual void set_vat_number(const std::string&);
+	[[nodiscard]] virtual std::string get_vat_number() const;
+	virtual void set_statement_schedule(const std::string&);
+	[[nodiscard]] virtual std::string get_statement_schedule() const;
 
-                private:
-                        [[nodiscard]] bool email_address_good(const std::vector<std::string>&);
-                        void set_flag(const int&);
-                        void clear_flag(const int&);
-                        [[nodiscard]] bool check_flags() const;
+private:
+	void set_flag(const int&);
+	void clear_flag(const int&);
+	[[nodiscard]] bool check_flags() const;
 
-                private:
-                        using mask_type = std::uint8_t;
+private:
+	using mask_type = std::uint8_t;
 
-                        std::string business_name{""};
-                        std::string business_address{""};
-                        std::string business_area_code{""};
-                        std::string business_town_name{""};
-                        std::string cellphone_number{""};
-                        std::string emails{""};
-                        std::string vat_number{""};
-                        std::string statement_schedule{""};
-                        mask_type flags{0x0};
-                        std::mutex client_data{};
-                        mask_type mask{0xFF};
-                        enum FLAG {
-                                NAME = 0,
-                                ADDRESS,
-                                AREA_CODE,
-                                TOWN,
-                                CELLPHONE,
-                                EMAIL,
-                                VAT_NUMBER,
-                                STATMENT_SCHEDULE
-                        };
+	std::string vat_number{""};
+	std::string statement_schedule{""};
+	mask_type flags{0x0};
+	std::mutex client_data{};
+	mask_type mask{0x3};
+	enum FLAG {
+		VAT_NUMBER = 0,
+		STATMENT_SCHEDULE
+	};
 
-                        enum BIT {
-                                CLEAR = 0,
-                                SET
-                        };
-        };
+	enum BIT {
+		CLEAR = 0,
+		SET
+	};
+};
 }
 #endif
