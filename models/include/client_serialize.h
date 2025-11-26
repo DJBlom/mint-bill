@@ -45,7 +45,8 @@ constexpr const char *client_usert{R"sql(
 			statement_schedule
 		)
 		VALUES ((SELECT business_id FROM business_details WHERE email_address = ?), ?, ?)
-		ON CONFLICT(vat_number) DO UPDATE SET
+		ON CONFLICT DO UPDATE SET
+			vat_number	   = excluded.vat_number,
 			statement_schedule = excluded.statement_schedule;
 		)sql"};
 

@@ -165,6 +165,12 @@ constexpr const char* labor_usert{R"sql(
 		amount      = excluded.amount;
 )sql"};
 
+constexpr const char* labor_delete_all_for_invoice{R"SQL(
+        DELETE FROM labor
+        WHERE invoice_id = ?;
+    )SQL"
+};
+
 constexpr const char* description_labor_select{R"sql(
 	SELECT
 		quantity,

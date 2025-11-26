@@ -45,11 +45,11 @@ constexpr const char* business_details_usert{R"sql(
 	VALUES (?, ?, ?, ?, ?, ?)
 	ON CONFLICT DO UPDATE SET
 		business_name  = excluded.business_name,
-		email_address  = excluded.email_address,
-		contact_number = excluded.contact_number,
 		street         = excluded.street,
 		area_code      = excluded.area_code,
-		town_name      = excluded.town_name;
+		town_name      = excluded.town_name,
+		contact_number = excluded.contact_number,
+		email_address  = excluded.email_address;
 )sql"};
 
 constexpr const char* business_details_select{R"sql(

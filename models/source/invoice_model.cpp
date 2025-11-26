@@ -18,6 +18,7 @@
 #include <invoice_serialize.h>
 
 
+
 model::invoice::invoice(const std::string& _database_file, const std::string& _database_password)
 	: database_file{_database_file}, database_password{_database_password} {}
 
@@ -95,6 +96,7 @@ bool model::invoice::save(const std::any& _data) const
 	else
         {
 		serialize::invoice invoice_serialize{};
+		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_invoice_number())};
 		storage::database::sql_parameters invoice_params{invoice_serialize.package_data(invoice_data)};
 		storage::database::sqlite database{this->database_file, this->database_password};
 		if (database.transaction("BEGIN IMMEDIATE;") == false)
@@ -104,6 +106,15 @@ bool model::invoice::save(const std::any& _data) const
 				syslog(LOG_CRIT, "INVOICE_MODEL: failed to rollback - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
+		}
+		if (database.usert(sql::query::labor_delete_all_for_invoice, labor_delete_all_params) == false)
+		{
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "INVOICE_MODEL: failed to rollback - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
+			return false;
 		}
 		else if (database.usert(sql::query::invoice_usert, invoice_params) == false)
 		{

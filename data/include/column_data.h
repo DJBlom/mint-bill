@@ -14,8 +14,8 @@
 #include <cstdint>
 
 namespace data {
-constexpr std::uint8_t LOGICAL_TRUE{1};
-constexpr std::uint8_t LOGICAL_FALSE{1};
+constexpr std::uint32_t LOGICAL_TRUE{1};
+constexpr std::uint32_t LOGICAL_FALSE{0};
 
 struct column {
 public:

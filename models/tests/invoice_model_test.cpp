@@ -9,8 +9,13 @@
 #include "CppUTestExt/MockSupport.h"
 
 
+#include <sqlite.h>
 #include <generate_pdf.h>
 #include <invoice_model.h>
+#include <admin_serialize.h>
+#include <client_serialize.h>
+#include <invoice_serialize.h>
+#include <business_serialize.h>
 extern "C"
 {
 
@@ -26,8 +31,25 @@ TEST_GROUP(invoice_model_test)
 	const std::string db_file{"../storage/tests/model_test.db"};
 	const std::string db_password{"123456789"};
         model::invoice invoice_model{db_file, db_password};
+	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
+		data::client client_data{test::generate_client_data()};
+		data::business client_business_data{client_data};
+		data::admin admin_data{test::generate_business_data()};
+		data::business admin_business_data{admin_data};
+		serialize::admin admin_serialize{};
+		serialize::client client_serialize{};
+		serialize::invoice invoice_serialize{};
+		serialize::business business_serialize{};
+		storage::database::sql_parameters admin_sql_parameters{admin_serialize.package_data(admin_data)};
+		storage::database::sql_parameters admin_business_sql_parameters{business_serialize.package_data(admin_business_data)};
+		storage::database::sql_parameters client_business_sql_parameters{business_serialize.package_data(client_business_data)};
+		storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
+		(void)database.select(sql::query::business_details_usert, admin_business_sql_parameters);
+		(void)database.select(sql::query::admin_usert, admin_sql_parameters);
+		(void)database.select(sql::query::business_details_usert, client_business_sql_parameters);
+		(void)database.select(sql::query::client_usert, client_sql_parameters);
 	}
 
 	void teardown()
@@ -52,7 +74,6 @@ TEST(invoice_model_test, save_data_to_database_successfully)
 TEST(invoice_model_test, save_second_invoice_to_database_successfully)
 {
         data::invoice invoice_data{test::generate_invoice_data("invoice model testing")};
-	invoice_data.set_order_number("13245kddf");
 
         CHECK_EQUAL(true, invoice_model.save(invoice_data));
 }

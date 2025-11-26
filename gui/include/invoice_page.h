@@ -82,6 +82,7 @@ namespace gui {
 
 			[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&,
 							  const std::shared_ptr<Gtk::Window>&) override;
+			[[nodiscard]] virtual bool set_database_password(const std::string&) override;
 			[[nodiscard]] virtual bool search(const std::string&) override;
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
@@ -114,7 +115,6 @@ namespace gui {
 
                 private: // Invoice
                         void populate(const std::string&);
-                        void add(const data::pdf_invoice&);
                         void connect_invoice_view();
                         void invoices(const std::unique_ptr<Gtk::ListView>&);
                         void invoice_setup(const Glib::RefPtr<Gtk::ListItem>&);
@@ -131,7 +131,6 @@ namespace gui {
                         void edit_known_invoice(uint);
 
                 private: // helper
-                        void perform_search(const std::string&);
                         void setup(const Glib::RefPtr<Gtk::ListItem>&);
                         void teardown(const Glib::RefPtr<Gtk::ListItem>&);
                         void bind_amount(const Glib::RefPtr<Gtk::ListItem>&);
@@ -151,16 +150,18 @@ namespace gui {
 										     const long long&);
 
                 private: // Member features
+			std::string database_password{""};
                         int number_of_pages{0};
                         bool email_success{false};
 			std::future<bool> email_future;
                         std::string paid_status{"Not Paid"};
                         std::string grand_total{""};
 			std::string business_name{""};
+			data::admin admin_data{};
+			data::client client_data{};
                         data::invoice invoice_edit{};
                         std::string material_total{""};
                         std::string description_total{""};
-                        model::invoice client_invoice{"mint-bill.db", "temp"};
                         Glib::Dispatcher email_dispatcher{};
                         std::vector<std::any> invoices_selected{};
 

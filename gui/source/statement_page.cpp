@@ -91,6 +91,23 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
         return true;
 }
 
+bool gui::statement_page::set_database_password(const std::string& _database_password)
+{
+	bool success{false};
+	if (_database_password.empty() == true)
+	{
+                syslog(LOG_CRIT, "STATEMENT_PAGE: database password is empty - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->database_password = _database_password;
+	}
+
+	return success;
+}
+
 bool gui::statement_page::search(const std::string& _keyword)
 {
         bool searched{true};

@@ -29,6 +29,7 @@ public:
 
 	[[nodiscard]] virtual bool create(const Glib::RefPtr<Gtk::Builder>&,
 					  const std::shared_ptr<Gtk::Window>& _main_window) override;
+        [[nodiscard]] virtual bool set_database_password(const std::string&) override;
 	[[nodiscard]] virtual bool search(const std::string&) override;
 	[[nodiscard]] virtual bool print() override;
 	[[nodiscard]] virtual bool email() override;
@@ -54,6 +55,7 @@ private:
 
 
 private:
+	std::string database_password{""};
 	std::vector<std::any> documents{};
 	std::vector<std::any> invoice_data{};
 	controller::client_statement client_statement{};

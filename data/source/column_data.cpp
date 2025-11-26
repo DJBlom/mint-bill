@@ -10,6 +10,7 @@
 
 
 
+
 namespace limit {
         constexpr std::uint8_t MAX_QUANTITY{9};
         constexpr std::uint16_t MAX_DESCRIPTION{500};
@@ -150,7 +151,7 @@ long long data::column::get_row_number() const
 
 void data::column::set_is_description(const long long& _is_description)
 {
-        if (_is_description == LOGICAL_FALSE || is_description == LOGICAL_TRUE)
+        if (_is_description == LOGICAL_FALSE || _is_description == LOGICAL_TRUE)
         {
                 this->set_flag(FLAG::IS_DESCRIPTION);
                 std::lock_guard<std::mutex> guard(this->column_data);

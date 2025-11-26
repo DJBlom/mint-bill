@@ -17,7 +17,7 @@ storage::database::sql_parameters serialize::client::package_data(const std::any
 	}
 	else
 	{
-		params.emplace_back(client_data.get_name());
+		params.emplace_back(client_data.get_email());
 		params.emplace_back(client_data.get_vat_number());
 		params.emplace_back(client_data.get_statement_schedule());
 	}

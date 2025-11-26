@@ -57,8 +57,8 @@ bool model::client::save(const std::any& _data)
 	}
 	else
         {
-		serialize::client client_serialize{};
 		data::business business_data{client_data};
+		serialize::client client_serialize{};
 		serialize::business business_serialize{};
 		storage::database::sql_parameters client_params{client_serialize.package_data(client_data)};
 		storage::database::sql_parameters business_params{business_serialize.package_data(business_data)};

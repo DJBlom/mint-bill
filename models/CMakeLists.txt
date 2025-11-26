@@ -17,9 +17,13 @@ if(${FILES_IN_DIR} GREATER 0)
         add_library(models
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/admin_model.cpp
+                ${PROJECT_SOURCE_DIR}/source/admin_serialize.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_model.cpp
+                ${PROJECT_SOURCE_DIR}/source/client_serialize.cpp
                 ${PROJECT_SOURCE_DIR}/source/invoice_model.cpp
+                ${PROJECT_SOURCE_DIR}/source/invoice_serialize.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
+                ${PROJECT_SOURCE_DIR}/source/business_serialize.cpp
         )
 
         target_include_directories(models
