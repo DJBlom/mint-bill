@@ -170,17 +170,6 @@ void data::business::set_email(const std::string& _email_addresses)
         {
                 clear_flag(FLAG::EMAIL);
         }
-        // std::regex email_regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
-        // bool correct_email_format{std::regex_search(_email, email_regex)};
-        // if (correct_email_format && (_email.length() <= upper_bound::MAX_ENTRY_LENGTH))
-        // {
-        //         set_flag(FLAG::EMAIL);
-        //         this->email = std::move(_email);
-        // }
-        // else
-        // {
-        //         clear_flag(FLAG::EMAIL);
-        // }
 }
 
 std::string data::business::get_email() const
