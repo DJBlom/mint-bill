@@ -322,7 +322,7 @@ bool gui::invoice_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 							this->description_store->remove_all();
 							this->material_store->remove_all();
 							this->invoice_store->remove_all();
-							this->populate(data.get_business_name());
+							this->populate(data.get_name());
 						}
 						break;
 					case GTK_RESPONSE_NO:
@@ -788,8 +788,8 @@ void gui::invoice_page::edit_known_invoice(uint position)
                          "filename %s, line number %d", __FILE__, __LINE__);
 
 	data::invoice invoice{pdf_invoice.get_invoice()};
-        this->invoice_number->set_text(invoice.get_invoice_number());
-        this->invoice_date->set_text(invoice.get_invoice_date());
+        this->invoice_number->set_text(invoice.get_id());
+        this->invoice_date->set_text(invoice.get_id());
         this->job_card->set_text(invoice.get_job_card_number());
         this->order_number->set_text(invoice.get_order_number());
         this->description_total_label->set_text("Total: R " + invoice.get_description_total());
@@ -1226,9 +1226,9 @@ double gui::invoice_page::compute_grand_total()
 data::invoice gui::invoice_page::extract_invoice_data()
 {
         data::invoice data{};
-        data.set_business_name(this->business_name);
-        data.set_invoice_number(this->invoice_number->get_text());
-        data.set_invoice_date(this->invoice_date->get_text());
+        data.set_name(this->business_name);
+        data.set_id(this->invoice_number->get_text());
+        data.set_date(this->invoice_date->get_text());
         data.set_paid_status("Not Paid");
         data.set_job_card_number(this->job_card->get_text());
         data.set_order_number(this->order_number->get_text());
@@ -1321,7 +1321,7 @@ void gui::invoice_page::populate(const std::string& _business_name)
 		{
 			data::pdf_invoice pdf_latest_invoice(pdf_invoices.back());
 			data::invoice invoice{pdf_latest_invoice.get_invoice()};
-			int new_invoice_number{std::stoi(invoice.get_invoice_number())};
+			int new_invoice_number{std::stoi(invoice.get_id())};
 			++new_invoice_number;
 			this->invoice_number->set_text(std::to_string(new_invoice_number));
 
@@ -1460,7 +1460,7 @@ void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
 
         data::pdf_invoice pdf_invoice{data->pdf_invoice};
 	data::invoice invoice{pdf_invoice.get_invoice()};
-        std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+        std::string details{"# " + invoice.get_id() + ", " + invoice.get_name() + ", " + invoice.get_date() + " "};
         label->set_text(details);
 }
 

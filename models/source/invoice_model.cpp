@@ -61,7 +61,7 @@ std::vector<std::any> model::invoice::load(const std::string& _business_name) co
 				database.select(sql::query::invoice_select, invoice_params)))
 		{
 			data::invoice invoice_data{std::any_cast<data::invoice> (data)};
-			storage::database::sql_parameters column_params = {std::stoi(invoice_data.get_invoice_number())};
+			storage::database::sql_parameters column_params = {std::stoi(invoice_data.get_id())};
 			std::vector<data::column> material_column_data{labor_serialize.extract_data(
 						database.select(sql::query::material_labor_select, column_params)
 					)};
@@ -96,7 +96,7 @@ bool model::invoice::save(const std::any& _data) const
 	else
         {
 		serialize::invoice invoice_serialize{};
-		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_invoice_number())};
+		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_id())};
 		storage::database::sql_parameters invoice_params{invoice_serialize.package_data(invoice_data)};
 		storage::database::sqlite database{this->database_file, this->database_password};
 		if (database.transaction("BEGIN IMMEDIATE;") == false)

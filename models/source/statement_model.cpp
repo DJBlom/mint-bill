@@ -69,9 +69,9 @@ std::vector<std::any> model::statement::load(const std::string& _business_name) 
 				}
 
 				data::invoice invoice_data;
-				invoice_data.set_business_name(_business_name);
-				invoice_data.set_invoice_number(std::to_string(j));
-				invoice_data.set_invoice_date("2023-09-04");
+				invoice_data.set_name(_business_name);
+				invoice_data.set_id(std::to_string(j));
+				invoice_data.set_date("2023-09-04");
 				invoice_data.set_paid_status("Paid");
 				invoice_data.set_job_card_number("24/md");
 				invoice_data.set_order_number("order 123");

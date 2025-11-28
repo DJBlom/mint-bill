@@ -44,9 +44,9 @@ data::invoice retrieve_invoice_data()
                 vec.push_back(expected);
         }
         data::invoice expected;
-        expected.set_business_name("Test admin");
-        expected.set_invoice_number("134");
-        expected.set_invoice_date("2023-09-04");
+        expected.set_name("Test admin");
+        expected.set_id("134");
+        expected.set_date("2023-09-04");
         expected.set_paid_status("Not Paid");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");
@@ -72,9 +72,9 @@ data::invoice retrieve_bad_invoice_data()
                 vec.push_back(expected);
         }
         data::invoice expected;
-        expected.set_business_name("");
-        expected.set_invoice_number("134");
-        expected.set_invoice_date("2023-09-04");
+        expected.set_name("");
+        expected.set_id("134");
+        expected.set_date("2023-09-04");
         expected.set_paid_status("Not Paid");
         expected.set_job_card_number("24/md");
         expected.set_order_number("order 123");

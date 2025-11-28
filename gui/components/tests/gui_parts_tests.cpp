@@ -862,8 +862,8 @@ TEST(statement_columns_test, retrieve_value)
         view->append_column(order_number_column.retrieve_item());
         view->append_column(paid_status_column.retrieve_item());
         view->append_column(price_column.retrieve_item());
-        std::string expected_invoice_number{invoice.get_invoice_number()};
-        std::string expected_date{invoice.get_invoice_date()};
+        std::string expected_invoice_number{invoice.get_id()};
+        std::string expected_date{invoice.get_date()};
         std::string expected_order_number{invoice.get_order_number()};
         std::string expected_paid_status{invoice.get_paid_status()};
         std::string expected_price{invoice.get_grand_total()};

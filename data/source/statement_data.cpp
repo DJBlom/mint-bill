@@ -11,22 +11,20 @@ data::statement::statement(){}
 data::statement::~statement() {}
 
 data::statement::statement(const statement& _copy)
-        : business_name{_copy.business_name}, period_start{_copy.period_start},
-          period_end{_copy.period_end}, schedule{_copy.schedule}, statement_date{_copy.statement_date},
+        : data::billing{_copy}, period_start{_copy.period_start},
+          period_end{_copy.period_end}, schedule{_copy.schedule},
 	  flags{_copy.flags}, statement_data{}, mask{_copy.mask}
 {
 }
 
 data::statement::statement(statement&& _move)
-        : business_name{std::move(_move.business_name)}, period_start{std::move(_move.period_start)},
-          period_end{std::move(_move.period_end)}, schedule{std::move(_move.schedule)}, statement_date{std::move(_move.statement_date)},
+        : data::billing{std::move(_move)}, period_start{std::move(_move.period_start)},
+          period_end{std::move(_move.period_end)}, schedule{std::move(_move.schedule)},
 	  flags{std::move(_move.flags)}, statement_data{}, mask{std::move(_move.mask)}
 {
-	_move.business_name.clear();
 	_move.period_start.clear();
 	_move.period_end.clear();
 	_move.schedule.clear();
-	_move.statement_date.clear();
 	_move.flags = 0x0;
 	_move.mask = this->mask;
 }
@@ -35,17 +33,17 @@ data::statement& data::statement::operator= (const statement& _copy)
 {
         statement temp{_copy};
         std::swap(temp, *this);
+	data::billing::operator=(_copy);
 
         return *this;
 }
 
 data::statement& data::statement::operator= (statement&& _move)
 {
-        std::swap(business_name, _move.business_name);
+	data::billing::operator=(_move);
         std::swap(period_start, _move.period_start);
         std::swap(period_end, _move.period_end);
         std::swap(schedule, _move.schedule);
-        std::swap(statement_date, _move.statement_date);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -54,26 +52,7 @@ data::statement& data::statement::operator= (statement&& _move)
 
 bool data::statement::is_valid() const
 {
-        return this->check_flags();
-}
-
-void data::statement::set_business_name(const std::string& _name)
-{
-        if (!_name.empty() && (_name.length() <= upper_bound::name_length))
-        {
-                set_flag(FLAG::NAME);
-                std::lock_guard<std::mutex> guard(this->statement_data);
-                this->business_name = std::move(_name);
-        }
-        else
-        {
-                clear_flag(FLAG::NAME);
-        }
-}
-
-std::string data::statement::get_business_name() const
-{
-        return this->business_name;
+        return this->check_flags() && data::billing::is_valid();
 }
 
 void data::statement::set_period_start(const std::string& _period_start)
@@ -133,25 +112,6 @@ void data::statement::set_schedule(const std::string& _schedule)
 std::string data::statement::get_schedule() const
 {
         return this->schedule;
-}
-
-void data::statement::set_statement_date(const std::string& _date)
-{
-        if (!_date.empty() && (_date.length() <= upper_bound::string_length))
-        {
-                set_flag(FLAG::DATE);
-                std::lock_guard<std::mutex> guard(this->statement_data);
-                this->statement_date = std::move(_date);
-        }
-        else
-        {
-                clear_flag(FLAG::DATE);
-        }
-}
-
-std::string data::statement::get_statement_date() const
-{
-        return this->statement_date;
 }
 
 bool data::statement::check_flags() const

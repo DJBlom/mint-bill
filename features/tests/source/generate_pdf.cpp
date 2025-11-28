@@ -139,9 +139,9 @@ data::invoice test::generate_invoice_data(const std::string& _desc)
         std::string number{"2"};
 
         data::invoice expected;
-        expected.set_business_name(name);
-        expected.set_invoice_number(number);
-        expected.set_invoice_date(date);
+        expected.set_name(name);
+        expected.set_id(number);
+        expected.set_date(date);
         expected.set_paid_status(paid_status);
         expected.set_job_card_number(card_number);
         expected.set_order_number(order_number);
@@ -186,9 +186,9 @@ data::invoice test::generate_invoice_data(const std::string& _desc, const int& n
         std::string grand_total{"1234.00"};
 
         data::invoice expected;
-        expected.set_business_name(name);
-        expected.set_invoice_number(std::to_string(num));
-        expected.set_invoice_date(date);
+        expected.set_name(name);
+        expected.set_id(std::to_string(num));
+        expected.set_date(date);
         expected.set_job_card_number(card_number);
         expected.set_order_number(order_number);
         expected.set_description_total(description_total);

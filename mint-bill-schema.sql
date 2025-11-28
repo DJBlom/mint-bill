@@ -73,9 +73,26 @@ CREATE TABLE client (
 	statement_schedule 	TEXT NOT NULL
 );
 
+CREATE TABLE statement (
+	statement_id   INTEGER PRIMARY KEY,
+	business_id    INTEGER NOT NULL,
+	period_start   TEXT    NOT NULL,  
+	period_end     TEXT    NOT NULL,  
+	schedule       TEXT    NOT NULL,  
+	statement_date TEXT    NOT NULL,  
+	created_at     TEXT    NOT NULL DEFAULT (datetime('now')),
+	status         TEXT    NOT NULL DEFAULT 'Not Paid',  
+
+	FOREIGN KEY (business_id) REFERENCES client(business_id)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+
+	UNIQUE (business_id, period_start, period_end)
+);
+
 CREATE TABLE invoice (
 	invoice_id		INTEGER PRIMARY KEY,
 	business_id		INTEGER NOT NULL,
+	statement_id		INTEGER,
 	order_number		TEXT NOT NULL,
 	job_card_number		TEXT NOT NULL,
 	date_created		TEXT NOT NULL DEFAULT (date('now')),
@@ -85,6 +102,8 @@ CREATE TABLE invoice (
 	grand_total		TEXT NOT NULL,
 	FOREIGN KEY (business_id) REFERENCES client(business_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (statement_id) REFERENCES statement(statement_id)
+		ON DELETE SET NULL ON UPDATE CASCADE,
 	UNIQUE(business_id, order_number, job_card_number)
 );
 

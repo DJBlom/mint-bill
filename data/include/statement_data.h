@@ -12,9 +12,10 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <billing_data.h>
 
 namespace data {
-struct statement {
+struct statement : public billing {
 public:
 	statement();
 	statement(const statement&);
@@ -23,17 +24,21 @@ public:
 	statement& operator= (statement&&);
 	virtual ~statement();
 
-	[[nodiscard]] virtual bool is_valid() const;
-	virtual void set_business_name(const std::string&);
-	[[nodiscard]] virtual std::string get_business_name() const;
+	[[nodiscard]] virtual bool is_valid() const override;
+	using data::billing::set_id;
+	using data::billing::get_id;
+	using data::billing::set_name;
+	using data::billing::get_name;
+	using data::billing::set_date;
+	using data::billing::get_date;
+	using data::billing::set_paid_status;
+	using data::billing::get_paid_status;
 	virtual void set_period_start(const std::string&);
 	[[nodiscard]] virtual std::string get_period_start() const;
 	virtual void set_period_end(const std::string&);
 	[[nodiscard]] virtual std::string get_period_end() const;
 	virtual void set_schedule(const std::string&);
 	[[nodiscard]] virtual std::string get_schedule() const;
-	virtual void set_statement_date(const std::string&);
-	[[nodiscard]] virtual std::string get_statement_date() const;
 
 private:
 	void set_flag(const int&);
@@ -43,20 +48,17 @@ private:
 private:
 	using mask_type = std::uint8_t;
 
-	std::string business_name{""};
 	std::string period_start{""};
 	std::string period_end{""};
 	std::string schedule{""};
-	std::string statement_date{""};
 	mask_type flags{0x0};
 	std::mutex statement_data{};
-	mask_type mask{0x1F};
+	mask_type mask{0x7};
 	enum FLAG {
-		NAME = 0,
-		PERIOD_START,
+		PERIOD_START = 0,
 		PERIOD_END,
 		SCHEDULE,
-		DATE
+		CREATED_DATE,
 	};
 
 	enum BIT {

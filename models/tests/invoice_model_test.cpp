@@ -91,7 +91,7 @@ TEST(invoice_model_test, load_data_from_database_unsuccessfully)
 TEST(invoice_model_test, load_data_from_database_successfully)
 {
         data::invoice invoice_data{test::generate_invoice_data("invoice model machining")};
-	for (const std::any pdf_invoice_data : invoice_model.load(invoice_data.get_business_name()))
+	for (const std::any pdf_invoice_data : invoice_model.load(invoice_data.get_name()))
 	{
 		data::pdf_invoice data{std::any_cast<data::pdf_invoice> (pdf_invoice_data)};
 		data::admin admin_data{data.get_business()};

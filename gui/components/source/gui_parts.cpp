@@ -120,7 +120,7 @@ void gui::part::statement::columns::invoice_number::bind(const Glib::RefPtr<Gtk:
 	}
 
 	this->value.clear();
-	this->value = col->invoice.get_invoice_number();
+	this->value = col->invoice.get_id();
 	this->value.shrink_to_fit();
 	label->set_text(this->value);
 }
@@ -233,7 +233,7 @@ void gui::part::statement::columns::date::bind(const Glib::RefPtr<Gtk::ListItem>
 	}
 
 	this->value.clear();
-	this->value = col->invoice.get_invoice_date();
+	this->value = col->invoice.get_date();
 	this->value.shrink_to_fit();
 	label->set_text(this->value);
 }
@@ -1143,7 +1143,7 @@ void gui::part::statement::invoice_pdf_view::bind(const Glib::RefPtr<Gtk::ListIt
 
 	data::pdf_invoice pdf_invoice{data->pdf_invoice};
 	data::invoice invoice{pdf_invoice.get_invoice()};
-	std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+	std::string details{"# " + invoice.get_id() + ", " + invoice.get_name() + ", " + invoice.get_date() + " "};
 	label->set_text(details);
 }
 

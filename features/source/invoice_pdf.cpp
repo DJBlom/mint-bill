@@ -225,12 +225,12 @@ bool feature::invoice_pdf::add_invoice(const data::invoice& _data)
         add_new_section();
 
         add_new_line();
-        std::string number{"Invoice #:... " + _data.get_invoice_number()};
+        std::string number{"Invoice #:... " + _data.get_id()};
         if (write_to_pdf(number, font_size::information) == false)
                 return false;
 
         add_new_line();
-        std::string date{"Date:........ " + _data.get_invoice_date()};
+        std::string date{"Date:........ " + _data.get_date()};
         if (write_to_pdf(date, font_size::information) == false)
                 return false;
 

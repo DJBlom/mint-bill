@@ -18,11 +18,11 @@ storage::database::sql_parameters serialize::invoice::package_data(const std::an
 	}
 	else
 	{
-		params.emplace_back(static_cast<long long>(std::stoi(invoice_data.get_invoice_number())));
-		params.emplace_back(invoice_data.get_business_name());
+		params.emplace_back(static_cast<long long>(std::stoi(invoice_data.get_id())));
+		params.emplace_back(invoice_data.get_name());
 		params.emplace_back(invoice_data.get_order_number());
 		params.emplace_back(invoice_data.get_job_card_number());
-		params.emplace_back(invoice_data.get_invoice_date());
+		params.emplace_back(invoice_data.get_date());
 		params.emplace_back(invoice_data.get_paid_status());
 		params.emplace_back(invoice_data.get_material_total());
 		params.emplace_back(invoice_data.get_description_total());
@@ -66,14 +66,14 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 				{
 					if constexpr (std::is_same_v<T, std::string>)
 					{
-						data.set_business_name(arg);
+						data.set_name(arg);
 					}
 				}
 				else if (col_index == DATA_FIELDS::INVOICE_NUMBER)
 				{
 					if constexpr (std::is_same_v<T, sqlite3_int64>)
 					{
-						data.set_invoice_number(std::to_string(arg));
+						data.set_id(std::to_string(arg));
 					}
 				}
 				else if (col_index == DATA_FIELDS::ORDER_NUMBER)
@@ -94,7 +94,7 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 				{
 					if constexpr (std::is_same_v<T, std::string>)
 					{
-						data.set_invoice_date(arg);
+						data.set_date(arg);
 					}
 				}
 				else if (col_index == DATA_FIELDS::PAID_STATUS)
@@ -150,7 +150,7 @@ storage::database::sql_parameters serialize::labor::package_data(
 	}
 	else
 	{
-		params.emplace_back(_invoice_data.get_business_name());
+		params.emplace_back(_invoice_data.get_name());
 		params.emplace_back(_invoice_data.get_order_number());
 		params.emplace_back(_invoice_data.get_job_card_number());
 		params.emplace_back(_column_data.get_row_number());
