@@ -60,8 +60,19 @@ bool model::client::save(const std::any& _data)
 		data::business business_data{client_data};
 		serialize::client client_serialize{};
 		serialize::business business_serialize{};
-		storage::database::sql_parameters client_params{client_serialize.package_data(client_data)};
-		storage::database::sql_parameters business_params{business_serialize.package_data(business_data)};
+		storage::database::sql_parameters client_params{
+			client_data.get_email(),
+			client_data.get_vat_number(),
+			client_data.get_statement_schedule()
+		};
+		storage::database::sql_parameters business_params{
+			business_data.get_name(),
+			business_data.get_address(),
+			business_data.get_area_code(),
+			business_data.get_town(),
+			business_data.get_cellphone(),
+			business_data.get_email()
+		};
 		storage::database::sqlite database{this->database_file, this->database_password};
 		if (database.transaction("BEGIN IMMEDIATE;") == false)
 		{

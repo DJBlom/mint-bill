@@ -789,7 +789,7 @@ void gui::invoice_page::edit_known_invoice(uint position)
 
 	data::invoice invoice{pdf_invoice.get_invoice()};
         this->invoice_number->set_text(invoice.get_id());
-        this->invoice_date->set_text(invoice.get_id());
+        this->invoice_date->set_text(invoice.get_date());
         this->job_card->set_text(invoice.get_job_card_number());
         this->order_number->set_text(invoice.get_order_number());
         this->description_total_label->set_text("Total: R " + invoice.get_description_total());

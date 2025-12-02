@@ -37,8 +37,6 @@ public:
 	[[nodiscard]] virtual std::string get_period_start() const;
 	virtual void set_period_end(const std::string&);
 	[[nodiscard]] virtual std::string get_period_end() const;
-	virtual void set_schedule(const std::string&);
-	[[nodiscard]] virtual std::string get_schedule() const;
 
 private:
 	void set_flag(const int&);
@@ -50,15 +48,12 @@ private:
 
 	std::string period_start{""};
 	std::string period_end{""};
-	std::string schedule{""};
 	mask_type flags{0x0};
 	std::mutex statement_data{};
-	mask_type mask{0x7};
+	mask_type mask{0x3};
 	enum FLAG {
 		PERIOD_START = 0,
 		PERIOD_END,
-		SCHEDULE,
-		CREATED_DATE,
 	};
 
 	enum BIT {

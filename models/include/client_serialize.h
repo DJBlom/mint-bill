@@ -15,7 +15,6 @@ public:
 	virtual ~client() override;
 
 	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) override;
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) override;
 
 private:
 	[[nodiscard]] data::client collect_values(const storage::database::part::rows&);

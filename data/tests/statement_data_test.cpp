@@ -22,8 +22,8 @@ extern "C"
  * 2) Retrieve the start period. (Done)
  * 3) Assign the end period. (Done)
  * 4) Retrieve the end period. (Done)
- * 5) Assign the schedule. (Done)
- * 6) Retrieve the schedule. (Done)
+ // * 5) Assign the schedule. (Done)
+ // * 6) Retrieve the schedule. (Done)
  * 7) Assign the statement date. (Done)
  * 8) Retrieve the statement date. (Done)
  * 9) Ensure none of the fields are empty. (Done)
@@ -63,22 +63,12 @@ TEST(statement_data_test, handle_the_end_period)
         CHECK_EQUAL(expected, result);
 }
 
-TEST(statement_data_test, handle_the_schedule)
-{
-        std::string expected{"4,1"};
-	statement_data.set_schedule(expected);
-        std::string result{statement_data.get_schedule()};
-
-        CHECK_EQUAL(expected, result);
-}
-
 TEST(statement_data_test, handle_the_copy_of_the_data)
 {
 	statement_data.set_id("1");
 	statement_data.set_name("test business");
 	statement_data.set_period_start("Nov-1-2025");
 	statement_data.set_period_end("Nov-28-2025");
-	statement_data.set_schedule("4,1");
 	statement_data.set_date("Nov-5-2025");
 	statement_data.set_paid_status("Not Paid");
         data::statement result;
@@ -93,7 +83,6 @@ TEST(statement_data_test, handle_the_move_of_the_data)
 	statement_data.set_name("test business");
 	statement_data.set_period_start("Nov-1-2025");
 	statement_data.set_period_end("Nov-28-2025");
-	statement_data.set_schedule("4,1");
 	statement_data.set_date("Nov-5-2025");
 	statement_data.set_paid_status("Not Paid");
         data::statement result;
@@ -108,7 +97,6 @@ TEST(statement_data_test, handle_copy_constructing_of_the_data)
 	statement_data.set_name("test business");
 	statement_data.set_period_start("Nov-1-2025");
 	statement_data.set_period_end("Nov-28-2025");
-	statement_data.set_schedule("4,1");
 	statement_data.set_date("Nov-5-2025");
 	statement_data.set_paid_status("Not Paid");
         data::statement result{statement_data};
@@ -122,7 +110,6 @@ TEST(statement_data_test, handle_move_constructing_of_the_data)
 	statement_data.set_name("test business");
 	statement_data.set_period_start("Nov-1-2025");
 	statement_data.set_period_end("Nov-28-2025");
-	statement_data.set_schedule("4,1");
 	statement_data.set_date("Nov-5-2025");
 	statement_data.set_paid_status("Not Paid");
         data::statement result{std::move(statement_data)};
@@ -136,7 +123,6 @@ TEST(statement_data_test, handle_failure_to_set_data)
 	statement_data.set_name("test business");
 	statement_data.set_period_start("Nov-1-2025");
 	statement_data.set_period_end("Nov-28-2025");
-	statement_data.set_schedule("");
 	statement_data.set_date("");
 	statement_data.set_paid_status("Not Paid");
 
@@ -152,7 +138,6 @@ TEST(statement_data_test, handle_data_limits)
 	statement_data.set_name(limit);
 	statement_data.set_period_start(limit);
 	statement_data.set_period_end(limit);
-	statement_data.set_schedule(limit);
 	statement_data.set_date(limit);
 	statement_data.set_paid_status(limit);
 

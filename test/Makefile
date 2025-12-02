@@ -13,6 +13,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 
 # CPPUTEST_EXE_FLAGS +=-xg "email_test client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-xg "client_invoice_test"
+# CPPUTEST_EXE_FLAGS +=-sg "date_manager_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_invoice_test"
 # CPPUTEST_EXE_FLAGS +=-sg "business_data_test"
 # CPPUTEST_EXE_FLAGS +=-sg "admin_data_test"
@@ -31,7 +32,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "client_serialize_test"
 # CPPUTEST_EXE_FLAGS +=-sg "column_serialize_test"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_serialize_test"
-CPPUTEST_EXE_FLAGS +=-sg "statement_serialize_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_serialize_test"
 # CPPUTEST_EXE_FLAGS +=-sg "pdf_window_test"
 # CPPUTEST_EXE_FLAGS +=-sg "sub_button_test"
 # CPPUTEST_EXE_FLAGS +=-sg "stack_test"

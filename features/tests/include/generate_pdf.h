@@ -11,6 +11,7 @@
 #include <client_data.h>
 #include <invoice_data.h>
 #include <admin_data.h>
+#include <statement_data.h>
 
 namespace test {
         bool generate_invoice_pdf(const std::string&, const std::string&);
@@ -20,5 +21,6 @@ namespace test {
         data::client generate_client_data_multiple_emails();
         data::invoice generate_invoice_data(const std::string&);
         data::invoice generate_invoice_data(const std::string&, const int&);
+	data::statement generate_statement_data();
 }
 #endif

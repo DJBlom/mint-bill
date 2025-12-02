@@ -39,6 +39,7 @@ BEGIN;
 DROP TABLE IF EXISTS business_details;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS statement;
 DROP TABLE IF EXISTS invoice;
 DROP TABLE IF EXISTS labor;
 
@@ -78,10 +79,8 @@ CREATE TABLE statement (
 	business_id    INTEGER NOT NULL,
 	period_start   TEXT    NOT NULL,  
 	period_end     TEXT    NOT NULL,  
-	schedule       TEXT    NOT NULL,  
 	statement_date TEXT    NOT NULL,  
-	created_at     TEXT    NOT NULL DEFAULT (datetime('now')),
-	status         TEXT    NOT NULL DEFAULT 'Not Paid',  
+	paid_status    TEXT    NOT NULL DEFAULT 'Not Paid', 
 
 	FOREIGN KEY (business_id) REFERENCES client(business_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,

@@ -4,27 +4,27 @@
 
 serialize::admin::~admin() {}
 
-storage::database::sql_parameters serialize::admin::package_data(const std::any& _data)
-{
-	storage::database::sql_parameters params{};
-	data::admin admin_data{std::any_cast<data::admin>(_data)};
-	if (admin_data.is_valid() == false)
-	{
-		syslog(LOG_CRIT, "ADMIN_SERIALIZE: argument is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		params.emplace_back(admin_data.get_name());
-		params.emplace_back(admin_data.get_bank());
-		params.emplace_back(admin_data.get_branch_code());
-		params.emplace_back(admin_data.get_account_number());
-		params.emplace_back(admin_data.get_password());
-		params.emplace_back(admin_data.get_client_message());
-	}
-
-	return params;
-}
+// storage::database::sql_parameters serialize::admin::package_data(const std::any& _data)
+// {
+// 	storage::database::sql_parameters params{};
+// 	data::admin admin_data{std::any_cast<data::admin>(_data)};
+// 	if (admin_data.is_valid() == false)
+// 	{
+// 		syslog(LOG_CRIT, "ADMIN_SERIALIZE: argument is not valid - "
+// 				 "filename %s, line number %d", __FILE__, __LINE__);
+// 	}
+// 	else
+// 	{
+// 		params.emplace_back(admin_data.get_name());
+// 		params.emplace_back(admin_data.get_bank());
+// 		params.emplace_back(admin_data.get_branch_code());
+// 		params.emplace_back(admin_data.get_account_number());
+// 		params.emplace_back(admin_data.get_password());
+// 		params.emplace_back(admin_data.get_client_message());
+// 	}
+//
+// 	return params;
+// }
 
 std::any serialize::admin::extract_data(const storage::database::part::rows& _rows)
 {

@@ -199,3 +199,16 @@ data::invoice test::generate_invoice_data(const std::string& _desc, const int& n
 
         return expected;
 }
+
+data::statement test::generate_statement_data()
+{
+	data::statement expected{};
+	expected.set_id("1");
+	expected.set_name("Client admin");
+	expected.set_date("Dec-1-2025");
+	expected.set_paid_status("Not paid");
+	expected.set_period_start("Dec-1-2025");
+	expected.set_period_end("Dec-11-2025");
+
+        return expected;
+}

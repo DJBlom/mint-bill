@@ -12,19 +12,18 @@ data::statement::~statement() {}
 
 data::statement::statement(const statement& _copy)
         : data::billing{_copy}, period_start{_copy.period_start},
-          period_end{_copy.period_end}, schedule{_copy.schedule},
-	  flags{_copy.flags}, statement_data{}, mask{_copy.mask}
+          period_end{_copy.period_end}, flags{_copy.flags},
+	  statement_data{}, mask{_copy.mask}
 {
 }
 
 data::statement::statement(statement&& _move)
         : data::billing{std::move(_move)}, period_start{std::move(_move.period_start)},
-          period_end{std::move(_move.period_end)}, schedule{std::move(_move.schedule)},
-	  flags{std::move(_move.flags)}, statement_data{}, mask{std::move(_move.mask)}
+          period_end{std::move(_move.period_end)}, flags{std::move(_move.flags)},
+	  statement_data{}, mask{std::move(_move.mask)}
 {
 	_move.period_start.clear();
 	_move.period_end.clear();
-	_move.schedule.clear();
 	_move.flags = 0x0;
 	_move.mask = this->mask;
 }
@@ -43,7 +42,6 @@ data::statement& data::statement::operator= (statement&& _move)
 	data::billing::operator=(_move);
         std::swap(period_start, _move.period_start);
         std::swap(period_end, _move.period_end);
-        std::swap(schedule, _move.schedule);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
 
@@ -91,27 +89,6 @@ void data::statement::set_period_end(const std::string& _period_end)
 std::string data::statement::get_period_end() const
 {
         return this->period_end;
-}
-
-void data::statement::set_schedule(const std::string& _schedule)
-{
-        std::regex sched_regex(R"(^[1-4],[1-7]$)");
-        bool format_correct{std::regex_search(_schedule, sched_regex)};
-        if (!_schedule.empty() && format_correct)
-        {
-                set_flag(FLAG::SCHEDULE);
-                std::lock_guard<std::mutex> guard(this->statement_data);
-                this->schedule = std::move(_schedule);
-        }
-        else
-        {
-                clear_flag(FLAG::SCHEDULE);
-        }
-}
-
-std::string data::statement::get_schedule() const
-{
-        return this->schedule;
 }
 
 bool data::statement::check_flags() const

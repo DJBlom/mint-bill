@@ -37,27 +37,27 @@ std::any serialize::business::extract_data(const storage::database::part::rows& 
 	return business_data;
 }
 
-storage::database::sql_parameters serialize::business::package_data(const std::any& _data)
-{
-	storage::database::sql_parameters params{};
-	data::business business_data{std::any_cast<data::business>(_data)};
-	if (business_data.is_valid() == false)
-	{
-		syslog(LOG_CRIT, "BUSINESS_SERIALIZE: argument is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		params.emplace_back(business_data.get_name());
-		params.emplace_back(business_data.get_address());
-		params.emplace_back(business_data.get_area_code());
-		params.emplace_back(business_data.get_town());
-		params.emplace_back(business_data.get_cellphone());
-		params.emplace_back(business_data.get_email());
-	}
-
-	return params;
-}
+// storage::database::sql_parameters serialize::business::package_data(const std::any& _data)
+// {
+// 	storage::database::sql_parameters params{};
+// 	data::business business_data{std::any_cast<data::business>(_data)};
+// 	if (business_data.is_valid() == false)
+// 	{
+// 		syslog(LOG_CRIT, "BUSINESS_SERIALIZE: argument is not valid - "
+// 				 "filename %s, line number %d", __FILE__, __LINE__);
+// 	}
+// 	else
+// 	{
+// 		params.emplace_back(business_data.get_name());
+// 		params.emplace_back(business_data.get_address());
+// 		params.emplace_back(business_data.get_area_code());
+// 		params.emplace_back(business_data.get_town());
+// 		params.emplace_back(business_data.get_cellphone());
+// 		params.emplace_back(business_data.get_email());
+// 	}
+//
+// 	return params;
+// }
 
 std::vector<std::string> serialize::business::collect_values(const storage::database::part::rows& _rows)
 {

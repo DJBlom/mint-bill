@@ -16,7 +16,7 @@
 #include <admin_serialize.h>
 #include <client_serialize.h>
 #include <invoice_serialize.h>
-
+#include <date_manager.h>
 
 
 model::invoice::invoice(const std::string& _database_file, const std::string& _database_password)
@@ -97,8 +97,34 @@ bool model::invoice::save(const std::any& _data) const
         {
 		serialize::invoice invoice_serialize{};
 		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_id())};
-		storage::database::sql_parameters invoice_params{invoice_serialize.package_data(invoice_data)};
 		storage::database::sqlite database{this->database_file, this->database_password};
+
+		storage::database::sql_parameters client_params = {invoice_data.get_name()};
+		serialize::client client_serialize{};
+		data::client client_data{
+			std::any_cast<data::client>(
+				client_serialize.extract_data(
+					database.select(sql::query::invoice_client_select, client_params)
+				)
+			)
+		};
+
+		utility::date_manager date_manager{};
+		utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+		storage::database::sql_parameters invoice_params{
+			static_cast<long long>(std::stoi(invoice_data.get_id())),
+			invoice_data.get_name(),
+			invoice_data.get_name(),
+			pb.period_start,
+			pb.period_end,
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			invoice_data.get_date(),
+			invoice_data.get_paid_status(),
+			invoice_data.get_material_total(),
+			invoice_data.get_description_total(),
+			invoice_data.get_grand_total()
+		};
 		if (database.transaction("BEGIN IMMEDIATE;") == false)
 		{
 			if (database.transaction("ROLLBACK;") == false)
@@ -114,7 +140,7 @@ bool model::invoice::save(const std::any& _data) const
 				syslog(LOG_CRIT, "INVOICE_MODEL: failed to rollback - "
 						"filename %s, line number %d", __FILE__, __LINE__);
 			}
-			return false;
+			return success;
 		}
 		else if (database.usert(sql::query::invoice_usert, invoice_params) == false)
 		{
@@ -128,7 +154,16 @@ bool model::invoice::save(const std::any& _data) const
 		serialize::labor labor_serialize{};
 		for (const data::column& column_data : invoice_data.get_description_column())
 		{
-			storage::database::sql_parameters description_params{labor_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters description_params{
+				invoice_data.get_name(),
+				invoice_data.get_order_number(),
+				invoice_data.get_job_card_number(),
+				column_data.get_row_number(),
+				column_data.get_is_description(),
+				column_data.get_quantity(),
+				column_data.get_description(),
+				column_data.get_amount(),
+			};
 			if (database.usert(sql::query::labor_usert, description_params) == false)
 			{
 				if (database.transaction("ROLLBACK;") == false)
@@ -141,7 +176,16 @@ bool model::invoice::save(const std::any& _data) const
 
 		for (const data::column& column_data : invoice_data.get_material_column())
 		{
-			storage::database::sql_parameters material_params{labor_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters material_params{
+				invoice_data.get_name(),
+				invoice_data.get_order_number(),
+				invoice_data.get_job_card_number(),
+				column_data.get_row_number(),
+				column_data.get_is_description(),
+				column_data.get_quantity(),
+				column_data.get_description(),
+				column_data.get_amount(),
+			};
 			if (database.usert(sql::query::labor_usert, material_params) == false)
 			{
 				if (database.transaction("ROLLBACK;") == false)

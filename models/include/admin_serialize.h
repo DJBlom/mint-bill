@@ -14,7 +14,6 @@ public:
 	admin& operator= (admin&&) = delete;
 	virtual ~admin() override;
 
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) override;
 	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) override;
 
 private:
