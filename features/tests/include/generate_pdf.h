@@ -8,6 +8,8 @@
 #ifndef _TEST_GENERATE_PDF_H_
 #define _TEST_GENERATE_PDF_H_
 #include <fstream>
+#include <any>
+#include <vector>
 #include <client_data.h>
 #include <invoice_data.h>
 #include <admin_data.h>
@@ -22,5 +24,7 @@ namespace test {
         data::invoice generate_invoice_data(const std::string&);
         data::invoice generate_invoice_data(const std::string&, const int&);
 	data::statement generate_statement_data();
+	std::vector<std::any> get_pdf_statements(const std::string& _business_name);
+	std::vector<std::any> get_pdf_invoices(const std::string& _business_name);
 }
 #endif

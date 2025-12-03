@@ -79,7 +79,7 @@ CREATE TABLE statement (
 	business_id    INTEGER NOT NULL,
 	period_start   TEXT    NOT NULL,  
 	period_end     TEXT    NOT NULL,  
-	statement_date TEXT    NOT NULL,  
+	statement_date TEXT    NOT NULL DEFAULT (date('now')),
 	paid_status    TEXT    NOT NULL DEFAULT 'Not Paid', 
 
 	FOREIGN KEY (business_id) REFERENCES client(business_id)

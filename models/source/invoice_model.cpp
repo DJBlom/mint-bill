@@ -16,6 +16,7 @@
 #include <admin_serialize.h>
 #include <client_serialize.h>
 #include <invoice_serialize.h>
+#include <statement_serialize.h>
 #include <date_manager.h>
 
 
@@ -95,22 +96,46 @@ bool model::invoice::save(const std::any& _data) const
 	}
 	else
         {
-		serialize::invoice invoice_serialize{};
-		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_id())};
 		storage::database::sqlite database{this->database_file, this->database_password};
+		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_id())};
 
-		storage::database::sql_parameters client_params = {invoice_data.get_name()};
+		storage::database::sql_parameters params = {invoice_data.get_name()};
 		serialize::client client_serialize{};
 		data::client client_data{
 			std::any_cast<data::client>(
 				client_serialize.extract_data(
-					database.select(sql::query::invoice_client_select, client_params)
+					database.select(sql::query::invoice_client_select, params)
 				)
 			)
 		};
 
 		utility::date_manager date_manager{};
 		utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+		serialize::statement statement_serialize{};
+		storage::database::sql_parameters statement_params{};
+		for (const std::any& stmt_data : statement_serialize.extract_data(
+					database.select(sql::query::statement_select, params)))
+		{
+			data::statement statement_data{std::any_cast<data::statement>(stmt_data)};
+			if (statement_data.is_valid() == true)
+			{
+				statement_params.emplace_back(statement_data.get_name());
+				statement_params.emplace_back(statement_data.get_period_start());
+				statement_params.emplace_back(statement_data.get_period_end());
+				statement_params.emplace_back(statement_data.get_paid_status());
+
+			}
+			else
+			{
+				statement_params.emplace_back(invoice_data.get_name());
+				statement_params.emplace_back(pb.period_start);
+				statement_params.emplace_back(pb.period_end);
+				statement_params.emplace_back("Not Paid");
+			}
+			break;
+		}
+
+
 		storage::database::sql_parameters invoice_params{
 			static_cast<long long>(std::stoi(invoice_data.get_id())),
 			invoice_data.get_name(),
@@ -125,6 +150,7 @@ bool model::invoice::save(const std::any& _data) const
 			invoice_data.get_description_total(),
 			invoice_data.get_grand_total()
 		};
+
 		if (database.transaction("BEGIN IMMEDIATE;") == false)
 		{
 			if (database.transaction("ROLLBACK;") == false)
@@ -133,7 +159,15 @@ bool model::invoice::save(const std::any& _data) const
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 		}
-		if (database.usert(sql::query::labor_delete_all_for_invoice, labor_delete_all_params) == false)
+		if (database.usert(sql::query::statement_usert, statement_params) == false)
+		{
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "INVOICE_MODEL: failed to rollback - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else if (database.usert(sql::query::labor_delete_all_for_invoice, labor_delete_all_params) == false)
 		{
 			if (database.transaction("ROLLBACK;") == false)
 			{

@@ -39,15 +39,13 @@ constexpr const char* statement_usert{R"sql(
 		business_id,
 		period_start,
 		period_end,
-		statement_date,
 		paid_status
 	) VALUES (
 		(SELECT c.business_id
 		FROM client c
 		JOIN business_details b ON b.business_id = c.business_id
-		WHERE b.business_name = ?), ?, ?, ?, ?)
+		WHERE b.business_name = ?), ?, ?, ?)
 	ON CONFLICT (business_id, period_start, period_end) DO UPDATE SET
-		statement_date = excluded.statement_date,
 		paid_status    = excluded.paid_status;
 )sql"};
 
@@ -64,6 +62,25 @@ constexpr const char* statement_select{R"sql(
 	JOIN business_details b ON b.business_id = c.business_id
 	WHERE b.business_name = ?
 	ORDER BY s.period_start DESC;
+)sql"};
+
+constexpr const char* statement_invoices_select{R"sql(
+	SELECT
+		i.statement_id,
+		i.invoice_id,
+		i.order_number,
+		i.job_card_number,
+		i.date_created,
+		i.paid_status,
+		i.material_total,
+		i.description_total,
+		i.grand_total
+	FROM invoice i
+	JOIN statement s       ON s.statement_id = i.statement_id
+	JOIN client c          ON c.business_id = s.business_id
+	JOIN business_details b ON b.business_id = c.business_id
+	WHERE b.business_name = ?
+	ORDER BY s.period_start DESC, i.date_created ASC;
 )sql"};
 }
 }

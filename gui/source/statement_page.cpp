@@ -10,6 +10,7 @@
 #include <email.h>
 #include <algorithm>
 #include <printer.h>
+#include <config.h>
 
 #include <iostream>
 
@@ -139,7 +140,8 @@ bool gui::statement_page::search(const std::string& _keyword)
 	else
 	{
 		std::vector<std::any> pdf_statements{};
-		for (const std::any& data : this->client_statement.load(_keyword))
+		model::statement statement_model{app::config::path_to_database_file, this->database_password};
+		for (const std::any& data : statement_model.load(_keyword))
 		{
 			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
 			pdf_statements.emplace_back(pdf_statement);
@@ -262,7 +264,9 @@ bool gui::statement_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 						else
 						{
 							this->email_future = std::move(std::async(std::launch::async, [this] () {
-								data::email data{this->client_statement.prepare_for_email(this->documents)};
+								model::statement statement_model{app::config::path_to_database_file,
+												 this->database_password};
+								data::email data{statement_model.prepare_for_email(this->documents)};
 								feature::email email;
 								bool result{email.send(data)};
 								this->email_dispatcher.emit();
@@ -321,7 +325,9 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 						}
 						else
 						{
-							std::vector<std::string> data{this->client_statement.prepare_for_print(this->documents)};
+							model::statement statement_model{app::config::path_to_database_file,
+											 this->database_password};
+							std::vector<std::string> data{statement_model.prepare_for_print(this->documents)};
 							gui::part::printer printer{"statement"};
 							if (printer.print(data, _main_window) == false)
 							{
@@ -357,14 +363,14 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->save_alert.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create save dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create save dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -380,6 +386,7 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 						}
 						else
 						{
+							model::statement statement_model{app::config::path_to_database_file, this->database_password};
 							// Code below should be removed and a call to save the data to DB should occur.
 							for (const std::any& data : this->invoice_data)
 							{

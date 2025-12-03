@@ -6,104 +6,160 @@
  * NOTE:
  *******************************************************/
 #include <future>
+#include <syslog.h>
+#include <sqlite.h>
 #include <algorithm>
 #include <statement_pdf.h>
 #include <statement_model.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
+#include <admin_data.h>
+#include <client_data.h>
+#include <invoice_data.h>
+#include <admin_serialize.h>
+#include <client_serialize.h>
+#include <invoice_serialize.h>
+#include <statement_serialize.h>
+#include <date_manager.h>
 
 
-#include <iostream>
+
+model::statement::statement(const std::string& _database_file, const std::string& _database_password)
+	: database_file{_database_file}, database_password{_database_password} {}
 
 model::statement::~statement() {}
 
 std::vector<std::any> model::statement::load(const std::string& _business_name) const
 {
-	std::vector<std::any> temp{};
+	std::vector<std::any> pdf_statements_data{};
 	if (_business_name.empty())
 	{
-
+		syslog(LOG_CRIT, "STATEMENT_MODEL: argument not valid - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
-		for (int i = 0; i < 100; ++i)
+		storage::database::sqlite database{this->database_file, this->database_password};
+		serialize::admin admin_serialize{};
+		data::admin admin_data{
+			std::any_cast<data::admin>(
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_select)
+				)
+			)
+		};
+
+		storage::database::sql_parameters client_params = {_business_name};
+		serialize::client client_serialize{};
+		data::client client_data{
+			std::any_cast<data::client>(
+				client_serialize.extract_data(
+					database.select(sql::query::client_select, client_params)
+				)
+			)
+		};
+
+		serialize::invoice invoice_serialize{};
+		serialize::statement statement_serialize{};
+		storage::database::sql_parameters params = {_business_name};
+		for (const std::any& stmt_sql_data : statement_serialize.extract_data(
+				database.select(sql::query::statement_select, params)))
 		{
-			data::pdf_invoice pdf_invoice_data{};
-			data::client client_data;
-			client_data.set_name(_business_name);
-			client_data.set_address("Geelsterd 8");
-			client_data.set_area_code("543543");
-			client_data.set_town("George");
-			client_data.set_cellphone("0832315944");
-			client_data.set_email("dmnsstmtest@gmail.com dawidjblom@gmail.com");
-			client_data.set_vat_number("3241324321413");
-			client_data.set_statement_schedule("4,4");
-			pdf_invoice_data.set_client(client_data);
-
-			data::admin business_data;
-			business_data.set_name("T.M Engineering");
-			business_data.set_address("geelsterd 8");
-			business_data.set_area_code("5432");
-			business_data.set_town("george");
-			business_data.set_cellphone("0832315944");
-			business_data.set_email("dmnsstmtest@gmail.com");
-			business_data.set_bank("Standard Bank");
-			business_data.set_branch_code("043232");
-			business_data.set_account_number("0932443824");
-			business_data.set_client_message("Thank you for your support");
-			business_data.set_password("bxwx eaku ndjj ltda");
-			pdf_invoice_data.set_business(business_data);
-
-			std::vector<data::pdf_invoice> pdf_invoices{};
-			for (int j = 0; j < 50; ++j)
+			float total{0.0f};
+			data::statement statement_data{std::any_cast<data::statement> (stmt_sql_data)};
+			serialize::labor labor_serialize{};
+			std::vector<data::pdf_invoice> pdf_invoices_data{};
+			storage::database::sql_parameters invoice_params = {_business_name};
+			for (const std::any& data : invoice_serialize.extract_data(
+					database.select(sql::query::invoice_select, invoice_params)))
 			{
-				const int size{50};
-				std::vector<data::column> vec{};
-				for (unsigned int k = 0; k < size; ++k)
-				{
-					data::column invoice_column_data{};
-					invoice_column_data.set_quantity(k);
-					invoice_column_data.set_description("machining");
-					invoice_column_data.set_amount(55554 + k + .0);
-					vec.push_back(invoice_column_data);
-				}
+				data::invoice invoice_data{std::any_cast<data::invoice> (data)};
+				storage::database::sql_parameters column_params = {std::stoi(invoice_data.get_id())};
+				std::vector<data::column> material_column_data{labor_serialize.extract_data(
+							database.select(sql::query::material_labor_select, column_params)
+						)};
+				std::vector<data::column> description_column_data{labor_serialize.extract_data(
+							database.select(sql::query::description_labor_select, column_params)
+						)};
 
-				data::invoice invoice_data;
-				invoice_data.set_name(_business_name);
-				invoice_data.set_id(std::to_string(j));
-				invoice_data.set_date("2023-09-04");
-				invoice_data.set_paid_status("Paid");
-				invoice_data.set_job_card_number("24/md");
-				invoice_data.set_order_number("order 123");
-				invoice_data.set_description_total("1235.00");
-				invoice_data.set_material_total("1237.00");
+				invoice_data.set_material_column(material_column_data);
+				invoice_data.set_description_column(description_column_data);
 
-				std::ostringstream price{""};
-				price << std::fixed << std::setprecision(2) << vec[j].get_amount();
-				invoice_data.set_grand_total(price.str());
-				invoice_data.set_material_column(vec);
-				invoice_data.set_description_column(vec);
+				data::pdf_invoice pdf_invoice_data{};
 				pdf_invoice_data.set_invoice(invoice_data);
-				pdf_invoices.push_back(pdf_invoice_data);
-			}
-			data::pdf_statement pdf_statement_data{};
-			pdf_statement_data.set_number(std::to_string(i));
-			pdf_statement_data.set_date("02/24/2025");
-			pdf_statement_data.set_total("2056.00");
-			pdf_statement_data.set_pdf_invoices(pdf_invoices);
+				pdf_invoice_data.set_client(client_data);
+				pdf_invoice_data.set_business(admin_data);
 
-			temp.push_back(pdf_statement_data);
+				total += std::stof(invoice_data.get_grand_total());
+				pdf_invoices_data.emplace_back(std::move(pdf_invoice_data));
+			}
+
+			std::ostringstream total_ss{""};
+			total_ss << std::fixed << std::setprecision(2) << total;
+
+			data::pdf_statement pdf_statement_data{};
+			pdf_statement_data.set_number(statement_data.get_id());
+			pdf_statement_data.set_date(statement_data.get_date());
+			pdf_statement_data.set_total(total_ss.str());
+			pdf_statement_data.set_pdf_invoices(pdf_invoices_data);
+
+			pdf_statements_data.push_back(std::move(pdf_statement_data));
 		}
 	}
 
-	return temp;
+	return pdf_statements_data;
 }
 
 bool model::statement::save(const std::any& _data) const
 {
-	(void)_data;
+        bool success{false};
+	data::statement statement_data{std::any_cast<data::statement> (_data)};
+        if (statement_data.is_valid() == false)
+	{
+		syslog(LOG_CRIT, "STATEMENT_MODEL: invalid argument - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+        {
+		storage::database::sqlite database{this->database_file, this->database_password};
+		storage::database::sql_parameters statement_params = {
+			statement_data.get_name(),
+			statement_data.get_period_start(),
+			statement_data.get_period_end(),
+			statement_data.get_paid_status()
+		};
 
-	return false;
+		if (database.transaction("BEGIN IMMEDIATE;") == false)
+		{
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "STATEMENT_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else if (database.usert(sql::query::statement_usert, statement_params) == false)
+		{
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "STATEMENT_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else if (database.transaction("COMMIT;") == false)
+		{
+			if (database.transaction("ROLLBACK;") == false)
+			{
+				syslog(LOG_CRIT, "STATEMENT_MODEL: failed to rollback - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else
+		{
+			success = true;
+		}
+        }
+
+        return success;
 }
 
 data::email model::statement::prepare_for_email(const std::vector<std::any>& _pdf_statements) const
@@ -122,10 +178,6 @@ data::email model::statement::prepare_for_email(const std::vector<std::any>& _pd
 	}
 	email_data.set_subject("Statement");
 	email_data.set_attachments(this->convert_pdfs_to_strings(_pdf_statements));
-	if (email_data.is_valid())
-	{
-		std::cout << "Email data is valid\n";
-	}
 
 	return email_data;
 }

@@ -12,6 +12,7 @@
 #include <sqlite.h>
 #include <generate_pdf.h>
 #include <invoice_model.h>
+#include <statement_model.h>
 #include <admin_serialize.h>
 #include <client_serialize.h>
 #include <invoice_serialize.h>
@@ -34,6 +35,8 @@ TEST_GROUP(invoice_model_test)
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
+		model::statement statement_model{db_file, db_password};
+		(void)statement_model.save(test::generate_statement_data());
 		data::client client_data{test::generate_client_data()};
 		data::business client_business_data{client_data};
 		data::admin admin_data{test::generate_business_data()};
@@ -71,10 +74,10 @@ TEST_GROUP(invoice_model_test)
 			client_data.get_vat_number(),
 			client_data.get_statement_schedule()
 		};
-		(void)database.select(sql::query::business_details_usert, admin_business_sql_parameters);
-		(void)database.select(sql::query::admin_usert, admin_sql_parameters);
-		(void)database.select(sql::query::business_details_usert, client_business_sql_parameters);
-		(void)database.select(sql::query::client_usert, client_sql_parameters);
+		(void)database.usert(sql::query::business_details_usert, admin_business_sql_parameters);
+		(void)database.usert(sql::query::admin_usert, admin_sql_parameters);
+		(void)database.usert(sql::query::business_details_usert, client_business_sql_parameters);
+		(void)database.usert(sql::query::client_usert, client_sql_parameters);
 	}
 
 	void teardown()

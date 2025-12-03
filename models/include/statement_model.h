@@ -12,7 +12,8 @@
 namespace model {
 class statement: public interface::model_operations {
 public:
-	statement() = default;
+	statement() = delete;
+	explicit statement(const std::string&, const std::string&);
 	statement(const statement&) = default;
 	statement(statement&&) = default;
 	statement& operator= (const statement&) = default;
@@ -26,6 +27,10 @@ public:
 
 protected:
 	[[nodiscard]] virtual std::vector<std::string> convert_pdfs_to_strings(const std::vector<std::any>&) const;
+
+private:
+	std::string database_file;
+	std::string database_password;
 };
 }
 #endif

@@ -27,6 +27,7 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "admin_model_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_model_test"
 # CPPUTEST_EXE_FLAGS +=-sg "invoice_model_test"
+# CPPUTEST_EXE_FLAGS +=-sg "statement_model_test"
 # CPPUTEST_EXE_FLAGS +=-sg "business_serialize_test"
 # CPPUTEST_EXE_FLAGS +=-sg "admin_serialize_test"
 # CPPUTEST_EXE_FLAGS +=-sg "client_serialize_test"

@@ -8,6 +8,11 @@
 #include <generate_pdf.h>
 #include <string>
 #include <ostream>
+#include <client_data.h>
+#include <business_data.h>
+#include <invoice_data.h>
+#include <pdf_invoice_data.h>
+#include <pdf_statement_data.h>
 
 
 bool test::generate_invoice_pdf(const std::string& _pdf_data, const std::string& _suffix)
@@ -211,4 +216,71 @@ data::statement test::generate_statement_data()
 	expected.set_period_end("Dec-11-2025");
 
         return expected;
+}
+
+std::vector<std::any> test::get_pdf_statements(const std::string& _business_name)
+{
+	std::vector<std::any> temp{};
+	if (_business_name.empty())
+	{
+
+	}
+	else
+	{
+		for (int i = 0; i < 100; ++i)
+		{
+			data::pdf_invoice pdf_invoice_data{};
+			data::admin admin_data{generate_business_data()};
+			pdf_invoice_data.set_business(admin_data);
+
+			data::client client_data{generate_client_data()};
+			pdf_invoice_data.set_client(client_data);
+
+			std::vector<data::pdf_invoice> pdf_invoices{};
+			for (int j = 0; j < 50; ++j)
+			{
+				data::invoice invoice_data{generate_invoice_data("Test description")};
+				pdf_invoice_data.set_invoice(invoice_data);
+				pdf_invoices.push_back(pdf_invoice_data);
+			}
+			data::pdf_statement pdf_statement_data{};
+			pdf_statement_data.set_number(std::to_string(i));
+			pdf_statement_data.set_date("02/24/2025");
+			pdf_statement_data.set_total("2056.00");
+			pdf_statement_data.set_pdf_invoices(pdf_invoices);
+
+			temp.push_back(pdf_statement_data);
+		}
+	}
+
+	return temp;
+}
+
+
+std::vector<std::any> test::get_pdf_invoices(const std::string& _business_name)
+{
+	std::vector<std::any> data;
+        if (!_business_name.empty())
+        {
+                for (int i = 1; i <= 50; ++i)
+                {
+			std::vector<data::pdf_invoice> pdf_invoices{};
+			data::pdf_invoice pdf_invoice_data{};
+			data::client client_data{generate_client_data()};
+			pdf_invoice_data.set_client(client_data);
+
+			data::admin admin_data{generate_business_data()};
+			pdf_invoice_data.set_business(admin_data);
+
+			data::invoice invoice_data{generate_invoice_data("Test description")};
+			pdf_invoice_data.set_invoice(invoice_data);
+
+			if (pdf_invoice_data.is_valid())
+			{
+				data.push_back(pdf_invoice_data);
+			}
+                }
+        }
+
+        return data;
 }
