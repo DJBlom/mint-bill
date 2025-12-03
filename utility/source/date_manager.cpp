@@ -73,7 +73,7 @@ utility::period_bounds utility::date_manager::compute_period_bounds(const std::s
 	std::chrono::year_month_day today{ local_days };
 	std::chrono::year  y = today.year();
 	std::chrono::month m = today.month();
-	std::chrono::day   d = today.day();
+	// std::chrono::day   d = today.day();
 
 	auto to_sa = [](const std::chrono::year_month_day& ymd) -> std::string
 	{
@@ -91,7 +91,7 @@ utility::period_bounds utility::date_manager::compute_period_bounds(const std::s
 		std::chrono::weekday today_wd{ today_sys };
 
 		// Monday-based week
-		int diff = (today_wd - std::chrono::Monday).count();
+		int diff = static_cast<int>((today_wd - std::chrono::Monday).count());
 		if (diff < 0)
 		{
 			diff += 7;
@@ -128,7 +128,7 @@ utility::period_bounds utility::date_manager::compute_period_bounds(const std::s
 
 	// ✅ FIX: Week 1 = first *Monday in the month*, not the week containing the 1st
 	std::chrono::weekday first_wd{ first_days };
-	int to_monday = (std::chrono::Monday - first_wd).count();
+	int to_monday = static_cast<int>((std::chrono::Monday - first_wd).count());
 	if (to_monday < 0)
 	{
 		to_monday += 7;

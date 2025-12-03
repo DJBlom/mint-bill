@@ -23,7 +23,7 @@ public:
 	invoice(invoice&&);
 	invoice& operator= (const invoice&);
 	invoice& operator= (invoice&&);
-	virtual ~invoice();
+	virtual ~invoice() override;
 
 	[[nodiscard]] virtual bool is_valid() const override;
 	using data::billing::set_id;

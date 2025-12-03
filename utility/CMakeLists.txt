@@ -14,14 +14,15 @@ project(target-utility VERSION 0.0.1 LANGUAGES CXX C)
 file(GLOB RESULT ${PROJECT_SOURCE_DIR}/source)
 list(LENGTH RESULT FILES_IN_DIR)
 if(${FILES_IN_DIR} GREATER 0)
-        add_library(utility 
+        add_library(utility
                 OBJECT
                 ${PROJECT_SOURCE_DIR}/source/file.cpp
                 ${PROJECT_SOURCE_DIR}/source/word_slicer.cpp
+                ${PROJECT_SOURCE_DIR}/source/date_manager.cpp
                 ${PROJECT_SOURCE_DIR}/source/boundary_slicer.cpp
         )
 
-        target_include_directories(utility 
+        target_include_directories(utility
                 PRIVATE
                 ${PROJECT_SOURCE_DIR}/include/
                 PUBLIC

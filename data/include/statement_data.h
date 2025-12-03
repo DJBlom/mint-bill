@@ -22,7 +22,7 @@ public:
 	statement(statement&&);
 	statement& operator= (const statement&);
 	statement& operator= (statement&&);
-	virtual ~statement();
+	virtual ~statement() override;
 
 	[[nodiscard]] virtual bool is_valid() const override;
 	using data::billing::set_id;

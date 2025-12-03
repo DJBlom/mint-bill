@@ -549,6 +549,26 @@
                                     </layout>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkLabel" id="statement-status-label">
+                                    <property name="halign">start</property>
+                                    <property name="label">Status: </property>
+                                    <layout>
+                                      <property name="column">2</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="statement-total-label">
+                                    <property name="halign">start</property>
+                                    <property name="label">Total: </property>
+                                    <layout>
+                                      <property name="column">3</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>

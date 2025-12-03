@@ -247,6 +247,7 @@ std::vector<std::any> test::get_pdf_statements(const std::string& _business_name
 			pdf_statement_data.set_number(std::to_string(i));
 			pdf_statement_data.set_date("02/24/2025");
 			pdf_statement_data.set_total("2056.00");
+			pdf_statement_data.set_statement(generate_statement_data());
 			pdf_statement_data.set_pdf_invoices(pdf_invoices);
 
 			temp.push_back(pdf_statement_data);

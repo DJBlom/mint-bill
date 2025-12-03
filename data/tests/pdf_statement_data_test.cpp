@@ -12,6 +12,7 @@
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 #include <mock_pdf_invoice_data.h>
+#include <generate_pdf.h>
 extern "C"
 {
 
@@ -71,6 +72,14 @@ TEST(pdf_statement_data_test, assign_and_retrieve_bad_pdf_invoice_data)
         CHECK_EQUAL(false, pdf_statement.is_valid());
 }
 
+TEST(pdf_statement_data_test, assign_and_retrieve_bad_statement_data)
+{
+	data::statement statement_data{};
+	pdf_statement.set_statement(statement_data);
+
+        CHECK_EQUAL(false, pdf_statement.is_valid());
+}
+
 TEST(pdf_statement_data_test, assign_and_retrieve_pdf_invoice_data)
 {
 	data::pdf_invoice pdf_invoice{};
@@ -79,6 +88,7 @@ TEST(pdf_statement_data_test, assign_and_retrieve_pdf_invoice_data)
         pdf_invoice.set_invoice(retrieve_invoice_data());
         pdf_invoice.set_business(retrieve_business_data());
 	pdf_invoices.push_back(pdf_invoice);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	std::vector<data::pdf_invoice> result{pdf_statement.get_pdf_invoices()};
 
@@ -91,6 +101,7 @@ TEST(pdf_statement_data_test, check_invalid_data)
 	pdf_statement.set_number("");
 	pdf_statement.set_date("");
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(false, pdf_statement.is_valid());
@@ -107,6 +118,7 @@ TEST(pdf_statement_data_test, ensure_that_the_data_is_valid)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(true, pdf_statement.is_valid());
@@ -126,6 +138,7 @@ TEST(pdf_statement_data_test, ensure_a_ratio_of_many_to_one)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 
         CHECK_EQUAL(true, pdf_statement.is_valid());
@@ -142,6 +155,7 @@ TEST(pdf_statement_data_test, ensure_copy_constructable)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result(pdf_statement);
 
@@ -159,6 +173,7 @@ TEST(pdf_statement_data_test, ensure_copy_assignmentable)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result;
 	result = pdf_statement;
@@ -177,6 +192,7 @@ TEST(pdf_statement_data_test, ensure_move_constructable)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result{pdf_statement};
 
@@ -194,6 +210,7 @@ TEST(pdf_statement_data_test, ensure_move_assignmentable)
 	pdf_statement.set_number(statement_number);
 	pdf_statement.set_date(statement_date);
 	pdf_statement.set_total(statement_total);
+	pdf_statement.set_statement(test::generate_statement_data());
 	pdf_statement.set_pdf_invoices(pdf_invoices);
 	data::pdf_statement result;
 	result = std::move(pdf_statement);

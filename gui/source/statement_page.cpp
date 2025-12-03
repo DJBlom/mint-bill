@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <printer.h>
 #include <config.h>
+#include <invoice_model.h>
 
 #include <iostream>
 
@@ -32,6 +33,9 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
 	}
 	else
         {
+		this->total_label = std::unique_ptr<Gtk::Label>{
+			_ui_builder->get_widget<Gtk::Label>("statement-total-label")};
+
 		if (this->email_setup(_ui_builder) == false)
 		{
 			syslog(LOG_CRIT, "Failed to setup email - "
@@ -381,16 +385,30 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 					case GTK_RESPONSE_YES:
 						if (this->save_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide save dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide save dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						else
 						{
 							model::statement statement_model{app::config::path_to_database_file, this->database_password};
-							// Code below should be removed and a call to save the data to DB should occur.
-							for (const std::any& data : this->invoice_data)
+							if (statement_model.save(this->selected_pdf_statement.get_statement()) == false)
 							{
-								data::invoice invoice{std::any_cast<data::invoice> (data)};
+								syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to save statement - "
+										 "filename %s, line number %d", __FILE__, __LINE__);
+							}
+							else
+							{
+								model::invoice invoice_model{app::config::path_to_database_file,
+											     this->database_password};
+								for (const std::any& data : this->invoice_data)
+								{
+									data::invoice invoice{std::any_cast<data::invoice> (data)};
+									if (invoice_model.save(invoice) == false)
+									{
+										syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to save associated invoice - "
+												 "filename %s, line number %d", __FILE__, __LINE__);
+									}
+								}
 							}
 						}
 						break;
@@ -660,6 +678,8 @@ bool gui::statement_page::on_double_click()
 		{
 			std::vector<std::any> invoices{};
 			std::vector<std::any> pdf_invoices{};
+			this->selected_pdf_statement = pdf_statement;
+			this->total_label->set_text(this->selected_pdf_statement.get_total());
 			for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
 			{
 				if (pdf_invoice.is_valid() == false)

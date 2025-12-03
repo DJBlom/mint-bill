@@ -58,7 +58,8 @@ private:
 	std::string database_password{""};
 	std::vector<std::any> documents{};
 	std::vector<std::any> invoice_data{};
-	// model::statement client_statement{"",""};
+	data::pdf_statement selected_pdf_statement{};
+	std::unique_ptr<Gtk::Label> total_label{};
         part::dialog no_item_selected{"statement-no-item-selected-alert"};
         part::dialog email_alert{"statement-email-button-alert"};
         part::dialog print_alert{"statement-print-button-alert"};

@@ -101,6 +101,7 @@ std::vector<std::any> model::statement::load(const std::string& _business_name) 
 			pdf_statement_data.set_number(statement_data.get_id());
 			pdf_statement_data.set_date(statement_data.get_date());
 			pdf_statement_data.set_total(total_ss.str());
+			pdf_statement_data.set_statement(statement_data);
 			pdf_statement_data.set_pdf_invoices(pdf_invoices_data);
 
 			pdf_statements_data.push_back(std::move(pdf_statement_data));
