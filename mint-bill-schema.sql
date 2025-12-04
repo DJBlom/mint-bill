@@ -39,6 +39,7 @@ BEGIN;
 DROP TABLE IF EXISTS business_details;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS statement;
 DROP TABLE IF EXISTS invoice;
 DROP TABLE IF EXISTS labor;
 
@@ -66,25 +67,43 @@ CREATE TABLE admin (
 );
 
 CREATE TABLE client (
-	business_id		INTEGER PRIMARY KEY
+	client_id		INTEGER PRIMARY KEY,
+	business_id		INTEGER NOT NULL UNIQUE
 					REFERENCES business_details(business_id)
 					ON DELETE CASCADE ON UPDATE CASCADE,
 	vat_number         	TEXT NOT NULL UNIQUE,
 	statement_schedule 	TEXT NOT NULL
 );
 
+CREATE TABLE statement (
+	statement_id   INTEGER PRIMARY KEY,
+	business_id    INTEGER NOT NULL,
+	period_start   TEXT    NOT NULL,  
+	period_end     TEXT    NOT NULL,  
+	statement_date TEXT    NOT NULL DEFAULT (date('now')),
+	paid_status    TEXT    NOT NULL DEFAULT 'Not Paid', 
+
+	FOREIGN KEY (business_id) REFERENCES client(business_id)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+
+	UNIQUE (business_id, period_start, period_end)
+);
+
 CREATE TABLE invoice (
 	invoice_id		INTEGER PRIMARY KEY,
 	business_id		INTEGER NOT NULL,
+	statement_id		INTEGER,
 	order_number		TEXT NOT NULL,
 	job_card_number		TEXT NOT NULL,
 	date_created		TEXT NOT NULL DEFAULT (date('now')),
-	paid_status		TEXT NOT NULL,
+	paid_status		TEXT NOT NULL DEFAULT 'Not Paid',
 	material_total		TEXT NOT NULL,
 	description_total	TEXT NOT NULL,
 	grand_total		TEXT NOT NULL,
 	FOREIGN KEY (business_id) REFERENCES client(business_id)
 		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (statement_id) REFERENCES statement(statement_id)
+		ON DELETE SET NULL ON UPDATE CASCADE,
 	UNIQUE(business_id, order_number, job_card_number)
 );
 

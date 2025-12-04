@@ -22,7 +22,8 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/client_serialize.cpp
                 ${PROJECT_SOURCE_DIR}/source/invoice_model.cpp
                 ${PROJECT_SOURCE_DIR}/source/invoice_serialize.cpp
-                ${PROJECT_SOURCE_DIR}/source/client_statement.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_model.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_serialize.cpp
                 ${PROJECT_SOURCE_DIR}/source/business_serialize.cpp
         )
 

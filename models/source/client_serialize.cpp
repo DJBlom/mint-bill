@@ -6,25 +6,6 @@
 
 serialize::client::~client() {}
 
-storage::database::sql_parameters serialize::client::package_data(const std::any& _data)
-{
-	storage::database::sql_parameters params{};
-	data::client client_data{std::any_cast<data::client>(_data)};
-	if (client_data.is_valid() == false)
-	{
-		syslog(LOG_CRIT, "CLIENT_SERIALIZE: argument is not valid - "
-				 "filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		params.emplace_back(client_data.get_email());
-		params.emplace_back(client_data.get_vat_number());
-		params.emplace_back(client_data.get_statement_schedule());
-	}
-
-	return params;
-}
-
 std::any serialize::client::extract_data(const storage::database::part::rows& _rows)
 {
 	data::client client_data{};

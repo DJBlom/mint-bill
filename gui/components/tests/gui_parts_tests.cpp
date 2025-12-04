@@ -14,11 +14,13 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <stack.h>
+#include <sqlite.h>
 #include <statement_page.h>
-#include <client_statement.h>
+#include <statement_data.h>
 #include <pdf_invoice_data.h>
 #include <pdf_statement_data.h>
 #include <mock_pdf_invoice_data.h>
+#include <generate_pdf.h>
 extern "C"
 {
 
@@ -377,9 +379,8 @@ TEST(statement_page_column_view_test, column_view_add_column)
 
 TEST(statement_page_column_view_test, column_view_populate)
 {
-        controller::client_statement client_statement{};
 	std::vector<std::any> statements{};
-	for (const std::any& data : client_statement.load("Test Business Name"))
+	for (const std::any& data : test::get_pdf_statements("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
 		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
@@ -400,16 +401,13 @@ TEST(statement_page_column_view_test, column_view_populate)
 
 TEST(statement_page_column_view_test, column_view_clear_unsuccessful)
 {
-        controller::client_statement client_statement{};
-
         CHECK_EQUAL(false, column_view.clear());
 }
 
 TEST(statement_page_column_view_test, column_view_clear_successful)
 {
-        controller::client_statement client_statement{};
 	std::vector<std::any> invoices{};
-	for (const std::any& data : client_statement.load("Test Business Name"))
+	for (const std::any& data : test::get_pdf_statements("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
 		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
@@ -431,9 +429,8 @@ TEST(statement_page_column_view_test, column_view_clear_successful)
 
 TEST(statement_page_column_view_test, extract_data_from_store)
 {
-        controller::client_statement client_statement{};
 	std::vector<std::any> invoices{};
-	for (const std::any& data : client_statement.load("Test Business Name"))
+	for (const std::any& data : test::get_pdf_statements("Test Business Name"))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
 		for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
@@ -532,7 +529,6 @@ TEST(pdf_window_test, generate_window_with_good_document)
  ******************************************************************************/
 TEST_GROUP(invoice_pdf_view_test)
 {
-	controller::client_statement client_statement{};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::invoice_pdf_view invoice_pdf_view{"statement-invoice-list-view", "statement-invoice-list-view-vadjustment"};
@@ -578,60 +574,62 @@ TEST(invoice_pdf_view_test, populate_view_without_being_created)
         CHECK_EQUAL(false, invoice_pdf_view.populate(invoices));
 }
 
-// TEST(invoice_pdf_view_test, populate_view_with_empty_data)
-// {
-// 	std::vector<std::any> empty_data{};
-//         (void) invoice_pdf_view.create(builder);
-//
-//         CHECK_EQUAL(false, invoice_pdf_view.populate(empty_data));
-// }
-//
-// TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
-// {
-// 	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
-// 	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
-// 	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
-// 	std::vector<std::any> invoices{};
-// 	for (const data::pdf_invoice& inv : temp_invoices)
-// 	{
-// 		invoices.emplace_back(inv);
-// 	}
-// 	(void) invoice_pdf_view.create(builder);
-//
-// 	CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
-// }
-//
-// TEST(invoice_pdf_view_test, clear_invoice_view_unsuccessfully)
-// {
-// 	CHECK_EQUAL(false, invoice_pdf_view.clear());
-// }
-//
-// TEST(invoice_pdf_view_test, clear_invoice_view_successfully)
-// {
-// 	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
-// 	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
-// 	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
-// 	std::vector<std::any> invoices{};
-// 	for (const data::pdf_invoice& inv : temp_invoices)
-// 	{
-// 		invoices.emplace_back(inv);
-// 	}
-// 	(void) invoice_pdf_view.create(builder);
-// 	(void) invoice_pdf_view.populate(invoices);
-//
-// 	CHECK_EQUAL(true, invoice_pdf_view.clear());
-// }
-//
-// TEST(invoice_pdf_view_test, extract_invoice_view_data_unsuccessfully)
-// {
-// 	std::vector<std::any> result{invoice_pdf_view.extract()};
-//
-// 	CHECK_COMPARE(2, >=, result.size());
-// }
-//
+TEST(invoice_pdf_view_test, populate_view_with_empty_data)
+{
+	std::vector<std::any> empty_data{};
+        (void) invoice_pdf_view.create(builder);
+
+        CHECK_EQUAL(false, invoice_pdf_view.populate(empty_data));
+}
+
+TEST(invoice_pdf_view_test, populate_invoice_view_successfully)
+{
+	std::vector<std::any> statement_pdf_data = std::move(test::get_pdf_statements("Test business"));
+	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
+
+	// std::vector<std::any> invoices{};
+	for (const data::pdf_invoice& inv : temp_invoices)
+	{
+		CHECK_EQUAL(true, inv.is_valid());
+	// 	invoices.emplace_back(inv);
+	}
+	// (void) invoice_pdf_view.create(builder);
+	//
+	// CHECK_EQUAL(true, invoice_pdf_view.populate(invoices));
+}
+
+TEST(invoice_pdf_view_test, clear_invoice_view_unsuccessfully)
+{
+	CHECK_EQUAL(false, invoice_pdf_view.clear());
+}
+
+TEST(invoice_pdf_view_test, clear_invoice_view_successfully)
+{
+	std::vector<std::any> statement_pdf_data = std::move(test::get_pdf_statements("Test business"));
+	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
+	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
+	std::vector<std::any> invoices{};
+	for (const data::pdf_invoice& inv : temp_invoices)
+	{
+		invoices.emplace_back(inv);
+	}
+	(void) invoice_pdf_view.create(builder);
+	(void) invoice_pdf_view.populate(invoices);
+
+	CHECK_EQUAL(true, invoice_pdf_view.clear());
+}
+
+TEST(invoice_pdf_view_test, extract_invoice_view_data_unsuccessfully)
+{
+	std::vector<std::any> result{invoice_pdf_view.extract()};
+
+	CHECK_COMPARE(2, >=, result.size());
+}
+
 // TEST(invoice_pdf_view_test, extract_invoice_view_data_successfully)
 // {
-// 	std::vector<std::any> statement_pdf_data = std::move(client_statement.load("Test Business Name"));
+// 	std::vector<std::any> statement_pdf_data = std::move(test::get_pdf_statements("Test business"));
 // 	data::pdf_statement temp_statement = std::move(std::any_cast<data::pdf_statement> (statement_pdf_data.front()));
 // 	std::vector<data::pdf_invoice> temp_invoices{temp_statement.get_pdf_invoices()};
 // 	std::vector<std::any> invoices{};
@@ -668,7 +666,11 @@ TEST(invoice_pdf_view_test, populate_view_without_being_created)
  ******************************************************************************/
 TEST_GROUP(statement_pdf_view_test)
 {
-	controller::client_statement client_statement{};
+	// const std::string db_file{"../storage/tests/model_test.db"};
+	// const std::string db_password{"123456789"};
+	// data::statement statement_data{test::generate_statement_data()};
+	// storage::database::sqlite database{db_file, db_password};
+	// model::statement statement_model{db_file, db_password};
         Glib::RefPtr<Gtk::Builder> builder{};
         Glib::RefPtr<Gtk::Application> app{};
         gui::part::statement::statement_pdf_view statement_pdf_view{"statement-list-view", "statement-list-view-vadjustment"};
@@ -724,7 +726,7 @@ TEST(statement_pdf_view_test, populate_view_with_empty_data)
 
 TEST(statement_pdf_view_test, populate_statement_view_successfully)
 {
-	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	std::vector<std::any> statements = std::move(test::get_pdf_statements("Test business"));
 	(void) statement_pdf_view.create(builder);
 
 	CHECK_EQUAL(true, statement_pdf_view.populate(statements));
@@ -737,7 +739,7 @@ TEST(statement_pdf_view_test, clear_statement_view_before_creation)
 
 TEST(statement_pdf_view_test, clear_statement_view)
 {
-	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	std::vector<std::any> statements = std::move(test::get_pdf_statements("Test business"));
 	(void) statement_pdf_view.create(builder);
 	(void) statement_pdf_view.populate(statements);
 
@@ -753,7 +755,7 @@ TEST(statement_pdf_view_test, extract_statement_view_data_before_creation)
 
 TEST(statement_pdf_view_test, extract_statement_view_data_after_creation)
 {
-	std::vector<std::any> statements = std::move(client_statement.load("Test Business Name"));
+	std::vector<std::any> statements = std::move(test::get_pdf_statements("Test business"));
 	(void) statement_pdf_view.create(builder);
 	(void) statement_pdf_view.populate(statements);
 	std::vector<std::any> records{statement_pdf_view.extract()};
@@ -862,8 +864,8 @@ TEST(statement_columns_test, retrieve_value)
         view->append_column(order_number_column.retrieve_item());
         view->append_column(paid_status_column.retrieve_item());
         view->append_column(price_column.retrieve_item());
-        std::string expected_invoice_number{invoice.get_invoice_number()};
-        std::string expected_date{invoice.get_invoice_date()};
+        std::string expected_invoice_number{invoice.get_id()};
+        std::string expected_date{invoice.get_date()};
         std::string expected_order_number{invoice.get_order_number()};
         std::string expected_paid_status{invoice.get_paid_status()};
         std::string expected_price{invoice.get_grand_total()};

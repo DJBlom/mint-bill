@@ -86,7 +86,6 @@ namespace gui {
 			[[nodiscard]] virtual bool search(const std::string&) override;
 			[[nodiscard]] virtual bool print() override;
 			[[nodiscard]] virtual bool email() override;
-			[[nodiscard]] virtual bool clear();
 			[[nodiscard]] virtual bool save() override;
 
                 private: // GUI creations
@@ -94,6 +93,7 @@ namespace gui {
                         void create_entries(const Glib::RefPtr<Gtk::Builder>&);
                         void create_dialogs(const Glib::RefPtr<Gtk::Builder>&);
                         void create_buttons(const Glib::RefPtr<Gtk::Builder>&);
+			void clear();
 			bool save_setup(const Glib::RefPtr<Gtk::Builder>&);
 			bool email_setup(const Glib::RefPtr<Gtk::Builder>&);
 			bool print_setup(const Glib::RefPtr<Gtk::Builder>&,

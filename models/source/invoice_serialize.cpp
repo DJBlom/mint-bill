@@ -2,35 +2,11 @@
 #include <limits>
 #include <syslog.h>
 #include <invoice_data.h>
+#include <statement_data.h>
 #include <invoice_serialize.h>
 
 
 serialize::invoice::~invoice() {}
-
-storage::database::sql_parameters serialize::invoice::package_data(const std::any& _data)
-{
-	storage::database::sql_parameters params{};
-	data::invoice invoice_data{std::any_cast<data::invoice>(_data)};
-	if (invoice_data.is_valid() == false)
-	{
-		syslog(LOG_CRIT, "INVOICE_SERIALIZE: argument is not valid - "
-				"filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		params.emplace_back(static_cast<long long>(std::stoi(invoice_data.get_invoice_number())));
-		params.emplace_back(invoice_data.get_business_name());
-		params.emplace_back(invoice_data.get_order_number());
-		params.emplace_back(invoice_data.get_job_card_number());
-		params.emplace_back(invoice_data.get_invoice_date());
-		params.emplace_back(invoice_data.get_paid_status());
-		params.emplace_back(invoice_data.get_material_total());
-		params.emplace_back(invoice_data.get_description_total());
-		params.emplace_back(invoice_data.get_grand_total());
-	}
-
-	return params;
-}
 
 std::vector<std::any> serialize::invoice::extract_data(const storage::database::part::rows& _rows)
 {
@@ -38,7 +14,7 @@ std::vector<std::any> serialize::invoice::extract_data(const storage::database::
 	if (_rows.empty() == true)
 	{
 		syslog(LOG_CRIT, "INVOICE_SERIALIZE: argument is not valid - "
-				"filename %s, line number %d", __FILE__, __LINE__);
+				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
@@ -49,6 +25,11 @@ std::vector<std::any> serialize::invoice::extract_data(const storage::database::
 	}
 
 	return any_data;
+}
+
+void serialize::invoice::set_schedule(const std::string& _schedule)
+{
+	(void) _schedule;
 }
 
 std::vector<data::invoice> serialize::invoice::collect_values(const storage::database::part::rows& _rows)
@@ -66,14 +47,14 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 				{
 					if constexpr (std::is_same_v<T, std::string>)
 					{
-						data.set_business_name(arg);
+						data.set_name(arg);
 					}
 				}
 				else if (col_index == DATA_FIELDS::INVOICE_NUMBER)
 				{
 					if constexpr (std::is_same_v<T, sqlite3_int64>)
 					{
-						data.set_invoice_number(std::to_string(arg));
+						data.set_id(std::to_string(arg));
 					}
 				}
 				else if (col_index == DATA_FIELDS::ORDER_NUMBER)
@@ -94,7 +75,7 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 				{
 					if constexpr (std::is_same_v<T, std::string>)
 					{
-						data.set_invoice_date(arg);
+						data.set_date(arg);
 					}
 				}
 				else if (col_index == DATA_FIELDS::PAID_STATUS)
@@ -138,31 +119,6 @@ std::vector<data::invoice> serialize::invoice::collect_values(const storage::dat
 
 
 // column
-storage::database::sql_parameters serialize::labor::package_data(
-		const data::column& _column_data,
-		const data::invoice& _invoice_data)
-{
-	storage::database::sql_parameters params{};
-	if (_column_data.is_valid() == false || _invoice_data.is_valid() == false)
-	{
-		syslog(LOG_CRIT, "COLUMN SERIALIZE: arguments is not valid - "
-				"filename %s, line number %d", __FILE__, __LINE__);
-	}
-	else
-	{
-		params.emplace_back(_invoice_data.get_business_name());
-		params.emplace_back(_invoice_data.get_order_number());
-		params.emplace_back(_invoice_data.get_job_card_number());
-		params.emplace_back(_column_data.get_row_number());
-		params.emplace_back(_column_data.get_is_description());
-		params.emplace_back(_column_data.get_quantity());
-		params.emplace_back(_column_data.get_description());
-		params.emplace_back(_column_data.get_amount());
-	}
-
-	return params;
-}
-
 std::vector<data::column> serialize::labor::extract_data(const storage::database::part::rows& _rows)
 {
 	std::vector<data::column> column_data{};

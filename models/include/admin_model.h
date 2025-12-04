@@ -11,7 +11,7 @@
 #include <sqlite.h>
 
 namespace model {
-class admin: public interface::model {
+class admin: public interface::model_register {
 public:
 	admin() = delete;
 	explicit admin(const std::string&, const std::string&);

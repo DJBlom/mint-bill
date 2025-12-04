@@ -1,5 +1,8 @@
 #include <pdf_statement_data.h>
 
+namespace upper_bound {
+        constexpr std::uint8_t string_length{20};
+}
 
 
 data::pdf_statement::pdf_statement() {}
@@ -8,20 +11,22 @@ data::pdf_statement::~pdf_statement() {}
 
 data::pdf_statement::pdf_statement(const pdf_statement& _copy)
 	: number{_copy.number}, date{_copy.date}, total{_copy.total},
-	  pdf_invoices{_copy.pdf_invoices}, data_mutex{},
-	  flags{_copy.flags}, mask{_copy.mask}
+	  statement_data{(_copy.statement_data)}, pdf_invoices{_copy.pdf_invoices},
+	  data_mutex{}, flags{_copy.flags}, mask{_copy.mask}
 {
 }
 
 data::pdf_statement::pdf_statement(pdf_statement&& _move)
 	: number{std::move(_move.number)}, date{std::move(_move.date)},
-	  total{std::move(_move.total)}, pdf_invoices{std::move(_move.pdf_invoices)},
-	  data_mutex{}, flags{std::move(_move.flags)}, mask{std::move(_move.mask)}
+	  total{std::move(_move.total)}, statement_data{std::move(_move.statement_data)},
+	  pdf_invoices{std::move(_move.pdf_invoices)}, data_mutex{},
+	  flags{std::move(_move.flags)}, mask{std::move(_move.mask)}
 {
         _move.number = number;
         _move.date = date;
         _move.total = total;
         _move.pdf_invoices = pdf_invoices;
+	_move.statement_data = statement_data;
         _move.flags = 0;
         _move.mask = this->mask;
 }
@@ -39,6 +44,7 @@ data::pdf_statement& data::pdf_statement::operator= (pdf_statement&& _move)
         std::swap(number, _move.number);
         std::swap(date, _move.date);
         std::swap(total, _move.total);
+        std::swap(statement_data, _move.statement_data);
         std::swap(pdf_invoices, _move.pdf_invoices);
         std::swap(flags, _move.flags);
         std::swap(mask, _move.mask);
@@ -93,7 +99,7 @@ std::string data::pdf_statement::get_date() const
 void data::pdf_statement::set_total(const std::string& _total)
 {
 
-        if (!_total.empty())
+        if (!_total.empty() || _total.length() <= upper_bound::string_length)
         {
                 set_flag(FLAG::TOTAL);
                 std::lock_guard<std::mutex> guard(this->data_mutex);
@@ -108,6 +114,25 @@ void data::pdf_statement::set_total(const std::string& _total)
 std::string data::pdf_statement::get_total() const
 {
 	return this->total;
+}
+
+void data::pdf_statement::set_statement(const data::statement& _statement_data)
+{
+	if (_statement_data.is_valid() == true)
+	{
+                set_flag(FLAG::STATEMENT);
+                std::lock_guard<std::mutex> guard(this->data_mutex);
+                this->statement_data = std::move(_statement_data);
+        }
+        else
+        {
+                clear_flag(FLAG::STATEMENT);
+	}
+}
+
+data::statement data::pdf_statement::get_statement() const
+{
+	return this->statement_data;
 }
 
 void data::pdf_statement::set_pdf_invoices(const std::vector<data::pdf_invoice>& _pdf_invoices)

@@ -13,26 +13,27 @@
 #include <string>
 #include <cstdint>
 #include <column_data.h>
+#include <billing_data.h>
 
 namespace data {
-struct invoice {
+struct invoice : public billing {
 public:
 	invoice();
 	invoice(const invoice&);
 	invoice(invoice&&);
 	invoice& operator= (const invoice&);
 	invoice& operator= (invoice&&);
-	virtual ~invoice();
+	virtual ~invoice() override;
 
-	[[nodiscard]] virtual bool is_valid() const;
-	virtual void set_business_name(const std::string&);
-	[[nodiscard]] virtual std::string get_business_name() const;
-	virtual void set_invoice_number(const std::string&);
-	[[nodiscard]] virtual std::string get_invoice_number() const;
-	virtual void set_invoice_date(const std::string&);
-	[[nodiscard]] virtual std::string get_invoice_date() const;
-	virtual void set_paid_status(const std::string&);
-	[[nodiscard]] virtual std::string get_paid_status() const;
+	[[nodiscard]] virtual bool is_valid() const override;
+	using data::billing::set_id;
+	using data::billing::get_id;
+	using data::billing::set_name;
+	using data::billing::get_name;
+	using data::billing::set_date;
+	using data::billing::get_date;
+	using data::billing::set_paid_status;
+	using data::billing::get_paid_status;
 	virtual void set_job_card_number(const std::string&);
 	[[nodiscard]] std::string get_job_card_number() const;
 	virtual void set_order_number(const std::string&);
@@ -54,12 +55,8 @@ private:
 	[[nodiscard]] bool check_flags() const;
 
 private:
-	using mask_type = std::uint16_t;
+	using mask_type = std::uint8_t;
 
-	std::string business_name{""};
-	std::string invoice_number{""};
-	std::string invoice_date{""};
-	std::string paid_status{""};
 	std::string job_card_number{""};
 	std::string order_number{""};
 	std::string description_total{""};
@@ -69,13 +66,9 @@ private:
 	std::vector<data::column> material_column{};
 	mask_type flags{0x0};
 	std::mutex invoice_data{};
-	mask_type mask{0x7FF};
+	mask_type mask{0x7F};
 	enum FLAG {
-		NAME = 0,
-		NUMBER,
-		DATE,
-		PAID,
-		JOB_CARD,
+		JOB_CARD = 0,
 		ORDER_NUMBER,
 		DESCRIPTION_TOTAL,
 		MATERIAL_TOTAL,

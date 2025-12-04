@@ -55,8 +55,22 @@ bool model::admin::save(const std::any& _data)
 		serialize::admin admin_serialize{};
 		data::business business_data{admin_data};
 		serialize::business business_serialize{};
-		storage::database::sql_parameters admin_params{admin_serialize.package_data(admin_data)};
-		storage::database::sql_parameters business_params{business_serialize.package_data(business_data)};
+		storage::database::sql_parameters admin_params{
+			admin_data.get_name(),
+			admin_data.get_bank(),
+			admin_data.get_branch_code(),
+			admin_data.get_account_number(),
+			admin_data.get_password(),
+			admin_data.get_client_message()
+		};
+		storage::database::sql_parameters business_params{
+			business_data.get_name(),
+			business_data.get_address(),
+			business_data.get_area_code(),
+			business_data.get_town(),
+			business_data.get_cellphone(),
+			business_data.get_email()
+		};
 		storage::database::sqlite database{this->database_file, this->database_password};
 		if (database.transaction("BEGIN IMMEDIATE;") == false)
 		{

@@ -10,6 +10,7 @@
 #include <syslog.h>
 #include <config.h>
 #include <invoice_page.h>
+#include <date_manager.h>
 
 
 //GCOVR_EXCL_START
@@ -127,6 +128,7 @@ bool gui::invoice_page::set_database_password(const std::string& _database_passw
 bool gui::invoice_page::search(const std::string& _business_name)
 {
         bool searched{false};
+	this->clear();
         if (_business_name.empty() == true)
         {
                 syslog(LOG_CRIT, "INVOICE_PAGE: The _keyword is empty - "
@@ -195,14 +197,15 @@ bool gui::invoice_page::email()
 	return success;
 }
 
-bool gui::invoice_page::clear()
+void gui::invoice_page::clear()
 {
-	this->invoices_selected.clear();
+	this->job_card->set_text("");
+	this->order_number->set_text("");
+	this->invoice_date->set_text("");
+	this->invoice_number->set_text("");
 	this->invoice_store->remove_all();
 	this->material_store->remove_all();
 	this->description_store->remove_all();
-
-	return true;
 }
 
 bool gui::invoice_page::save()
@@ -215,8 +218,15 @@ bool gui::invoice_page::save()
 	}
 	else
 	{
-		success = true;
-		(void) this->save_alert.show();
+		if (this->save_alert.show() == false)
+		{
+			syslog(LOG_CRIT, "INVOICE_PAGE: The show save_alert - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			success = true;
+		}
 	}
 
 	return success;
@@ -318,11 +328,8 @@ bool gui::invoice_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 										 "filename %s, line number %d", __FILE__, __LINE__);
 							}
 
-							this->description_store->remove_all();
-							this->description_store->remove_all();
-							this->material_store->remove_all();
-							this->invoice_store->remove_all();
-							this->populate(data.get_business_name());
+							this->clear();
+							this->populate(data.get_name());
 						}
 						break;
 					case GTK_RESPONSE_NO:
@@ -788,8 +795,8 @@ void gui::invoice_page::edit_known_invoice(uint position)
                          "filename %s, line number %d", __FILE__, __LINE__);
 
 	data::invoice invoice{pdf_invoice.get_invoice()};
-        this->invoice_number->set_text(invoice.get_invoice_number());
-        this->invoice_date->set_text(invoice.get_invoice_date());
+        this->invoice_number->set_text(invoice.get_id());
+        this->invoice_date->set_text(invoice.get_date());
         this->job_card->set_text(invoice.get_job_card_number());
         this->order_number->set_text(invoice.get_order_number());
         this->description_total_label->set_text("Total: R " + invoice.get_description_total());
@@ -1226,9 +1233,9 @@ double gui::invoice_page::compute_grand_total()
 data::invoice gui::invoice_page::extract_invoice_data()
 {
         data::invoice data{};
-        data.set_business_name(this->business_name);
-        data.set_invoice_number(this->invoice_number->get_text());
-        data.set_invoice_date(this->invoice_date->get_text());
+        data.set_name(this->business_name);
+        data.set_id(this->invoice_number->get_text());
+        data.set_date(this->invoice_date->get_text());
         data.set_paid_status("Not Paid");
         data.set_job_card_number(this->job_card->get_text());
         data.set_order_number(this->order_number->get_text());
@@ -1295,44 +1302,45 @@ void gui::invoice_page::populate(const std::string& _business_name)
 					return std::any_cast<data::pdf_invoice> (_pdf_invoice);
 				});
 
-		if (pdf_invoices.empty() == true)
+		data::client client_data{};
+		data::invoice invoice_data{};
+		for (const data::pdf_invoice& data : pdf_invoices)
 		{
-			int new_invoice_number{0};
-			++new_invoice_number;
-			this->invoice_number->set_text(std::to_string(new_invoice_number));
+			 client_data = data.get_client();
+			 invoice_data = data.get_invoice();
+		}
 
-			std::ostringstream date_ss{""};
-			const std::chrono::time_point now{std::chrono::system_clock::now()};
-			const std::chrono::year_month_day date{
-				std::chrono::year_month_day{
-					floor<std::chrono::days>(
-						std::chrono::zoned_time{std::chrono::current_zone(),
-						std::chrono::system_clock::now()}.get_local_time()
-					)
-				}
-			};
-			date_ss << date.month() << "-" << date.day() << "-" << date.year() ;
-			this->invoice_date->set_text(date_ss.str());
-
-			syslog(LOG_CRIT, "INVOICE_PAGE: The pdf_invoices are empty - "
+		if (client_data.is_valid() == false)
+		{
+			this->clear();
+			syslog(LOG_CRIT, "INVOICE_PAGE: The client does not exist - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
-			data::pdf_invoice pdf_latest_invoice(pdf_invoices.back());
-			data::invoice invoice{pdf_latest_invoice.get_invoice()};
-			int new_invoice_number{std::stoi(invoice.get_invoice_number())};
-			++new_invoice_number;
-			this->invoice_number->set_text(std::to_string(new_invoice_number));
+			utility::date_manager date_manager{};
+			if (invoice_data.is_valid() == false)
+			{
+				int new_invoice_number{0};
+				++new_invoice_number;
+				this->invoice_number->set_text(std::to_string(new_invoice_number));
+				this->invoice_date->set_text(date_manager.current_date());
 
-			std::ostringstream date_ss{""};
-			const std::chrono::time_point now{std::chrono::system_clock::now()};
-			const std::chrono::year_month_day date{std::chrono::floor<std::chrono::days>(now)};
-			date_ss << date.year() << "-" << date.month() << "-" << date.day();
-			this->invoice_date->set_text(date_ss.str());
-			this->admin_data = pdf_latest_invoice.get_business();
-			this->client_data = pdf_latest_invoice.get_client();
-			populate_list_store(pdf_invoices);
+				syslog(LOG_CRIT, "INVOICE_PAGE: There are no invoices associated with the client - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+			else
+			{
+				data::pdf_invoice pdf_latest_invoice(pdf_invoices.back());
+				data::invoice invoice{pdf_latest_invoice.get_invoice()};
+				int new_invoice_number{std::stoi(invoice.get_id())};
+				++new_invoice_number;
+				this->invoice_number->set_text(std::to_string(new_invoice_number));
+				this->invoice_date->set_text(date_manager.current_date());
+				this->admin_data = pdf_latest_invoice.get_business();
+				this->client_data = pdf_latest_invoice.get_client();
+				populate_list_store(pdf_invoices);
+			}
 		}
         }
 }
@@ -1460,7 +1468,7 @@ void gui::invoice_page::bind_invoices(const Glib::RefPtr<Gtk::ListItem>& _item)
 
         data::pdf_invoice pdf_invoice{data->pdf_invoice};
 	data::invoice invoice{pdf_invoice.get_invoice()};
-        std::string details{"# " + invoice.get_invoice_number() + ", " + invoice.get_business_name() + ", " + invoice.get_invoice_date() + " "};
+        std::string details{"# " + invoice.get_id() + ", " + invoice.get_name() + ", " + invoice.get_date() + " "};
         label->set_text(details);
 }
 

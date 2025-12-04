@@ -14,8 +14,8 @@
 #include <admin_serialize.h>
 #include <client_serialize.h>
 #include <invoice_serialize.h>
-
-#include <iostream>
+#include <statement_serialize.h>
+#include <date_manager.h>
 
 
 extern "C"
@@ -23,6 +23,8 @@ extern "C"
 
 }
 
+const std::string db_file{"../storage/tests/model_test.db"};
+const std::string db_password{"123456789"};
 
 /**********************************TEST LIST************************************
  * 1) Ensure the ability to convert data to SQL arguments. (Done)
@@ -30,8 +32,6 @@ extern "C"
  ******************************************************************************/
 TEST_GROUP(business_serialize_test)
 {
-	const std::string db_file{"../storage/tests/model_test.db"};
-	const std::string db_password{"123456789"};
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
@@ -41,15 +41,6 @@ TEST_GROUP(business_serialize_test)
 	{
 	}
 };
-
-TEST(business_serialize_test, convert_data_to_sql_arguments_unsuccessfully)
-{
-	data::business business_data{};
-	serialize::business business_serialize{};
-	storage::database::sql_parameters sql_parameters{business_serialize.package_data(business_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
 
 TEST(business_serialize_test, convert_data_to_sql_arguments_successfully)
 {
@@ -62,7 +53,14 @@ TEST(business_serialize_test, convert_data_to_sql_arguments_successfully)
 	business_data.set_cellphone(admin_data.get_cellphone());
 	business_data.set_email(admin_data.get_email());
 	serialize::business business_serialize{};
-	storage::database::sql_parameters sql_parameters{business_serialize.package_data(business_data)};
+	storage::database::sql_parameters sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
 	(void)database.select(sql::query::business_details_usert, sql_parameters);
 
 	CHECK_EQUAL(false, sql_parameters.empty());
@@ -89,7 +87,14 @@ TEST(business_serialize_test, convert_sql_business_data_successfully)
 	data::admin tmp_admin_data{test::generate_business_data()};
 	std::string business_name{tmp_admin_data.get_name()};
 	data::business tmp_business_data{tmp_admin_data};
-	storage::database::sql_parameters sql_parameters{business_serialize.package_data(tmp_business_data)};
+	storage::database::sql_parameters sql_parameters{
+		tmp_business_data.get_name(),
+		tmp_business_data.get_address(),
+		tmp_business_data.get_area_code(),
+		tmp_business_data.get_town(),
+		tmp_business_data.get_cellphone(),
+		tmp_business_data.get_email(),
+	};
 	(void)database.select(sql::query::business_details_usert, sql_parameters);
 	std::vector<storage::database::param_values> params = {business_name};
 	data::business business_data{
@@ -114,8 +119,6 @@ TEST(business_serialize_test, convert_sql_business_data_successfully)
  ******************************************************************************/
 TEST_GROUP(admin_serialize_test)
 {
-	const std::string db_file{"../storage/tests/model_test.db"};
-	const std::string db_password{"123456789"};
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
@@ -126,23 +129,28 @@ TEST_GROUP(admin_serialize_test)
 	}
 };
 
-TEST(admin_serialize_test, convert_data_to_sql_arguments_unsuccessfully)
-{
-	data::admin admin_data{};
-	serialize::admin admin_serialize{};
-	storage::database::sql_parameters sql_parameters{admin_serialize.package_data(admin_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
-
 TEST(admin_serialize_test, convert_data_to_sql_arguments_successfully)
 {
 	serialize::admin admin_serialize{};
 	serialize::business business_serialize{};
 	data::admin admin_data{test::generate_business_data()};
 	data::business business_data{admin_data};
-	storage::database::sql_parameters admin_sql_parameters{admin_serialize.package_data(admin_data)};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
+	storage::database::sql_parameters admin_sql_parameters{
+		admin_data.get_name(),
+		admin_data.get_bank(),
+		admin_data.get_branch_code(),
+		admin_data.get_account_number(),
+		admin_data.get_password(),
+		admin_data.get_client_message()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
 	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 	(void)database.select(sql::query::admin_usert, admin_sql_parameters);
 
@@ -170,8 +178,22 @@ TEST(admin_serialize_test, convert_sql_admin_data_successfully)
 	serialize::business business_serialize{};
 	data::admin tmp_admin_data{test::generate_business_data()};
 	data::business business_data{tmp_admin_data};
-	storage::database::sql_parameters admin_sql_parameters{admin_serialize.package_data(tmp_admin_data)};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
+	storage::database::sql_parameters admin_sql_parameters{
+		tmp_admin_data.get_name(),
+		tmp_admin_data.get_bank(),
+		tmp_admin_data.get_branch_code(),
+		tmp_admin_data.get_account_number(),
+		tmp_admin_data.get_password(),
+		tmp_admin_data.get_client_message()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email()
+	};
 	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 	(void)database.select(sql::query::admin_usert, admin_sql_parameters);
 	std::vector<storage::database::param_values> params = {tmp_admin_data.get_name()};
@@ -196,8 +218,6 @@ TEST(admin_serialize_test, convert_sql_admin_data_successfully)
  ******************************************************************************/
 TEST_GROUP(client_serialize_test)
 {
-	const std::string db_file{"../storage/tests/model_test.db"};
-	const std::string db_password{"123456789"};
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
@@ -208,23 +228,25 @@ TEST_GROUP(client_serialize_test)
 	}
 };
 
-TEST(client_serialize_test, convert_data_to_sql_arguments_unsuccessfully)
-{
-	data::client client_data{};
-	serialize::client client_serialize{};
-	storage::database::sql_parameters sql_parameters{client_serialize.package_data(client_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
-
 TEST(client_serialize_test, convert_data_to_sql_arguments_successfully)
 {
 	serialize::client client_serialize{};
 	serialize::business business_serialize{};
 	data::client client_data{test::generate_client_data()};
 	data::business business_data{client_data};
-	storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
+	storage::database::sql_parameters client_sql_parameters{
+		client_data.get_email(),
+		client_data.get_vat_number(),
+		client_data.get_statement_schedule()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
 	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 	(void)database.select(sql::query::client_usert, client_sql_parameters);
 
@@ -252,8 +274,19 @@ TEST(client_serialize_test, convert_sql_business_data_successfully)
 	serialize::business business_serialize{};
 	data::client tmp_client_data{test::generate_client_data()};
 	data::business business_data{tmp_client_data};
-	storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(tmp_client_data)};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
+	storage::database::sql_parameters client_sql_parameters{
+		tmp_client_data.get_email(),
+		tmp_client_data.get_vat_number(),
+		tmp_client_data.get_statement_schedule()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
 	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 	(void)database.select(sql::query::client_usert, client_sql_parameters);
 	std::vector<storage::database::param_values> params = {tmp_client_data.get_name()};
@@ -280,8 +313,6 @@ TEST(client_serialize_test, convert_sql_business_data_successfully)
  ******************************************************************************/
 TEST_GROUP(column_serialize_test)
 {
-	const std::string db_file{"../storage/tests/model_test.db"};
-	const std::string db_password{"123456789"};
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
@@ -291,26 +322,6 @@ TEST_GROUP(column_serialize_test)
 	{
 	}
 };
-
-TEST(column_serialize_test, convert_data_to_sql_arguments_invalid_column_data)
-{
-	data::invoice invoice_data{test::generate_invoice_data("Serialize test")};
-	data::column column_data{};
-	serialize::labor labor_serialize{};
-	storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
-
-TEST(column_serialize_test, convert_data_to_sql_arguments_invalid_invoice_data)
-{
-	data::column column_data{};
-	data::invoice invoice_data{test::generate_invoice_data("Serialize test")};
-	serialize::labor labor_serialize{};
-	storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
 
 TEST(column_serialize_test, convert_data_to_sql_arguments_successfully)
 {
@@ -324,26 +335,79 @@ TEST(column_serialize_test, convert_data_to_sql_arguments_successfully)
 		serialize::client client_serialize{};
 		serialize::business business_serialize{};
 		serialize::invoice invoice_serialize{};
-		storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
-		storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-		storage::database::sql_parameters invoice_sql_parameters{invoice_serialize.package_data(invoice_data)};
+		storage::database::sql_parameters business_sql_parameters{
+			business_data.get_name(),
+			business_data.get_address(),
+			business_data.get_area_code(),
+			business_data.get_town(),
+			business_data.get_cellphone(),
+			business_data.get_email(),
+		};
+		storage::database::sql_parameters client_sql_parameters{
+			client_data.get_email(),
+			client_data.get_vat_number(),
+			client_data.get_statement_schedule()
+		};
+		utility::date_manager date_manager{};
+		utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+		storage::database::sql_parameters invoice_sql_parameters{
+			static_cast<long long>(std::stoi(invoice_data.get_id())),
+			invoice_data.get_name(),
+			invoice_data.get_name(),
+			pb.period_start,
+			pb.period_end,
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			invoice_data.get_date(),
+			invoice_data.get_paid_status(),
+			invoice_data.get_material_total(),
+			invoice_data.get_description_total(),
+			invoice_data.get_grand_total()
+		};
 		(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 		(void)database.select(sql::query::client_usert, client_sql_parameters);
 		(void)database.select(sql::query::invoice_usert, invoice_sql_parameters);
 
 		for (const data::column& column_data : invoice_data.get_description_column())
 		{
-			storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters labor_sql_parameters{
+				invoice_data.get_name(),
+				invoice_data.get_order_number(),
+				invoice_data.get_job_card_number(),
+				column_data.get_row_number(),
+				column_data.get_is_description(),
+				column_data.get_quantity(),
+				column_data.get_description(),
+				column_data.get_amount(),
+			};
 			(void)database.select(sql::query::labor_usert, labor_sql_parameters);
 		}
 
 		for (const data::column& column_data : invoice_data.get_material_column())
 		{
-			storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
+			storage::database::sql_parameters labor_sql_parameters{
+				invoice_data.get_name(),
+				invoice_data.get_order_number(),
+				invoice_data.get_job_card_number(),
+				column_data.get_row_number(),
+				column_data.get_is_description(),
+				column_data.get_quantity(),
+				column_data.get_description(),
+				column_data.get_amount(),
+			};
 			(void)database.select(sql::query::labor_usert, labor_sql_parameters);
 		}
 
-		storage::database::sql_parameters sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
+		storage::database::sql_parameters sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
 
 		CHECK_EQUAL(false, sql_parameters.empty());
 	}
@@ -371,27 +435,71 @@ TEST(column_serialize_test, convert_sql_to_business_data_successfully)
 	serialize::client client_serialize{};
 	serialize::business business_serialize{};
 	serialize::invoice invoice_serialize{};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
-	storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-	storage::database::sql_parameters invoice_sql_parameters{invoice_serialize.package_data(invoice_data)};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
+	storage::database::sql_parameters client_sql_parameters{
+		client_data.get_email(),
+		client_data.get_vat_number(),
+		client_data.get_statement_schedule()
+	};
+	utility::date_manager date_manager{};
+	utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+	storage::database::sql_parameters invoice_sql_parameters{
+		static_cast<long long>(std::stoi(invoice_data.get_id())),
+		invoice_data.get_name(),
+		invoice_data.get_name(),
+		pb.period_start,
+		pb.period_end,
+		invoice_data.get_order_number(),
+		invoice_data.get_job_card_number(),
+		invoice_data.get_date(),
+		invoice_data.get_paid_status(),
+		invoice_data.get_material_total(),
+		invoice_data.get_description_total(),
+		invoice_data.get_grand_total()
+	};
 	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
 	(void)database.select(sql::query::client_usert, client_sql_parameters);
 	(void)database.select(sql::query::invoice_usert, invoice_sql_parameters);
 
 	for (const data::column& column_data : invoice_data.get_description_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
 		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
 	}
 
 	for (const data::column& column_data : invoice_data.get_material_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
 		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
 	}
 	std::vector<storage::database::param_values> params = {
 		static_cast<long long> (
-				std::stoi(invoice_data.get_invoice_number())
+				std::stoi(invoice_data.get_id())
 				)
 	};
 
@@ -405,14 +513,112 @@ TEST(column_serialize_test, convert_sql_to_business_data_successfully)
 
 
 
+
+
+
+
 /**********************************TEST LIST************************************
  * 1) Ensure the ability to convert data to SQL arguments. (Done)
- * 2) Ensure the ability to convert SQL data to admin struct data. (Done)
+ * 2) Ensure the ability to convert SQL data to statement data struct. (Done)
+ ******************************************************************************/
+TEST_GROUP(statement_serialize_test)
+{
+	storage::database::sqlite database{db_file, db_password};
+	void setup()
+	{
+		data::client client_data{test::generate_client_data()};
+		data::business business_data{client_data};
+		serialize::client client_serialize{};
+		serialize::business business_serialize{};
+		serialize::statement statement_serialize{};
+		storage::database::sql_parameters business_sql_parameters{
+			business_data.get_name(),
+			business_data.get_address(),
+			business_data.get_area_code(),
+			business_data.get_town(),
+			business_data.get_cellphone(),
+			business_data.get_email(),
+		};
+		storage::database::sql_parameters client_sql_parameters{
+			client_data.get_email(),
+			client_data.get_vat_number(),
+			client_data.get_statement_schedule()
+		};
+		(void)database.usert(sql::query::business_details_usert, business_sql_parameters);
+		(void)database.usert(sql::query::client_usert, client_sql_parameters);
+	}
+
+	void teardown()
+	{
+	}
+};
+
+TEST(statement_serialize_test, convert_data_to_sql_arguments_successfully)
+{
+	data::statement statement_data{test::generate_statement_data()};
+	storage::database::sql_parameters statement_sql_parameters{
+		statement_data.get_name(),
+		statement_data.get_period_start(),
+		statement_data.get_period_end(),
+		statement_data.get_date(),
+		statement_data.get_paid_status(),
+	};
+	(void)database.usert(sql::query::statement_usert, statement_sql_parameters);
+
+	CHECK_EQUAL(false, statement_sql_parameters.empty());
+}
+
+TEST(statement_serialize_test, convert_sql_to_business_data_unsuccessfully)
+{
+	serialize::statement statement_serialize{};
+	storage::database::sql_parameters params{};
+
+	for (const std::any& data : statement_serialize.extract_data(
+			database.select(sql::query::statement_select, params)))
+	{
+		data::statement statement_data{std::any_cast<data::statement> (data)};
+
+		CHECK_EQUAL(false, statement_data.is_valid());
+	}
+}
+
+TEST(statement_serialize_test, convert_sql_to_business_data_successfully)
+{
+	data::statement statement_data{test::generate_statement_data()};
+	serialize::statement statement_serialize{};
+	storage::database::sql_parameters usert_params{
+		statement_data.get_name(),
+		statement_data.get_period_start(),
+		statement_data.get_period_end(),
+		statement_data.get_date(),
+		statement_data.get_paid_status(),
+	};
+	(void)database.usert(sql::query::statement_usert, usert_params);
+
+	storage::database::sql_parameters select_params{
+		statement_data.get_name()
+	};
+
+	for (const std::any& data : statement_serialize.extract_data(
+			database.select(sql::query::statement_select, select_params)))
+	{
+		data::statement statement_data{std::any_cast<data::statement> (data)};
+
+		CHECK_EQUAL(true, statement_data.is_valid());
+	}
+}
+
+
+
+
+
+
+/**********************************TEST LIST************************************
+ * 1) Ensure the ability to convert data to SQL arguments. (Done)
+ * 2) Ensure the ability to convert SQL data to invoice data struct. (Done)
  ******************************************************************************/
 TEST_GROUP(invoice_serialize_test)
 {
-	const std::string db_file{"../storage/tests/model_test.db"};
-	const std::string db_password{"123456789"};
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
@@ -423,41 +629,86 @@ TEST_GROUP(invoice_serialize_test)
 	}
 };
 
-TEST(invoice_serialize_test, convert_data_to_sql_arguments_unsuccessfully)
-{
-	data::invoice invoice_data{};
-	serialize::invoice invoice_serialize{};
-	storage::database::sql_parameters sql_parameters{invoice_serialize.package_data(invoice_data)};
-
-	CHECK_EQUAL(true, sql_parameters.empty());
-}
-
 TEST(invoice_serialize_test, convert_data_to_sql_arguments_successfully)
 {
 	data::invoice invoice_data{test::generate_invoice_data("Serialization test")};
 	data::client client_data{test::generate_client_data()};
 	data::business business_data{client_data};
+	data::statement statement_data{test::generate_statement_data()};
 	serialize::client client_serialize{};
 	serialize::business business_serialize{};
 	serialize::invoice invoice_serialize{};
 	serialize::labor labor_serialize{};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
-	storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-	storage::database::sql_parameters invoice_sql_parameters{invoice_serialize.package_data(invoice_data)};
-	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
-	(void)database.select(sql::query::client_usert, client_sql_parameters);
-	(void)database.select(sql::query::invoice_usert, invoice_sql_parameters);
+	serialize::statement statement_serialize{};
+	storage::database::sql_parameters statement_sql_parameters{
+		statement_data.get_name(),
+		statement_data.get_period_start(),
+		statement_data.get_period_end(),
+		statement_data.get_date(),
+		statement_data.get_paid_status(),
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
+	storage::database::sql_parameters client_sql_parameters{
+		client_data.get_email(),
+		client_data.get_vat_number(),
+		client_data.get_statement_schedule()
+	};
+	utility::date_manager date_manager{};
+	utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+	storage::database::sql_parameters invoice_sql_parameters{
+		static_cast<long long>(std::stoi(invoice_data.get_id())),
+		invoice_data.get_name(),
+		invoice_data.get_name(),
+		pb.period_start,
+		pb.period_end,
+		invoice_data.get_order_number(),
+		invoice_data.get_job_card_number(),
+		invoice_data.get_date(),
+		invoice_data.get_paid_status(),
+		invoice_data.get_material_total(),
+		invoice_data.get_description_total(),
+		invoice_data.get_grand_total()
+	};
+	(void)database.usert(sql::query::business_details_usert, business_sql_parameters);
+	(void)database.usert(sql::query::client_usert, client_sql_parameters);
+	(void)database.usert(sql::query::invoice_usert, invoice_sql_parameters);
+	(void)database.usert(sql::query::statement_usert, statement_sql_parameters);
 
 	for (const data::column& column_data : invoice_data.get_description_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
+		(void)database.usert(sql::query::labor_usert, labor_sql_parameters);
 	}
 
 	for (const data::column& column_data : invoice_data.get_material_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
+		(void)database.usert(sql::query::labor_usert, labor_sql_parameters);
 	}
 
 	CHECK_EQUAL(false, invoice_sql_parameters.empty());
@@ -482,35 +733,89 @@ TEST(invoice_serialize_test, convert_sql_to_business_data_successfully)
 	data::invoice invoice_data{test::generate_invoice_data("Serialization test")};
 	data::client client_data{test::generate_client_data()};
 	data::business business_data{client_data};
+	data::statement statement_data{test::generate_statement_data()};
 	serialize::client client_serialize{};
 	serialize::business business_serialize{};
 	serialize::invoice invoice_serialize{};
 	serialize::labor labor_serialize{};
-	storage::database::sql_parameters business_sql_parameters{business_serialize.package_data(business_data)};
-	storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-	storage::database::sql_parameters invoice_sql_parameters{invoice_serialize.package_data(invoice_data)};
-	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
-	(void)database.select(sql::query::client_usert, client_sql_parameters);
-	(void)database.select(sql::query::invoice_usert, invoice_sql_parameters);
+	serialize::statement statement_serialize{};
+	storage::database::sql_parameters statement_sql_parameters{
+		statement_data.get_name(),
+		statement_data.get_period_start(),
+		statement_data.get_period_end(),
+		statement_data.get_date(),
+		statement_data.get_paid_status(),
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email(),
+	};
+	storage::database::sql_parameters client_sql_parameters{
+		client_data.get_email(),
+		client_data.get_vat_number(),
+		client_data.get_statement_schedule()
+	};
+	utility::date_manager date_manager{};
+	utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
+	storage::database::sql_parameters invoice_sql_parameters{
+		static_cast<long long>(std::stoi(invoice_data.get_id())),
+		invoice_data.get_name(),
+		invoice_data.get_name(),
+		pb.period_start,
+		pb.period_end,
+		invoice_data.get_order_number(),
+		invoice_data.get_job_card_number(),
+		invoice_data.get_date(),
+		invoice_data.get_paid_status(),
+		invoice_data.get_material_total(),
+		invoice_data.get_description_total(),
+		invoice_data.get_grand_total()
+	};
+	(void)database.usert(sql::query::business_details_usert, business_sql_parameters);
+	(void)database.usert(sql::query::client_usert, client_sql_parameters);
+	(void)database.usert(sql::query::invoice_usert, invoice_sql_parameters);
+	(void)database.usert(sql::query::statement_usert, statement_sql_parameters);
 
 	for (const data::column& column_data : invoice_data.get_description_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
+		(void)database.usert(sql::query::labor_usert, labor_sql_parameters);
 	}
 
 	for (const data::column& column_data : invoice_data.get_material_column())
 	{
-		storage::database::sql_parameters labor_sql_parameters{labor_serialize.package_data(column_data, invoice_data)};
-		(void)database.select(sql::query::labor_usert, labor_sql_parameters);
+		storage::database::sql_parameters labor_sql_parameters{
+			invoice_data.get_name(),
+			invoice_data.get_order_number(),
+			invoice_data.get_job_card_number(),
+			column_data.get_row_number(),
+			column_data.get_is_description(),
+			column_data.get_quantity(),
+			column_data.get_description(),
+			column_data.get_amount(),
+		};
+		(void)database.usert(sql::query::labor_usert, labor_sql_parameters);
 	}
 
-	storage::database::sql_parameters invoice_params = {invoice_data.get_business_name()};
+	storage::database::sql_parameters invoice_params = {invoice_data.get_name()};
 	for (const std::any& data : invoice_serialize.extract_data(
 			database.select(sql::query::invoice_select, invoice_params)))
 	{
 		data::invoice tmp_invoice_data{std::any_cast<data::invoice> (data)};
-		storage::database::sql_parameters column_params = {std::stoi(tmp_invoice_data.get_invoice_number())};
+		storage::database::sql_parameters column_params = {std::stoi(tmp_invoice_data.get_id())};
 		std::vector<data::column> description_column_data{labor_serialize.extract_data(
 					database.select(sql::query::description_labor_select, column_params)
 				)};

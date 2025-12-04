@@ -3,6 +3,7 @@
 #define _SERIALIZE_INVOICE_H_
 #include <serialize.h>
 #include <column_data.h>
+#include <invoice_data.h>
 
 namespace serialize {
 class invoice : public interface::multi_serialize {
@@ -14,8 +15,8 @@ public:
 	invoice& operator= (invoice&&) = delete;
 	virtual ~invoice() override;
 
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) override;
 	[[nodiscard]] virtual std::vector<std::any> extract_data(const storage::database::part::rows&) override;
+	virtual void set_schedule(const std::string&);
 
 private:
 	[[nodiscard]] std::vector<data::invoice> collect_values(const storage::database::part::rows&);
@@ -44,8 +45,6 @@ public:
 	virtual ~labor() = default;
 
 	[[nodiscard]] virtual std::vector<data::column> extract_data(const storage::database::part::rows&);
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const data::column&,
-									     const data::invoice&);
 
 private:
 	[[nodiscard]] std::vector<data::column> collect_values(const storage::database::part::rows&);
@@ -68,6 +67,7 @@ constexpr const char* invoice_usert{R"sql(
 	INSERT INTO invoice (
 		invoice_id,
 		business_id,
+		statement_id,
 		order_number,
 		job_card_number,
 		date_created,
@@ -80,10 +80,20 @@ constexpr const char* invoice_usert{R"sql(
 		(SELECT c.business_id
 			FROM client c
 			JOIN business_details b ON b.business_id = c.business_id
-			WHERE b.business_name = ?),
+			WHERE b.business_name = ?
+		),
+		(SELECT s.statement_id
+			FROM statement s
+			JOIN client c2 ON c2.business_id = s.business_id
+			JOIN business_details b2 ON b2.business_id = c2.business_id
+			WHERE b2.business_name = ?
+			  AND s.period_start   = ?
+			  AND s.period_end     = ?),
 		?, ?, ?, ?, ?, ?, ?
 	)
 	ON CONFLICT (invoice_id) DO UPDATE SET
+		business_id       = excluded.business_id,
+		statement_id      = excluded.statement_id,
 		order_number      = excluded.order_number,
 		job_card_number   = excluded.job_card_number,
 		date_created      = excluded.date_created,
@@ -92,6 +102,7 @@ constexpr const char* invoice_usert{R"sql(
 		description_total = excluded.description_total,
 		grand_total       = excluded.grand_total;
 )sql"};
+
 
 constexpr const char* invoice_admin_select{R"sql(
 	SELECT

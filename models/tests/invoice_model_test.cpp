@@ -12,6 +12,7 @@
 #include <sqlite.h>
 #include <generate_pdf.h>
 #include <invoice_model.h>
+#include <statement_model.h>
 #include <admin_serialize.h>
 #include <client_serialize.h>
 #include <invoice_serialize.h>
@@ -42,14 +43,39 @@ TEST_GROUP(invoice_model_test)
 		serialize::client client_serialize{};
 		serialize::invoice invoice_serialize{};
 		serialize::business business_serialize{};
-		storage::database::sql_parameters admin_sql_parameters{admin_serialize.package_data(admin_data)};
-		storage::database::sql_parameters admin_business_sql_parameters{business_serialize.package_data(admin_business_data)};
-		storage::database::sql_parameters client_business_sql_parameters{business_serialize.package_data(client_business_data)};
-		storage::database::sql_parameters client_sql_parameters{client_serialize.package_data(client_data)};
-		(void)database.select(sql::query::business_details_usert, admin_business_sql_parameters);
-		(void)database.select(sql::query::admin_usert, admin_sql_parameters);
-		(void)database.select(sql::query::business_details_usert, client_business_sql_parameters);
-		(void)database.select(sql::query::client_usert, client_sql_parameters);
+		storage::database::sql_parameters admin_sql_parameters{
+			admin_data.get_name(),
+			admin_data.get_bank(),
+			admin_data.get_branch_code(),
+			admin_data.get_account_number(),
+			admin_data.get_password(),
+			admin_data.get_client_message()
+		};
+		storage::database::sql_parameters admin_business_sql_parameters{
+			admin_business_data.get_name(),
+			admin_business_data.get_address(),
+			admin_business_data.get_area_code(),
+			admin_business_data.get_town(),
+			admin_business_data.get_cellphone(),
+			admin_business_data.get_email(),
+		};
+		storage::database::sql_parameters client_business_sql_parameters{
+			client_business_data.get_name(),
+			client_business_data.get_address(),
+			client_business_data.get_area_code(),
+			client_business_data.get_town(),
+			client_business_data.get_cellphone(),
+			client_business_data.get_email(),
+		};
+		storage::database::sql_parameters client_sql_parameters{
+			client_data.get_email(),
+			client_data.get_vat_number(),
+			client_data.get_statement_schedule()
+		};
+		(void)database.usert(sql::query::business_details_usert, admin_business_sql_parameters);
+		(void)database.usert(sql::query::admin_usert, admin_sql_parameters);
+		(void)database.usert(sql::query::business_details_usert, client_business_sql_parameters);
+		(void)database.usert(sql::query::client_usert, client_sql_parameters);
 	}
 
 	void teardown()
@@ -91,7 +117,7 @@ TEST(invoice_model_test, load_data_from_database_unsuccessfully)
 TEST(invoice_model_test, load_data_from_database_successfully)
 {
         data::invoice invoice_data{test::generate_invoice_data("invoice model machining")};
-	for (const std::any pdf_invoice_data : invoice_model.load(invoice_data.get_business_name()))
+	for (const std::any pdf_invoice_data : invoice_model.load(invoice_data.get_name()))
 	{
 		data::pdf_invoice data{std::any_cast<data::pdf_invoice> (pdf_invoice_data)};
 		data::admin admin_data{data.get_business()};

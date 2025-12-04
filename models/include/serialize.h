@@ -10,7 +10,6 @@ class single_serialize {
 public:
 	virtual ~single_serialize() = default;
 
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) = 0;
 	[[nodiscard]] virtual std::any extract_data(const storage::database::part::rows&) = 0;
 };
 
@@ -18,7 +17,6 @@ class multi_serialize {
 public:
 	virtual ~multi_serialize() = default;
 
-	[[nodiscard]] virtual storage::database::sql_parameters package_data(const std::any&) = 0;
 	[[nodiscard]] virtual std::vector<std::any> extract_data(const storage::database::part::rows&) = 0;
 };
 }

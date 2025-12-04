@@ -19,7 +19,9 @@ if(${FILES_IN_DIR} GREATER 0)
                 ${PROJECT_SOURCE_DIR}/source/email_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/client_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/column_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/billing_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/invoice_data.cpp
+                ${PROJECT_SOURCE_DIR}/source/statement_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/pdf_invoice_data.cpp
                 ${PROJECT_SOURCE_DIR}/source/pdf_statement_data.cpp
         )

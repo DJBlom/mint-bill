@@ -258,10 +258,10 @@ bool feature::statement_pdf::add_items(const std::vector<data::pdf_invoice>& _da
         {
 		data::invoice invoice{pdf_invoice.get_invoice()};
                 this->current_width = width::left_border;
-                if (write_to_pdf("# " + invoice.get_invoice_number(), font_size::information) == false)
+                if (write_to_pdf("# " + invoice.get_id(), font_size::information) == false)
 			break;
 
-                if (write_to_pdf_in_first_quarter(invoice.get_invoice_date() , font_size::information) == false)
+                if (write_to_pdf_in_first_quarter(invoice.get_date() , font_size::information) == false)
 			break;
 
                 if (write_to_pdf_in_second_quarter(invoice.get_paid_status() , font_size::information) == false)

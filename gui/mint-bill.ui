@@ -549,6 +549,17 @@
                                     </layout>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkLabel" id="statement-total-label">
+                                    <property name="halign">start</property>
+                                    <property name="justify">right</property>
+                                    <property name="label">Total: </property>
+                                    <layout>
+                                      <property name="column">2</property>
+                                      <property name="row">0</property>
+                                    </layout>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -930,9 +941,7 @@
 
 2) - Is u e-pos korrek ingevul?
 
-3) - Is die staatskedule formaat korrek dag/maand, dag/week?
-     Byvoorbeeld, 4, 4 beteken dat die staat op elke 4 dag 
-     van die week vir 4 keer 'n maand gegenereer gaan word.</property>
+3) - Is die staatskedule formaat korrek dag/maand, dag/week? Byvoorbeeld, 4, 4 beteken dat die staat 4 keer 'n maand gegenereer gaan word op elke 4 dag van die week vir.</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>
