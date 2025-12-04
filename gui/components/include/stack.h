@@ -21,6 +21,8 @@ public:
 	[[nodiscard]] virtual bool subscribe(const std::string&,
 				      std::function<void(const std::string&)>) const override;
 	[[nodiscard]] virtual std::string current_page() const;
+	[[nodiscard]] virtual bool set_current_page(const std::string&) const;
+
 private:
 	void on_page_switched();
 

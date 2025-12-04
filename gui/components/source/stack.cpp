@@ -77,6 +77,23 @@ std::string gui::part::stack::current_page() const
 	return this->current_page_name;
 }
 
+bool gui::part::stack::set_current_page(const std::string& _stack_page_name) const
+{
+	bool success{false};
+	if (_stack_page_name.empty() == true)
+	{
+		syslog(LOG_CRIT, "STACK: invalid argumnet - "
+				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		success = true;
+		this->gui_stack->set_visible_child(_stack_page_name);
+	}
+
+	return success;
+}
+
 void gui::part::stack::on_page_switched()
 {
 	if (this->is_not_valid())

@@ -110,6 +110,20 @@ bool model::invoice::save(const std::any& _data) const
 		storage::database::sqlite database{this->database_file, this->database_password};
 		storage::database::sql_parameters labor_delete_all_params{std::stoi(invoice_data.get_id())};
 
+		serialize::admin admin_serialize{};
+		data::admin admin_data{
+			std::any_cast<data::admin>(
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_no_name_select)
+				)
+			)
+		};
+
+		if (admin_data.is_valid() == false)
+		{
+			return success;
+		}
+
 		storage::database::sql_parameters params = {invoice_data.get_name()};
 		serialize::client client_serialize{};
 		data::client client_data{

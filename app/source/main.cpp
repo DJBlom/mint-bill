@@ -55,6 +55,7 @@ private:
 	std::unique_ptr<Gtk::Entry> database_password_entry{nullptr};
 	std::unique_ptr<Gtk::Button> database_password_button{nullptr};
 	std::unique_ptr<Gtk::Label> organization_label{nullptr};
+	bool admin_exists{false};
 	gui::admin_page admin_page{};
 	gui::client_register_page client_register_page{};
 	gui::invoice_page invoice_page{};
@@ -686,10 +687,15 @@ void mint_bill::database_password_exist()
 		{
 			syslog(LOG_CRIT, "MINT_BILL: the admin data is not valid - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (this->stack.set_current_page("admin-page") == false)
+			{
+
+			}
 		}
 		else
 		{
 			this->organization_label->set_text(admin_data.get_name());
+			this->admin_exists = true;
 		}
 
 		if (this->admin_page.set_database_password(password) == false)

@@ -80,6 +80,7 @@ TEST(stack_test, subscribe_no_callback)
 	(void) stack.create(builder);
 
 	CHECK_EQUAL(false, stack.subscribe("admin-page", nullptr));
+	CHECK_EQUAL(true, stack.set_current_page("admin-page"));
 }
 
 TEST(stack_test, subscribe_successfully)
@@ -87,6 +88,7 @@ TEST(stack_test, subscribe_successfully)
 	(void) stack.create(builder);
 
 	CHECK_EQUAL(true, stack.subscribe("admin-page", callback_function));
+	CHECK_EQUAL(true, stack.set_current_page("admin-page"));
 }
 
 TEST(stack_test, try_to_add_multiple_subscriber_to_the_same_page)

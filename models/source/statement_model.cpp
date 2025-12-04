@@ -134,6 +134,21 @@ bool model::statement::save(const std::any& _data) const
 	else
         {
 		storage::database::sqlite database{this->database_file, this->database_password};
+
+		serialize::admin admin_serialize{};
+		data::admin admin_data{
+			std::any_cast<data::admin>(
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_no_name_select)
+				)
+			)
+		};
+
+		if (admin_data.is_valid() == false)
+		{
+			return success;
+		}
+
 		storage::database::sql_parameters statement_params = {
 			statement_data.get_name(),
 			statement_data.get_period_start(),
