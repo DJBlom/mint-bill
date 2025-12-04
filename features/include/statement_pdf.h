@@ -1,10 +1,54 @@
-/********************************************************
-* Contents: Statement PDF
-* Author: Dawid J. Blom
-* Date: July 11, 2025
-*
-* NOTE:
-*******************************************************/
+/******************************************************************************
+ * @file statement_pdf.h
+ * @brief Declaration of the statement_pdf class for generating customer
+ *        statements in PDF format.
+ *
+ * @details
+ * This header defines the feature::statement_pdf class, an implementation of the
+ * interface::pdf abstraction used to generate structured financial statements.
+ * The class encapsulates PDF rendering logic using Cairo and CairoMM, providing
+ * a clean API for formatting client details, account summaries, invoice lists,
+ * totals, and payment information.
+ *
+ * Purpose:
+ *  - Produce professional, consistent statement documents for customers.
+ *  - Support multi-invoice summaries and account-level information.
+ *  - Integrate with application data models (client, admin, pdf_statement).
+ *
+ * Overview of Responsibilities:
+ *  - Render PDF headers, metadata blocks, invoice tables, and totals.
+ *  - Format all textual sections using configurable font sizes and alignment
+ *    routines (left, center, right, first/second quarter).
+ *  - Create table-like structures using Cairo drawing primitives.
+ *  - Manage pagination and spatial constraints to avoid visual overflow.
+ *
+ * Thread Safety:
+ *  - A mutex ensures synchronized updates to PDF cursor positions during write
+ *    operations, preventing inconsistent layout in multi-threaded contexts.
+ *
+ * Public API:
+ *  - std::string generate(const std::any&)
+ *      Converts a data::pdf_statement into a fully rendered PDF stored in memory
+ *      and returned as a binary string. Handles validation, surface creation,
+ *      context setup, and full layout execution.
+ *
+ * Internal Helpers:
+ *  - add_header(), add_information(), add_statement_information(),
+ *    add_statements(), add_items(), add_grand_total(), add_payment_method()
+ *      These methods draw specific document sections.
+ *
+ *  - write_to_pdf(), write_to_pdf_in_first_quarter(), write_to_pdf_in_center(),
+ *    write_to_pdf_in_second_quarter(), write_to_pdf_from_right(), etc.
+ *      Handle positioning, text rendering, and formatting for each section.
+ *
+ *  - align_to_*(...) and adjust_height()/adjust_payment_height()
+ *      Manage layout flow and prevent clipping across PDF pages.
+ *
+ * Error Handling:
+ *  - Invalid data triggers syslog messages and aborts PDF generation.
+ *  - Failures at any rendering stage cause early termination with an empty PDF.
+ *
+ ******************************************************************************/
 #ifndef _STATEMENT_PDF_H_
 #define _STATEMENT_PDF_H_
 #include <mutex>

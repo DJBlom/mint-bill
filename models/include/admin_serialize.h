@@ -1,4 +1,27 @@
-
+/*******************************************************************************
+ * @file admin_serialize.h
+ *
+ * @brief Serialization helper for administrator records.
+ *
+ * @details
+ * This header declares the `serialize::admin` class, which implements the
+ * `interface::single_serialize` interface to convert raw SQLite query
+ * results into a strongly-typed `data::admin` object.
+ *
+ * Responsibilities:
+ *  - Interpret `storage::database::part::rows` returned from the database.
+ *  - Map each column to the corresponding admin field (business details,
+ *    contact info, banking data, and client message).
+ *  - Provide a single `extract_data()` entry point that returns a fully
+ *    populated `data::admin` wrapped in `std::any`.
+ *
+ * The file also defines SQL query strings in `sql::query` used by the admin
+ * model:
+ *  - `admin_usert`           – UPSERT for admin records linked to a business.
+ *  - `admin_select`          – Select admin and business data by name.
+ *  - `admin_no_name_select`  – Select the first available admin/business
+ *                              combination without filtering by name.
+ *******************************************************************************/
 #ifndef _SERIALIZE_ADMIN_H_
 #define _SERIALIZE_ADMIN_H_
 #include <serialize.h>

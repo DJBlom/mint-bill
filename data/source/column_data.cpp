@@ -1,14 +1,35 @@
-/********************************************************
- * Contents: Column data implementation
- * Author: Dawid J. Blom
- * Date: December 9, 2024
+/*****************************************************************************
+ * @file column_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the column data model defined in column_data.h, including
+ *   construction, assignment, validation, and controlled updates to column
+ *   fields.
+ *
+ * @details
+ *   This implementation provides the behavior for data::column, including copy
+ *   and move semantics as well as setter and getter methods for quantity,
+ *   description, amount, row number, and the is_description flag. Setter
+ *   functions apply basic validation rules, such as length constraints for
+ *   formatted numeric and textual data, and range checks for numeric fields.
+ *
+ *   The amount field is formatted with fixed precision before length
+ *   verification, ensuring that external constraints are applied to a
+ *   predictable representation. A bitmask-based flag mechanism is used to
+ *   track which attributes are initialized, and check_flags() consolidates
+ *   this state so that is_valid() can report completeness. A mutex guards
+ *   modifications to internal members, enabling thread-safe use in concurrent
+ *   code.
+ *
+ * @notes
+ *   Field limits are defined in the local limit namespace, making it easy to
+ *   adjust constraints without changing the class interface. The logical
+ *   is_description flag is validated against LOGICAL_TRUE and LOGICAL_FALSE,
+ *   enabling clear separation of purely descriptive rows from rows that carry
+ *   transactional values.
+ *****************************************************************************/
 #include <column_data.h>
 #include <limits>
-
-
 
 
 namespace limit {

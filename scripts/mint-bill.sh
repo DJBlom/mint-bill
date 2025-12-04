@@ -1,11 +1,22 @@
-############################################################################
-# Contents: Main Function
-# Author: Dawid Blom
-# Date: September 15, 2023
+################################################################################
+# File: mint-bill.sh
+# Description:
+#   Main entrypoint script for building, testing, installing, and gathering
+#   statistics for the Mint-Bill project. Delegates operations to build.sh,
+#   test.sh, install.sh, and statistics.sh. Provides complete project lifecycle
+#   tooling through a unified command interface.
 #
-# NOTE: Allows the user to build, test, draw statistics, and install 
-#       project related packages.
-############################################################################
+# Features:
+#   - Command-line argument parsing
+#   - Environment validation
+#   - Dispatch for build, test, install, and metrics
+#   - ANSI-colored messaging
+#
+# Usage:
+#   ./mint-bill.sh [--build] [--test] [--install] [--stats]
+#   ./mint-bill.sh -h
+#
+################################################################################
 #!/bin/bash
 source $(dirname "$0")/build.sh
 source $(dirname "$0")/test.sh
@@ -58,7 +69,7 @@ function parse_command_line_arguments()
                         -b | --build | -b=* | --build=*)
                                 is_argument_value_provided $@
                                 if return_value_not_ok;
-                                then 
+                                then
                                         $ECHO "${ERROR_COLOR}ERROR: Build option not specified${END_COLOR}"
                                         help
                                         exit 1
@@ -76,7 +87,7 @@ function parse_command_line_arguments()
                         -t | --test | -t=* | --test=*)
                                 is_argument_value_provided $@
                                 if return_value_not_ok;
-                                then 
+                                then
                                         $ECHO "${ERROR_COLOR}ERROR: Test option not specified${END_COLOR}"
                                         help
                                         exit 1
@@ -94,7 +105,7 @@ function parse_command_line_arguments()
                         -s | --stats | -s=* | --stats=*)
                                 is_argument_value_provided $@
                                 if return_value_not_ok;
-                                then 
+                                then
                                         $ECHO "${ERROR_COLOR}ERROR: Statistic option not specified${END_COLOR}"
                                         help
                                         exit 1
@@ -112,7 +123,7 @@ function parse_command_line_arguments()
                         -i | --install | -i=* | --install=*)
                                 is_argument_value_provided $@
                                 if return_value_not_ok;
-                                then 
+                                then
                                         $ECHO "${ERROR_COLOR}ERROR: Installation option not specified${END_COLOR}"
                                         help
                                         exit 1
@@ -143,7 +154,7 @@ function help()
 {
         $ECHO "${INFO_COLOR}\n\rUsage: ./scripts/mintbill.sh [OPTION]${END_COLOR}"
         $ECHO "${INFO_COLOR}Building, testing, and analyzing a projects code${END_COLOR}"
-        $ECHO   
+        $ECHO
         $ECHO "${INFO_COLOR}OPTIONS:${END_COLOR}"
         $ECHO "${INFO_COLOR}\t-b, -b=, --build, --build=SUPPORTED_BUILD${END_COLOR}"
         $ECHO "${INFO_COLOR}\t\tSUPPORTED_BUILD:${END_COLOR}"
@@ -204,7 +215,7 @@ function return_value_not_ok()
 
 function to_lower()
 {
-        echo "${1}" | tr '[:upper:]' '[:lower:]' 
+        echo "${1}" | tr '[:upper:]' '[:lower:]'
 }
 
 main $@

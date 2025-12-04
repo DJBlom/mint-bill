@@ -1,10 +1,30 @@
-/********************************************************
- * Contents: Email data implementation
- * Author: Dawid J. Blom
- * Date: December 30, 2024
+/*****************************************************************************
+ * @file email_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the email data model defined in email_data.h, including
+ *   construction, assignment, validation, and controlled updates to email
+ *   attributes.
+ *
+ * @details
+ *   This implementation provides the behavior of data::email, including copy
+ *   and move semantics, along with setter and getter methods for attachments,
+ *   client, business (admin), and subject. Attachments are accepted as a
+ *   collection of file name strings, while client and admin objects are only
+ *   stored if they report themselves as valid.
+ *
+ *   A bitmask-based flag system is used to track which components are
+ *   initialized. The check_flags() helper consolidates this state so that
+ *   is_valid() can indicate whether an email instance is complete enough for
+ *   use by higher-level logic. All mutating operations acquire a mutex to
+ *   ensure thread-safe updates.
+ *
+ * @notes
+ *   Subject length constraints are defined in the local limits namespace and
+ *   can be adjusted without altering the public interface. Callers should rely
+ *   on is_valid() before handing email instances to formatting or transport
+ *   layers.
+ *****************************************************************************/
 #include <email_data.h>
 
 

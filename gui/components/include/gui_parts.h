@@ -1,4 +1,68 @@
-
+/*******************************************************************************
+ * @file gui_parts.h
+ *
+ * @brief Declarations for reusable GUI building blocks used across the
+ *        application, including statement column types, list views,
+ *        PDF viewers, dialogs, search bar, and subscribed buttons.
+ *
+ * @details
+ * This header groups small, composable GUI helpers under the gui::part
+ * namespace. These helpers encapsulate Gtkmm widgets and common patterns so
+ * that higher-level pages (e.g., statement_page, invoice_page) can be wired
+ * together with minimal boilerplate:
+ *
+ *   - gui::part::statement::columns::
+ *       * entries: Glib::Object wrapper that carries a data::invoice instance
+ *         used as the model item for Gtk::ColumnView.
+ *       * invoice_number, date, order_number, paid_status, price:
+ *         column_item implementations that create and bind Gtk::ColumnViewColumn
+ *         objects, formatting invoice properties into labels/check buttons.
+ *
+ *   - gui::part::statement::column_view:
+ *       * Thin wrapper around Gtk::ColumnView + Gio::ListStore<entries>
+ *         providing a typed model for data::invoice, plus convenience methods
+ *         to add columns, populate/clear data, and extract the underlying
+ *         invoice list.
+ *
+ *   - gui::part::statement::rows::
+ *       * invoice_pdf_entries / statement_pdf_entries:
+ *         Glib::Object model types holding data::pdf_invoice and
+ *         data::pdf_statement instances for list views.
+ *
+ *   - gui::part::statement::pdf_window / pdf_draw:
+ *       * Create a modal Gtk::Window that renders a multi-page PDF using
+ *         poppler and Cairo. pdf_draw is a Gtk::DrawingArea that renders a
+ *         single page at a configurable DPI, scaling to the widget size.
+ *
+ *   - gui::part::statement::invoice_pdf_view / statement_pdf_view:
+ *       * ListView wrappers that display PDF invoices and PDF statements,
+ *         manage selection, and expose convenience callbacks:
+ *             - invoice_pdf_view: opens a generated invoice PDF window when
+ *               a row is activated.
+ *             - statement_pdf_view: supports registration of single-click and
+ *               double-click callbacks to propagate selected statements to
+ *               higher-level controllers.
+ *
+ *   - gui::part::search_bar:
+ *       * Encapsulates a Gtk::SearchEntry and a simple pub-sub mechanism.
+ *         Pages subscribe with a name and callback; whenever the search text
+ *         changes, all subscribers are notified with the current keyword.
+ *
+ *   - gui::part::dialog:
+ *       * Wrapper around Gtk::MessageDialog that exposes a uniform interface
+ *         for creating, showing/hiding dialogs, and registering a response
+ *         callback.
+ *
+ *   - gui::part::sub_button:
+ *       * Wraps a Gtk::Button and allows controllers to subscribe a callback
+ *         that will be triggered on click, plus enable/disable helpers.
+ *
+ * All helpers follow a similar pattern:
+ *   - create(): resolve widgets via Gtk::Builder and hook up signals.
+ *   - is_not_valid(): runtime validation guard.
+ *   - Operations returning bool and logging failures via syslog, to provide
+ *     consistent error reporting throughout the GUI layer.
+ *******************************************************************************/
 #ifndef _GUI_PART_H_
 #define _GUI_PART_H_
 #include <part.h>

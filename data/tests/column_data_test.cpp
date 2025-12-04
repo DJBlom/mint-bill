@@ -1,10 +1,39 @@
-/*******************************************************************************
- * Contents: invoice data unit tests
- * Author: Dawid Blom
- * Date: December 4, 2024
+/*****************************************************************************
+ * @file column_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::column model, validating line-item fields,
+ *   boundary constraints, and copy/move semantics.
+ *
+ * @details
+ *   This test suite exercises the data::column structure, which represents a
+ *   single line item in an invoice or tabular dataset. The following aspects
+ *   are covered:
+ *
+ *   - Field assignment and retrieval:
+ *       • row_number
+ *       • is_description flag
+ *       • quantity
+ *       • description
+ *       • amount
+ *
+ *   - Validation behavior:
+ *       • Verifies that fully populated, well-formed data is considered valid
+ *       • Confirms that extreme or out-of-range values are rejected
+ *       • Checks length constraints for quantity, description, and amount
+ *
+ *   - Copy and move semantics:
+ *       • Copy-assignment and copy-construction
+ *       • Move-assignment and move-construction
+ *       • Ensures validity is preserved across transfers of ownership
+ *
+ *   - Boundary conditions:
+ *       • Tests numeric limits for quantity, row_number, and is_description
+ *       • Tests length limits for amount and description formatting
+ *
+ *   Collectively, these tests ensure that data::column behaves reliably as a
+ *   robust, validated building block for invoice and statement line items.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

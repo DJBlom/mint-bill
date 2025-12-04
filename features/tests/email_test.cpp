@@ -1,9 +1,31 @@
-/*******************************************************************************
- * Contents: Sending emails feature unit tests
- * Author: Dawid Blom
- * Date: December 23, 2024
+/******************************************************************************
+ * @test_list Email Feature Test Suite
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @brief
+ *   This test suite validates the behavior of the e-mail sending feature,
+ *   including end-to-end integration with PDF generation, attachment handling,
+ *   and data validation logic.
+ *
+ * @details
+ *   The following behaviors are tested:
+ *
+ *   1. **Successful e-mail sending with valid data**
+ *      - Ensures that when all required business, client, and invoice fields
+ *        are valid, and a correct PDF attachment is provided, the e-mail
+ *        subsystem successfully transmits the message.
+ *
+ *   2. **Handling of multiple PDF attachments**
+ *      - Verifies that the system can attach and transmit multiple generated
+ *        invoice PDFs and still report a successful send operation.
+ *
+ *   3. **Failure on invalid or missing data**
+ *      - Confirms that the feature prevents sending when required fields are
+ *        missing, blank, or invalid (e.g., missing subject, empty attachments,
+ *        invalid business/client data).
+ *
+ *   Together, these tests ensure correct functionality of the e-mail sending
+ *   pipeline under normal, stress, and error conditions.
+ *
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -24,9 +46,6 @@ extern "C"
 }
 
 
-/**********************************TEST LIST************************************
- * 1)
- ******************************************************************************/
 TEST_GROUP(email_test)
 {
         data::email data;

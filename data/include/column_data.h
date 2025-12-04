@@ -1,10 +1,35 @@
-/********************************************************
- * Contents: Column data definition
- * Author: Dawid J. Blom
- * Date: December 8, 2024
+/*****************************************************************************
+ * @file column_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the column data model representing a single logical row entry
+ *   with quantity, description, amount, row index, and a description flag.
+ *
+ * @details
+ *   The data::column structure encapsulates the fields required to describe an
+ *   individual line item in a tabular dataset, such as an invoice or report.
+ *   It stores numeric and textual attributes and exposes a small interface for
+ *   setting and retrieving each one. A bitmask-based flag mechanism is used to
+ *   track which fields are initialized, allowing is_valid() to provide a
+ *   concise completeness check.
+ *
+ *   The model also includes a logical indicator field (is_description) that
+ *   distinguishes between descriptive rows and value-bearing rows. A mutex is
+ *   used to protect internal state during updates, supporting safe use in
+ *   multi-threaded scenarios.
+ *
+ * @responsibilities
+ *   Represent an individual tabular entry with quantity, description, amount,
+ *   row number, and a logical flag.
+ *   Provide setters and getters for each stored attribute.
+ *   Track initialization state via an internal flag mask.
+ *   Support thread-safe modifications using a per-instance mutex.
+ *
+ * @notes
+ *   Logical constants LOGICAL_TRUE and LOGICAL_FALSE are defined at namespace
+ *   scope to indicate the expected values for the is_description field. Higher
+ *   layers can interpret this flag when rendering or processing tabular data.
+ *****************************************************************************/
 #ifndef _COLUMN_DATA_H_
 #define _COLUMN_DATA_H_
 #include <mutex>

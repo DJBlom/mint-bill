@@ -1,10 +1,31 @@
-/********************************************************
- * Contents: sqlite class declaration
- * Author: Dawid J. Blom
- * Date: November 25, 2024
+/*******************************************************************************
+ * @file    sqlite.h
+ * @brief   SQLite/SQLCipher database abstraction layer.
  *
- * NOTE:
- *******************************************************/
+ * @details This header defines the interfaces and supporting types used for
+ *          interacting with an encrypted SQLCipher-backed SQLite database.
+ *
+ *          Key features:
+ *            - Provides storage::database::sqlite, a high-level wrapper around
+ *              SQLCipher that manages encrypted database connections and
+ *              exposes simple APIs for transactions, parameterized inserts/
+ *              updates, and SELECT queries.
+ *
+ *            - Defines storage::database::param_values and related aliases,
+ *              representing the full set of SQLite storage classes through
+ *              std::variant (NULL, INTEGER, REAL, TEXT, BLOB).
+ *
+ *            - Introduces storage::database::part::sql_operations, a helper
+ *              responsible for preparing SQL statements, binding parameters,
+ *              executing queries, and collecting rows into structured forms.
+ *
+ *            - Includes binder, a std::variant visitor that binds C++ values
+ *              to SQLite prepared-statement parameters safely and consistently.
+ *
+ *          These abstractions decouple the rest of the system from direct
+ *          SQLite API usage, promote consistent error handling, and provide a
+ *          clean interface for all database interactions.
+ ******************************************************************************/
 #ifndef _SQLITE_H_
 #define _SQLITE_H_
 #include <string>

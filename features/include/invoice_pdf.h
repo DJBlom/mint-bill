@@ -1,10 +1,49 @@
-/********************************************************
-* Contents: Invoice PDF
-* Author: Dawid J. Blom
-* Date: December 23, 2024
-*
-* NOTE:
-*******************************************************/
+/*****************************************************************************
+ * @file    invoice_pdf.h
+ *
+ * @brief
+ *   Declaration of the PDF invoice generator.
+ *
+ * @details
+ *   This header declares the `feature::invoice_pdf` class, an implementation
+ *   of the `interface::pdf` interface used to generate invoice PDFs for the
+ *   Mint-Bill application.
+ *
+ *   Responsibilities:
+ *     - Accept a `data::pdf_invoice` aggregate (business, client, invoice).
+ *     - Lay out invoice content using Cairo / cairomm on a PDF surface:
+ *         * Document header (title and top-of-page layout).
+ *         * Business and client information sections.
+ *         * Invoice metadata (number, date, order number, job card).
+ *         * Labor and material tables with quantities, descriptions, amounts.
+ *         * Totals (labor, materials, and grand total).
+ *         * Payment method and optional client message.
+ *     - Expose a single `generate()` API that returns the final PDF as an
+ *       in-memory string buffer suitable for email attachments or file I/O.
+ *
+ *   Layout and rendering details:
+ *     - Uses fixed page dimensions (A4 in points: 595 x 842).
+ *     - Provides helper methods for:
+ *         * Text placement: left-aligned, centered, and right-aligned.
+ *         * Section spacing, line drawing, and page-break handling.
+ *         * Column layout for quantity / description / amount fields.
+ *     - Uses `utility::boundary_slicer` to wrap long item descriptions over
+ *       multiple lines without exceeding column boundaries.
+ *
+ *   Concurrency and safety:
+ *     - Maintains internal drawing state (`current_width`, `current_height`)
+ *       protected by a `std::mutex` to guard against accidental concurrent
+ *       access during rendering.
+ *     - All drawing goes through `context_ok()` to verify the Cairo context
+ *       remains in a valid state.
+ *
+ *   Error handling:
+ *     - `generate()` returns an empty string if any step fails (e.g., Cairo
+ *       surface/context creation or rendering failure).
+ *     - Helper methods return `bool` to allow early bail-out when layout or
+ *       drawing operations fail.
+ *
+ *****************************************************************************/
 #ifndef _INVOICE_PDF_H_
 #define _INVOICE_PDF_H_
 #include <mutex>

@@ -1,10 +1,36 @@
-/*******************************************************************************
- * Contents: statement data unit tests
- * Author: Dawid Blom
- * Date: February, 2025
+/*****************************************************************************
+ * @file pdf_statement_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::pdf_statement aggregation model.
+ *
+ * @details
+ *   This test suite validates the behavior of the pdf_statement data
+ *   structure, which represents a full customer statement ready for
+ *   PDF generation. A pdf_statement combines:
+ *
+ *     - A single data::statement instance representing the high-level
+ *       statement metadata (number, date, period, etc.).
+ *     - One or more data::pdf_invoice objects, each of which bundles
+ *       a client, an invoice, and business (admin) details.
+ *
+ *   The tests cover:
+ *     - Assigning and retrieving the statement number, date, and total
+ *       as formatted strings.
+ *     - Enforcing the many-pdf_invoice to one-statement relationship by
+ *       requiring a non-empty vector of pdf_invoice objects.
+ *     - Verifying that invalid statement data or an empty invoice list
+ *       causes is_valid() to fail.
+ *     - Confirming that fully valid statement and invoice data produce
+ *       a valid pdf_statement object.
+ *     - Exercising copy and move semantics (copy/move construction and
+ *       copy/move assignment) to ensure the type behaves correctly as a
+ *       value object and remains safe to pass around between threads.
+ *
+ *   These tests help ensure that any code generating statement PDFs
+ *   can rely on pdf_statement as a consistent, validated container for
+ *   both summary and per-invoice billing details.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -26,7 +52,7 @@ extern "C"
  * 3) Ensure that the user can copy the information. (Done)
  * 4) Ensure that the user can move the data somewhere. (Done)
  * 5) The user should be able to assign and retrieve the data. (Done)
- * 6) Asisgn and retrieve the statement price total.
+ * 6) Asisgn and retrieve the statement price total. (Done)
  ******************************************************************************/
 TEST_GROUP(pdf_statement_data_test)
 {

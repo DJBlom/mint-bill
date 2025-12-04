@@ -37,7 +37,7 @@
             <property name="ellipsize">middle</property>
             <property name="halign">start</property>
             <property name="justify">fill</property>
-            <property name="label">Business Name</property>
+            <property name="label">Mint Bill</property>
             <accessibility>
               <state name="expanded">False</state>
             </accessibility>

@@ -1,10 +1,28 @@
-/********************************************************
- * Contents: PDF invoice data implementation
- * Author: Dawid J. Blom
- * Date: December 23, 2024
+/*****************************************************************************
+ * @file pdf_invoice_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the pdf_invoice data model defined in pdf_invoice_data.h,
+ *   including construction, assignment, validation, and managed updates to
+ *   the aggregated invoice-related entities.
+ *
+ * @details
+ *   This implementation provides the behavior for data::pdf_invoice, covering
+ *   copy and move semantics as well as setter and getter methods for client,
+ *   invoice, and business (admin) objects. Each setter verifies that the
+ *   provided object reports itself as valid before storing it and updating the
+ *   internal flag mask.
+ *
+ *   The check_flags() helper consolidates the flag state, enabling is_valid()
+ *   to indicate whether all required components are present and initialized.
+ *   A mutex guards updates to the internal client, invoice, and admin members,
+ *   ensuring thread-safe assembly of the composite object.
+ *
+ * @notes
+ *   The pdf_invoice type is intended to be a transient container passed to a
+ *   PDF generation pipeline. Callers should invoke is_valid() before using an
+ *   instance to drive rendering or file export operations.
+ *****************************************************************************/
 #include <pdf_invoice_data.h>
 
 

@@ -1,10 +1,48 @@
-/********************************************************
- * Contents: Client invoice interface implementation
- * Author: Dawid J. Blom
- * Date: December 9, 2024
+/*******************************************************************************
+ * @file invoice_model.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the invoice model operations.
+ *
+ * @details
+ * Provides the concrete behavior for `model::invoice`, tying together
+ * database access, serialization components, and PDF generation.
+ *
+ * Core operations:
+ *  - `load(const std::string&)`:
+ *      * Validates the business name.
+ *      * Queries the database for admin, client, invoice, and labor data.
+ *      * Assembles each invoice into a `data::pdf_invoice` object containing
+ *        invoice, client, and business details, then returns a vector of
+ *        `std::any` wrapping these objects.
+ *      * If no invoice rows are found, still returns a single
+ *        `data::pdf_invoice` with business and client information.
+ *
+ *  - `save(const std::any&)`:
+ *      * Validates a `data::invoice` object extracted from the `std::any`.
+ *      * Starts a transaction and:
+ *          - Upserts statement metadata for the client and billing period.
+ *          - Deletes all existing labor rows for the invoice.
+ *          - Upserts the invoice header.
+ *          - Re-inserts each description and material line item.
+ *      * Commits the transaction on success, or attempts a rollback on error,
+ *        logging failures via syslog.
+ *
+ *  - `prepare_for_email(const std::vector<std::any>&)`:
+ *      * Extracts the first `data::pdf_invoice` to determine client and
+ *        business metadata.
+ *      * Generates PDFs asynchronously for each invoice using `feature::invoice_pdf`.
+ *      * Returns a `data::email` populated with subject and attachments.
+ *
+ *  - `prepare_for_print(const std::vector<std::any>&)`:
+ *      * Asynchronously generates and returns a vector of PDF documents
+ *        (encoded as strings) for printing.
+ *
+ * Error handling:
+ *  - Uses `syslog(LOG_CRIT, ...)` with file and line information to report
+ *    invalid arguments and transaction/SQL issues.
+ *  - Relies on the surrounding infrastructure (SQLite wrapper and serializers)
+ *    to report lower-level database or mapping errors.
+ ******************************************************************************/
 #include <invoice_model.h>
 #include <invoice_pdf.h>
 #include <future>

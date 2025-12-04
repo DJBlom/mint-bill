@@ -1,10 +1,25 @@
-############################################################################
-# Contents: Project Install Functions
-# Author: Dawid Blom
-# Date: September 15, 2023
+################################################################################
+# File: install.sh
+# Description:
+#   Installs development, design, and analysis software required by the project.
+#   Automates system dependency installation (via dnf), CppUTest setup, and
+#   optional Flatpak-based tooling for GUI and system modelling work.
 #
-# NOTE:
-############################################################################
+# Features:
+#   - Development environment setup (compilers, tools, libraries)
+#   - Automatic installation of CppUTest framework
+#   - Installation of design tools (Cambalache)
+#   - Installation of analysis tools (Gaphor)
+#
+# Usage:
+#   ./install.sh <install-type>
+#
+#   Supported install types:
+#       develop – Install build/test/debug dependencies
+#       design  – Install GUI design tools
+#       analysis – Install modelling/analysis tools
+#
+################################################################################
 #!/bin/bash
 
 

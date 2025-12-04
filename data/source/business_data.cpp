@@ -1,10 +1,36 @@
-/********************************************************
- * Contents: business data implementation
- * Author: Dawid J. Blom
- * Date: October 13, 2025
+/*****************************************************************************
+ * @file business_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the business data model defined in business_data.h, including
+ *   construction, assignment, validation, and controlled mutation of business
+ *   contact fields.
+ *
+ * @details
+ *   This implementation defines the behavior of data::business, providing copy
+ *   and move semantics as well as setter and getter functions for core
+ *   attributes: name, address, area code, town, cellphone number, and email
+ *   addresses. Setter functions perform basic length checks and, in the case
+ *   of email addresses, delegate to email_address_good() for regex-based
+ *   format validation over a sliced list of addresses.
+ *
+ *   The check_flags() helper consolidates the flag state, allowing is_valid()
+ *   to report whether all required business attributes have been initialized.
+ *   Access to mutable members is guarded by a mutex to enable safe use in
+ *   multi-threaded applications.
+ *
+ * @responsibilities
+ *   Realize the data::business interface and manage internal state changes.
+ *   Apply field-level validation and record outcomes using a flag mask.
+ *   Validate email address formatting using a configurable regular expression.
+ *   Provide thread-safe updates to all business-related fields.
+ *
+ * @notes
+ *   Maximum field lengths are controlled via constants in the upper_bound
+ *   namespace, allowing constraints to be tuned without altering the public
+ *   interface. Callers should rely on is_valid() to verify completeness and
+ *   correctness before using a business record.
+ *****************************************************************************/
 #include <business_data.h>
 
 

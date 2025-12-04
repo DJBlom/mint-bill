@@ -1,10 +1,44 @@
-/*******************************************************************************
- * Contents: client data unit tests
- * Author: Dawid Blom
- * Date: November 26, 2024
+/*****************************************************************************
+ * @file client_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::client model, validating client-specific fields,
+ *   inherited business data, and overall validation behavior.
+ *
+ * @details
+ *   This test suite exercises the client data structure, which extends the
+ *   core business model with VAT number and statement schedule information.
+ *   The following aspects are covered:
+ *
+ *   - Field assignment and retrieval:
+ *       • Business name
+ *       • Street address
+ *       • Area code
+ *       • Town
+ *       • Cellphone number
+ *       • Email address
+ *       • VAT number
+ *       • Statement schedule
+ *
+ *   - Validation rules:
+ *       • All required fields must be non-empty for validity
+ *       • Email addresses must match the expected format
+ *       • Statement schedule must follow the constrained "X,Y" pattern
+ *       • Entry fields must respect maximum length constraints
+ *
+ *   - Copy and move semantics:
+ *       • Copy-assignment and copy-construction
+ *       • Move-assignment and move-construction
+ *       • Ensures validity is preserved after object transfers
+ *
+ *   - Boundary conditions:
+ *       • Verifies behavior when fields exceed allowed sizes
+ *       • Confirms that invalid schedules (e.g., extra numbers) are rejected
+ *
+ *   Together, these tests provide confidence that data::client behaves
+ *   correctly and robustly as a domain model for client configuration and
+ *   billing workflows.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

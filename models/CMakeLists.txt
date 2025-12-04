@@ -1,12 +1,27 @@
-############################################################################
-# Contents: Feature CMakeLists.txt file
-# Author: Dawid Blom
-# Date: September 15, 2023
+###############################################################################
+# CMakeLists.txt
 #
-# NOTE:
-# This file is the CMakeLists.txt for the feature sub branch file, containing
-# the source and header files of the feautre sub branch.
-############################################################################
+# This file defines the build configuration for the `target-models` component.
+# The module builds an OBJECT library containing all model and serialization
+# sources used throughout the system. These models act as the primary bridge
+# between domain logic, serialization layers, and storage queries.
+#
+# Key Features:
+#   • Automatically detects source files under models/source.
+#   • Builds an OBJECT library (`models`) for efficient reuse by other targets.
+#   • Exposes required include directories for dependencies such as:
+#       - CURL
+#       - GTKMM
+#       - Poppler
+#       - Cairomm
+#       - libsecret
+#   • Makes model and serialization headers available to external modules via
+#     PUBLIC include paths.
+#
+# The CMake configuration ensures that higher-level components (GUI, app, data,
+# storage, features, utility) can link against `models` without duplicating
+# include paths or build logic.
+###############################################################################
 cmake_minimum_required(VERSION 3.25)
 project(target-models VERSION 0.0.1 LANGUAGES CXX C)
 

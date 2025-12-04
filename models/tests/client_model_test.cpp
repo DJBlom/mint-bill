@@ -1,10 +1,22 @@
 /*******************************************************************************
- * Contents: Client feature unit tests
- * Author: Dawid Blom
- * Date: November 27, 2024
+ * @file client_model_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for the model::client class.
+ *
+ * @details
+ * This test suite verifies correctness of the client model’s interactions with
+ * the underlying SQLite database. It focuses on:
+ *
+ *   • Validating and saving client records.
+ *   • Updating existing client information.
+ *   • Rejecting invalid or incomplete client data.
+ *   • Loading client entries by business name.
+ *
+ * These tests rely on a controlled test database
+ * (storage/tests/model_test.db) to ensure predictable behavior and isolation
+ * between test runs. Each case exercises real model logic without mocking the
+ * storage layer to provide end-to-end verification.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -20,8 +32,8 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1) Load data from a db. Done
- * 2) Save data to a db. Done
+ * 1) Load data from a db. (Done)
+ * 2) Save data to a db. (Done)
  ******************************************************************************/
 TEST_GROUP(client_model_test)
 {

@@ -1,4 +1,27 @@
-
+/*******************************************************************************
+ * @file client_serialize.h
+ *
+ * @brief Serialization support for client records.
+ *
+ * @details
+ * Declares the `serialize::client` class, which implements the
+ * `interface::single_serialize` interface to convert raw database result rows
+ * into a strongly-typed `data::client` domain object.
+ *
+ * Responsibilities:
+ *  - Provide a single entry point, `extract_data()`, which:
+ *      * Validates the result set,
+ *      * Delegates to `collect_values()` to map each column into the
+ *        corresponding client field,
+ *      * Returns a fully-populated `data::client` wrapped in `std::any`.
+ *  - Encode the expected column ordering via the `DATA_FIELDS` enum, which
+ *    must remain consistent with the SQL `SELECT` statements in this header.
+ *
+ * This header also defines the SQL statements for:
+ *  - Upserting a client record (`client_usert`),
+ *  - Selecting a client (and associated business details) by business name
+ *    (`client_select`).
+ ******************************************************************************/
 #ifndef _SERIALIZE_CLIENT_H_
 #define _SERIALIZE_CLIENT_H_
 #include <serialize.h>

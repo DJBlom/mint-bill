@@ -1,3 +1,30 @@
+/*****************************************************************************
+ * @file statement_data.cpp
+ *
+ * @brief
+ *   Implements the statement data model defined in statement_data.h, including
+ *   construction, assignment, validation, and controlled updates to statement
+ *   period fields.
+ *
+ * @details
+ *   This implementation defines the behavior of data::statement, providing
+ *   copy and move semantics and setter/getter methods for the period start and
+ *   end strings. Setter functions enforce simple non-empty and length
+ *   constraints before committing updates and recording the result in the
+ *   internal flag mask.
+ *
+ *   The check_flags() helper consolidates statement-level flag state, allowing
+ *   is_valid() to combine period completeness with data::billing::is_valid()
+ *   for an overall correctness check. A mutex guards modifications to the
+ *   period fields, supporting thread-safe usage in concurrent code.
+ *
+ * @notes
+ *   Length limits for period strings are defined in the local upper_bound
+ *   namespace, making it easy to tune constraints without modifying the public
+ *   interface. Callers should rely on is_valid() to confirm that a statement
+ *   instance is properly configured before using it in downstream processing,
+ *   such as PDF generation or reporting.
+ *****************************************************************************/
 #include <statement_data.h>
 
 

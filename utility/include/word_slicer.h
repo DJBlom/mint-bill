@@ -1,10 +1,18 @@
-/********************************************************
- * Contents: Slicer definition
- * Author: Dawid J. Blom
- * Date: December 28, 2024
+/*******************************************************************************
+ * @file    word_slicer.h
+ * @brief   Word-by-word slicing utility.
  *
- * NOTE:
- *******************************************************/
+ * @details Defines a simple slicer implementation that splits an input string
+ *          into individual whitespace-delimited words. The class implements the
+ *          shared slicer interface and enforces basic constraints such as:
+ *
+ *            • Rejecting empty input strings.
+ *            • Limiting the maximum number of output words.
+ *            • Thread-safe modification of the internal sliced_data container.
+ *
+ *          Typical use cases include preparing text for UI display, formatting
+ *          invoice content, or breaking larger strings into manageable chunks.
+ ******************************************************************************/
 #ifndef _WORD_SLICER_H_
 #define _WORD_SLICER_H_
 #include <mutex>

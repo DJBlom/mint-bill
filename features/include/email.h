@@ -1,10 +1,55 @@
-/********************************************************
- * Contents: Email definition
- * Author: Dawid J. Blom
- * Date: December 11, 2024
+/*****************************************************************************
+ * @file    email.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares email–related features and SMTP helper classes built on libcurl.
+ *
+ * @details
+ *   This header defines the high–level `feature::email` façade and a set of
+ *   lower–level SMTP helper classes in the `smtp` namespace that together
+ *   provide a robust, testable email–sending pipeline for the application.
+ *
+ *   The design separates responsibilities into four main components:
+ *
+ *     - feature::email
+ *       Public façade used by the rest of the application. It owns a shared
+ *       libcurl handle and exposes a single `send(const data::email&)` method
+ *       that orchestrates SMTP connection, header setup, recipient handling,
+ *       and MIME body construction.
+ *
+ *     - smtp::client
+ *       Encapsulates SMTP connection configuration. It applies server URL,
+ *       authentication, and protocol–specific libcurl options required to
+ *       connect to the outbound mail server (e.g., Gmail’s SMTP endpoint).
+ *
+ *     - smtp::header
+ *       Builds and attaches RFC–compliant email headers (From, To, Cc, Subject,
+ *       etc.) using `curl_slist`. It uses `utility::word_slicer` to break long
+ *       header fields (such as subject lines) into safe segments where needed.
+ *
+ *     - smtp::recipients
+ *       Manages recipient addressing (To/Cc/Bcc) derived from `data::client`
+ *       information. It configures libcurl with the final recipient list via
+ *       a `curl_slist` owned by this component.
+ *
+ *     - smtp::parts
+ *       Constructs the MIME body using `curl_mime`, including:
+ *         * Plain–text body
+ *         * HTML body (optionally templated via `update_dom`)
+ *         * One or more file attachments sourced from `data::email`
+ *
+ *   Ownership and lifetime:
+ *     - All SMTP helpers receive a `std::shared_ptr<CURL>` so they operate on
+ *       the same underlying libcurl easy handle.
+ *     - Smart pointers (`std::unique_ptr` with custom deleters) are used for
+ *       libcurl lists and MIME structures to guarantee correct cleanup.
+ *
+ *   This module does not perform business–logic validation of email content;
+ *   instead it assumes `data::email`, `data::client`, and `data::admin` have
+ *   already been validated by the data layer and focuses solely on reliable
+ *   transport and formatting.
+ *
+ *****************************************************************************/
 #ifndef _EMAIL_H_
 #define _EMAIL_H_
 #include <string>

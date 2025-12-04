@@ -1,10 +1,35 @@
-############################################################################
-# Contents: Graphical User Interface CMakeLists.txt file
-# Author: Dawid Blom
-# Date: November 13, 2024
+###############################################################################
+# @file    CMakeLists.txt
 #
-# NOTE:
-############################################################################
+# @brief   Build configuration for the GUI Target Components library.
+#
+# @details
+# This CMake file defines the build process for the 'components' object library,
+# which contains reusable GUI building blocks used throughout the Mint-Bill
+# application. These components wrap GTKMM widgets and implement higher-level
+# behaviors such as stack management, printing, and general GUI interactions.
+#
+# Functionality:
+#   - Ensures a minimum required version of CMake (3.25).
+#   - Declares the 'target-components' project using C and C++.
+#   - Detects whether the expected source directory contains implementation files.
+#   - Builds an OBJECT library named 'components' when files are present.
+#   - Adds include paths required by GTKMM and other project modules
+#     (app, data, storage, features, utility, GUI invoice pages).
+#
+# Behavior:
+#   - If GUI source files exist:
+#         • stack.cpp
+#         • printer.cpp
+#         • gui_parts.cpp
+#     then an object library is produced.
+#
+#   - If the directory is empty, a CMake STATUS message is printed instead
+#     and no target is created.
+#
+# This file does not create a standalone library but an OBJECT library intended
+# to be linked into other GUI-related targets within the project.
+###############################################################################
 cmake_minimum_required(VERSION 3.25)
 project(target-components VERSION 0.0.1 LANGUAGES CXX C)
 

@@ -1,9 +1,30 @@
 /*******************************************************************************
- * Contents: String slicer feature unit tests
- * Author: Dawid Blom
- * Date: December 23, 2024
+ * @file    word_slicer_test.cpp
+ * @brief   Unit tests for the utility::word_slicer class.
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @details This test suite verifies the functionality and robustness of the
+ *          word-based slicing utility, which splits an input string into
+ *          individual whitespace-delimited tokens. These tests ensure:
+ *
+ *            • Correct parsing of arbitrary strings into discrete words, with
+ *              whitespace handled strictly as a separator.
+ *
+ *            • Enforcement of the class’s internal safety guarantees, including
+ *              thread-safe insertion of sliced words via mutex protection.
+ *
+ *            • Proper non-copyable and non-movable semantics, preventing unsafe
+ *              transfer of internal state that could lead to race conditions.
+ *
+ *            • Adherence to the enforced maximum capacity of 50 tokens, ensuring
+ *              excess data is safely ignored without corrupting state.
+ *
+ *            • Graceful handling of empty input strings, yielding an empty list
+ *              without errors.
+ *
+ *          Together, these tests validate that utility::word_slicer provides a
+ *          simple, deterministic, and concurrency-safe tokenization mechanism
+ *          suitable for processing user descriptions, messages, or printed
+ *          content where fixed upper limits are required.
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"

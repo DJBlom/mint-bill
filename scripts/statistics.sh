@@ -1,10 +1,21 @@
-############################################################################
-# Contents: Project Statistics Functions
-# Author: Dawid Blom
-# Date: September 15, 2023
+################################################################################
+# File: statistics.sh
+# Description:
+#   Provides project-level statistical tools such as line-of-code (LOC)
+#   reporting using 'cloc'. Intended for quick codebase metrics and size
+#   analysis functions.
 #
-# NOTE:
-############################################################################
+# Features:
+#   - LOC measurement with cloc
+#   - Easy extension point for additional metrics
+#
+# Usage:
+#   ./statistics.sh <stats-type>
+#
+#   Supported stat types:
+#       lc – Count total project lines of code
+#
+################################################################################
 #!/bin/bash
 
 

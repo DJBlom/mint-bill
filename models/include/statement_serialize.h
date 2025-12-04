@@ -1,4 +1,41 @@
-
+/*******************************************************************************
+ * @file statement_serialize.h
+ *
+ * @brief Declaration of the serialize::statement class, responsible for
+ *        transforming raw SQL query results into data::statement domain objects.
+ *
+ * @details
+ * The serialize::statement class implements the interface::multi_serialize
+ * interface and provides the following abilities:
+ *
+ *   • Convert database result sets (rows) into a vector<std::any> containing
+ *     fully populated data::statement objects.
+ *
+ *   • Use collect_values() to iterate through each row returned from the
+ *     database, mapping column positions (indexed via DATA_FIELDS) to the
+ *     corresponding strongly typed data::statement fields.
+ *
+ *   • Handle SQL types stored in variant form (strings, integers, etc.) using
+ *     std::visit, ensuring safe extraction and assignment of values.
+ *
+ *   • Validate result sets and record critical failures using syslog when the
+ *     input rows are empty or malformed.
+ *
+ * SQL Query Constants:
+ *   The nested sql::query namespace provides the SQL statements used for:
+ *     - Inserting/updating a statement record          (statement_usert)
+ *     - Selecting a specific business’s statement      (statement_select)
+ *     - Selecting invoices associated with a statement (statement_invoices_select)
+ *     - Selecting administrative business information   (statement_admin_select)
+ *
+ * DATA_FIELDS enum:
+ *   Maps column indices in SQL SELECT queries to semantic fields:
+ *     BUSINESS_NAME, STATEMENT_ID, PERIOD_START, PERIOD_END, DATE, PAID_STATUS
+ *
+ * This serializer is used by model::statement to transform the storage-layer
+ * output into domain-layer objects suitable for printing, emailing, and
+ * business logic workflows.
+ *******************************************************************************/
 #ifndef _SERIALIZE_STATEMENT_H_
 #define _SERIALIZE_STATEMENT_H_
 #include <serialize.h>

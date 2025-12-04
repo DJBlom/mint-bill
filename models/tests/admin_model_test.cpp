@@ -1,10 +1,21 @@
 /*******************************************************************************
- * Contents: business feature unit tests
- * Author: Dawid Blom
- * Date: November 18, 2024
+ * @file admin_model_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for the model::admin class.
+ *
+ * @details
+ * This test suite validates the core functionality of the admin model,
+ * including:
+ *
+ *   • Saving admin (business) details to the database.
+ *   • Rejecting invalid or incomplete data during save operations.
+ *   • Loading admin records from the database based on business name.
+ *   • Ensuring that validation rules are correctly enforced.
+ *
+ * The test database is isolated under storage/tests/model_test.db and uses a
+ * known password to reproduce a controlled test environment. Each test verifies
+ * the model’s behavior using lightweight data fixtures and helper utilities.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -19,8 +30,8 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1) Load the data from the database.
- * 2) Save the data to the database.
+ * 1) Load the data from the database. (Done)
+ * 2) Save the data to the database. (Done)
  ******************************************************************************/
 TEST_GROUP(admin_model_test)
 {

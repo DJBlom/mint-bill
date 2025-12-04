@@ -1,4 +1,32 @@
-
+/*******************************************************************************
+ * @file statement_serialize.cpp
+ *
+ * @brief Implementation of the statement model and its serialization logic.
+ *
+ * @details
+ * This file provides:
+ *
+ *   1. Implementation of serialize::statement
+ *      - Converts database query results into std::vector<std::any> containing
+ *        data::statement objects.
+ *      - Uses collect_values() to map variant SQL column values to strongly
+ *        typed data::statement fields using the DATA_FIELDS enum.
+ *      - Logs critical errors via syslog() when invalid or empty result sets
+ *        are encountered.
+ *
+ *   2. collect_values()
+ *      - Iterates row-by-row through storage::database::part::rows.
+ *      - Uses std::visit to safely match variant types to expected fields.
+ *      - Populates domain objects by calling the appropriate setters
+ *        (set_name, set_id, set_period_start, set_period_end, etc.).
+ *
+ * Error Handling:
+ *   - Empty or malformed result sets immediately generate a syslog(LOG_CRIT)
+ *     message including file and line information.
+ *
+ * The serializer is used by model::statement to transform raw SQL query output
+ * into strongly typed domain objects for printing, emailing, or further processing.
+ *******************************************************************************/
 #include <limits>
 #include <syslog.h>
 #include <statement_serialize.h>

@@ -1,10 +1,44 @@
 /*******************************************************************************
- * Contents: Serialize unit tests
- * Author: Dawid Blom
- * Date: December 9, 2024
+ * @file serialize_sql_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for serialization and persistence of business, admin,
+ *        client, labor/column, statement, and invoice data.
+ *
+ * @details
+ * This test suite verifies the end-to-end behavior of the serialization layer
+ * that bridges in-memory data structures and the SQLite database schema. The
+ * following aspects are covered:
+ *
+ *   • business_serialize_test
+ *       - Converting business/admin data into SQL parameter lists.
+ *       - Reading business rows from the database into data::business objects.
+ *
+ *   • admin_serialize_test
+ *       - Mapping admin data to SQL arguments for INSERT/UPDATE.
+ *       - Reconstructing data::admin from admin_* SELECT queries
+ *         (with and without explicit business name).
+ *
+ *   • client_serialize_test
+ *       - Converting client data into SQL parameters.
+ *       - Rebuilding data::client from client SELECT results.
+ *
+ *   • column_serialize_test (labor)
+ *       - Writing invoice labor/line-item data as SQL parameters.
+ *       - Extracting data::column vectors from labor SELECT queries.
+ *
+ *   • statement_serialize_test
+ *       - Serializing statement metadata into SQL arguments.
+ *       - Deserializing rows into data::statement objects, including
+ *         validation of failure/success paths.
+ *
+ *   • invoice_serialize_test
+ *       - Serializing full invoice records and associated labor lines.
+ *       - Reconstructing data::invoice objects (including material and
+ *         description columns) from joined invoice/labor queries.
+ *
+ * Together these tests ensure that all serialize::* classes correctly translate
+ * between the database representation and the strongly typed domain model.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

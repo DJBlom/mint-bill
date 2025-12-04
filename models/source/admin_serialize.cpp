@@ -1,30 +1,29 @@
-
+/*******************************************************************************
+ * @file admin_serialize.cpp
+ *
+ * @brief Implementation of the admin serialization logic.
+ *
+ * @details
+ * This source file defines the behavior of `serialize::admin`, which is
+ * responsible for translating low-level SQLite result sets into a single
+ * `data::admin` instance.
+ *
+ * Core workflow:
+ *  - `extract_data()` validates the incoming row set and delegates to
+ *    `collect_values()` when data is present, logging failures via `syslog`.
+ *  - `collect_values()` iterates over each row and column, using
+ *    `std::visit` on the variant column type to assign string values to
+ *    the appropriate fields in `data::admin` based on the `DATA_FIELDS`
+ *    enum ordering.
+ *
+ * This keeps SQL/schema details localized to the serialization layer and
+ * allows higher-level models and UI code to work with domain objects
+ * instead of raw database rows.
+ *******************************************************************************/
 #include <syslog.h>
 #include <admin_serialize.h>
 
 serialize::admin::~admin() {}
-
-// storage::database::sql_parameters serialize::admin::package_data(const std::any& _data)
-// {
-// 	storage::database::sql_parameters params{};
-// 	data::admin admin_data{std::any_cast<data::admin>(_data)};
-// 	if (admin_data.is_valid() == false)
-// 	{
-// 		syslog(LOG_CRIT, "ADMIN_SERIALIZE: argument is not valid - "
-// 				 "filename %s, line number %d", __FILE__, __LINE__);
-// 	}
-// 	else
-// 	{
-// 		params.emplace_back(admin_data.get_name());
-// 		params.emplace_back(admin_data.get_bank());
-// 		params.emplace_back(admin_data.get_branch_code());
-// 		params.emplace_back(admin_data.get_account_number());
-// 		params.emplace_back(admin_data.get_password());
-// 		params.emplace_back(admin_data.get_client_message());
-// 	}
-//
-// 	return params;
-// }
 
 std::any serialize::admin::extract_data(const storage::database::part::rows& _rows)
 {

@@ -1,12 +1,26 @@
-############################################################################
-# Contents: Feature CMakeLists.txt file
-# Author: Dawid Blom
-# Date: September 15, 2023
+# ============================================================================================
+#  Utility Module CMake Configuration
+# --------------------------------------------------------------------------------------------
+#  This CMakeLists file declares the `utility` object library, which provides foundational
+#  helper classes such as:
+#      - file I/O utilities
+#      - date computation utilities
+#      - string slicing utilities (boundary_slicer, word_slicer)
 #
-# NOTE:
-# This file is the CMakeLists.txt for the feature sub branch file, containing
-# the source and header files of the feautre sub branch.
-############################################################################
+#  The library is compiled as an OBJECT library so multiple upper-level targets may link
+#  against the compiled object files without creating an independent shared/static library.
+#
+#  Directory Structure Expected:
+#      utility/
+#      ├── include/      # Public headers
+#      └── source/       # .cpp implementation files
+#
+#  Notes:
+#   • The presence of files in `source/` is checked dynamically.
+#   • If no files exist, an informational CMake message is printed.
+#   • Public include paths allow the application layer to consume this module.
+#   • Private include paths hide implementation details from linking targets.
+# ============================================================================================
 cmake_minimum_required(VERSION 3.25)
 project(target-utility VERSION 0.0.1 LANGUAGES CXX C)
 

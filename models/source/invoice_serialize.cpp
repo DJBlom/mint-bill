@@ -1,4 +1,40 @@
-
+/*******************************************************************************
+ * @file invoice_serialize.cpp
+ *
+ * @brief Implementation of invoice and labor serialization logic.
+ *
+ * @details
+ * Provides concrete implementations for:
+ *
+ *  - `serialize::invoice`
+ *      * `extract_data(const rows&)`:
+ *          - Validates that the result set is non-empty.
+ *          - Uses `collect_values()` to convert each row into a `data::invoice`
+ *            object.
+ *          - Wraps each `data::invoice` in `std::any` and returns a vector.
+ *      * `set_schedule(const std::string&)`:
+ *          - Currently a no-op; reserved for future behavior tied to invoice
+ *            scheduling or filtering.
+ *      * `collect_values(const rows&)`:
+ *          - Iterates over rows/columns and uses `std::visit` plus the
+ *            `DATA_FIELDS` enum to map from the variant column values to the
+ *            appropriate invoice setters (e.g. id, order number, totals).
+ *
+ *  - `serialize::labor`
+ *      * `extract_data(const rows&)`:
+ *          - Validates the result set and delegates to `collect_values()`.
+ *      * `collect_values(const rows&)`:
+ *          - Converts each row into a `data::column` line-item object.
+ *          - Uses `std::visit` and the `DATA_FIELDS` enum to map quantity,
+ *            description, amount, row number, and the is-description flag.
+ *
+ * Error handling:
+ *  - When called with empty result sets, both serializers log a critical
+ *    message via `syslog(LOG_CRIT, ...)` including file and line information.
+ *
+ * These implementations are used by higher-level models to transform database
+ * query results into rich invoice and labor domain objects.
+ ******************************************************************************/
 #include <limits>
 #include <syslog.h>
 #include <invoice_data.h>

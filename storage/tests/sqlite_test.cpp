@@ -1,9 +1,46 @@
 /*******************************************************************************
- * Contents: Sql unit tests
- * Author: Dawid Blom
- * Date: November 18, 2024
+ * @file    sqlite_test.cpp
+ * @brief   Unit tests for the SQLite/SQLCipher database wrapper and helpers.
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @details This test file verifies the behavior of the encrypted SQLite wrapper
+ *          (storage::database::sqlite) and its supporting SQL operation
+ *          helper (storage::database::part::sql_operations).
+ *
+ *          The following aspects are validated:
+ *
+ *            - Correct construction and error handling:
+ *                • Throwing on invalid database paths or passwords.
+ *                • Ensuring encrypted database access via SQLCipher.
+ *
+ *            - Transaction handling:
+ *                • Rejecting empty transaction queries.
+ *                • Successfully executing BEGIN/COMMIT sequences.
+ *
+ *            - Parameterized INSERT/UPDATE operations (usert):
+ *                • Rejecting empty SQL strings and empty parameter lists.
+ *                • Detecting mismatched parameter counts.
+ *                • Handling execution failures when parameters are invalid.
+ *                • Successfully inserting/updating rows with valid parameters.
+ *
+ *            - SELECT query behavior:
+ *                • Handling empty queries and/or empty parameter lists safely.
+ *                • Returning empty result sets in error/invalid-parameter cases.
+ *                • Returning non-empty rows for valid queries and parameters.
+ *                • Exercising column conversion for INTEGER, REAL, TEXT, and
+ *                  BLOB-like data through the variant-based row representation.
+ *
+ *            - sql_operations helper:
+ *                • Preparing SQL statements on construction and throwing on
+ *                  invalid input (null connection, empty SQL, syntax errors).
+ *                • Binding parameter vectors to positional placeholders and
+ *                  catching mismatched counts.
+ *                • Executing single-step (non-SELECT) statements.
+ *                • Executing multi-step (SELECT) statements and collecting
+ *                  rows into storage::database::part::rows.
+ *
+ *          Together, these tests provide regression coverage for the database
+ *          abstraction layer, ensuring robust parameter binding, execution, and
+ *          error handling around the SQLCipher-backed storage engine.
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"

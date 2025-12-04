@@ -1,10 +1,27 @@
-############################################################################
-# Contents: Project Test Functions
-# Author: Dawid Blom
-# Date: September 15, 2023
+################################################################################
+# File: test.sh
+# Description:
+#   Provides automated testing utilities, including:
+#     - Static analysis (Cppcheck)
+#     - Unit testing (CppUTest)
+#     - Code coverage generation (gcovr, gcov)
+#     - HTML visualization of coverage results
 #
-# NOTE:
-############################################################################
+# Features:
+#   - Support for SCAs, coverage, unit tests, and coverage preview
+#   - Virtual framebuffer (Xvfb) setup for headless test environments
+#   - Coverage thresholds with automatic pass/fail handling
+#
+# Usage:
+#   ./test.sh <test-type>
+#
+#   Supported test types:
+#       sca      – Run cppcheck static analysis
+#       coverage – Generate and evaluate code coverage
+#       unit     – Run all CppUTest-based unit tests
+#       show     – Launch browser showing coverage report
+#
+################################################################################
 #!/bin/bash
 
 BIN_SUFFIX=""

@@ -1,10 +1,30 @@
-############################################################################
-# Contents: Feature CMakeLists.txt file
-# Author: Dawid Blom
-# Date: September 15, 2023
+###############################################################################
+# @file CMakeLists.txt
 #
-# NOTE:
-############################################################################
+# @brief
+#   CMake configuration for building the target-data module, which provides
+#   the full set of data-model types used across the application.
+#
+# @details
+#   This CMakeLists file defines an OBJECT library named 'data' containing the
+#   various source files for business, client, invoice, statement, email, and
+#   PDF-related data structures. Before building, it checks whether the source
+#   directory contains files and emits a status message if it does not.
+#
+#   The library exposes public include directories for downstream targets while
+#   keeping internal includes private, ensuring clean dependency separation.
+#
+# @responsibilities
+#   - Define the target-data project and build settings.
+#   - Build an OBJECT library composed of all data-model source files.
+#   - Provide proper include paths for public and private consumers.
+#   - Perform a runtime check ensuring the source directory is populated.
+#
+# @notes
+#   The data library is an OBJECT target, meaning it contributes compiled
+#   object files to other targets rather than producing a standalone library
+#   artifact. Adjust source lists and include paths as new components evolve.
+###############################################################################
 cmake_minimum_required(VERSION 3.25)
 project(target-data VERSION 0.0.1 LANGUAGES CXX C)
 

@@ -1,10 +1,33 @@
-/********************************************************
- * Contents: PDF invoice data definition
- * Author: Dawid J. Blom
- * Date: December 23, 2024
+/*****************************************************************************
+ * @file pdf_invoice_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the pdf_invoice data model that aggregates client, invoice, and
+ *   business information required to generate a PDF invoice document.
+ *
+ * @details
+ *   The data::pdf_invoice structure acts as a simple aggregation layer that
+ *   bundles together a validated client record, a validated invoice instance,
+ *   and a validated administrative business profile. It exposes a minimal
+ *   interface for setting and retrieving each component and uses a
+ *   bitmask-based flag mechanism to track initialization state.
+ *
+ *   A mutex is used to guard modifications to internal state, allowing this
+ *   composite object to be safely prepared or updated in multi-threaded
+ *   environments before being passed to the PDF generation logic.
+ *
+ * @responsibilities
+ *   Aggregate client, invoice, and business data for PDF rendering.
+ *   Provide setters and getters for each aggregated component.
+ *   Enforce that stored client, invoice, and business objects are valid.
+ *   Track initialization state using an internal flag mask.
+ *   Support thread-safe updates using a dedicated mutex.
+ *
+ * @notes
+ *   This abstraction focuses solely on collecting the data needed to render a
+ *   PDF invoice. Layout, typography, and file-generation logic are expected to
+ *   be handled by separate PDF rendering components.
+ *****************************************************************************/
 #ifndef _PDF_INVOICE_DATA_H_
 #define _PDF_INVOICE_DATA_H_
 #include <mutex>

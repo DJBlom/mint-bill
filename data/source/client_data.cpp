@@ -1,10 +1,30 @@
-/********************************************************
- * Contents: Client data implementation
- * Author: Dawid J. Blom
- * Date: November 26, 2024
+/*****************************************************************************
+ * @file client_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the client data model defined in client_data.h, including
+ *   construction, assignment, validation, and controlled mutation of
+ *   client-specific attributes.
+ *
+ * @details
+ *   This implementation provides the behavior of data::client, including copy
+ *   and move semantics, as well as setter and getter methods for VAT number
+ *   and statement schedule. The VAT number is checked against a simple length
+ *   constraint, while the statement schedule is validated using a regular
+ *   expression that enforces a compact "period,weekday" format.
+ *
+ *   A bitmask-based flag system is used to track which client-specific fields
+ *   are initialized. The check_flags() helper consolidates this state so that
+ *   is_valid() can combine client-level completeness with the underlying
+ *   data::business validity. A mutex guards modifications to client-owned
+ *   fields, enabling threadsafe updates in concurrent environments.
+ *
+ * @notes
+ *   The upper_bound namespace provides local limits for string lengths without
+ *   affecting the public interface. Callers should rely on is_valid() to
+ *   verify that a client record is complete and correctly formatted before it
+ *   is used by higher-level logic (such as billing or statement generation).
+ *****************************************************************************/
 #include <client_data.h>
 
 

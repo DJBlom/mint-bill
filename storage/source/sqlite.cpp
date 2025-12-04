@@ -1,10 +1,29 @@
-/********************************************************
- * Contents: Storage class implementation
- * Author: Dawid J. Blom
- * Date: November 25, 2024
+/*******************************************************************************
+ * @file    sqlite.cpp
+ * @brief   Implementation of the SQLite/SQLCipher database wrapper.
  *
- * NOTE:
- *******************************************************/
+ * @details This source file implements the encrypted-database management and
+ *          SQL-execution mechanisms declared in sqlite.h.
+ *
+ *          Major responsibilities:
+ *            - Opens and configures SQLCipher database connections, including
+ *              password-based decryption, PRAGMA configuration, enabling
+ *              foreign keys, and applying performance-related settings.
+ *
+ *            - Implements transaction(), usert(), and select() operations for
+ *              executing SQL statements with or without bound parameters.
+ *
+ *            - Uses part::sql_operations to prepare SQL statements, bind
+ *              parameters, step through results, and translate SQLite column
+ *              types into std::variant-based C++ values.
+ *
+ *            - Implements binder, which performs type-specific parameter
+ *              binding through std::visit.
+ *
+ *          Errors encountered during database setup, binding, execution, or
+ *          teardown are logged through syslog, and construction-time failures
+ *          raise app::errors::construction exceptions to ensure safety.
+ ******************************************************************************/
 #include <numeric>
 #include <cstring>
 #include <errors.h>

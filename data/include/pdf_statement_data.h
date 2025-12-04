@@ -1,10 +1,35 @@
-/********************************************************
- * Contents: Statement data definition
- * Author: Dawid J. Blom
- * Date: February 19, 2025
+/*****************************************************************************
+ * @file pdf_statement_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the pdf_statement data model that aggregates statement metadata
+ *   and associated PDF invoice data required for statement PDF generation.
+ *
+ * @details
+ *   The data::pdf_statement structure encapsulates the essential information
+ *   needed to render a statement as a PDF document. It stores a statement
+ *   number, date, total, the underlying statement data object, and a
+ *   collection of pdf_invoice instances representing individual invoices
+ *   included in the statement.
+ *
+ *   A bitmask-based flag mechanism is used to track initialization of each
+ *   core attribute. The is_valid() function consults this flag state to
+ *   determine whether the pdf_statement instance is complete and suitable for
+ *   use by downstream PDF rendering logic. A mutex guards modifications to
+ *   internal state, enabling safe use in multi-threaded environments.
+ *
+ * @responsibilities
+ *   Represent statement-level metadata for PDF rendering.
+ *   Aggregate statement data and related pdf_invoice objects.
+ *   Provide setters and getters for all stored attributes.
+ *   Track initialization state via an internal flag mask.
+ *   Support thread-safe updates using a dedicated mutex.
+ *
+ * @notes
+ *   This type focuses on data aggregation only. Layout, pagination, and other
+ *   PDF formatting concerns are expected to be handled by higher-level
+ *   rendering components.
+ *****************************************************************************/
 #ifndef _PDF_STATEMENT_DATA_H_
 #define _PDF_STATEMENT_DATA_H_
 #include <statement_data.h>

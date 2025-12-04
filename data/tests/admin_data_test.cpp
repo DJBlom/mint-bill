@@ -1,10 +1,31 @@
-/*******************************************************************************
- * Contents: admin data unit tests
- * Author: Dawid Blom
- * Date: November 18, 2024
+/*****************************************************************************
+ * @file admin_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::admin data model, validating correctness,
+ *   robustness, and boundary behavior of the administrative data layer.
+ *
+ * @details
+ *   This test suite uses CppUTest to exercise the data::admin class and its
+ *   inherited business-related behavior. The following aspects are covered:
+ *
+ *   - Basic validity: all required fields populated with acceptable values.
+ *   - Invalid cases: missing or empty fields, incorrect email formats.
+ *   - Accessors: verifying that getters return the values previously set.
+ *   - Copy and move semantics: ensuring that copied and moved instances
+ *     preserve validity and internal state.
+ *   - Boundary constraints: enforcing maximum lengths for name, address,
+ *     contact fields, client messages, and passwords.
+ *
+ *   Collectively, these tests help ensure that the flag-based validation,
+ *   string length limits, and email-format validation perform as intended
+ *   before higher-level components rely on the data::admin model.
+ *
+ * @notes
+ *   This test file is intended to be run as part of the broader CppUTest
+ *   suite for the data module. New tests should be added here when extending
+ *   the data::admin interface or adjusting its validation rules.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

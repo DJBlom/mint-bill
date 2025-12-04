@@ -1,12 +1,29 @@
-/********************************************************
- * Contents: Boundary slicer implementation
- * Author: Dawid J. Blom
- * Date: December 28, 2024
+/*******************************************************************************
+ * @file    boundary_slicer.cpp
+ * @brief   Implementation of the boundary-based text slicing utility.
  *
- * NOTE: This utility handles the splitting of words or
- * the placing of words on a new line depending on their
- * length.
- *******************************************************/
+ * @details This file provides the runtime logic for converting a long string
+ *          into multiple bounded lines. The implementation follows a structured
+ *          decision model:
+ *
+ *            - Determine whether the next word fits on the current line.
+ *            - Slice oversized words into multiple fixed-width segments.
+ *            - Emit completed lines into the output vector before starting new
+ *              ones.
+ *            - Append any leftover buffered text at the end.
+ *
+ *          Internal helpers encapsulate each decision:
+ *            • word_does_not_exceed_max() — safe to append word to line.
+ *            • word_does_exceed_max()     — word must be segmented.
+ *            • add_word_to_current_line() — appends with optional whitespace.
+ *            • add_new_current_line()     — flushes current line and begins new.
+ *            • handle_large_word()        — slices very long words.
+ *            • add_whats_left_over()      — emits the trailing line.
+ *
+ *          The design ensures deterministic line wrapping suitable for
+ *          UI rendering, PDF creation, or any text environment requiring
+ *          predictable formatting boundaries.
+ ******************************************************************************/
 #include <boundary_slicer.h>
 
 

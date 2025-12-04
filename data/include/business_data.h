@@ -1,10 +1,35 @@
-/********************************************************
- * Contents: business data declaration
- * Author: Dawid J. Blom
- * Date: October 13, 2025
+/*****************************************************************************
+ * @file business_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the core business data model representing contact and identity
+ *   information for a business entity.
+ *
+ * @details
+ *   The data::business structure encapsulates common business attributes such
+ *   as name, address, area code, town, cellphone number, and one or more
+ *   email addresses. It provides a virtual interface for setting and
+ *   retrieving these fields, allowing derived types to extend or override
+ *   behavior where necessary.
+ *
+ *   Internal completeness is tracked using a bitmask-based flag mechanism,
+ *   which enables a concise is_valid() implementation to verify that all
+ *   required attributes are present and well-formed. A mutex is used to
+ *   synchronize access to mutable fields, supporting safe use in concurrent
+ *   contexts.
+ *
+ * @responsibilities
+ *   Encapsulate core business identity and contact information.
+ *   Provide virtual setters and getters for each business attribute.
+ *   Validate email formatting via a helper routine.
+ *   Track initialization state using an internal flag mask.
+ *   Support thread-safe updates using a mutex for synchronization.
+ *
+ * @notes
+ *   This abstraction is intended as a foundation for higher-level data models
+ *   (such as administrative or billing records) that require consistent access
+ *   to business-level contact and identity information.
+ *****************************************************************************/
 #ifndef _BUSINESS_DATA_H_
 #define _BUSINESS_DATA_H_
 #include <mutex>

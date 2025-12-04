@@ -1,10 +1,55 @@
-/********************************************************
- * Contents: statement_pdf implementation
- * Author: Dawid J. Blom
- * Date: July 11, 2025
+/******************************************************************************
+ * @file statement_pdf.cpp
+ * @brief Implementation of the statement_pdf class for rendering financial
+ *        statements into a PDF document.
  *
- * NOTE:
- *******************************************************/
+ * @details
+ * This file defines the complete rendering pipeline used to generate structured
+ * PDF statements through Cairo. It manages stream-backed output, rendering
+ * context configuration, text layout, column alignment, table generation, and
+ * page management.
+ *
+ * generate():
+ *  - Validates the supplied std::any data and extracts a data::pdf_statement.
+ *  - Creates a Cairo PDF surface writing into a memory stream.
+ *  - Initializes font face and performs sequential rendering of:
+ *        * header section
+ *        * client + business information block
+ *        * statement metadata (statement number, date)
+ *        * invoice list and table rows
+ *        * grand total
+ *        * payment method details
+ *  - Ensures proper pagination and finalizes the PDF.
+ *
+ * Section-Rendering Methods:
+ *  - add_header(): Draws the page title using large typography.
+ *  - add_information(): Prints client and business identity/address pairs.
+ *  - add_statement_information(): Renders the statement number and date.
+ *  - add_statements(): Renders table headers and delegates line-item output.
+ *  - add_items(): Prints each invoice row (ID, date, order number, totals).
+ *  - add_grand_total(): Displays the sum of all invoices.
+ *  - add_payment_method(): Displays business banking details and note text.
+ *
+ * Layout and Alignment:
+ *  - Cursor-based positioning relies on current_width/current_height and a
+ *    collection of helper alignment methods:
+ *        align_to_left_border(), align_to_right_border()
+ *        align_to_top_border(), align_information_section()
+ *        align_to_first_quarter(), align_to_center()
+ *        align_to_second_quarter(), align_to_right_information()
+ *
+ *  - adjust_height() and adjust_payment_height() ensure content never exceeds
+ *    page limits, initiating page breaks when required.
+ *
+ * Error Handling:
+ *  - All rendering steps validate their success and return false on failure.
+ *  - syslog is used for logging validation failures or unexpected states.
+ *
+ * Rendering Backend:
+ *  - Cairo::Context and Cairo::PdfSurface are used with stream-based output.
+ *  - Cairo text measurement guides alignment-based cursor positioning.
+ *
+ ******************************************************************************/
 #include <statement_pdf.h>
 
 namespace font_size {

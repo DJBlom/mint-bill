@@ -1,9 +1,32 @@
-/*******************************************************************************
- * Contents: Generate statement_pdf feature unit tests
- * Author: Dawid Blom
- * Date: July 11, 2025
+/******************************************************************************
+ * @test_list Statement PDF Generation Test Suite
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @brief
+ *   This suite verifies the correctness, robustness, and boundary behavior of
+ *   the statement PDF generation subsystem.
+ *
+ * @details
+ *   The following behaviors are tested:
+ *
+ *   1. **Generation under upper-bound conditions**
+ *      - Builds a statement with a large number of invoices, long descriptions,
+ *        and high total values, then verifies that a valid PDF byte stream is
+ *        produced and successfully written to disk.
+ *
+ *   2. **Generation under normal / lower-bound conditions**
+ *      - Uses typical statement data (short descriptions and realistic totals)
+ *        to ensure a valid PDF is produced for the common, expected use case.
+ *
+ *   3. **Failure behavior with missing or invalid data**
+ *      - Uses an invalid statement (e.g., empty date / invalid nested data) to
+ *        confirm that the generator rejects the input and no usable PDF file
+ *        is produced.
+ *
+ *   4. **Thread-safe PDF creation (via generate_statement_pdf utilities)**
+ *      - The tests are designed to support concurrent execution, ensuring the
+ *        generator can be safely invoked from multiple threads without corrupting
+ *        the resulting statement PDFs.
+ *
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"

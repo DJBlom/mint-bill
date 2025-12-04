@@ -1,5 +1,34 @@
+/*******************************************************************************
+ * @file    stack.cpp
+ *
+ * @brief   Implementation of the gui::part::stack class responsible for
+ *          observing Gtk::Stack page changes and notifying subscribed GUI
+ *          components.
+ *
+ * @details
+ * The implementation performs the following:
+ *
+ *   - Retrieves a Gtk::Stack instance using the provided stack name.
+ *   - Connects to the “visible-child-name” property change signal.
+ *   - Updates internal state when the user or application switches pages.
+ *   - Invokes all registered subscriber callbacks with the new page name.
+ *
+ * Key Behaviors:
+ *   - create(): Initializes Gtk::Stack and attaches signal handlers.
+ *   - subscribe(): Registers component-specific callbacks; updates callbacks
+ *                  if the component re-subscribes.
+ *   - set_current_page(): Allows programmatic UI navigation.
+ *   - on_page_switched(): Central signal handler dispatching notifications.
+ *
+ * Logging:
+ *   - Syslog is used to report invalid states, null pointers, or missing
+ *     callbacks, ensuring predictable debugging in production builds.
+ *
+ * This implementation supports a clean observer pattern for GUI navigation,
+ * enabling interaction between multiple GUI components without tight coupling.
+ *******************************************************************************/
 #include <stack.h>
-#include <iostream>
+
 
 gui::part::stack::stack(const std::string& _stack_name) : stack_name{_stack_name}
 {

@@ -1,10 +1,48 @@
-/*******************************************************
- * Contents: Statement Page class declaration
- * Author: Dawid J. Blom
- * Date: February 19, 2025
+/*******************************************************************************
+ * @file statement_page.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the gui::statement_page GUI controller responsible
+ *        for displaying, selecting, saving, printing, and emailing statements
+ *        and their associated invoices.
+ *
+ * @details
+ * This implementation:
+ *
+ *   - Validates the Gtk::Builder and main-window pointers during create(), then
+ *     initializes labels, dialogs, and custom view wrappers:
+ *       * part::statement::column_view for tabular invoice details.
+ *       * part::statement::invoice_pdf_view for invoice PDF previews/listing.
+ *       * part::statement::statement_pdf_view for statement PDF selection.
+ *
+ *   - Configures dialog workflows for:
+ *       * Email (email_alert) — launches asynchronous email sending via
+ *         std::async, prepares data through model::statement, and emits a
+ *         Glib::Dispatcher signal to email_sent() on completion.
+ *       * Print (print_alert) — prepares print data via model::statement and
+ *         invokes gui::part::printer with the active documents.
+ *       * Save (save_alert) — persists the selected statement and related
+ *         invoices to the database via model::statement and model::invoice.
+ *       * Error/edge conditions such as no selection and no internet.
+ *
+ *   - Populates the statement listing using model::statement::load(), converts
+ *     entries into data::pdf_statement objects, and feeds them into
+ *     statement_pdf_view.
+ *
+ *   - Reacts to single-clicks on statements to track the currently selected
+ *     documents for email/print, and to double-clicks to:
+ *       * Cache the selected data::pdf_statement.
+ *       * Populate the itemized invoice table (statement_view).
+ *       * Populate the invoice PDF preview list (invoice_pdf_view).
+ *       * Update the total_label with the statement’s total.
+ *
+ *   - Provides search() and clear() helpers to reset state, re-load statements
+ *     for a given business name, and keep the GUI consistent with the
+ *     underlying data model.
+ *
+ * Extensive syslog logging is used to trace normal user actions and to report
+ * any invalid state, failed dialog operations, or database/printing/email
+ * issues, aiding diagnosis in production environments.
+ *******************************************************************************/
 #include <statement_page.h>
 #include <pdf_statement_data.h>
 #include <email.h>

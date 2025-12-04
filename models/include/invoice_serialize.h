@@ -1,4 +1,40 @@
-
+/*******************************************************************************
+ * @file invoice_serialize.h
+ *
+ * @brief Serialization helpers for invoice and labor database rows.
+ *
+ * @details
+ * Declares:
+ *
+ *  - `serialize::invoice`
+ *      * Implements `interface::multi_serialize` for converting a set of
+ *        `storage::database::part::rows` into a collection of `data::invoice`
+ *        objects, returned as `std::vector<std::any>`.
+ *      * Field-to-column mapping is defined by the `DATA_FIELDS` enum to keep
+ *        column ordering explicit and maintainable.
+ *      * Provides an optional `set_schedule()` hook (currently a no-op) for
+ *        future schedule-related behavior.
+ *
+ *  - `serialize::labor`
+ *      * Utility serializer that converts labor query results into a
+ *        `std::vector<data::column>`, representing invoice line items.
+ *      * Uses the `DATA_FIELDS` enum to map quantity, description, amount,
+ *        row number, and description/material flag.
+ *
+ *  - `sql::query` namespace constants
+ *      * `invoice_usert`                – upsert for invoice header data.
+ *      * `invoice_admin_select`         – query admin/business details
+ *                                         associated with invoices.
+ *      * `invoice_client_select`        – query client and scheduling info.
+ *      * `invoice_select`               – query invoice header details.
+ *      * `labor_usert`                  – upsert for labor (line item) rows.
+ *      * `labor_delete_all_for_invoice` – delete all labor rows for an invoice.
+ *      * `description_labor_select`     – select description-type line items.
+ *      * `material_labor_select`        – select material-type line items.
+ *
+ * These serializers are used by the invoice model and related components to
+ * bridge between raw SQL query results and domain-specific types.
+ ******************************************************************************/
 #ifndef _SERIALIZE_INVOICE_H_
 #define _SERIALIZE_INVOICE_H_
 #include <serialize.h>

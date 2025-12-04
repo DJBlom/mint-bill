@@ -1,10 +1,22 @@
-/***********************************************************
- * Contents: admin Information Page class implementation
- * Author: Dawid J. Blom
- * Date: November 14, 2024
+/*******************************************************************************
+ * @file admin_page.cpp
  *
- * NOTE:
- **********************************************************/
+ * @brief Implementation of the gui::admin_page class, providing the GUI logic,
+ *        widget bindings, data extraction, database interaction, and user
+ *        feedback mechanisms for handling business administrative data.
+ *
+ * @details
+ * This implementation performs the following:
+ *   - Retrieves GTK widgets from a Gtk::Builder file.
+ *   - Connects confirmation and error dialog callbacks.
+ *   - Loads business information from the database and populates the UI.
+ *   - Extracts user-entered values into a data::admin object.
+ *   - Handles save operations through model::admin.
+ *   - Provides UI clearing, validation, and error logging.
+ *
+ * Error conditions (invalid builder, invalid data, failed save attempts) are
+ * logged to syslog to aid diagnostics and maintain application robustness.
+ *******************************************************************************/
 #include <config.h>
 #include <syslog.h>
 #include <admin_page.h>

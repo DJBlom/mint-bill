@@ -1,10 +1,35 @@
-/********************************************************
- * Contents: Invoice data definition
- * Author: Dawid J. Blom
- * Date: December 4, 2024
+/*****************************************************************************
+ * @file invoice_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the invoice data model that extends billing information with
+ *   invoice-specific identifiers, totals, and line-item column data.
+ *
+ * @details
+ *   The data::invoice structure derives from data::billing to reuse common
+ *   billing metadata such as identifier, name, date, and paid status. It
+ *   augments this with invoice-specific attributes including job card number,
+ *   order number, description and material totals, and a grand total. It also
+ *   maintains two collections of data::column instances representing
+ *   description and material line items.
+ *
+ *   Internal completeness is tracked using a bitmask-based flag mechanism,
+ *   enabling is_valid() to combine invoice-level flags with the underlying
+ *   billing validation logic. A mutex is used to guard updates to mutable
+ *   state, allowing safe use in multi-threaded code.
+ *
+ * @responsibilities
+ *   Extend billing data with invoice-specific identifiers and totals.
+ *   Manage collections of description and material line-item columns.
+ *   Provide setters and getters for all invoice-related attributes.
+ *   Track initialization state using an internal flag mask.
+ *   Support thread-safe updates via a per-instance mutex.
+ *
+ * @notes
+ *   This abstraction represents the logical structure of an invoice. Rendering,
+ *   numbering schemes, currency formatting, and persistence are expected to be
+ *   implemented by higher-level components.
+ *****************************************************************************/
 #ifndef _INVOICE_DATA_H_
 #define _INVOICE_DATA_H_
 #include <mutex>

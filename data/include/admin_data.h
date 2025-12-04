@@ -1,10 +1,32 @@
-/********************************************************
- * Contents: admin data definition
- * Author: Dawid J. Blom
- * Date: November 18, 2024
+/*****************************************************************************
+ * @file admin_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Defines the administrative data model extending the core business
+ *   information structure. This model introduces additional attributes
+ *   required for administrative configuration and secure profile management.
+ *
+ * @details
+ *   The admin class provides controlled access to sensitive data such as
+ *   banking details, account identifiers, passwords, and client-facing
+ *   messages. It inherits standard business information and augments it with
+ *   administrative attributes used by higher-level application logic.
+ *
+ *   A bitmask-based flag system tracks field completeness, enabling validation
+ *   of required attributes. A mutex protects internal state to ensure safe
+ *   concurrent modification.
+ *
+ * @responsibilities
+ *   Encapsulate and manage administrative attributes.
+ *   Extend and reuse base business information.
+ *   Provide overrideable accessors for integration flexibility.
+ *   Track field validity using internal flags.
+ *   Support thread-safe updates to internal data.
+ *
+ * @notes
+ *   Suitable for components handling administrative profiles, configuration
+ *   workflows, or authentication-related data management.
+ *****************************************************************************/
 #ifndef _ADMIN_DATA_H_
 #define _ADMIN_DATA_H_
 #include <mutex>

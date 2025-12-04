@@ -1,10 +1,31 @@
-/*******************************************************************************
- * Contents: email data unit tests
- * Author: Dawid Blom
- * Date: December 30, 2024
+/*****************************************************************************
+ * @file email_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::email model, validating aggregation of client
+ *   and admin data, attachment handling, and subject constraints.
+ *
+ * @details
+ *   This test suite exercises the email data structure, which combines:
+ *     - A list of attachment file names (typically PDF documents),
+ *     - A data::client instance representing the email recipient,
+ *     - A data::admin instance representing the business sender,
+ *     - A subject line with length constraints.
+ *
+ *   The following aspects are covered:
+ *     - Successful construction of a valid email with attachments,
+ *       client data, admin data, and subject.
+ *     - Enforcement of length limits on the subject field.
+ *     - Handling of invalid inputs such as empty attachments, incomplete
+ *       client/admin objects, or missing subject text.
+ *     - Verification of copy and move semantics to ensure that email
+ *       instances remain valid after assignment or construction transfers.
+ *
+ * @notes
+ *   These tests help guarantee that the email aggregation layer behaves
+ *   predictably before being used by higher-level components responsible
+ *   for composing and sending actual email messages.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

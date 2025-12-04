@@ -1,10 +1,38 @@
 /*******************************************************************************
- * Contents: Statement feature unit tests
- * Author: Dawid Blom
- * Date: June 11, 2025
+ * @file statement_model_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for the statement model’s database integration and
+ *        PDF-oriented data preparation.
+ *
+ * @details
+ * This test group validates the behavior of model::statement when interacting
+ * with the SQLite backing store and related models:
+ *
+ *   • Setup:
+ *       - Initializes a shared test database file and password.
+ *       - Persists a generated client (with multiple emails) via model::client
+ *         to ensure required foreign-key/business data exists.
+ *
+ *   • save_first_statement_data_to_db
+ *       - Generates a data::statement instance using helper test utilities.
+ *       - Persists the statement via model::statement::save and verifies that
+ *         the call reports success.
+ *
+ *   • save_second_statement_data_to_db
+ *       - Repeats statement creation and persistence to ensure that multiple
+ *         statements can be stored without conflicts in the same database.
+ *
+ *   • load_data_from_db
+ *       - Persists an invoice using model::invoice, then saves a statement
+ *         associated with that client.
+ *       - Calls model::statement::load with the invoice’s business name,
+ *         deserializes each std::any into data::pdf_statement, and confirms
+ *         that the resulting PDF-ready statement objects are valid.
+ *
+ * Together these tests confirm that statements can be saved, retrieved, and
+ * transformed into PDF-facing aggregates in coordination with client and
+ * invoice models.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -27,7 +55,8 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1)
+ * 1) Load the data from a database. (Done)
+ * 2) Save the data into a database. (Done)
  ******************************************************************************/
 TEST_GROUP(statement_model_test)
 {

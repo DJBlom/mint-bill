@@ -1,4 +1,34 @@
-
+/*******************************************************************************
+ * @file client_serialize.cpp
+ *
+ * @brief Implementation of client row-to-object deserialization.
+ *
+ * @details
+ * Defines the behavior of `serialize::client`, which adapts the generic
+ * database row representation (`storage::database::part::rows`) into a
+ * `data::client` instance.
+ *
+ * Core operations:
+ *  - `extract_data(const rows&)`:
+ *      * Verifies that the input result set is non-empty.
+ *      * Logs a critical error and returns a default-constructed
+ *        `data::client` if validation fails.
+ *      * Otherwise uses `collect_values()` to populate the client object.
+ *
+ *  - `collect_values(const rows&)`:
+ *      * Iterates over each row and column.
+ *      * Uses `std::visit` to safely handle the variant column type.
+ *      * Maps each column index (as defined by the `DATA_FIELDS` enum) to the
+ *        corresponding setter on `data::client` (name, address, area code,
+ *        town, cellphone, email, VAT number, statement schedule).
+ *
+ * Error handling:
+ *  - If no rows are present, a `LOG_CRIT` message is emitted with file and
+ *    line context.
+ *  - Mapping assumes that the column ordering of the SQL `SELECT` statement
+ *    matches the `DATA_FIELDS` enumeration; any changes to the SQL must be
+ *    reflected here.
+ ******************************************************************************/
 #include <syslog.h>
 #include <client_data.h>
 #include <client_serialize.h>

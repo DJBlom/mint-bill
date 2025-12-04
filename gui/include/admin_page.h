@@ -1,10 +1,25 @@
-/********************************************************
- * Contents: admin Information Page class definition
- * Author: Dawid J. Blom
- * Date: November 14, 2024
+/*******************************************************************************
+ * @file admin_page.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Declaration of the gui::admin_page class responsible for managing
+ *        business (admin) information within the application's GUI layer.
+ *
+ * @details
+ * The admin_page class implements the interface::register_page interface and
+ * provides the user-facing functionality for viewing, editing, validating, and
+ * saving business-related data. This includes organization details, contact
+ * information, banking data, and the SMTP email password.
+ *
+ * Responsibilities:
+ *   - Bind to GTK widgets using a Gtk::Builder UI definition.
+ *   - Populate the UI from database records via model::admin.
+ *   - Extract widget state into a data::admin object for persistence.
+ *   - Present confirmation dialogs and error alerts.
+ *   - Maintain the database password required for model operations.
+ *
+ * The class is intentionally non-copyable and non-movable to prevent accidental
+ * duplication of GTK widget ownership and ensure GUI correctness.
+ *******************************************************************************/
 #ifndef _ADMIN_PAGE_H_
 #define _ADMIN_PAGE_H_
 #include <gui.h>
