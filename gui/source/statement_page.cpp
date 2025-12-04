@@ -13,7 +13,6 @@
 #include <config.h>
 #include <invoice_model.h>
 
-#include <iostream>
 
 gui::statement_page::statement_page()
 {
@@ -116,42 +115,16 @@ bool gui::statement_page::set_database_password(const std::string& _database_pas
 bool gui::statement_page::search(const std::string& _keyword)
 {
         bool searched{true};
+	this->clear();
 	if (_keyword.empty() == true)
 	{
 		searched = false;
 		syslog(LOG_CRIT, "The _keyword is empty, clearing all entries - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
-		this->documents.clear();
-		this->invoice_data.clear();
-		if (this->statement_view.clear() == false)
-		{
-			syslog(LOG_CRIT, "Could not clear statement_view - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-		}
-
-		if (this->invoice_pdf_view.clear() == false)
-		{
-			syslog(LOG_CRIT, "Could not clear invoice_pdf_view - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-		}
-
-		if (this->statement_pdf_view.clear() == false)
-		{
-			syslog(LOG_CRIT, "Could not clear statement_pdf_view - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-		}
 	}
 	else
 	{
-		std::vector<std::any> pdf_statements{};
-		model::statement statement_model{app::config::path_to_database_file, this->database_password};
-		for (const std::any& data : statement_model.load(_keyword))
-		{
-			data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
-			pdf_statements.emplace_back(pdf_statement);
-		}
-
-		if (this->statement_pdf_view.populate(pdf_statements) == false)
+		if (this->populate(_keyword) == false)
 		{
 			searched = false;
 		}
@@ -391,7 +364,8 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 						else
 						{
 							model::statement statement_model{app::config::path_to_database_file, this->database_password};
-							if (statement_model.save(this->selected_pdf_statement.get_statement()) == false)
+							data::statement statement_data{this->selected_pdf_statement.get_statement()};
+							if (statement_model.save(statement_data) == false)
 							{
 								syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to save statement - "
 										 "filename %s, line number %d", __FILE__, __LINE__);
@@ -408,6 +382,13 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 										syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to save associated invoice - "
 												 "filename %s, line number %d", __FILE__, __LINE__);
 									}
+								}
+
+								this->clear();
+								if (this->populate(statement_data.get_name()) == false)
+								{
+									syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to re-populate - "
+											 "filename %s, line number %d", __FILE__, __LINE__);
 								}
 							}
 						}
@@ -432,6 +413,24 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 	}
 
 	return success;
+}
+
+bool gui::statement_page::populate(const std::string& _business_name)
+{
+	std::vector<std::any> pdf_statements{};
+	model::statement statement_model{app::config::path_to_database_file, this->database_password};
+	for (const std::any& data : statement_model.load(_business_name))
+	{
+		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};
+		pdf_statements.emplace_back(pdf_statement);
+	}
+
+	if (this->statement_pdf_view.populate(pdf_statements) == false)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool gui::statement_page::no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
@@ -667,8 +666,8 @@ bool gui::statement_page::on_double_click()
 {
 	return this->statement_pdf_view.double_click([this] (const std::any& _data) {
 		bool success{true};
-		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement> (_data)};
-		if (pdf_statement.is_valid() == false)
+		data::pdf_statement pdf_statement_data{std::any_cast<data::pdf_statement> (_data)};
+		if (pdf_statement_data.is_valid() == false)
 		{
 			syslog(LOG_CRIT, "The pdf_statement data is not valid - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
@@ -678,9 +677,9 @@ bool gui::statement_page::on_double_click()
 		{
 			std::vector<std::any> invoices{};
 			std::vector<std::any> pdf_invoices{};
-			this->selected_pdf_statement = pdf_statement;
-			this->total_label->set_text(this->selected_pdf_statement.get_total());
-			for (const data::pdf_invoice& pdf_invoice : pdf_statement.get_pdf_invoices())
+			this->selected_pdf_statement = pdf_statement_data;
+			this->total_label->set_text("Total: " + this->selected_pdf_statement.get_total());
+			for (const data::pdf_invoice& pdf_invoice : pdf_statement_data.get_pdf_invoices())
 			{
 				if (pdf_invoice.is_valid() == false)
 				{
@@ -745,5 +744,30 @@ void gui::statement_page::email_sent()
 	{
 		syslog(LOG_CRIT, "Email successfully sent - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+}
+
+void gui::statement_page::clear()
+{
+	this->documents.clear();
+	this->invoice_data.clear();
+	this->total_label->set_text("Total: ");
+
+	if (this->statement_view.clear() == false)
+	{
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to clear statement_view - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+
+	if (this->invoice_pdf_view.clear() == false)
+	{
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to clear invoice_pdf_view - "
+				"filename %s, line number %d", __FILE__, __LINE__);
+	}
+
+	if (this->statement_pdf_view.clear() == false)
+	{
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to clear statement_pdf_view - "
+				"filename %s, line number %d", __FILE__, __LINE__);
 	}
 }

@@ -20,6 +20,7 @@
 #include <date_manager.h>
 
 
+
 model::invoice::invoice(const std::string& _database_file, const std::string& _database_password)
 	: database_file{_database_file}, database_password{_database_password} {}
 
@@ -80,7 +81,17 @@ std::vector<std::any> model::invoice::load(const std::string& _business_name) co
 
 			pdf_invoices_data.emplace_back(std::move(pdf_invoice_data));
 		}
+
+		if (pdf_invoices_data.empty() == true)
+		{
+			data::pdf_invoice pdf_invoice_data{};
+			pdf_invoice_data.set_client(client_data);
+			pdf_invoice_data.set_business(admin_data);
+
+			pdf_invoices_data.emplace_back(std::move(pdf_invoice_data));
+		}
         }
+
 
         return pdf_invoices_data;
 }
@@ -112,29 +123,13 @@ bool model::invoice::save(const std::any& _data) const
 		utility::date_manager date_manager{};
 		utility::period_bounds pb{date_manager.compute_period_bounds(client_data.get_statement_schedule())};
 		serialize::statement statement_serialize{};
-		storage::database::sql_parameters statement_params{};
-		for (const std::any& stmt_data : statement_serialize.extract_data(
-					database.select(sql::query::statement_select, params)))
-		{
-			data::statement statement_data{std::any_cast<data::statement>(stmt_data)};
-			if (statement_data.is_valid() == true)
-			{
-				statement_params.emplace_back(statement_data.get_name());
-				statement_params.emplace_back(statement_data.get_period_start());
-				statement_params.emplace_back(statement_data.get_period_end());
-				statement_params.emplace_back(statement_data.get_paid_status());
-
-			}
-			else
-			{
-				statement_params.emplace_back(invoice_data.get_name());
-				statement_params.emplace_back(pb.period_start);
-				statement_params.emplace_back(pb.period_end);
-				statement_params.emplace_back("Not Paid");
-			}
-			break;
-		}
-
+		storage::database::sql_parameters statement_params{
+			invoice_data.get_name(),
+			pb.period_start,
+			pb.period_end,
+			date_manager.current_date(),
+			"Not Paid",
+		};
 
 		storage::database::sql_parameters invoice_params{
 			static_cast<long long>(std::stoi(invoice_data.get_id())),

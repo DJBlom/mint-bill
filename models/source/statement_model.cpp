@@ -44,7 +44,7 @@ std::vector<std::any> model::statement::load(const std::string& _business_name) 
 		data::admin admin_data{
 			std::any_cast<data::admin>(
 				admin_serialize.extract_data(
-					database.select(sql::query::admin_select)
+					database.select(sql::query::statement_admin_select)
 				)
 			)
 		};
@@ -90,7 +90,18 @@ std::vector<std::any> model::statement::load(const std::string& _business_name) 
 				pdf_invoice_data.set_client(client_data);
 				pdf_invoice_data.set_business(admin_data);
 
-				total += std::stof(invoice_data.get_grand_total());
+				total += [&]() -> float
+				{
+					std::string input{ invoice_data.get_grand_total() };
+
+					std::string cleaned;
+					cleaned.reserve(input.size());
+					for (char c : input)
+						if (c != ',')
+							cleaned.push_back(c);
+
+					return std::stof(cleaned);
+				}();
 				pdf_invoices_data.emplace_back(std::move(pdf_invoice_data));
 			}
 
@@ -127,6 +138,7 @@ bool model::statement::save(const std::any& _data) const
 			statement_data.get_name(),
 			statement_data.get_period_start(),
 			statement_data.get_period_end(),
+			statement_data.get_date(),
 			statement_data.get_paid_status()
 		};
 

@@ -38,20 +38,22 @@ public:
 protected:
 	void email_sent();
 	bool email_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool print_setup(const Glib::RefPtr<Gtk::Builder>&,
+	[[nodiscard]] bool print_setup(const Glib::RefPtr<Gtk::Builder>&,
 			 const std::shared_ptr<Gtk::Window>&);
-	bool save_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool no_internet_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool statement_column_view_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool invoice_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
-	bool statement_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool save_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool populate(const std::string&);
+	[[nodiscard]] bool no_item_selected_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool no_internet_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool statement_column_view_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool invoice_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
+	[[nodiscard]] bool statement_pdf_view_setup(const Glib::RefPtr<Gtk::Builder>&);
 
 private:
 	std::future<bool> email_future;
 	Glib::Dispatcher email_dispatcher{};
 	bool on_double_click();
 	bool on_single_click();
+	void clear();
 
 
 private:

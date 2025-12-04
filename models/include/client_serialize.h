@@ -43,11 +43,11 @@ constexpr const char *client_usert{R"sql(
 			vat_number,
 			statement_schedule
 		)
-		VALUES ((SELECT business_id FROM business_details WHERE email_address = ?), ?, ?)
+		VALUES ((SELECT business_id FROM business_details WHERE business_name = ?), ?, ?)
 		ON CONFLICT DO UPDATE SET
 			vat_number	   = excluded.vat_number,
 			statement_schedule = excluded.statement_schedule;
-		)sql"};
+)sql"};
 
 constexpr const char* client_select{R"sql(
 	SELECT
@@ -62,7 +62,8 @@ constexpr const char* client_select{R"sql(
 	FROM business_details bd
 	LEFT JOIN client c
 		ON bd.business_id = c.business_id
-	WHERE bd.business_name = ?)sql"};
+	WHERE bd.business_name = ?;
+)sql"};
 }
 }
 #endif

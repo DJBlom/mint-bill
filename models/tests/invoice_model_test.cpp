@@ -35,8 +35,6 @@ TEST_GROUP(invoice_model_test)
 	storage::database::sqlite database{db_file, db_password};
 	void setup()
 	{
-		model::statement statement_model{db_file, db_password};
-		(void)statement_model.save(test::generate_statement_data());
 		data::client client_data{test::generate_client_data()};
 		data::business client_business_data{client_data};
 		data::admin admin_data{test::generate_business_data()};

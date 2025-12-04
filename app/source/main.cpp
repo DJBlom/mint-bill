@@ -280,13 +280,6 @@ bool mint_bill::stack_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 			{
 				if (_stack_page_name == "invoice-page" || _stack_page_name == "statement-page")
 				{
-					// Verify this behaviour with client
-					if (invoice_page.clear() == false)
-					{
-						syslog(LOG_CRIT, "MINT_BILL: failed to clear the invoice_page - "
-								 "filename %s, line number %d", __FILE__, __LINE__);
-					}
-
 					if (this->print_button.enable() == false)
 					{
 						syslog(LOG_CRIT, "MINT_BILL: failed to enable the print_button - "

@@ -67,7 +67,8 @@ CREATE TABLE admin (
 );
 
 CREATE TABLE client (
-	business_id		INTEGER PRIMARY KEY
+	client_id		INTEGER PRIMARY KEY,
+	business_id		INTEGER NOT NULL UNIQUE
 					REFERENCES business_details(business_id)
 					ON DELETE CASCADE ON UPDATE CASCADE,
 	vat_number         	TEXT NOT NULL UNIQUE,
@@ -95,7 +96,7 @@ CREATE TABLE invoice (
 	order_number		TEXT NOT NULL,
 	job_card_number		TEXT NOT NULL,
 	date_created		TEXT NOT NULL DEFAULT (date('now')),
-	paid_status		TEXT NOT NULL,
+	paid_status		TEXT NOT NULL DEFAULT 'Not Paid',
 	material_total		TEXT NOT NULL,
 	description_total	TEXT NOT NULL,
 	grand_total		TEXT NOT NULL,

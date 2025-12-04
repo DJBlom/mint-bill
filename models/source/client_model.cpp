@@ -61,7 +61,7 @@ bool model::client::save(const std::any& _data)
 		serialize::client client_serialize{};
 		serialize::business business_serialize{};
 		storage::database::sql_parameters client_params{
-			client_data.get_email(),
+			client_data.get_name(),
 			client_data.get_vat_number(),
 			client_data.get_statement_schedule()
 		};

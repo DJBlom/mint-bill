@@ -1519,6 +1519,7 @@ bool gui::part::search_bar::update(const std::string& _current_stack_page_name)
 		updated = true;
 		this->gui_search_bar->set_text("");
 		this->stack_page_name = _current_stack_page_name;
+		on_search_changed();
 	}
 
 	return updated;

@@ -1,5 +1,8 @@
 #include <pdf_statement_data.h>
 
+namespace upper_bound {
+        constexpr std::uint8_t string_length{20};
+}
 
 
 data::pdf_statement::pdf_statement() {}
@@ -96,7 +99,7 @@ std::string data::pdf_statement::get_date() const
 void data::pdf_statement::set_total(const std::string& _total)
 {
 
-        if (!_total.empty())
+        if (!_total.empty() || _total.length() <= upper_bound::string_length)
         {
                 set_flag(FLAG::TOTAL);
                 std::lock_guard<std::mutex> guard(this->data_mutex);

@@ -56,6 +56,7 @@ bool gui::admin_page::set_database_password(const std::string& _database_passwor
 bool gui::admin_page::search(const std::string& _business_name)
 {
         bool searched{false};
+	clear_entries();
         if (_business_name.empty())
         {
                 syslog(LOG_CRIT, "ADMIN_PAGE: invalid argument - "

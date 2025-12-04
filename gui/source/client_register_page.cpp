@@ -54,6 +54,7 @@ bool gui::client_register_page::set_database_password(const std::string& _databa
 bool gui::client_register_page::search(const std::string& _business_name)
 {
         bool searched{true};
+	this->clear_all_entries();
         if (_business_name.empty())
         {
                 syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: business name is empty - "
@@ -187,14 +188,22 @@ void gui::client_register_page::display_on_ui(const std::string& _business_name)
 {
 	model::client client_model{app::config::path_to_database_file, this->database_password};
 	data::client data = std::any_cast<data::client> (client_model.load(_business_name));
-        this->email->set_text(data.get_email());
-        this->vat_number->set_text(data.get_vat_number());
-        this->cellphone->set_text(data.get_cellphone());
-        this->business_name->set_text(data.get_name());
-        this->statment_schedule->set_text(data.get_statement_schedule());
-        this->business_area_code->set_text(data.get_area_code());
-        this->business_town_name->set_text(data.get_town());
-        this->business_street_address->set_text(data.get_address());
+	if (data.is_valid() == false)
+	{
+                syslog(LOG_CRIT, "CLIENT_REGISTER_PAGE: Client data is invalid - "
+                                 "filename %s, line number %d", __FILE__, __LINE__);
+	}
+	else
+	{
+		this->email->set_text(data.get_email());
+		this->vat_number->set_text(data.get_vat_number());
+		this->cellphone->set_text(data.get_cellphone());
+		this->business_name->set_text(data.get_name());
+		this->statment_schedule->set_text(data.get_statement_schedule());
+		this->business_area_code->set_text(data.get_area_code());
+		this->business_town_name->set_text(data.get_town());
+		this->business_street_address->set_text(data.get_address());
+	}
 }
 
 data::client gui::client_register_page::extract_page_entries()
