@@ -116,8 +116,7 @@ void gui::admin_page::create_entries(const Glib::RefPtr<Gtk::Builder>& _ui_build
                 _ui_builder->get_widget<Gtk::MessageDialog>("admin-wrong-info-alert")};
         this->save_alert_dialog = std::unique_ptr<Gtk::MessageDialog>{
                 _ui_builder->get_widget<Gtk::MessageDialog>("admin-save-button-alert")};
-        this->organization_label = std::unique_ptr<Gtk::Label>{
-                _ui_builder->get_widget<Gtk::Label>("organization-name")};
+	organization_label = _ui_builder->get_widget<Gtk::Label>("organization-name");
 }
 
 void gui::admin_page::connect_save_alert()

@@ -21,6 +21,7 @@ public:
 	admin& operator= (admin&&) = delete;
 	virtual ~admin() override;
 
+	[[nodiscard]] virtual std::any load();
 	[[nodiscard]] virtual std::any load(const std::string&) override;
 	[[nodiscard]] virtual bool save(const std::any&) override;
 

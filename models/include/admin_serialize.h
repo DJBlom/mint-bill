@@ -74,7 +74,24 @@ constexpr const char* admin_select{R"sql(
 	JOIN business_details AS bd
 		ON a.business_id = bd.business_id
 		WHERE bd.business_name = ?;
-	)sql"};
+)sql"};
+
+constexpr const char* admin_no_name_select{R"sql(
+	SELECT
+		bd.business_name,
+		bd.street,
+		bd.area_code,
+		bd.town_name,
+		bd.contact_number,
+		bd.email_address,
+		a.bank_name,
+		a.branch_code,
+		a.account_number,
+		a.app_password,
+		a.client_message
+	FROM admin a
+	JOIN business_details bd ON bd.business_id = a.business_id;
+)sql"};
 }
 }
 #endif

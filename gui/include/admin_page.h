@@ -38,7 +38,7 @@ private:
 	std::string database_password{""};
 
 private: // Label
-	std::unique_ptr<Gtk::Label> organization_label{};
+	Gtk::Label* organization_label{nullptr};
 
 private: // Entries
 	std::unique_ptr<Gtk::Entry> name{};

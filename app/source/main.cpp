@@ -54,6 +54,7 @@ private:
 	std::unique_ptr<Gtk::Window> database_password_window{nullptr};
 	std::unique_ptr<Gtk::Entry> database_password_entry{nullptr};
 	std::unique_ptr<Gtk::Button> database_password_button{nullptr};
+	std::unique_ptr<Gtk::Label> organization_label{nullptr};
 	gui::admin_page admin_page{};
 	gui::client_register_page client_register_page{};
 	gui::invoice_page invoice_page{};
@@ -129,6 +130,7 @@ void mint_bill::activate()
 	}
 	else
 	{
+
 		if (this->load_ui_file(ui_builder) == false)
 		{
 			syslog(LOG_CRIT, "MINT_BILL: failed to load the UI file - "
@@ -599,6 +601,8 @@ bool mint_bill::css_setup()
 bool mint_bill::window_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
 	bool success{false};
+	this->organization_label = std::unique_ptr<Gtk::Label>{
+		_ui_builder->get_widget<Gtk::Label>("organization-name")};
         this->mint_bill_window = std::shared_ptr<Gtk::Window> {
 		_ui_builder->get_widget<Gtk::Window>("main-window")};
 	this->database_password_window = std::unique_ptr<Gtk::Window> {
@@ -675,6 +679,19 @@ void mint_bill::database_password_exist()
 	}
 	else
 	{
+		model::admin admin_model{app::config::path_to_database_file, password};
+		std::any data{admin_model.load()};
+		data::admin admin_data{std::any_cast<data::admin> (data)};
+		if (admin_data.is_valid() == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: the admin data is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+		}
+		else
+		{
+			this->organization_label->set_text(admin_data.get_name());
+		}
+
 		if (this->admin_page.set_database_password(password) == false)
 		{
 			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "

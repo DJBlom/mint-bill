@@ -17,6 +17,21 @@ model::admin::admin(const std::string& _database_file, const std::string& _datab
 
 model::admin::~admin() {}
 
+std::any model::admin::load()
+{
+        data::admin admin_data;
+	serialize::admin admin_serialize{};
+	storage::database::sqlite database{this->database_file, this->database_password};
+	admin_data = std::move(std::any_cast<data::admin> (
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_no_name_select)
+					)
+				)
+			);
+
+        return admin_data;
+}
+
 std::any model::admin::load(const std::string& _business_name)
 {
         data::admin admin_data;

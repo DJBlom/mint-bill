@@ -208,6 +208,42 @@ TEST(admin_serialize_test, convert_sql_admin_data_successfully)
 	CHECK_EQUAL(true, admin_data.is_valid());
 }
 
+TEST(admin_serialize_test, convert_sql_admin_data_successfully_without_name)
+{
+	serialize::admin admin_serialize{};
+	serialize::business business_serialize{};
+	data::admin tmp_admin_data{test::generate_business_data()};
+	data::business business_data{tmp_admin_data};
+	storage::database::sql_parameters admin_sql_parameters{
+		tmp_admin_data.get_name(),
+		tmp_admin_data.get_bank(),
+		tmp_admin_data.get_branch_code(),
+		tmp_admin_data.get_account_number(),
+		tmp_admin_data.get_password(),
+		tmp_admin_data.get_client_message()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email()
+	};
+	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
+	(void)database.select(sql::query::admin_usert, admin_sql_parameters);
+	std::vector<storage::database::param_values> params = {tmp_admin_data.get_name()};
+	data::admin admin_data{
+		std::any_cast<data::admin>(
+			admin_serialize.extract_data(
+				database.select(sql::query::admin_no_name_select)
+			)
+		)
+	};
+
+	CHECK_EQUAL(true, admin_data.is_valid());
+}
+
 
 
 
