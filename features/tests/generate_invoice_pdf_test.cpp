@@ -1,9 +1,31 @@
-/*******************************************************************************
- * Contents: Generate invoice_pdf feature unit tests
- * Author: Dawid Blom
- * Date: December 23, 2024
+/******************************************************************************
+ * @test_list Invoice PDF Generation Test Suite
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @brief
+ *   This suite verifies the correctness, robustness, and thread-safety of the
+ *   invoice PDF generation subsystem.
+ *
+ * @details
+ *   The following behaviors are tested:
+ *
+ *   1. **Generation under upper-bound conditions**
+ *      - Validates that extremely long item descriptions and large data sets
+ *        still produce a valid, complete PDF without corruption or failure.
+ *
+ *   2. **Generation under normal / lower-bound conditions**
+ *      - Ensures that typical invoice data with short descriptions produces a
+ *        valid PDF, confirming correct behavior for the most common use case.
+ *
+ *   3. **Failure behavior with missing or invalid data**
+ *      - Confirms that the generator rejects incomplete input (missing business,
+ *        client, or invoice data) and does *not* output a PDF file when the
+ *        document cannot be considered valid.
+ *
+ *   4. **Thread-safe PDF creation (via generate_pdf utilities)**
+ *      - While not directly asserted in these tests, this suite is designed to
+ *        support concurrent execution, ensuring the generator behaves safely
+ *        when invoked from multiple threads.
+ *
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"

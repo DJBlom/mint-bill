@@ -1,10 +1,38 @@
-/********************************************************
- * Contents: Invoice Page class definition
- * Author: Dawid J. Blom
- * Date: November 28, 2024
+/*******************************************************************************
+ * @file invoice_page.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Declaration of the gui::invoice_page class and supporting data
+ *        structures used to create, edit, save, print, and email invoices
+ *        within the GUI.
+ *
+ * @details
+ * This header defines:
+ *   - gui::column_entries: a Glib::Object wrapper representing a single row in
+ *     a line-item column (quantity, description, amount).
+ *   - gui::invoice_entries: a Glib::Object wrapper holding a data::pdf_invoice
+ *     for display in the “known invoices” list.
+ *   - gui::invoice_page: an implementation of interface::operations_page that
+ *     provides the full invoice workflow in the UI.
+ *
+ * The invoice_page class is responsible for:
+ *   - Creating and binding Gtk::ColumnView / Gtk::ListView models and factories
+ *     for materials, descriptions, and known invoices.
+ *   - Managing Gtk entries, labels, buttons, dialogs, and scroll adjustments
+ *     related to invoice data.
+ *   - Loading invoice and client/business data from the database via
+ *     model::invoice, and populating the GUI accordingly.
+ *   - Extracting user-edited invoice data back into data::invoice, including
+ *     description and material columns (data::column).
+ *   - Computing per-column totals and the overall grand total, keeping labels
+ *     in sync with list-store contents.
+ *   - Orchestrating save/print/email operations using dialog wrappers
+ *     (part::dialog), feature::email, and gui::part::printer.
+ *   - Performing asynchronous email sending and signaling completion through
+ *     Glib::Dispatcher.
+ *
+ * The class is non-copyable and non-movable to avoid duplicating complex GUI
+ * state and shared model/list-store ownership.
+ *******************************************************************************/
 #ifndef _INVOICE_PAGE_H_
 #define _INVOICE_PAGE_H_
 #include <gui.h>

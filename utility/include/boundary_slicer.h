@@ -1,12 +1,28 @@
-/********************************************************
- * Contents: Slicer definition
- * Author: Dawid J. Blom
- * Date: December 28, 2024
+/*******************************************************************************
+ * @file    boundary_slicer.h
+ * @brief   Line-boundary text slicer with configurable maximum width.
  *
- * NOTE: This utility handles the splitting of words or
- * the placing of words on a new line depending on their
- * length. 
- *******************************************************/
+ * @details This class implements a deterministic, thread-safe text slicing
+ *          utility that breaks an input string into multiple lines according to
+ *          a caller-specified maximum character boundary.
+ *
+ *          The algorithm processes text word-by-word and applies the following
+ *          behavior:
+ *
+ *            - Words that fit on the current line are appended normally.
+ *            - Words that exceed the maximum length are sliced into multiple
+ *              segments of size @ref max.
+ *            - Words that would overflow the current line cause a new line to
+ *              be started.
+ *
+ *          Concurrency:
+ *            A mutex protects updates to the mutable internal buffer
+ *            (`current_line`) ensuring safe usage in multi-threaded contexts.
+ *
+ *          This class derives from interface::slicer, providing a concrete
+ *          implementation of the slice() operation for use by formatting,
+ *          printing, and PDF-generation components.
+ ******************************************************************************/
 #ifndef _BOUNDARY_SLICER_H_
 #define _BOUNDARY_SLICER_H_
 #include <mutex>

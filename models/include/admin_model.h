@@ -1,10 +1,24 @@
-/********************************************************
- * Contents: admin info feature definition
- * Author: Dawid J. Blom
- * Date: November 18, 2024
+/*******************************************************************************
+ * @file admin_model.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Admin model interface for loading and saving administrator data.
+ *
+ * @details
+ * This header declares the `model::admin` class, which implements the
+ * `interface::model_register` interface to provide persistence for
+ * administrator-related data such as contact details, banking information,
+ * and client messaging.
+ *
+ * The model encapsulates:
+ *  - Connection details to an encrypted SQLite database (file + password).
+ *  - An API to load admin records either without a key or by business name.
+ *  - An API to save admin data received as a type-erased `std::any`.
+ *
+ * Internally, the model collaborates with serialization helpers and the
+ * SQLite wrapper to convert between database rows and strongly-typed
+ * `data::admin` / `data::business` objects, ensuring that UI and other
+ * layers remain decoupled from SQL and schema details.
+ *******************************************************************************/
 #ifndef _ADMIN_MODEL_H_
 #define _ADMIN_MODEL_H_
 #include <models.h>
@@ -21,6 +35,7 @@ public:
 	admin& operator= (admin&&) = delete;
 	virtual ~admin() override;
 
+	[[nodiscard]] virtual std::any load();
 	[[nodiscard]] virtual std::any load(const std::string&) override;
 	[[nodiscard]] virtual bool save(const std::any&) override;
 

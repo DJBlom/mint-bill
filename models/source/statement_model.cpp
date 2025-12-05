@@ -1,10 +1,36 @@
-/********************************************************
- * Contents: Client statement definition
- * Author: Dawid J. Blom
- * Date: June 11, 2025
+/*******************************************************************************
+ * @file statement_model.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the model::statement class.
+ *
+ * @details
+ * The model::statement class provides the high–level operations needed to
+ * work with customer account statements in the application. It is responsible
+ * for:
+ *
+ *   • Loading statements and their associated invoices from the database and
+ *     constructing data::pdf_statement objects that aggregate:
+ *       - data::statement metadata
+ *       - data::client information
+ *       - data::admin (business) information
+ *       - data::pdf_invoice entries (each containing invoice + labor details)
+ *
+ *   • Persisting statement records to the database using parameterized SQL
+ *     queries and transactional semantics to preserve data integrity.
+ *
+ *   • Preparing email payloads (data::email) containing the correct client,
+ *     business details, and a collection of generated PDF documents.
+ *
+ *   • Preparing data for printing by converting statement aggregates into a
+ *     vector<std::string> of in-memory PDF representations using the
+ *     feature::statement_pdf facility. PDF generation is parallelized using
+ *     std::async to keep the implementation scalable.
+ *
+ * Error handling:
+ *   All critical failures (invalid arguments, empty result sets, failed
+ *   transactions) are logged via syslog with file name and line number
+ *   information to aid debugging and troubleshooting.
+ *******************************************************************************/
 #include <future>
 #include <syslog.h>
 #include <sqlite.h>
@@ -134,6 +160,21 @@ bool model::statement::save(const std::any& _data) const
 	else
         {
 		storage::database::sqlite database{this->database_file, this->database_password};
+
+		serialize::admin admin_serialize{};
+		data::admin admin_data{
+			std::any_cast<data::admin>(
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_no_name_select)
+				)
+			)
+		};
+
+		if (admin_data.is_valid() == false)
+		{
+			return success;
+		}
+
 		storage::database::sql_parameters statement_params = {
 			statement_data.get_name(),
 			statement_data.get_period_start(),

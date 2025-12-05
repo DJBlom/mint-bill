@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- Created with Cambalache 0.96.1 -->
+<!-- Created with Cambalache 0.96.3 -->
 <interface>
   <!-- interface-name invoice-system.ui -->
   <requires lib="gtk" version="4.14"/>
@@ -37,7 +37,7 @@
             <property name="ellipsize">middle</property>
             <property name="halign">start</property>
             <property name="justify">fill</property>
-            <property name="label">Business Name</property>
+            <property name="label">Mint Bill</property>
             <accessibility>
               <state name="expanded">False</state>
             </accessibility>
@@ -964,10 +964,13 @@
     <property name="text">1) - Is alle inskrywingsvelde ingevul?
 
 2) - Soek vir die besigheid vir wie die 
-        faktuur gegenereer moet word.
+     faktuur gegenereer moet word.
 
 3) - Is die arbeid en materiaal items 
-        by gevoeg?</property>
+     by gevoeg?
+
+4) - Is u besigheid gerigistreer van die bladsy 
+     "Besigheids-Inligting" af?</property>
     <property name="title">Maak Seker Oor Die Volgende</property>
     <property name="transient-for">main-window</property>
   </object>

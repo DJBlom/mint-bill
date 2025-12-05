@@ -1,10 +1,36 @@
-/***********************************************************
- * Contents: Invoice Page class implementation
- * Author: Dawid J. Blom
- * Date: November 28, 2024
+/*******************************************************************************
+ * @file invoice_page.cpp
  *
- * NOTE:
- **********************************************************/
+ * @brief Implementation of the gui::invoice_page class and helper wrappers
+ *        used to drive invoice creation, editing, searching, printing, and
+ *        emailing from the GUI.
+ *
+ * @details
+ * This implementation:
+ *   - Wires up Gtk::ColumnView and Gtk::ListView instances for description,
+ *     material, and known-invoice views, including their selection models and
+ *     SignalListItemFactory setup/bind/teardown handlers.
+ *   - Manages the lifecycle of line-item stores (Gio::ListStore<column_entries>)
+ *     and invoice stores (Gio::ListStore<invoice_entries>), updating totals
+ *     whenever items change.
+ *   - Validates user input for quantity (integer) and amount (double) columns,
+ *     showing error dialogs when formats are incorrect and resetting values
+ *     to safe defaults.
+ *   - Loads invoice data from the database via model::invoice, converts it
+ *     into data::pdf_invoice and data::invoice objects, and populates both the
+ *     “known invoices” list and the editable invoice fields.
+ *   - Extracts the current GUI state into a data::invoice instance, including
+ *     description and material columns tagged with is_description flags, ready
+ *     for persistence or further processing.
+ *   - Coordinates confirmation and error dialogs for save, email, print, and
+ *     data/selection problems through part::dialog helpers.
+ *   - Launches asynchronous email sending using std::async and notifies the
+ *     main thread via a Glib::Dispatcher callback (email_sent), handling
+ *     success and failure (e.g., no internet) with logging and dialogs.
+ *
+ * Throughout, syslog is used to record both normal flow (user actions) and
+ * error conditions, aiding diagnostics and operational observability.
+ *******************************************************************************/
 #include <chrono>
 #include <ostream>
 #include <syslog.h>
@@ -1302,15 +1328,15 @@ void gui::invoice_page::populate(const std::string& _business_name)
 					return std::any_cast<data::pdf_invoice> (_pdf_invoice);
 				});
 
-		data::client client_data{};
-		data::invoice invoice_data{};
+		data::client db_client_data{};
+		data::invoice db_invoice_data{};
 		for (const data::pdf_invoice& data : pdf_invoices)
 		{
-			 client_data = data.get_client();
-			 invoice_data = data.get_invoice();
+			 db_client_data = data.get_client();
+			 db_invoice_data = data.get_invoice();
 		}
 
-		if (client_data.is_valid() == false)
+		if (db_client_data.is_valid() == false)
 		{
 			this->clear();
 			syslog(LOG_CRIT, "INVOICE_PAGE: The client does not exist - "
@@ -1319,7 +1345,7 @@ void gui::invoice_page::populate(const std::string& _business_name)
 		else
 		{
 			utility::date_manager date_manager{};
-			if (invoice_data.is_valid() == false)
+			if (db_invoice_data.is_valid() == false)
 			{
 				int new_invoice_number{0};
 				++new_invoice_number;

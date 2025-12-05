@@ -1,10 +1,39 @@
-/********************************************************************************
- * Contents: The main function
- * Author: Dawid Blom
- * Date: October 26, 2024
+/*****************************************************************************
+ * @file    main.cpp
  *
- * Note:
- *******************************************************************************/
+ * @brief
+ *   Application entry point and top-level orchestration for the mint-bill GUI.
+ *
+ * @details
+ *   This file defines the `mint_bill` application class and the `main()`
+ *   function that bootstraps the GTK application. It is responsible for:
+ *
+ *     - Creating the Gtk::Application instance and wiring up the activate
+ *       callback.
+ *     - Loading the UI definition from the .ui file and applying the CSS theme.
+ *     - Initializing the main application windows and common GUI components:
+ *       * Page stack and stack-driven navigation.
+ *       * Global search bar.
+ *       * Print, email, and save buttons.
+ *     - Constructing and initializing the feature pages:
+ *       * Admin page (business details and configuration).
+ *       * Client registration page.
+ *       * Invoice page (invoice creation, printing, emailing, saving).
+ *       * Statement page (statement creation, printing, emailing, saving).
+ *     - Integrating with the password manager to:
+ *       * Look up or store the encrypted database password.
+ *       * Open a database password window when no password is configured.
+ *       * Propagate the password to the page controllers.
+ *     - Loading persisted admin data from the database and updating the UI
+ *       (for example, the organization label) when valid data exists.
+ *
+ *   Error conditions and unexpected states are reported via syslog with
+ *   critical severity, including file name and line number to aid in
+ *   diagnostics. The class is intentionally non-copyable and non-movable to
+ *   enforce a single owning instance managing process-wide resources such as
+ *   the Gtk::Application, shared windows, and dispatcher.
+ *
+ *****************************************************************************/
 #include <gui.h>
 #include <thread>
 #include <future>
@@ -54,6 +83,7 @@ private:
 	std::unique_ptr<Gtk::Window> database_password_window{nullptr};
 	std::unique_ptr<Gtk::Entry> database_password_entry{nullptr};
 	std::unique_ptr<Gtk::Button> database_password_button{nullptr};
+	std::unique_ptr<Gtk::Label> organization_label{nullptr};
 	gui::admin_page admin_page{};
 	gui::client_register_page client_register_page{};
 	gui::invoice_page invoice_page{};
@@ -129,6 +159,7 @@ void mint_bill::activate()
 	}
 	else
 	{
+
 		if (this->load_ui_file(ui_builder) == false)
 		{
 			syslog(LOG_CRIT, "MINT_BILL: failed to load the UI file - "
@@ -599,6 +630,8 @@ bool mint_bill::css_setup()
 bool mint_bill::window_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder)
 {
 	bool success{false};
+	this->organization_label = std::unique_ptr<Gtk::Label>{
+		_ui_builder->get_widget<Gtk::Label>("organization-name")};
         this->mint_bill_window = std::shared_ptr<Gtk::Window> {
 		_ui_builder->get_widget<Gtk::Window>("main-window")};
 	this->database_password_window = std::unique_ptr<Gtk::Window> {
@@ -675,6 +708,29 @@ void mint_bill::database_password_exist()
 	}
 	else
 	{
+		model::admin admin_model{app::config::path_to_database_file, password};
+		std::any data{admin_model.load()};
+		data::admin admin_data{std::any_cast<data::admin> (data)};
+		if (admin_data.is_valid() == false)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: the admin data is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			if (this->stack.set_current_page("admin-page") == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: Failed to make admin-page the visible page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+		else
+		{
+			this->organization_label->set_text(admin_data.get_name());
+			if (this->stack.set_current_page("invoice-page") == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: Failed to make invoice-page the visible page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+			}
+		}
+
 		if (this->admin_page.set_database_password(password) == false)
 		{
 			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "

@@ -1,10 +1,55 @@
 /*******************************************************************************
- * Contents: gui parts unit tests
- * Author: Dawid Blom
- * Date: May 27, 2025
+ * @file    gui_parts_tests.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief   CppUTest unit tests for GUI helper components and statement views.
+ *
+ * @details
+ * This file contains integration-style GUI tests for multiple helper classes
+ * in the gui::part and gui::part::statement namespaces, using a common
+ * Gtk::Application and Gtk::Builder loaded from the mint-bill.ui file.
+ *
+ * Covered Components:
+ *   - gui::part::search_bar
+ *       * Verifies creation, validity checks, subscriber registration,
+ *         search keyword propagation, and automatic clearing on stack changes.
+ *
+ *   - gui::part::dialog
+ *       * Ensures safe creation, connection of response callbacks, and
+ *         visibility control (show/hide) including failure paths.
+ *
+ *   - gui::part::sub_button
+ *       * Tests button creation, callback subscription, and validity checks.
+ *
+ *   - gui::part::statement::column_view
+ *       * Validates creation, adding columns, populating with invoice data,
+ *         clearing, and extracting records from the underlying store.
+ *
+ *   - gui::part::statement::pdf_window
+ *       * Exercises PDF window generation with both invalid and valid
+ *         poppler::document instances.
+ *
+ *   - gui::part::statement::invoice_pdf_view
+ *       * Checks creation, validity, population, clearing, and record
+ *         extraction behavior for invoice PDF list views.
+ *
+ *   - gui::part::statement::statement_pdf_view
+ *       * Tests creation, validity, population, clearing, and extraction
+ *         of statement records from the list view model.
+ *
+ *   - gui::part::statement::columns (invoice/date/order/paid/price)
+ *       * Verifies column validity, correct column titles, and that
+ *         retrieve_value() reflects the underlying invoice data.
+ *
+ * Test Strategy:
+ *   - Uses Gtk::Builder to pull named widgets from the mint-bill.ui file.
+ *   - Uses real signal connections (e.g., “search-changed”, list activation).
+ *   - Calls C-style emission helpers where needed to simulate user actions.
+ *   - Relies on mocked or test data providers for invoice/statement models.
+ *
+ * The goal of these tests is to ensure that GUI helper parts behave correctly
+ * when wired together with actual GTK widgets, while still remaining fast and
+ * deterministic enough for automated unit test runs.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

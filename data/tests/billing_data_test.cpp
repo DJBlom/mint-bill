@@ -1,10 +1,38 @@
-/*******************************************************************************
- * Contents: billing data unit tests
- * Author: Dawid Blom
- * Date: November 27, 2025
+/*****************************************************************************
+ * @file billing_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::billing model, validating correctness, boundary
+ *   constraints, and the integrity of copy/move semantics.
+ *
+ * @details
+ *   This test suite verifies the behavior of the billing data structure, which
+ *   represents the common billing fields used by invoices and statements.
+ *   The following functional areas are exercised:
+ *
+ *   - Field assignment and retrieval:
+ *       • ID
+ *       • Business name
+ *       • Billing/statement date
+ *       • Paid-status field
+ *
+ *   - Validation logic:
+ *       • Ensures no required field is left empty
+ *       • Enforces string-length constraints (≤ 50 chars)
+ *       • Rejects invalid or oversized data
+ *
+ *   - Copy and move operations:
+ *       • Copy-construction and copy-assignment
+ *       • Move-construction and move-assignment
+ *       • Ensures validity is preserved across operations
+ *
+ *   - Thread-safety assumptions:
+ *       • Uses mutex-protected state inside data::billing; tests ensure
+ *         multithreaded access patterns do not break state integrity.
+ *
+ *   These tests collectively ensure that the billing model behaves reliably
+ *   as a foundational component for higher-level invoice and statement models.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

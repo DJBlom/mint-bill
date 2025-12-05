@@ -1,3 +1,75 @@
+/*******************************************************************************
+ * @file gui_parts.cpp
+ *
+ * @brief Implementation of reusable GUI components for statements, invoices,
+ *        PDF rendering, dialogs, search bar, and subscribed buttons.
+ *
+ * @details
+ * This file provides the concrete behavior for the declarations in
+ * gui_parts.h, organizing the implementation into logical sections:
+ *
+ *   - Statement column entries and column_item implementations:
+ *       * entries stores a data::invoice model object.
+ *       * invoice_number, date, order_number, paid_status, price:
+ *         - configure a Gtk::SignalListItemFactory and Gtk::ColumnViewColumn.
+ *         - create child widgets in setup() (labels or check buttons).
+ *         - bind() reads invoice data (id, date, order number, paid flag,
+ *           grand total) and updates the cell widget.
+ *         - teardown() cleans up list items.
+ *
+ *   - column_view:
+ *       * Resolves a Gtk::ColumnView and Gtk::Adjustment via Gtk::Builder.
+ *       * Maintains a Gio::ListStore<entries> as backing storage.
+ *       * Provides populate()/clear()/extract() to manage a list of
+ *         data::invoice objects and auto-scrolls to the bottom when new items
+ *         are appended.
+ *
+ *   - rows::invoice_pdf_entries / rows::statement_pdf_entries:
+ *       * Provide factory functions that wrap data::pdf_invoice and
+ *         data::pdf_statement objects for use in Gio::ListStore-based models.
+ *
+ *   - pdf_window and pdf_draw:
+ *       * pdf_window::generate() creates a transient modal window containing a
+ *         scrolled vertical box of pdf_draw widgets, one per page.
+ *       * pdf_draw::on_draw() uses poppler::page_renderer to render a PDF page
+ *         into a Cairo image surface and scales it to the drawing area.
+ *
+ *   - invoice_pdf_view:
+ *       * Wraps Gtk::ListView + Gio::ListStore<invoice_pdf_entries>.
+ *       * populate() fills the store with data::pdf_invoice objects.
+ *       * signal_activate handler generates a PDF via feature::invoice_pdf and
+ *         opens it in a pdf_window.
+ *
+ *   - statement_pdf_view:
+ *       * Wraps Gtk::ListView + Gio::ListStore<statement_pdf_entries>.
+ *       * populate() fills the store with data::pdf_statement objects.
+ *       * edit_statement(): called on row activation, delegates to a registered
+ *         double-click callback with the selected statement.
+ *       * selected_statement(): collects all selected statements and forwards
+ *         them to a registered single-click callback.
+ *
+ *   - search_bar:
+ *       * create(): binds to a Gtk::SearchEntry and hooks signal_search_changed.
+ *       * on_search_changed(): fetches the current keyword and invokes all
+ *         subscriber callbacks, enabling cross-page search coordination.
+ *       * update(): clears the entry and triggers a fresh notification when
+ *         the active stack page changes.
+ *
+ *   - dialog:
+ *       * create(): resolves Gtk::MessageDialog and connects signal_response.
+ *       * show()/hide(): manage dialog visibility with logging on failure.
+ *       * on_response(): forwards the response id to the registered callback.
+ *
+ *   - sub_button:
+ *       * create(): resolves a Gtk::Button and connects its clicked signal.
+ *       * subscribe(): registers a callback to be invoked on clicks.
+ *       * disable()/enable(): convenience methods to toggle sensitivity.
+ *       * on_clicked(): guards validity and then calls the subscribed handler.
+ *
+ * Throughout, syslog is used to report invalid widgets, failed casts, and
+ * other error conditions, providing a consistent diagnostic channel across
+ * the GUI layer.
+ *******************************************************************************/
 #include <gui_parts.h>
 #include <invoice_pdf.h>
 #include <errors.h>

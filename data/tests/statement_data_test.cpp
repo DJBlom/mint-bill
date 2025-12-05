@@ -1,10 +1,32 @@
-/*******************************************************************************
- * Contents: statement data unit tests
- * Author: Dawid Blom
- * Date: December 4, 2024
+/*****************************************************************************
+ * @file statement_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::statement billing model.
+ *
+ * @details
+ *   This test suite verifies the behavior of the data::statement type,
+ *   which represents a summarized billing statement for a client over
+ *   a specific period. The tests cover:
+ *
+ *     - Assigning and retrieving the statement period start and end
+ *       dates as strings.
+ *     - Ensuring that statement metadata inherited from data::billing
+ *       (ID, business name, statement date, paid status) is correctly
+ *       stored and validated.
+ *     - Rejecting invalid objects when any required field is empty or
+ *       when string fields exceed their configured length constraints.
+ *     - Exercising copy and move semantics (copy/move construction and
+ *       copy/move assignment) so statement objects behave as safe
+ *       value types in the wider billing pipeline.
+ *     - Confirming that is_valid() correctly distinguishes between
+ *       fully populated, valid statements and incomplete or malformed
+ *       ones.
+ *
+ *   These tests help ensure that higher-level components depending on
+ *   statement summaries can rely on data::statement for consistent,
+ *   thread-safe billing period metadata.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

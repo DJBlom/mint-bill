@@ -1,3 +1,40 @@
+/******************************************************************************
+ * @file password_manager.cpp
+ * @brief Implementation of the password_manager class for secure password
+ *        persistence using libsecret.
+ *
+ * @details
+ * This source file implements schema initialization, password storage, and
+ * password retrieval. All operational methods follow a fail-safe pattern: they
+ * validate inputs, call libsecret synchronously, log errors via syslog, and
+ * never throw exceptions.
+ *
+ * Constructor:
+ *  - Validates schema name; throws app::errors::construction if empty.
+ *  - Initializes SecretSchema fields, including integer and boolean attributes.
+ *
+ * store_password():
+ *  - Validates password string and integer bounds.
+ *  - Uses secret_password_store_sync to persist the password.
+ *  - Logs and returns false if:
+ *      * input validation fails,
+ *      * libsecret reports an error,
+ *      * storage fails for any reason.
+ *
+ * lookup_password():
+ *  - Validates integer input.
+ *  - Uses secret_password_lookup_sync with the "number" and "even" attributes.
+ *  - Logs failures including libsecret errors or null results.
+ *  - Returns an empty string if no password is found or an error occurs.
+ *
+ * Error Handling Notes:
+ *  - libsecret GError objects are always freed when present.
+ *  - No exceptions are thrown during operational functions.
+ *
+ * Behavior:
+ *  - Ensures consistent secure handling and cleanup of secrets.
+ *  - Ensures predictable application behavior even under failure conditions.
+ ******************************************************************************/
 #include <password_manager.h>
 
 feature::password_manager::password_manager(const std::string& _name): schema_name{_name}

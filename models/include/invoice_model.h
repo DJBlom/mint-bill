@@ -1,10 +1,27 @@
-/********************************************************
- * Contents: Client invoice interface definition
- * Author: Dawid J. Blom
- * Date: December 9, 2024
+/*******************************************************************************
+ * @file invoice_model.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Invoice domain model and operations interface implementation.
+ *
+ * @details
+ * Declares the `model::invoice` class, which implements the
+ * `interface::model_operations` interface for invoice-related workflows.
+ *
+ * Responsibilities:
+ *  - Load invoice-related data for a given business from persistent storage
+ *    and assemble it into higher-level domain objects.
+ *  - Persist invoice data (including related labor/line items and statement
+ *    information) to the database.
+ *  - Prepare invoice data for downstream use cases:
+ *      * `prepare_for_email()` – build a `data::email` object with all
+ *        necessary context and PDF attachments.
+ *      * `prepare_for_print()` – generate raw PDF documents as strings for
+ *        printing.
+ *
+ * The model holds:
+ *  - `database_file`      : path to the underlying SQLite database.
+ *  - `database_password`  : password required to open the database.
+ ******************************************************************************/
 #ifndef _INVOICE_MODEL_H_
 #define _INVOICE_MODEL_H_
 #include <string>

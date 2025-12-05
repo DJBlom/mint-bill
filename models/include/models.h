@@ -1,12 +1,34 @@
-/********************************************************
- * Contents: Abstract classes for features
- * Author: Dawid J. Blom
- * Date: June 11, 2025
+/*******************************************************************************
+ * @file models.h
  *
- * NOTE:
- *******************************************************/
-#ifndef _INTERFACES_H_
-#define _INTERFACES_H_
+ * @brief Abstract interfaces defining the core model operations framework.
+ *
+ * @details
+ * This header declares two foundational interfaces used throughout the system's
+ * data-model layer. These interfaces define uniform behaviors for loading,
+ * saving, and preparing model data for downstream consumers such as PDF or
+ * email generation.
+ *
+ *   • interface::model_operations
+ *       - Represents the primary contract for all data models (Admin, Client,
+ *         Invoice, Statement).
+ *       - Ensures every model can:
+ *            • Load domain data from storage using a string key.
+ *            • Save domain data using std::any-based type erasure.
+ *            • Prepare email data structures for outbound messages.
+ *            • Produce printable artifacts such as encoded PDFs.
+ *
+ *   • interface::model_register
+ *       - Minimal interface intended for registry-like components that act as
+ *         dispatchers or aggregators of model types.
+ *       - Allows generic save/load without exposing concrete model types.
+ *
+ * These interfaces abstract model logic away from persistence, serialization,
+ * and presentation layers, promoting clean separation of responsibilities and
+ * consistent behavior across all model implementations.
+ *******************************************************************************/
+#ifndef _MODELS_H_
+#define _MODELS_H_
 #include <any>
 #include <memory>
 #include <string>

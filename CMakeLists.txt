@@ -1,14 +1,27 @@
-############################################################################
-# Contents: Top Most CMakeLists.txt file
-# Author: Dawid Blom
-# Date: September 15, 2023
+###################################################################################################
+# Mint-Bill: Top-Level CMake Configuration
 #
-# NOTE:
-# This file is the main CMakeLists.txt file containing the compiler
-# options and definitions, the linker options, path to Main.cpp, and
-# the including of all the sub directories where other CMakeLists.txt
-# files are found.
-############################################################################
+# This CMake file defines the global build configuration for the Mint-Bill application.
+# It controls:
+#   • Project naming (with or without deployment version suffixes)
+#   • Global build options (Debug/Release, C/C++ standard levels, warnings, defines)
+#   • Optional feature toggles:
+#         - BUILD_PROJECT_FOR_DEPLOY: Build the deploy-ready version of the application
+#         - BUILD_PROJECT: Build the full project with all modules
+#         - UNIT_TESTS: Enable unit-testing targets
+#         - STATIC_CODE_ANALYSIS: Enable Cppcheck/static analysis integration
+#         - CODE_COVERAGE: Enable gcovr code-coverage support
+#
+# When BUILD_PROJECT is enabled, this file:
+#   • Finds and configures all required third-party dependencies
+#   • Builds the main application executable
+#   • Recursively adds subdirectories (gui, components, data, storage, models, features, utility)
+#   • Links all modules and system libraries together
+#   • Optionally generates a post-build objdump (.S) output for debugging
+#
+# This file acts as the root of the Mint-Bill build system, orchestrating every subsystem and
+# enforcing consistent compilation settings across the entire project.
+###################################################################################################
 cmake_minimum_required(VERSION 3.25)
 
 option(BUILD_PROJECT_FOR_DEPLOY "Build the project for deployment" OFF)

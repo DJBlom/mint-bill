@@ -1,10 +1,23 @@
 /*******************************************************************************
- * Contents: Invoice model unit tests
- * Author: Dawid Blom
- * Date: December 9, 2024
+ * @file invoice_model_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for the model::invoice class.
+ *
+ * @details
+ * This test suite verifies the invoice model’s interaction with the SQLite
+ * database and its composition of higher-level PDF invoice data. It covers:
+ *
+ *   • Rejecting invalid invoice data on save.
+ *   • Persisting valid invoices, including multiple invoices.
+ *   • Loading invoices by client/business name and reconstructing:
+ *       - Business (admin) details
+ *       - Client details
+ *       - Invoice line and total information
+ *       - Combined pdf_invoice aggregates
+ *
+ * The tests use a prepared test database and real SQL queries to provide
+ * end-to-end coverage of the model behavior.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -24,8 +37,8 @@ extern "C"
 
 
 /**********************************TEST LIST************************************
- * 1) Load the data from a database.
- * 2) Save the data into a database.
+ * 1) Load the data from a database. (Done)
+ * 2) Save the data into a database. (Done)
  ******************************************************************************/
 TEST_GROUP(invoice_model_test)
 {

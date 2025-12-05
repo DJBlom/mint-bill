@@ -1,10 +1,20 @@
-/********************************************************
- * Contents: File implementation
- * Author: Dawid J. Blom
- * Date: December 30, 2024
+/*******************************************************************************
+ * @file    file.cpp
+ * @brief   Implementation of the thread-safe file reader utility.
  *
- * NOTE:
- *******************************************************/
+ * @details Defines the logic for opening, validating, reading, and closing a
+ *          filesystem resource. The constructor resolves the supplied path to an
+ *          absolute location before attempting to open the file, and throws an
+ *          application-level construction error on failure.
+ *
+ *          read()
+ *            • Locks an internal mutex to ensure exclusive read access.
+ *            • Streams the entire file into a string buffer.
+ *            • Returns the result as a std::string.
+ *
+ *          The destructor closes the underlying file stream, maintaining proper
+ *          RAII semantics and preventing resource leaks.
+ ******************************************************************************/
 #include <file.h>
 
 

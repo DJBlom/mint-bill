@@ -1,4 +1,28 @@
-
+/*******************************************************************************
+ * @file business_serialize.h
+ *
+ * @brief Serialization helper for business detail records.
+ *
+ * @details
+ * This header declares the `serialize::business` class, which implements the
+ * `interface::single_serialize` interface to convert raw SQLite query results
+ * into a `data::business` object.
+ *
+ * Responsibilities:
+ *  - Interpret `storage::database::part::rows` returned from the database.
+ *  - Map each column (name, address, area code, town, phone, email) into a
+ *    structured `data::business` instance.
+ *  - Provide a single `extract_data()` entry point that returns the populated
+ *    object wrapped in `std::any`.
+ *
+ * The file also defines SQL query strings in `sql::query` used by the business
+ * model:
+ *  - `business_details_usert`  – UPSERT for core business details.
+ *  - `business_details_select` – Select a single business by name.
+ *
+ * This keeps schema and SQL details localized to the serialization layer and
+ * allows higher-level code to operate on domain objects instead of raw rows.
+ *******************************************************************************/
 #ifndef _SERIALIZE_BUSINESS_H_
 #define _SERIALIZE_BUSINESS_H_
 #include <serialize.h>

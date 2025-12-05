@@ -1,10 +1,29 @@
-/********************************************************
- * Contents: admin data implementation
- * Author: Dawid J. Blom
- * Date: November 18, 2024
+/*****************************************************************************
+ * @file admin_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the administrative data model defined in admin_data.h,
+ *   providing construction, assignment, validation, and controlled access
+ *   to administrative attributes associated with a business entity.
+ *
+ * @details
+ *   This implementation defines the behavior of the data::admin class,
+ *   including copy and move semantics, field setters and getters, and
+ *   internal validity checks. Administrative attributes such as bank name,
+ *   branch code, account number, client message, and password are stored
+ *   and updated with basic length-based validation.
+ *
+ *   A bitmask-based flag mechanism is used to track which fields have been
+ *   populated, enabling a concise implementation of is_valid() that combines
+ *   the flag state with the base data::business validation logic. A mutex
+ *   protects access to mutable internal data to support safe concurrent use
+ *   from multiple threads.
+ *
+ * @notes
+ *   The upper_bound namespace provides local compile-time limits for the
+ *   maximum length of administrative string fields. Callers should rely on
+ *   is_valid() rather than assuming that individual setters always succeed.
+ *****************************************************************************/
 #include <admin_data.h>
 
 

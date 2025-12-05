@@ -1,10 +1,48 @@
-/*******************************************************
- * Contents: Statement Page class declaration
- * Author: Dawid J. Blom
- * Date: February 19, 2025
+/*******************************************************************************
+ * @file statement_page.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the gui::statement_page GUI controller responsible
+ *        for displaying, selecting, saving, printing, and emailing statements
+ *        and their associated invoices.
+ *
+ * @details
+ * This implementation:
+ *
+ *   - Validates the Gtk::Builder and main-window pointers during create(), then
+ *     initializes labels, dialogs, and custom view wrappers:
+ *       * part::statement::column_view for tabular invoice details.
+ *       * part::statement::invoice_pdf_view for invoice PDF previews/listing.
+ *       * part::statement::statement_pdf_view for statement PDF selection.
+ *
+ *   - Configures dialog workflows for:
+ *       * Email (email_alert) — launches asynchronous email sending via
+ *         std::async, prepares data through model::statement, and emits a
+ *         Glib::Dispatcher signal to email_sent() on completion.
+ *       * Print (print_alert) — prepares print data via model::statement and
+ *         invokes gui::part::printer with the active documents.
+ *       * Save (save_alert) — persists the selected statement and related
+ *         invoices to the database via model::statement and model::invoice.
+ *       * Error/edge conditions such as no selection and no internet.
+ *
+ *   - Populates the statement listing using model::statement::load(), converts
+ *     entries into data::pdf_statement objects, and feeds them into
+ *     statement_pdf_view.
+ *
+ *   - Reacts to single-clicks on statements to track the currently selected
+ *     documents for email/print, and to double-clicks to:
+ *       * Cache the selected data::pdf_statement.
+ *       * Populate the itemized invoice table (statement_view).
+ *       * Populate the invoice PDF preview list (invoice_pdf_view).
+ *       * Update the total_label with the statement’s total.
+ *
+ *   - Provides search() and clear() helpers to reset state, re-load statements
+ *     for a given business name, and keep the GUI consistent with the
+ *     underlying data model.
+ *
+ * Extensive syslog logging is used to trace normal user actions and to report
+ * any invalid state, failed dialog operations, or database/printing/email
+ * issues, aiding diagnosis in production environments.
+ *******************************************************************************/
 #include <statement_page.h>
 #include <pdf_statement_data.h>
 #include <email.h>
@@ -26,7 +64,7 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
 {
         if (_ui_builder == nullptr || _main_window == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder or the _main_window is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder or the _main_window is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 		return false;
 	}
@@ -37,56 +75,56 @@ bool gui::statement_page::create(const Glib::RefPtr<Gtk::Builder>& _ui_builder,
 
 		if (this->email_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup email - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup email - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->print_setup(_ui_builder, _main_window) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup print - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup print - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->save_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup save - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup save - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->no_item_selected_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup no_item_selected_setup - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup no_item_selected_setup - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->no_internet_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup no_internet_setup - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup no_internet_setup - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->invoice_pdf_view_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup invoice_pdf_view_setup - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup invoice_pdf_view_setup - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->statement_pdf_view_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup statement_pdf_view_setup - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup statement_pdf_view_setup - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
 
 		if (this->statement_column_view_setup(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to setup statement_column_view_setup - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to setup statement_column_view_setup - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			return false;
 		}
@@ -119,7 +157,7 @@ bool gui::statement_page::search(const std::string& _keyword)
 	if (_keyword.empty() == true)
 	{
 		searched = false;
-		syslog(LOG_CRIT, "The _keyword is empty, clearing all entries - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _keyword is empty, clearing all entries - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -140,7 +178,7 @@ bool gui::statement_page::print()
 	{
 		if (this->no_item_selected.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show no_item_selected dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show no_item_selected dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 	}
@@ -148,7 +186,7 @@ bool gui::statement_page::print()
 	{
 		if (this->print_alert.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show print dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show print dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -167,7 +205,7 @@ bool gui::statement_page::email()
 	{
 		if (this->no_item_selected.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show no_item_selected dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show no_item_selected dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 	}
@@ -175,7 +213,7 @@ bool gui::statement_page::email()
 	{
 		if (this->email_alert.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show email dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show email dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -195,7 +233,7 @@ bool gui::statement_page::save()
 	{
 		if (this->no_item_selected.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show no_item_selected dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show no_item_selected dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 	}
@@ -204,7 +242,7 @@ bool gui::statement_page::save()
 		success = true;
 		if (this->save_alert.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show save dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show save dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 	}
@@ -217,14 +255,14 @@ bool gui::statement_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder or the _main_window is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder or the _main_window is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->email_alert.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create email dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create email dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -235,7 +273,7 @@ bool gui::statement_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 					case GTK_RESPONSE_YES:
 						if (this->email_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide email dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide email dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						else
@@ -254,14 +292,14 @@ bool gui::statement_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 					case GTK_RESPONSE_NO:
 						if (this->email_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide email dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide email dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
 					default:
 						if (this->email_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide email dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide email dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
@@ -279,14 +317,14 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 	bool success{false};
 	if (_ui_builder == nullptr || _main_window == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder or the _main_window is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder or the _main_window is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->print_alert.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create print dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create print dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -297,7 +335,7 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 					case GTK_RESPONSE_YES:
 						if (this->print_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide print dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide print dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						else
@@ -308,7 +346,7 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 							gui::part::printer printer{"statement"};
 							if (printer.print(data, _main_window) == false)
 							{
-								syslog(LOG_CRIT, "Failed to print documents - "
+								syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to print documents - "
 										 "filename %s, line number %d", __FILE__, __LINE__);
 							}
 						}
@@ -316,14 +354,14 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 					case GTK_RESPONSE_NO:
 						if (this->print_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide print dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide print dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
 					default:
 						if (this->print_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide print dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide print dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
@@ -396,14 +434,14 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 					case GTK_RESPONSE_NO:
 						if (this->save_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide save dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide save dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
 					default:
 						if (this->save_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide save dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide save dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
@@ -438,14 +476,14 @@ bool gui::statement_page::no_item_selected_setup(const Glib::RefPtr<Gtk::Builder
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->no_item_selected.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create no_item_selected dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create no_item_selected dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -456,14 +494,14 @@ bool gui::statement_page::no_item_selected_setup(const Glib::RefPtr<Gtk::Builder
 					case GTK_RESPONSE_CLOSE:
 						if (this->no_item_selected.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide no_item_selected dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide no_item_selected dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
 					default:
 						if (this->no_item_selected.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide no_item_selected dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide no_item_selected dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
@@ -480,14 +518,14 @@ bool gui::statement_page::no_internet_setup(const Glib::RefPtr<Gtk::Builder>& _u
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->no_internet_alert.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create no_item_selected dialog - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create no_item_selected dialog - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
@@ -498,14 +536,14 @@ bool gui::statement_page::no_internet_setup(const Glib::RefPtr<Gtk::Builder>& _u
 					case GTK_RESPONSE_CLOSE:
 						if (this->no_internet_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide no_internet_alert dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide no_internet_alert dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
 					default:
 						if (this->no_internet_alert.hide() == false)
 						{
-							syslog(LOG_CRIT, "Failed to hide no_internet_alert dialog - "
+							syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to hide no_internet_alert dialog - "
 									 "filename %s, line number %d", __FILE__, __LINE__);
 						}
 						break;
@@ -523,84 +561,84 @@ bool gui::statement_page::statement_column_view_setup(const Glib::RefPtr<Gtk::Bu
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->statement_view.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create the statement_view - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the statement_view - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
 			if (this->invoice_number.create("Invoice Number") == false)
 			{
-				syslog(LOG_CRIT, "Failed to create the column Invoice Number - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the column Invoice Number - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
 				if (this->statement_view.add_column(this->invoice_number) == false)
 				{
-					syslog(LOG_CRIT, "Failed to add the column invoice_number - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to add the column invoice_number - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
 
 			if (this->date.create("Date") == false)
 			{
-				syslog(LOG_CRIT, "Failed to create the column Date - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the column Date - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
 				if (this->statement_view.add_column(this->date) == false)
 				{
-					syslog(LOG_CRIT, "Failed to add the column date - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to add the column date - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
 
 			if (this->order_number.create("Order Number") == false)
 			{
-				syslog(LOG_CRIT, "Failed to create the column Order Number - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the column Order Number - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
 				if (this->statement_view.add_column(this->order_number) == false)
 				{
-					syslog(LOG_CRIT, "Failed to add the column order_number - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to add the column order_number - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
 
 			if (this->paid_status.create("Paid Status") == false)
 			{
-				syslog(LOG_CRIT, "Failed to create the column Paid Status - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the column Paid Status - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
 				if (this->statement_view.add_column(this->paid_status) == false)
 				{
-					syslog(LOG_CRIT, "Failed to add the column paid_satus - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to add the column paid_satus - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
 
 			if (this->price.create("Price") == false)
 			{
-				syslog(LOG_CRIT, "Failed to create the column Price - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the column Price - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			else
 			{
 				if (this->statement_view.add_column(this->price) == false)
 				{
-					syslog(LOG_CRIT, "Failed to add the column price - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to add the column price - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 			}
@@ -616,7 +654,7 @@ bool gui::statement_page::invoice_pdf_view_setup(const Glib::RefPtr<Gtk::Builder
 	bool success{false};
 	if (this->invoice_pdf_view.create(_ui_builder) == false)
 	{
-		syslog(LOG_CRIT, "Failed to create the invoice_pdf_view - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the invoice_pdf_view - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
@@ -632,27 +670,27 @@ bool gui::statement_page::statement_pdf_view_setup(const Glib::RefPtr<Gtk::Build
 	bool success{false};
 	if (_ui_builder == nullptr)
 	{
-		syslog(LOG_CRIT, "The _ui_builder is not valid - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: The _ui_builder is not valid - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 	else
 	{
 		if (this->statement_pdf_view.create(_ui_builder) == false)
 		{
-			syslog(LOG_CRIT, "Failed to create the statement_pdf_view - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to create the statement_pdf_view - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 		else
 		{
 			if (on_double_click() == false)
 			{
-				syslog(LOG_CRIT, "The pdf_statement_data is not valid - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: The pdf_statement_data is not valid - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 
 			if (on_single_click() == false)
 			{
-				syslog(LOG_CRIT, "The pdf_statements is not valid - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: The pdf_statements is not valid - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 			success = true;
@@ -669,7 +707,7 @@ bool gui::statement_page::on_double_click()
 		data::pdf_statement pdf_statement_data{std::any_cast<data::pdf_statement> (_data)};
 		if (pdf_statement_data.is_valid() == false)
 		{
-			syslog(LOG_CRIT, "The pdf_statement data is not valid - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: The pdf_statement data is not valid - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 			success = false;
 		}
@@ -683,7 +721,7 @@ bool gui::statement_page::on_double_click()
 			{
 				if (pdf_invoice.is_valid() == false)
 				{
-					syslog(LOG_CRIT, "The pdf_invoice data is not valid - "
+					syslog(LOG_CRIT, "STATEMENT_PAGE: The pdf_invoice data is not valid - "
 							 "filename %s, line number %d", __FILE__, __LINE__);
 				}
 				else
@@ -695,13 +733,13 @@ bool gui::statement_page::on_double_click()
 
 			if (this->statement_view.populate(invoices) == false)
 			{
-				syslog(LOG_CRIT, "Failed to populate the statement_view - "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to populate the statement_view - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 
 			if (this->invoice_pdf_view.populate(pdf_invoices) == false)
 			{
-				syslog(LOG_CRIT, "Failed to populate the invoice_pdf_view- "
+				syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to populate the invoice_pdf_view- "
 						 "filename %s, line number %d", __FILE__, __LINE__);
 			}
 		}
@@ -732,17 +770,17 @@ void gui::statement_page::email_sent()
 {
 	if (this->email_future.get() == false)
 	{
-		syslog(LOG_CRIT, "Failed to send the email - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to send the email - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 		if (this->no_internet_alert.show() == false)
 		{
-			syslog(LOG_CRIT, "Failed to show the no_internet_alert - "
+			syslog(LOG_CRIT, "STATEMENT_PAGE: Failed to show the no_internet_alert - "
 					 "filename %s, line number %d", __FILE__, __LINE__);
 		}
 	}
 	else
 	{
-		syslog(LOG_CRIT, "Email successfully sent - "
+		syslog(LOG_CRIT, "STATEMENT_PAGE: Email successfully sent - "
 				 "filename %s, line number %d", __FILE__, __LINE__);
 	}
 }

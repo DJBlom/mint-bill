@@ -1,9 +1,33 @@
 /*******************************************************************************
- * Contents: Date manger unit tests
- * Author: Dawid Blom
- * Date: November 28, 2025
+ * @file    date_manager_test.cpp
+ * @brief   Unit tests for the date_manager utility class.
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @details This test suite validates the correctness and behavior of the
+ *          date_manager, which is responsible for:
+ *
+ *            • Producing a formatted current-date string based on the system’s
+ *              local time zone.
+ *
+ *            • Computing statement period boundaries from user-defined schedules
+ *              expressed as "N,D", where:
+ *                    N ∈ {1..4} specifies the weekly period,
+ *                    D ∈ {1..7} specifies the weekday (Mon-Sun).
+ *
+ *          The tests include:
+ *
+ *            1. Verifying that current_date() returns a non-empty result.
+ *
+ *            2. Confirming that an empty schedule returns empty bounds.
+ *
+ *            3. Evaluating compute_period_bounds() across all valid N,D
+ *               combinations, printing results for manual inspection.
+ *
+ *            4. Ensuring the function gracefully handles local-time conversion,
+ *               calendar arithmetic, and month-boundary clamping.
+ *
+ *          These tests collectively ensure that the date_manager produces
+ *          deterministic, well-formed period boundaries for downstream systems
+ *          such as invoicing, statements, reporting, and scheduled automation.
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -17,9 +41,6 @@ extern "C"
 }
 
 
-/**********************************TEST LIST************************************
- * 1)
- ******************************************************************************/
 TEST_GROUP(date_manager_test)
 {
 	utility::date_manager date_manager;

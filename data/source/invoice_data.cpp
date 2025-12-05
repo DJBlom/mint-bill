@@ -1,10 +1,30 @@
-/********************************************************
- * Contents: Invoice data implementation
- * Author: Dawid J. Blom
- * Date: December 4, 2024
+/*****************************************************************************
+ * @file invoice_data.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implements the invoice data model defined in invoice_data.h, including
+ *   construction, assignment, validation, and managed updates to invoice
+ *   attributes.
+ *
+ * @details
+ *   This implementation defines the behavior of data::invoice, including copy
+ *   and move semantics, along with setter and getter methods for job card
+ *   number, order number, description and material totals, grand total, and
+ *   the two column collections. Setter functions enforce simple string length
+ *   checks and non-empty constraints, and record the outcome in the internal
+ *   flag mask.
+ *
+ *   The check_flags() helper consolidates invoice-level flag state so that
+ *   is_valid() can combine it with data::billing::is_valid() to determine
+ *   overall completeness. Access to mutable members is guarded by a mutex,
+ *   allowing safe modification of invoice data in concurrent environments.
+ *
+ * @notes
+ *   Upper bounds for string lengths and related constraints are defined in the
+ *   local upper_bound namespace. Callers should rely on is_valid() before
+ *   using an invoice instance in downstream processes such as PDF generation,
+ *   emailing, or persistence.
+ *****************************************************************************/
 #include <invoice_data.h>
 
 

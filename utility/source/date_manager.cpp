@@ -1,3 +1,30 @@
+/*******************************************************************************
+ * @file    date_manager.cpp
+ * @brief   Implementation of date utilities and billing-period calculations.
+ *
+ * @details This file defines the runtime logic behind computing:
+ *
+ *            1) A formatted current local date string.
+ *            2) Billing-period start/end dates based on schedule rules.
+ *
+ *          The implementation leverages <chrono> (including year_month_day,
+ *          zoned_time, and weekday arithmetic) to produce timezone-correct and
+ *          calendar-safe results.
+ *
+ *          Notable behaviors:
+ *            • current_date()
+ *                Formats local system date as MM-DD-YYYY.
+ *
+ *            • compute_period_bounds(schedule)
+ *                - Validates schedule format ("N,D") and allowed ranges.
+ *                - Computes weekly or monthly billing windows.
+ *                - Ensures all computed dates are clamped within valid month
+ *                  boundaries when N ≥ 2.
+ *                - Throws descriptive runtime errors for malformed schedules.
+ *
+ *          These utilities support statement generation, invoicing workflows,
+ *          and any component requiring deterministic period calculations.
+ ******************************************************************************/
 #include <date_manager.h>
 #include <chrono>
 #include <sstream>

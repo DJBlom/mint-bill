@@ -1,10 +1,32 @@
-/********************************************************
- * Contents: Statement Page class definition
- * Author: Dawid J. Blom
- * Date: February 19, 2025
+/*******************************************************************************
+ * @file statement_page.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Declaration of the gui::statement_page class for statement operations
+ *        such as viewing, saving, printing, and emailing account statements.
+ *
+ * @details
+ * The statement_page class implements interface::operations_page and provides
+ * the GUI workflow for interacting with customer account statements. It:
+ *
+ *   - Binds to Gtk widgets created via Gtk::Builder (labels, list views,
+ *     dialogs, etc.) and wires them into higher-level GUI components under
+ *     part::statement (column views and PDF views).
+ *   - Loads statement data from the database via model::statement and presents
+ *     it as lists of data::pdf_statement and data::invoice instances.
+ *   - Handles user selection of one or more statements and associated invoices,
+ *     storing them in internal containers for later actions.
+ *   - Coordinates printing through gui::part::printer and emailing through
+ *     feature::email, including asynchronous email sending with a
+ *     Glib::Dispatcher callback (email_sent).
+ *   - Supports saving statement and invoice changes back to the database via
+ *     model::statement and model::invoice after user confirmation.
+ *   - Manages dialogs for save/print/email operations, no selection, and
+ *     no-internet conditions using part::dialog helpers.
+ *
+ * All stateful GUI and model-related members are kept in a single instance,
+ * and the class is explicitly non-copyable and non-movable to avoid accidental
+ * duplication of UI or data ownership.
+ *******************************************************************************/
 #ifndef _STATEMENT_PAGE_H_
 #define _STATEMENT_PAGE_H_
 #include <gui.h>

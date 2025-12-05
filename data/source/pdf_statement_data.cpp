@@ -1,3 +1,31 @@
+/*****************************************************************************
+ * @file pdf_statement_data.cpp
+ *
+ * @brief
+ *   Implements the pdf_statement data model defined in pdf_statement_data.h,
+ *   including construction, assignment, validation, and controlled updates to
+ *   statement-related PDF data.
+ *
+ * @details
+ *   This implementation defines the behavior of data::pdf_statement, providing
+ *   copy and move semantics along with setter and getter methods for the
+ *   statement number, date, total, underlying statement object, and collection
+ *   of pdf_invoice instances. Setter methods enforce basic non-empty and
+ *   length constraints and rely on the underlying statement object's validity
+ *   before storing it.
+ *
+ *   A bitmask-based flag system is used to record which attributes have been
+ *   successfully initialized. The check_flags() helper inspects this state so
+ *   that is_valid() can indicate whether a pdf_statement instance is ready for
+ *   downstream processing. All mutating operations acquire a mutex to ensure
+ *   thread-safe updates.
+ *
+ * @notes
+ *   Upper bounds for string lengths are defined in the local upper_bound
+ *   namespace, allowing constraints to be tuned without changing the public
+ *   interface. Callers should consult is_valid() before using a pdf_statement
+ *   instance to drive PDF rendering or export operations.
+ *****************************************************************************/
 #include <pdf_statement_data.h>
 
 namespace upper_bound {

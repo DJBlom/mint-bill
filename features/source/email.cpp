@@ -1,10 +1,58 @@
-/********************************************************
- * Contents: Email implementation
- * Author: Dawid J. Blom
- * Date: December 11, 2024
+/*****************************************************************************
+ * @file    email.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implementation of email delivery and SMTP helper components.
+ *
+ * @details
+ *   This source file implements the high–level `feature::email` façade and
+ *   the supporting SMTP helpers in the `smtp` namespace declared in
+ *   `email.h`. Together they provide an end–to–end email sending path based
+ *   on libcurl.
+ *
+ *   Main responsibilities:
+ *
+ *     - feature::email
+ *       * Validates the `data::email` object.
+ *       * Creates and configures:
+ *           - `smtp::client`      – SMTP connection (URL, TLS, credentials).
+ *           - `smtp::header`      – RFC–style headers (To, From, Cc, Subject).
+ *           - `smtp::recipients`  – MAIL RCPT list derived from client data.
+ *           - `smtp::parts`       – MIME message body and attachments.
+ *       * Invokes `curl_easy_perform` on the shared CURL handle to send the
+ *         composed message and returns `true`/`false` on success/failure.
+ *
+ *     - smtp::client
+ *       * Configures SMTP server URL and enables TLS.
+ *       * Sets username, password, and MAIL FROM address from `data::admin`.
+ *
+ *     - smtp::header
+ *       * Generates header strings using `data::email`, `data::client`, and
+ *         `data::admin`.
+ *       * Uses `utility::word_slicer` to split long recipient lists and then
+ *         attaches the final header list via `CURLOPT_HTTPHEADER`.
+ *
+ *     - smtp::recipients
+ *       * Splits client email string(s) into discrete addresses and builds
+ *         the recipient list (`CURLOPT_MAIL_RCPT`) with `curl_slist`.
+ *
+ *     - smtp::parts
+ *       * Builds a multipart MIME message using `curl_mime`:
+ *           - Plain–text body from "email.txt" with placeholder replacement.
+ *           - HTML body from "email.html" with the same placeholder scheme.
+ *           - A multipart/alternative wrapper for the two bodies.
+ *           - One or more PDF attachments, base64 encoded, named using the
+ *             `data::email` subject (e.g., "<subject>.pdf").
+ *       * Placeholders such as `{{CLIENT_NAME}}`, `{{BUSINESS_NAME}}`, and
+ *         `{{CLIENT_DOCUMENT}}` are substituted via `update_dom`.
+ *
+ *   Error handling:
+ *     - Each step returns `false` on failure, allowing `feature::email::send`
+ *       to short–circuit and report an overall failure without throwing.
+ *     - libcurl resources (CURL handles, `curl_slist`, `curl_mime`) are owned
+ *       by smart pointers with custom deleters to ensure correct cleanup.
+ *
+ *****************************************************************************/
 #include <email.h>
 
 feature::email::email() {}

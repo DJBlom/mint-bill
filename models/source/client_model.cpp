@@ -1,12 +1,39 @@
-/********************************************************
- * Contents: Client register implementation
- * Author: Dawid J. Blom
- * Date: November 27, 2024
+/*******************************************************************************
+ * @file client_model.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the client model persistence logic.
+ *
+ * @details
+ * Defines the behavior of `model::client`, which coordinates between:
+ *  - The SQLite storage layer (`storage::database::sqlite`),
+ *  - The client and business serializers (`serialize::client`,
+ *    `serialize::business`),
+ *  - And the domain objects (`data::client`, `data::business`).
+ *
+ * Core operations:
+ *  - `load(const std::string&)`:
+ *      * Validates the provided business name.
+ *      * Executes `sql::query::client_select` with the business name as a
+ *        parameter.
+ *      * Delegates row-to-object conversion to `serialize::client`, returning
+ *        a populated `data::client` wrapped in `std::any`.
+ *
+ *  - `save(const std::any&)`:
+ *      * Unpacks and validates the `data::client` instance.
+ *      * Derives a corresponding `data::business` view for the same entity.
+ *      * Executes a transactional sequence:
+ *          - UPSERT business details (`business_details_usert`),
+ *          - UPSERT client details (`client_usert`),
+ *          - Commit or rollback on failure.
+ *      * Logs all error paths via `syslog` for traceability.
+ *
+ * Error handling:
+ *  - Invalid arguments and database/transaction failures are reported using
+ *    `LOG_CRIT` messages with file and line context.
+ *  - On any failure within the transaction, a rollback is attempted and
+ *    `false` is returned to the caller.
+ ******************************************************************************/
 #include <syslog.h>
-#include <iostream>
 #include <client_data.h>
 #include <client_model.h>
 #include <client_serialize.h>

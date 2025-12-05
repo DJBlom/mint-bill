@@ -1,10 +1,30 @@
-/********************************************************
- * Contents: admin info model implementation
- * Author: Dawid J. Blom
- * Date: November 18, 2024
+/*******************************************************************************
+ * @file admin_model.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the admin model backed by SQLite.
+ *
+ * @details
+ * This source file defines the behavior of the `model::admin` class, which
+ * is responsible for loading and saving administrator data to an SQLite
+ * database. Data is represented as `data::admin` and `data::business`
+ * objects and transported across the model boundary using `std::any`.
+ *
+ * Key responsibilities:
+ *  - Opening an encrypted SQLite connection using the configured database
+ *    file and password.
+ *  - Loading admin data:
+ *      * `load()`       – fetches admin data without a business key.
+ *      * `load(name)`   – fetches admin data for a specific business name.
+ *  - Saving admin and business details in a single transaction using
+ *    UPSERT-style queries to keep information consistent.
+ *
+ * The implementation relies on:
+ *  - `serialize::admin` and `serialize::business` to translate between
+ *    result sets and domain objects.
+ *  - `storage::database::sqlite` for transaction handling and query
+ *    execution.
+ *  - `syslog` for reporting validation failures and database errors.
+ *******************************************************************************/
 #include <string>
 #include <syslog.h>
 #include <admin_model.h>
@@ -16,6 +36,21 @@ model::admin::admin(const std::string& _database_file, const std::string& _datab
 	: database_file{_database_file}, database_password{_database_password} {}
 
 model::admin::~admin() {}
+
+std::any model::admin::load()
+{
+        data::admin admin_data;
+	serialize::admin admin_serialize{};
+	storage::database::sqlite database{this->database_file, this->database_password};
+	admin_data = std::move(std::any_cast<data::admin> (
+				admin_serialize.extract_data(
+					database.select(sql::query::admin_no_name_select)
+					)
+				)
+			);
+
+        return admin_data;
+}
 
 std::any model::admin::load(const std::string& _business_name)
 {

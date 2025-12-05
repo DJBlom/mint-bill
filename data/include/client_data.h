@@ -1,10 +1,35 @@
-/********************************************************
- * Contents: Client data definition
- * Author: Dawid J. Blom
- * Date: November 26, 2024
+/*****************************************************************************
+ * @file client_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the client data model, extending the core business information
+ *   with client-specific attributes such as VAT number and statement schedule.
+ *
+ * @details
+ *   The data::client structure derives from data::business to reuse common
+ *   business identity and contact fields, and augments them with additional
+ *   client-specific properties. These include a VAT registration number and a
+ *   configurable statement schedule used to determine how often and on which
+ *   day statements are generated.
+ *
+ *   Internal completeness is tracked using a bitmask-based flag mechanism,
+ *   enabling a concise implementation of is_valid() that combines client-level
+ *   flags with the base business validation logic. A mutex is used to protect
+ *   internal mutable state, providing basic thread safety when the object is
+ *   accessed concurrently.
+ *
+ * @responsibilities
+ *   Extend data::business with client-specific fields.
+ *   Provide setters and getters for VAT number and statement schedule.
+ *   Enforce basic validation rules for client attributes.
+ *   Track initialization state using an internal flag mask.
+ *   Support thread-safe updates using a client-specific mutex.
+ *
+ * @notes
+ *   The statement schedule format is validated externally via the
+ *   implementation, allowing a compact encoding (for example, period and
+ *   weekday) while keeping the public interface simple.
+ *****************************************************************************/
 #ifndef _CLIENT_DATA_H_
 #define _CLIENT_DATA_H_
 #include <mutex>

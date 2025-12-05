@@ -1,3 +1,29 @@
+/*****************************************************************************
+ * @file mock_pdf_invoice_data.cpp
+ *
+ * @brief
+ *   Factory functions that generate valid and invalid test data objects used
+ *   throughout the PDF-related unit tests.
+ *
+ * @details
+ *   This implementation provides reusable helpers for constructing
+ *   pre-configured instances of the following data models:
+ *
+ *     - data::client
+ *     - data::invoice
+ *     - data::admin
+ *
+ *   For each model, two functions are supplied:
+ *     * A "retrieve_*_data()" function returning a fully valid object that
+ *       satisfies all structural and formatting requirements.
+ *     * A "retrieve_bad_*_data()" function returning an intentionally invalid
+ *       object, allowing unit tests to exercise failure paths and validation
+ *       logic.
+ *
+ *   These helpers keep unit tests concise, reduce boilerplate setup, and ensure
+ *   consistency when generating complex nested data structures such as invoices
+ *   containing column data, or combined e-mail and PDF models.
+ *****************************************************************************/
 #include <mock_pdf_invoice_data.h>
 
 

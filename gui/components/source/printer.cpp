@@ -1,4 +1,78 @@
-
+/*******************************************************************************
+ * @file    printer.cpp
+ *
+ * @brief   PDF-to-printer bridge using Gtk::PrintOperation and Poppler.
+ *
+ * @details
+ * This module provides a small printing utility that takes raw PDF bytes
+ * (as std::string objects), converts them into Poppler documents, flattens
+ * them into a single page sequence, and drives a Gtk::PrintOperation to
+ * render them to a printer.
+ *
+ * Main responsibilities:
+ *   - Configure a print job:
+ *       * A4 portrait PageSetup with zero top/left/right margins.
+ *       * Monochrome Gtk::PrintSettings (no color).
+ *       * Synchronous Gtk::PrintOperation with progress UI.
+ *
+ *   - Convert application-generated PDFs into Poppler documents:
+ *       * render_poppler_documents():
+ *           - Accepts a vector of std::string, each containing raw PDF data.
+ *           - Uses std::async to load each into a poppler::document safely.
+ *           - Stores resulting std::shared_ptr<poppler::document> objects in
+ *             the member ‘documents’ vector.
+ *
+ *   - Compute combined page ranges across all input documents:
+ *       * number_of_pages_to_print():
+ *           - Iterates all Poppler documents and records, for each, its
+ *             starting page index in the global sequence, its page count,
+ *             and its index in the ‘documents’ vector.
+ *           - Uses the helper struct gui::part::page_range to represent
+ *             these ranges and compute the total number of pages to print.
+ *
+ *   - Drive the Gtk print pipeline:
+ *       * print():
+ *           - Validates input and main_window.
+ *           - Calls render_poppler_documents() and number_of_pages_to_print().
+ *           - Sets the total page count on Gtk::PrintOperation and runs the
+ *             PRINT_DIALOG action so the user can confirm printer, copies,
+ *             etc.
+ *
+ *       * draw_page():
+ *           - Called by Gtk::PrintOperation for each page index.
+ *           - Uses page_ranges to map a global page number to the correct
+ *             poppler::document and local page index.
+ *           - Renders the page via poppler::page_renderer into a Cairo
+ *             ImageSurface, scales it to fit the PrintContext extents, and
+ *             paints it onto the printer surface.
+ *
+ *       * print_operation_done():
+ *           - Logs the result of the print operation (ERROR, CANCEL,
+ *             IN_PROGRESS).
+ *           - Logs if no printer name is set on the PrintSettings.
+ *
+ * Helper type:
+ *   - gui::part::page_range
+ *       * Represents a contiguous range of pages belonging to a single
+ *         Poppler document within the global print sequence.
+ *       * Members:
+ *           - first_page: starting page index in the global sequence.
+ *           - number_of_pages: total number of pages from this document.
+ *           - document_index: index into the ‘documents’ vector.
+ *       * Methods:
+ *           - check(page): test whether a global page index belongs to this
+ *             range.
+ *           - local_page(page): translate a global page index to the
+ *             document’s local page index.
+ *           - current_document(): return associated document index.
+ *
+ * Error handling:
+ *   - Constructor throws app::errors::construction if any of the core Gtk
+ *     objects (PageSetup, PrintSettings, PrintOperation) cannot be created.
+ *   - Most methods log critical errors via syslog when encountering invalid
+ *     pointers, empty inputs, or Poppler/Gtk failures but try to keep the
+ *     API boolean-based for the caller.
+ ******************************************************************************/
 #include <future>
 #include <errors.h>
 #include <algorithm>

@@ -1,10 +1,26 @@
-/********************************************************
- * Contents: Client Register Page class definition
- * Author: Dawid J. Blom
- * Date: November 26, 2024
+/*******************************************************************************
+ * @file client_register_page.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Declaration of the gui::client_register_page class, responsible for
+ *        creating, displaying, validating, and saving client registration data
+ *        within the application's GUI.
+ *
+ * @details
+ * The client_register_page class implements the interface::register_page
+ * interface and provides all UI logic related to registering or editing client
+ * information. This includes business name, contact details, VAT number,
+ * statement schedule, and address information.
+ *
+ * Responsibilities:
+ *   - Bind UI elements using Gtk::Builder for all client-related entry fields.
+ *   - Load and display client data from the database.
+ *   - Validate user input and extract UI values into a data::client object.
+ *   - Present save-confirmation and error-alert dialogs.
+ *   - Maintain the database password required for model operations.
+ *
+ * The class is intentionally non-copyable and non-movable to preserve unique
+ * widget ownership and to prevent duplication of GTK state.
+ *******************************************************************************/
 #ifndef _CLIENT_REGISTER_PAGE_H_
 #define _CLIENT_REGISTER_PAGE_H_
 #include <gui.h>

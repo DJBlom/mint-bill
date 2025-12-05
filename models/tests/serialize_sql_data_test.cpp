@@ -1,10 +1,44 @@
 /*******************************************************************************
- * Contents: Serialize unit tests
- * Author: Dawid Blom
- * Date: December 9, 2024
+ * @file serialize_sql_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief Unit tests for serialization and persistence of business, admin,
+ *        client, labor/column, statement, and invoice data.
+ *
+ * @details
+ * This test suite verifies the end-to-end behavior of the serialization layer
+ * that bridges in-memory data structures and the SQLite database schema. The
+ * following aspects are covered:
+ *
+ *   • business_serialize_test
+ *       - Converting business/admin data into SQL parameter lists.
+ *       - Reading business rows from the database into data::business objects.
+ *
+ *   • admin_serialize_test
+ *       - Mapping admin data to SQL arguments for INSERT/UPDATE.
+ *       - Reconstructing data::admin from admin_* SELECT queries
+ *         (with and without explicit business name).
+ *
+ *   • client_serialize_test
+ *       - Converting client data into SQL parameters.
+ *       - Rebuilding data::client from client SELECT results.
+ *
+ *   • column_serialize_test (labor)
+ *       - Writing invoice labor/line-item data as SQL parameters.
+ *       - Extracting data::column vectors from labor SELECT queries.
+ *
+ *   • statement_serialize_test
+ *       - Serializing statement metadata into SQL arguments.
+ *       - Deserializing rows into data::statement objects, including
+ *         validation of failure/success paths.
+ *
+ *   • invoice_serialize_test
+ *       - Serializing full invoice records and associated labor lines.
+ *       - Reconstructing data::invoice objects (including material and
+ *         description columns) from joined invoice/labor queries.
+ *
+ * Together these tests ensure that all serialize::* classes correctly translate
+ * between the database representation and the strongly typed domain model.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -201,6 +235,42 @@ TEST(admin_serialize_test, convert_sql_admin_data_successfully)
 		std::any_cast<data::admin>(
 			admin_serialize.extract_data(
 				database.select(sql::query::admin_select, params)
+			)
+		)
+	};
+
+	CHECK_EQUAL(true, admin_data.is_valid());
+}
+
+TEST(admin_serialize_test, convert_sql_admin_data_successfully_without_name)
+{
+	serialize::admin admin_serialize{};
+	serialize::business business_serialize{};
+	data::admin tmp_admin_data{test::generate_business_data()};
+	data::business business_data{tmp_admin_data};
+	storage::database::sql_parameters admin_sql_parameters{
+		tmp_admin_data.get_name(),
+		tmp_admin_data.get_bank(),
+		tmp_admin_data.get_branch_code(),
+		tmp_admin_data.get_account_number(),
+		tmp_admin_data.get_password(),
+		tmp_admin_data.get_client_message()
+	};
+	storage::database::sql_parameters business_sql_parameters{
+		business_data.get_name(),
+		business_data.get_address(),
+		business_data.get_area_code(),
+		business_data.get_town(),
+		business_data.get_cellphone(),
+		business_data.get_email()
+	};
+	(void)database.select(sql::query::business_details_usert, business_sql_parameters);
+	(void)database.select(sql::query::admin_usert, admin_sql_parameters);
+	std::vector<storage::database::param_values> params = {tmp_admin_data.get_name()};
+	data::admin admin_data{
+		std::any_cast<data::admin>(
+			admin_serialize.extract_data(
+				database.select(sql::query::admin_no_name_select)
 			)
 		)
 	};

@@ -1,10 +1,31 @@
 /*******************************************************************************
- * Contents: stack unit tests
- * Author: Dawid Blom
- * Date: June 26, 2025
+ * @file    stack_tests.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief   Unit tests for the gui::part::stack component.
+ *
+ * @details
+ * This test suite verifies the behavior of the stack page-management utility
+ * used throughout the Mint-Bill GUI. The gui::part::stack class wraps a
+ * Gtk::Stack widget and provides:
+ *
+ *   - Safe creation from a Gtk::Builder file.
+ *   - Page-validity checks and visible page tracking.
+ *   - Subscription and notification for page-change observers.
+ *   - Programmatic page switching through set_current_page().
+ *
+ * The tests in this file validate:
+ *   - Proper handling of invalid builder references.
+ *   - Correct detection of stack validity before and after creation.
+ *   - Subscriber registration rules (reject duplicate pages, reject missing
+ *     callbacks or page names).
+ *   - Correct reaction to simulated GTK stack page changes.
+ *   - Retrieval of the current visible page name.
+ *
+ * Test Strategy:
+ *   - Uses Gtk::Application + Gtk::Builder loaded from mint-bill.ui.
+ *   - Uses Gtk::Stack's child switching to simulate GUI navigation.
+ *   - Uses a callback function to confirm subscriber notifications.
+ *******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 
@@ -80,6 +101,7 @@ TEST(stack_test, subscribe_no_callback)
 	(void) stack.create(builder);
 
 	CHECK_EQUAL(false, stack.subscribe("admin-page", nullptr));
+	CHECK_EQUAL(true, stack.set_current_page("admin-page"));
 }
 
 TEST(stack_test, subscribe_successfully)
@@ -87,6 +109,7 @@ TEST(stack_test, subscribe_successfully)
 	(void) stack.create(builder);
 
 	CHECK_EQUAL(true, stack.subscribe("admin-page", callback_function));
+	CHECK_EQUAL(true, stack.set_current_page("admin-page"));
 }
 
 TEST(stack_test, try_to_add_multiple_subscriber_to_the_same_page)

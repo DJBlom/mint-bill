@@ -1,9 +1,29 @@
 /*******************************************************************************
- * Contents: Read file feature unit tests
- * Author: Dawid Blom
- * Date: December 30, 2024
+ * @file    file_test.cpp
+ * @brief   Unit tests for the utility::file class.
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @details This test suite verifies the correctness, safety, and behavior of
+ *          the file-reading utility responsible for loading plain-text and HTML
+ *          resources from disk. The tests ensure:
+ *
+ *            • Correct reading of arbitrary text files, including multi-line
+ *              content and whitespace preservation.
+ *
+ *            • Proper RAII behavior—construction opens the file, and the
+ *              destructor closes it without leaking system resources.
+ *
+ *            • Thread safety when reading file contents, guaranteed through
+ *              internal mutex protection.
+ *
+ *            • Enforcement of non-copyable and non-movable semantics, ensuring
+ *              the file handle cannot be duplicated or transferred improperly.
+ *
+ *            • Successful reading of both plain text and HTML files, validating
+ *              that the class handles general-purpose file I/O consistently.
+ *
+ *          Collectively, these tests confirm that the utility::file abstraction
+ *          is reliable, safe, and suitable for use in higher-level components
+ *          such as email generation, templating, and document export workflows.
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -110,7 +130,7 @@ static const char* html{
 /**********************************TEST LIST************************************
  * 1) Read data from a file based path that should be provided. (Done)
  * 2) Ensure RAII. (Done)
- * 3) Ensure thread safety.
+ * 3) Ensure thread safety. (Done)
  * 4) Ensure non-copy or move semantics. (Done)
  * 5) Ensure plain text files can be read. (Done)
  * 6) Ensure html files can be read. (Done)

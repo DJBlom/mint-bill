@@ -1,10 +1,77 @@
-/********************************************************
- * Contents: invoice_pdf implementation
- * Author: Dawid J. Blom
- * Date: December 23, 2024
+/*****************************************************************************
+ * @file    invoice_pdf.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Implementation of the Mint-Bill invoice PDF generator.
+ *
+ * @details
+ *   This source file implements `feature::invoice_pdf`, which converts a
+ *   `data::pdf_invoice` object into a fully formatted PDF invoice using
+ *   Cairo / cairomm.
+ *
+ *   High-level flow (`generate()`):
+ *     1. Accept a `std::any` that is expected to contain `data::pdf_invoice`.
+ *     2. Validate the aggregate (`data::pdf_invoice::is_valid()`).
+ *     3. Create a `Cairo::PdfSurface` backed by an in-memory stream and a
+ *        `Cairo::Context` bound to that surface.
+ *     4. Configure a monospace font and fixed page dimensions.
+ *     5. Render, in sequence:
+ *          - Document header (e.g., "Invoice").
+ *          - Business / client information block.
+ *          - Invoice metadata (ID, date, order number, job card).
+ *          - Labor section (table, rows, and subtotal).
+ *          - Material section (table, rows, and subtotal).
+ *          - Grand total summary.
+ *          - Payment method details and client message.
+ *     6. Finalize the page with `show_page()` and `finish()` and return the
+ *        accumulated PDF bytes as a `std::string`.
+ *
+ *   Layout helpers:
+ *     - `add_header`, `add_information`, `add_invoice`,
+ *       `add_labor`, `add_material`, `add_grand_total`,
+ *       `add_payment_method`:
+ *         * Compose domain-level sections using the underlying drawing
+ *           primitives (`write_to_pdf*`, `draw_line`, alignment helpers).
+ *
+ *     - `add_items` / `add_item_description`:
+ *         * Iterate over `data::column` vectors to render tabular rows.
+ *         * Use `utility::boundary_slicer` to wrap long descriptions into
+ *           multiple lines while preserving column alignment.
+ *
+ *     - `write_to_pdf`, `write_to_pdf_in_center`,
+ *       `write_to_pdf_from_right`, `write_to_pdf_from_right_information`:
+ *         * Configure font size, compute `Cairo::TextExtents`, update the
+ *           current cursor position, and render the given string.
+ *
+ *   Page and cursor management:
+ *     - `add_new_line`:
+ *         * Advances the vertical cursor and triggers a new page if the
+ *           next line would exceed the bottom margin.
+ *
+ *     - `add_new_section`:
+ *         * Adds vertical spacing between logical sections.
+ *
+ *     - `align_to_left_border`, `align_to_right_border`,
+ *       `align_information_section`, `align_to_top_border`:
+ *         * Update horizontal/vertical cursors to fixed margin anchors.
+ *
+ *     - `align_to_right`, `align_to_right_information`,
+ *       `align_to_center`:
+ *         * Compute x-coordinates based on text extents so that text
+ *           is right-aligned or centered within the configured widths.
+ *
+ *     - `adjust_height` and `adjust_payment_height`:
+ *         * Predict future vertical usage and insert a page break when
+ *           remaining space is insufficient to render the upcoming section.
+ *
+ *   Robustness:
+ *     - `context_ok()` inspects the Cairo target status to detect write or
+ *       surface errors after drawing operations.
+ *     - All layout helpers return `bool` and are checked by callers so that
+ *       `generate()` can abort gracefully and return an empty result if any
+ *       drawing step fails.
+ *
+ *****************************************************************************/
 #include <invoice_pdf.h>
 
 

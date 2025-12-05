@@ -1,10 +1,32 @@
-/********************************************************
- * Contents: Statement data definition
- * Author: Dawid J. Blom
- * Date: November 27, 2025
+/*****************************************************************************
+ * @file statement_data.h
  *
- * NOTE:
- *******************************************************/
+ * @brief
+ *   Declares the statement data model that extends billing information with
+ *   statement-specific period boundaries.
+ *
+ * @details
+ *   The data::statement structure derives from data::billing to reuse common
+ *   billing metadata such as identifier, name, date, and paid status. It
+ *   augments this with a start and end period, representing the date range
+ *   covered by a financial statement.
+ *
+ *   A bitmask-based flag mechanism is used to track initialization of the
+ *   period fields, enabling is_valid() to combine statement-level completeness
+ *   with the underlying billing validation logic. A mutex guards modifications
+ *   to internal state, allowing safe use in multi-threaded environments.
+ *
+ * @responsibilities
+ *   Extend billing data with statement period boundaries.
+ *   Provide setters and getters for period start and end values.
+ *   Track initialization state using an internal flag mask.
+ *   Support thread-safe updates via a per-instance mutex.
+ *
+ * @notes
+ *   This abstraction focuses on logical statement metadata. Formatting,
+ *   presentation, and persistence are expected to be handled by higher-level
+ *   components that consume the statement data.
+ *****************************************************************************/
 #ifndef _STATEMENT_DATA_H_
 #define _STATEMENT_DATA_H_
 #include <mutex>

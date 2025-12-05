@@ -1,5 +1,31 @@
+/*****************************************************************************
+ * @file billing_data.cpp
+ *
+ * @brief
+ *   Implements the billing data model defined in billing_data.h, including
+ *   construction, assignment, validation, and controlled mutation of billing
+ *   attributes.
+ *
+ * @details
+ *   This implementation defines the behavior of data::billing, including copy
+ *   and move semantics, as well as setter and getter functions for each of the
+ *   core billing fields: identifier, name, date, and paid status. Each setter
+ *   applies simple string length checks before updating internal state and
+ *   recording the result in the flag mask.
+ *
+ *   The check_flags() helper consolidates the flag state to determine whether
+ *   all required fields are set, allowing is_valid() to provide a clear
+ *   indication of completeness. A mutex is used to guard writes to internal
+ *   members so that billing records can be safely modified in multithreaded
+ *   environments.
+ *
+ * @notes
+ *   Field length limits are provided via the local upper_bound namespace,
+ *   allowing the constraints to be tuned without changing the core class
+ *   interface. Callers should rely on is_valid() to test completeness rather
+ *   than assuming setter calls always yield a valid object.
+ *****************************************************************************/
 #include <billing_data.h>
-
 
 namespace upper_bound {
         constexpr std::uint8_t name_length{50};

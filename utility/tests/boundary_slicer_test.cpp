@@ -1,9 +1,31 @@
 /*******************************************************************************
- * Contents: String slicer feature unit tests
- * Author: Dawid Blom
- * Date: December 23, 2024
+ * @file    boundary_slicer_test.cpp
+ * @brief   Unit tests for the boundary_slicer utility class.
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
+ * @details This test suite verifies the correctness, robustness, and safety of
+ *          the boundary_slicer implementation. The slicer is responsible for
+ *          segmenting long input strings into multiple lines while respecting
+ *          a configurable maximum line length and avoiding word fragmentation
+ *          whenever possible.
+ *
+ *          The tests cover the following behaviors:
+ *
+ *            1. Correct segmentation of a ~500-character string into 40-char
+ *               bounded lines without breaking words unnecessarily.
+ *
+ *            2. Proper handling of very large words that exceed the boundary
+ *               constraint, requiring forced slicing into multiple chunks.
+ *
+ *            3. Graceful handling of empty input and trailing whitespace blocks.
+ *
+ *            4. Validation that the implemented logic produces expected output
+ *               sequences (golden-value comparison).
+ *
+ *            5. Internal thread-safe operations through mutex-guarded updates.
+ *
+ *          These tests ensure slicing stability for UI formatting, receipts,
+ *          PDF rendering, and any feature relying on deterministic text-boundary
+ *          segmentation.
  ******************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"

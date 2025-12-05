@@ -1,10 +1,23 @@
-############################################################################
-# Contents: Project Build Functions
-# Author: Dawid Blom
-# Date: September 15, 2023
+################################################################################
+# File: build.sh
+# Description:
+#   Provides build automation for the project, supporting both host builds and
+#   deployable production builds. Wraps CMake configuration, binary generation,
+#   packaging, and build directory management.
 #
-# NOTE:
-############################################################################
+# Features:
+#   - Host and deploy build modes
+#   - Automatic build directory recreation
+#   - Packaging deployment artifacts into tar.gz archives
+#
+# Usage:
+#   ./build.sh <build-type>
+#
+#   Supported build types:
+#       host    – Build for local development machine
+#       deploy  – Build and package for production release
+#
+################################################################################
 #!/bin/bash
 
 

@@ -1,10 +1,39 @@
-/*******************************************************************************
- * Contents: business data unit tests
- * Author: Dawid Blom
- * Date: October 13, 2025
+/*****************************************************************************
+ * @file business_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::business model, verifying correctness,
+ *   validation logic, and copy/move behavior of the core business data layer.
+ *
+ * @details
+ *   This test suite exercises the foundational business data structure, which
+ *   represents shared contact and identity information used across multiple
+ *   higher-level models. The following aspects are covered:
+ *
+ *   - Field assignment and retrieval:
+ *       • name
+ *       • address
+ *       • area code
+ *       • town
+ *       • cellphone number
+ *       • email address
+ *
+ *   - Validation behavior:
+ *       • Required fields must not be empty
+ *       • Email addresses must match the expected format
+ *       • Entry fields must respect the maximum length constraints
+ *
+ *   - Flag and state handling:
+ *       • Ensures that flag bits are properly set and cleared
+ *       • Confirms that is_valid() reflects the true completeness of data
+ *
+ *   - Copy and move semantics:
+ *       • Validates that copied and moved instances preserve correctness
+ *         and the internal validity state.
+ *
+ *   Together, these tests help ensure that data::business behaves reliably as
+ *   the base class for extended models such as client and admin.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

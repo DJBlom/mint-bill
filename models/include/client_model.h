@@ -1,10 +1,29 @@
-/********************************************************
- * Contents: Client register interface definition
- * Author: Dawid J. Blom
- * Date: November 27, 2024
+/*******************************************************************************
+ * @file client_model.h
  *
- * NOTE:
- *******************************************************/
+ * @brief Client model interface to the persistence layer.
+ *
+ * @details
+ * Declares the `model::client` class, which implements the
+ * `interface::model_register` interface to provide a model-layer façade for
+ * client records.
+ *
+ * Responsibilities:
+ *  - Load a single `data::client` record associated with a given business
+ *    name from the backing SQLite database.
+ *  - Save a `data::client` instance and its associated business details using
+ *    transactional SQL operations.
+ *
+ * Design notes:
+ *  - The model owns only the database connection configuration
+ *    (`database_file`, `database_password`); no connection is kept open
+ *    between calls.
+ *  - All I/O is funneled through the generic `load()` / `save()` interface
+ *    inherited from `interface::model_register`, using `std::any` as the
+ *    transport type between layers.
+ *  - Internal `DATA_FIELDS` and `PARAMETERS` enums document the expected
+ *    column and parameter ordering used by the serialization and SQL layers.
+ ******************************************************************************/
 #ifndef _CLIENT_MODEL_H_
 #define _CLIENT_MODEL_H_
 #include <models.h>

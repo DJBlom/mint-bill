@@ -1,10 +1,23 @@
-/********************************************************
- * Contents: Client Register Page class implementation
- * Author: Dawid J. Blom
- * Date: November 26, 2024
+/*******************************************************************************
+ * @file client_register_page.cpp
  *
- * NOTE:
- *******************************************************/
+ * @brief Implementation of the gui::client_register_page class, providing the
+ *        logic for binding client-registration widgets, interacting with the
+ *        underlying data model, and managing user-driven save and search
+ *        operations.
+ *
+ * @details
+ * This implementation:
+ *   - Retrieves all relevant Gtk::Entry and Gtk::MessageDialog widgets.
+ *   - Connects response handlers for save-confirmation and error dialogs.
+ *   - Clears and populates UI fields based on database query results.
+ *   - Extracts user input into a data::client object used by model::client.
+ *   - Logs errors such as invalid data, empty search queries, or missing UI
+ *     widgets using syslog for operational visibility.
+ *
+ * Error handling ensures that the GUI remains responsive and consistent even
+ * when data retrieval, saving, or UI binding issues occur.
+ *******************************************************************************/
 #include <config.h>
 #include <syslog.h>
 #include <client_data.h>

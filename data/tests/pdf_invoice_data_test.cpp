@@ -1,10 +1,30 @@
-/*******************************************************************************
- * Contents: PDF invoice data unit tests
- * Author: Dawid Blom
- * Date: December 23, 2024
+/*****************************************************************************
+ * @file pdf_invoice_data_test.cpp
  *
- * Note: Refer to the TEST LIST for details on what this fixture tests.
- ******************************************************************************/
+ * @brief
+ *   Unit tests for the data::pdf_invoice aggregation model.
+ *
+ * @details
+ *   This test suite verifies the behavior of the pdf_invoice data structure,
+ *   which combines three validated entities into a single object used for
+ *   PDF invoice generation:
+ *     - data::client  : recipient/customer information
+ *     - data::invoice : invoice header and line-item totals
+ *     - data::admin   : business/issuer information
+ *
+ *   The following aspects are exercised:
+ *     - Assigning and retrieving valid client, invoice, and admin data.
+ *     - Ensuring that invalid sub-objects propagate a failed validity
+ *       result in the aggregated pdf_invoice object.
+ *     - Verifying the correctness of the overall is_valid() function when
+ *       mixing valid and invalid sub-components.
+ *     - Copy and move semantics for pdf_invoice, including copy assignment,
+ *       move assignment, copy construction, and move construction.
+ *
+ *   Together, these tests help guarantee that pdf_invoice instances provide
+ *   a consistent, thread-safe container for all data required to render an
+ *   invoice PDF, before any rendering logic is invoked.
+ *****************************************************************************/
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 

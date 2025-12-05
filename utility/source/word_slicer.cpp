@@ -1,10 +1,20 @@
-/********************************************************
- * Contents: Word slicer implementation
- * Author: Dawid J. Blom
- * Date: December 28, 2024
+/*******************************************************************************
+ * @file    word_slicer.cpp
+ * @brief   Implementation of the word-by-word slicing utility.
  *
- * NOTE:
- *******************************************************/
+ * @details Contains the operational logic for validating data, iterating through
+ *          whitespace-separated tokens, and populating the internal vector of
+ *          words. A mutex guards updates to the sliced_data structure, ensuring
+ *          consistent behavior when accessed from multiple threads.
+ *
+ *          Key behaviors:
+ *            • slice(...) resets state and populates words up to a fixed limit.
+ *            • data_ok(...) checks basic validity of the input.
+ *            • safely_add(...) performs synchronized insertion into the buffer.
+ *
+ *          This component is intentionally lightweight and is commonly used to
+ *          segment customer-facing text in the billing system.
+ ******************************************************************************/
 #include <word_slicer.h>
 
 namespace limit {

@@ -1,4 +1,27 @@
-
+/*******************************************************************************
+ * @file business_serialize.cpp
+ *
+ * @brief Implementation of the business serialization logic.
+ *
+ * @details
+ * This source file defines the behavior of `serialize::business`, which is
+ * responsible for translating low-level SQLite result sets into a strongly
+ * typed `data::business` instance.
+ *
+ * Core workflow:
+ *  - `extract_data()` validates the incoming row set and, when non-empty,
+ *    calls `collect_values()` to extract ordered string values. It logs
+ *    failures via `syslog` when no rows or no values are present.
+ *  - `collect_values()` iterates through all rows and columns, using
+ *    `std::visit` on the variant column type and collecting string
+ *    representations of each field in the order defined by `DATA_FIELDS`.
+ *  - The resulting vector is then mapped into the fields of `data::business`
+ *    (name, address, area code, town, cellphone, email).
+ *
+ * By isolating this mapping in a dedicated component, the rest of the
+ * application can work with typed business objects instead of dealing with
+ * database-specific structures directly.
+ *******************************************************************************/
 #include <syslog.h>
 #include <business_data.h>
 #include <business_serialize.h>
@@ -36,28 +59,6 @@ std::any serialize::business::extract_data(const storage::database::part::rows& 
 
 	return business_data;
 }
-
-// storage::database::sql_parameters serialize::business::package_data(const std::any& _data)
-// {
-// 	storage::database::sql_parameters params{};
-// 	data::business business_data{std::any_cast<data::business>(_data)};
-// 	if (business_data.is_valid() == false)
-// 	{
-// 		syslog(LOG_CRIT, "BUSINESS_SERIALIZE: argument is not valid - "
-// 				 "filename %s, line number %d", __FILE__, __LINE__);
-// 	}
-// 	else
-// 	{
-// 		params.emplace_back(business_data.get_name());
-// 		params.emplace_back(business_data.get_address());
-// 		params.emplace_back(business_data.get_area_code());
-// 		params.emplace_back(business_data.get_town());
-// 		params.emplace_back(business_data.get_cellphone());
-// 		params.emplace_back(business_data.get_email());
-// 	}
-//
-// 	return params;
-// }
 
 std::vector<std::string> serialize::business::collect_values(const storage::database::part::rows& _rows)
 {
