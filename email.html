@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <style>
+                        body {
+                                margin: 0;
+                                padding: 0;
+                                font-family: monospace;
+                                background-color: #3d3d5c;
+                        }
+                        table {
+                                border-spacing: 0;
+                                width: 100%;
+                        }
+                        img {
+                                max-width: 100%;
+                                height: auto;
+                                display: block;
+                        }
+                        .content {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                background-color: #DAE1ED;
+                                padding: 20px;
+                                border-radius: 5px;
+                                box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.8);
+                        }
+                        .header {
+                                background-color: #4C679A;
+                                color: #2A3955;
+                                text-align: center;
+                                padding: 20px;
+                                font-size: 24px;
+                                font-weight: bold;
+                                border-radius: 5px;
+                        }
+                        .body {
+                                font-size: 16px;
+                                color: #151B26;
+                                line-height: 1.6;
+                        }
+                        .footer {
+                                font-size: 12px;
+                                background-color: #2A3955;
+                                color: #DAE1ED;
+                                text-align: center;
+                                margin-top: 20px;
+                                padding: 10px;
+                                border-radius: 5px;
+                        }
+                </style>
+        </head>
+        <body>
+                <table>
+                        <tr>
+                                <td>
+                                        <div class="content">
+                                                <div class="header">
+                                                        Greatings, {{CLIENT_NAME}}!
+                                                </div>
+                                                <div class="body">
+                                                        <p>Thank you for your continuous support!</p> 
+                                                        <p>Please find attached your {{CLIENT_DOCUMENT}}.</p>
+                                                        <p>If there are any issues, please do not hesitate to contact us!</p>
+                                                        <p><b>Contact:</b></p>
+                                                        <ul>
+                                                                <li>Cell: {{BUSINESS_CELLPHONE}} </li>
+                                                                <li>Email: {{BUSINESS_EMAIL}}</li>
+                                                        </ul>
+                                                        <p>Thank you!</p>
+                                                </div>
+                                                <div class="footer">
+                                                        &copy; {{BUSINESS_NAME}}. All rights reserved.
+                                                </div>
+                                        </div>
+                                </td>
+                        </tr>
+                </table>
+        </body>
+</html>

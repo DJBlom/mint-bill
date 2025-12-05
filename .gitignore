@@ -1,0 +1,26 @@
+############################################
+# Git ignore file for unwanted files
+############################################
+
+# Build folder
+build
+
+# CTags
+tags
+
+# Created test folders
+test/objs
+test/lib
+test/coverage
+test/*.pdf
+test/mint-bill
+
+# Doxygen
+docs/doxydoc
+
+# Vim .swp files
+*.swp
+
+# SQLcipher files.
+*.db-shm
+*.db-wal

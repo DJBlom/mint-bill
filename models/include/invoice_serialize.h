@@ -1,0 +1,244 @@
+/*******************************************************************************
+ * @file invoice_serialize.h
+ *
+ * @brief Serialization helpers for invoice and labor database rows.
+ *
+ * @details
+ * Declares:
+ *
+ *  - `serialize::invoice`
+ *      * Implements `interface::multi_serialize` for converting a set of
+ *        `storage::database::part::rows` into a collection of `data::invoice`
+ *        objects, returned as `std::vector<std::any>`.
+ *      * Field-to-column mapping is defined by the `DATA_FIELDS` enum to keep
+ *        column ordering explicit and maintainable.
+ *      * Provides an optional `set_schedule()` hook (currently a no-op) for
+ *        future schedule-related behavior.
+ *
+ *  - `serialize::labor`
+ *      * Utility serializer that converts labor query results into a
+ *        `std::vector<data::column>`, representing invoice line items.
+ *      * Uses the `DATA_FIELDS` enum to map quantity, description, amount,
+ *        row number, and description/material flag.
+ *
+ *  - `sql::query` namespace constants
+ *      * `invoice_usert`                – upsert for invoice header data.
+ *      * `invoice_admin_select`         – query admin/business details
+ *                                         associated with invoices.
+ *      * `invoice_client_select`        – query client and scheduling info.
+ *      * `invoice_select`               – query invoice header details.
+ *      * `labor_usert`                  – upsert for labor (line item) rows.
+ *      * `labor_delete_all_for_invoice` – delete all labor rows for an invoice.
+ *      * `description_labor_select`     – select description-type line items.
+ *      * `material_labor_select`        – select material-type line items.
+ *
+ * These serializers are used by the invoice model and related components to
+ * bridge between raw SQL query results and domain-specific types.
+ ******************************************************************************/
+#ifndef _SERIALIZE_INVOICE_H_
+#define _SERIALIZE_INVOICE_H_
+#include <serialize.h>
+#include <column_data.h>
+#include <invoice_data.h>
+
+namespace serialize {
+class invoice : public interface::multi_serialize {
+public:
+	invoice() = default;
+	invoice(const invoice&) = delete;
+	invoice(invoice&&) = delete;
+	invoice& operator= (const invoice&) = delete;
+	invoice& operator= (invoice&&) = delete;
+	virtual ~invoice() override;
+
+	[[nodiscard]] virtual std::vector<std::any> extract_data(const storage::database::part::rows&) override;
+	virtual void set_schedule(const std::string&);
+
+private:
+	[[nodiscard]] std::vector<data::invoice> collect_values(const storage::database::part::rows&);
+
+private:
+	enum DATA_FIELDS {
+		BUSINESS_NAME = 0,
+		INVOICE_NUMBER,
+		ORDER_NUMBER,
+		JOB_CARD_NUMBER,
+		INVOICE_DATE,
+		PAID_STATUS,
+		MATERIAL_TOTAL,
+		DESCRIPTION_TOTAL,
+		GRAND_TOTAL
+	};
+};
+
+class labor {
+public:
+	labor() = default;
+	labor(const labor&) = delete;
+	labor(labor&&) = delete;
+	labor& operator= (const labor&) = delete;
+	labor& operator= (labor&&) = delete;
+	virtual ~labor() = default;
+
+	[[nodiscard]] virtual std::vector<data::column> extract_data(const storage::database::part::rows&);
+
+private:
+	[[nodiscard]] std::vector<data::column> collect_values(const storage::database::part::rows&);
+
+private:
+	enum DATA_FIELDS {
+		QUANTITY = 0,
+		DESCRIPTION,
+		AMOUNT,
+		ROW_NUMBER,
+		IS_DESCRIPTION
+	};
+};
+}
+
+
+namespace sql {
+namespace query {
+constexpr const char* invoice_usert{R"sql(
+	INSERT INTO invoice (
+		invoice_id,
+		business_id,
+		statement_id,
+		order_number,
+		job_card_number,
+		date_created,
+		paid_status,
+		material_total,
+		description_total,
+		grand_total
+	)
+	VALUES (?,
+		(SELECT c.business_id
+			FROM client c
+			JOIN business_details b ON b.business_id = c.business_id
+			WHERE b.business_name = ?
+		),
+		(SELECT s.statement_id
+			FROM statement s
+			JOIN client c2 ON c2.business_id = s.business_id
+			JOIN business_details b2 ON b2.business_id = c2.business_id
+			WHERE b2.business_name = ?
+			  AND s.period_start   = ?
+			  AND s.period_end     = ?),
+		?, ?, ?, ?, ?, ?, ?
+	)
+	ON CONFLICT (invoice_id) DO UPDATE SET
+		business_id       = excluded.business_id,
+		statement_id      = excluded.statement_id,
+		order_number      = excluded.order_number,
+		job_card_number   = excluded.job_card_number,
+		date_created      = excluded.date_created,
+		paid_status       = excluded.paid_status,
+		material_total    = excluded.material_total,
+		description_total = excluded.description_total,
+		grand_total       = excluded.grand_total;
+)sql"};
+
+
+constexpr const char* invoice_admin_select{R"sql(
+	SELECT
+		bd.business_name,
+		bd.street,
+		bd.area_code,
+		bd.town_name,
+		bd.contact_number,
+		bd.email_address,
+		a.bank_name,
+		a.branch_code,
+		a.account_number,
+		a.app_password,
+		a.client_message
+	FROM admin a
+	JOIN business_details bd ON bd.business_id = a.business_id;
+)sql"};
+
+constexpr const char* invoice_client_select{R"sql(
+	SELECT
+		b.business_name,
+		b.email_address,
+		b.contact_number,
+		b.street,
+		b.area_code,
+		b.town_name,
+		c.vat_number,
+		c.statement_schedule
+	FROM client c
+	JOIN business_details b ON b.business_id = c.business_id
+	WHERE b.business_name = ?;
+)sql"};
+
+constexpr const char* invoice_select{R"sql(
+	SELECT
+		b.business_name,
+		i.invoice_id,
+		i.order_number,
+		i.job_card_number,
+		i.date_created,
+		i.paid_status,
+		i.material_total,
+		i.description_total,
+		i.grand_total
+	FROM invoice i
+	JOIN business_details b ON b.business_id = i.business_id
+	WHERE b.business_name = ?;
+)sql"};
+
+constexpr const char* labor_usert{R"sql(
+	INSERT INTO labor (
+		invoice_id,
+		line_number,
+		is_description,
+		quantity,
+		description,
+		amount
+	)
+	VALUES (
+		(SELECT i.invoice_id
+			FROM invoice i
+			JOIN business_details b ON b.business_id = i.business_id
+			WHERE b.business_name   = ?
+			AND i.order_number    = ?
+			AND i.job_card_number = ?),
+			?, ?, ?, ?, ?
+	)
+	ON CONFLICT (invoice_id, line_number, is_description) DO UPDATE SET
+		quantity    = excluded.quantity,
+		description = excluded.description,
+		amount      = excluded.amount;
+)sql"};
+
+constexpr const char* labor_delete_all_for_invoice{R"SQL(
+        DELETE FROM labor
+        WHERE invoice_id = ?;
+    )SQL"
+};
+
+constexpr const char* description_labor_select{R"sql(
+	SELECT
+		quantity,
+		description ,
+		amount,
+		line_number,
+		is_description
+	FROM labor
+	WHERE invoice_id = ? AND is_description = 1
+	ORDER BY is_description, line_number;
+)sql"};
+
+constexpr const char* material_labor_select{R"sql(
+	SELECT
+		quantity,
+		description ,
+		amount
+	FROM labor
+	WHERE invoice_id = ? AND is_description = 0
+	ORDER BY is_description, line_number;
+)sql"};
+}
+}
+#endif
