@@ -48,6 +48,9 @@
 #include <client_register_page.h>
 
 
+#include <iostream>
+
+
 class mint_bill {
 public:
 	mint_bill();
@@ -796,5 +799,9 @@ void mint_bill::database_password_exist()
 	catch (const std::exception& e)
 	{
 		syslog(LOG_CRIT, "EXCEPTION: Signal handler --database password exists-- %s", e.what());
+	}
+	catch (...)
+	{
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --unkown--");
 	}
 }
