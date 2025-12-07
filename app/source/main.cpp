@@ -803,5 +803,6 @@ void mint_bill::database_password_exist()
 	catch (...)
 	{
 		syslog(LOG_CRIT, "EXCEPTION: Signal handler --unkown--");
+		std::cerr << "EXCEPTION: Signal handler database_password_exists --unkown--\n";
 	}
 }
