@@ -141,7 +141,7 @@ void gui::admin_page::connect_save_alert()
         }
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
-		model::admin admin_model{app::config::path_to_database_file, this->database_password};
+		model::admin admin_model{MINTBILL_DB_PATH, this->database_password};
                 data::admin data{extract_page_entries()};
                 switch(response)
                 {
@@ -213,7 +213,7 @@ void gui::admin_page::clear_entries()
 
 void gui::admin_page::update_business_info_with_db_data(const std::string& _business_name)
 {
-	model::admin admin_model{app::config::path_to_database_file, this->database_password};
+	model::admin admin_model{MINTBILL_DB_PATH, this->database_password};
 	std::any data{admin_model.load(_business_name)};
 	data::admin admin_data{std::any_cast<data::admin> (data)};
         if (admin_data.is_valid() == false)

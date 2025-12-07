@@ -279,7 +279,7 @@ bool gui::statement_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 						else
 						{
 							this->email_future = std::move(std::async(std::launch::async, [this] () {
-								model::statement statement_model{app::config::path_to_database_file,
+								model::statement statement_model{MINTBILL_DB_PATH,
 												 this->database_password};
 								data::email data{statement_model.prepare_for_email(this->documents)};
 								feature::email email;
@@ -340,7 +340,7 @@ bool gui::statement_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_buil
 						}
 						else
 						{
-							model::statement statement_model{app::config::path_to_database_file,
+							model::statement statement_model{MINTBILL_DB_PATH,
 											 this->database_password};
 							std::vector<std::string> data{statement_model.prepare_for_print(this->documents)};
 							gui::part::printer printer{"statement"};
@@ -401,7 +401,7 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 						}
 						else
 						{
-							model::statement statement_model{app::config::path_to_database_file, this->database_password};
+							model::statement statement_model{MINTBILL_DB_PATH, this->database_password};
 							data::statement statement_data{this->selected_pdf_statement.get_statement()};
 							if (statement_model.save(statement_data) == false)
 							{
@@ -410,7 +410,7 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 							}
 							else
 							{
-								model::invoice invoice_model{app::config::path_to_database_file,
+								model::invoice invoice_model{MINTBILL_DB_PATH,
 											     this->database_password};
 								for (const std::any& data : this->invoice_data)
 								{
@@ -456,7 +456,7 @@ bool gui::statement_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_build
 bool gui::statement_page::populate(const std::string& _business_name)
 {
 	std::vector<std::any> pdf_statements{};
-	model::statement statement_model{app::config::path_to_database_file, this->database_password};
+	model::statement statement_model{MINTBILL_DB_PATH, this->database_password};
 	for (const std::any& data : statement_model.load(_business_name))
 	{
 		data::pdf_statement pdf_statement{std::any_cast<data::pdf_statement>(data)};

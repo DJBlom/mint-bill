@@ -134,7 +134,7 @@ void gui::client_register_page::connect_save_alert()
 
         this->save_alert_dialog->signal_response().connect([this] (int response) {
                 data::client data{extract_page_entries()};
-		model::client client_model{app::config::path_to_database_file, this->database_password};
+		model::client client_model{MINTBILL_DB_PATH, this->database_password};
                 switch(response)
                 {
                         case GTK_RESPONSE_YES:
@@ -199,7 +199,7 @@ void gui::client_register_page::clear_all_entries()
 
 void gui::client_register_page::display_on_ui(const std::string& _business_name)
 {
-	model::client client_model{app::config::path_to_database_file, this->database_password};
+	model::client client_model{MINTBILL_DB_PATH, this->database_password};
 	data::client data = std::any_cast<data::client> (client_model.load(_business_name));
 	if (data.is_valid() == false)
 	{

@@ -708,7 +708,7 @@ void mint_bill::database_password_exist()
 	}
 	else
 	{
-		model::admin admin_model{app::config::path_to_database_file, password};
+		model::admin admin_model{MINTBILL_DB_PATH, password};
 		std::any data{admin_model.load()};
 		data::admin admin_data{std::any_cast<data::admin> (data)};
 		if (admin_data.is_valid() == false)

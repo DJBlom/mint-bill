@@ -323,7 +323,7 @@ bool gui::invoice_page::save_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builder
 		else
 		{
 			success = this->save_alert.connect([this] (const int& _response) {
-				model::invoice invoice_model{app::config::path_to_database_file, this->database_password};
+				model::invoice invoice_model{MINTBILL_DB_PATH, this->database_password};
 				data::invoice data{this->extract_invoice_data()};
 				switch(_response)
 				{
@@ -412,7 +412,7 @@ bool gui::invoice_page::email_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builde
 						else
 						{
 							this->email_future = std::move(std::async(std::launch::async, [this] () {
-								model::invoice invoice_model{app::config::path_to_database_file,
+								model::invoice invoice_model{MINTBILL_DB_PATH,
 											     this->database_password};
 								data::email data{invoice_model.prepare_for_email(
 										 this->invoices_selected)};
@@ -464,7 +464,7 @@ bool gui::invoice_page::print_setup(const Glib::RefPtr<Gtk::Builder>& _ui_builde
 		else
 		{
 			success = this->print_alert.connect([this, _main_window] (const int& response) {
-				model::invoice invoice_model{app::config::path_to_database_file, this->database_password};
+				model::invoice invoice_model{MINTBILL_DB_PATH, this->database_password};
 				switch (response)
 				{
 					case GTK_RESPONSE_YES:
@@ -1318,7 +1318,7 @@ void gui::invoice_page::populate(const std::string& _business_name)
         {
 		this->business_name.clear();
 		this->business_name = _business_name;
-		model::invoice invoice_model{app::config::path_to_database_file, this->database_password};
+		model::invoice invoice_model{MINTBILL_DB_PATH, this->database_password};
 		std::vector<std::any> db_invoices = invoice_model.load(_business_name);
 		std::vector<data::pdf_invoice> pdf_invoices;
 		std::transform(db_invoices.cbegin(),
