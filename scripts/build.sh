@@ -27,7 +27,7 @@ BIN_SUFFIX=
 CMAKE=cmake
 BUILD_TYPE="Debug"
 BUILD_DIR=build
-APPLICATION_NAME=(basename `pwd`)
+APPLICATION_NAME=$(basename `pwd`)
 BIN_DIR=$BUILD_DIR/$APPLICATION_NAME
 SUPPORTED_BUILD_TYPES=("host" "deploy")
 
