@@ -712,9 +712,11 @@
                             <property name="valign">center</property>
                             <child>
                               <object class="GtkGrid" id="admin-common-information-grid">
+                                <property name="column-homogeneous">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="margin-end">25</property>
                                 <property name="margin-start">25</property>
+                                <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">10</property>
                                 <child>
                                   <object class="GtkEntry" id="admin-page-name-entry">
@@ -818,7 +820,9 @@
                                 <property name="hexpand">True</property>
                                 <property name="margin-end">25</property>
                                 <property name="margin-start">25</property>
+                                <property name="row-homogeneous">True</property>
                                 <property name="row-spacing">10</property>
+                                <property name="valign">start</property>
                                 <child>
                                   <object class="GtkLabel" id="admin-page-bank-label">
                                     <property name="can-focus">False</property>
