@@ -42,6 +42,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(APP_DATA_DIR "share/${APP_ID}")
 
 if(BUILD_PROJECT)
         find_package(CURL REQUIRED)
@@ -185,6 +186,16 @@ if(BUILD_PROJECT)
         endif()
 
 	if (INSTALL_APPLICATION)
+		install(FILES
+			${CMAKE_SOURCE_DIR}/gui/mint-bill.css
+			DESTINATION ${APP_DATA_DIR}
+		)
+
+		install(DIRECTORY
+			${CMAKE_SOURCE_DIR}/gui/ui/
+			DESTINATION ${APP_DATA_DIR}/ui
+			FILES_MATCHING PATTERN "*.ui"
+		)
 		install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 	else ()
 		message("Application is not installed.")
