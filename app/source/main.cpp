@@ -266,7 +266,7 @@ bool mint_bill::load_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
         try
         {
                 verified = true;
-                ui_builder->add_from_file(app::config::path_to_ui_file);
+                ui_builder->add_from_file(MINTBILL_UI_PATH);
         }
         catch(const Glib::FileError& ex)
         {
@@ -616,7 +616,7 @@ bool mint_bill::css_setup()
 	else
 	{
 		success = true;
-		css_provider->load_from_path("gui/mint-bill.css");
+		css_provider->load_from_path(MINTBILL_CSS_PATH);
 		Gtk::StyleContext::add_provider_for_display(
 			display,
 			css_provider,
