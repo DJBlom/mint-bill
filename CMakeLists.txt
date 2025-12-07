@@ -29,10 +29,9 @@ option(INSTALL_APPLICATION "Installing Application" OFF)
 option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
-
 option(APP_NAME "The name of the compiled application executable" "mint-bill-tme")
 
-project(mint-bill LANGUAGES CXX C ASM)
+project(${APP_NAME} LANGUAGES CXX C ASM)
 
 
 set(CMAKE_C_STANDARD 11)

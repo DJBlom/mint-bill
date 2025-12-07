@@ -27,8 +27,8 @@ BIN_SUFFIX=
 CMAKE=cmake
 BUILD_TYPE="Debug"
 BUILD_DIR=build
-PROJECT_NAME=$(basename `pwd`)
-BIN_DIR=$BUILD_DIR/$PROJECT_NAME
+APPLICATION_NAME=(basename `pwd`)
+BIN_DIR=$BUILD_DIR/$APPLICATION_NAME
 SUPPORTED_BUILD_TYPES=("host" "deploy")
 
 function run_build()
@@ -50,9 +50,10 @@ function run_build()
 
 function host_build()
 {
+	echo "Project name $POES"
         mkdir -p $BIN_DIR
         $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-                -DAPP_NAME=$PROJECT_NAME  \
+                -DAPP_NAME=$APPLICATION_NAME  \
                 -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
                 -DBUILD_PROJECT=ON
         $CMAKE --build $BIN_DIR
@@ -60,9 +61,8 @@ function host_build()
 
 function deploy_build()
 {
-        $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-                -DAPP_NAME=$PROJECT_NAME  \
-                -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
+        $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE={$BUILD_TYPE}  \
+                -DAPP_NAME=$APPLICATION_NAME  \
                 -DBUILD_PROJECT=ON \
 		-DINSTALL_APPLICATION=ON
         $CMAKE --build $BIN_DIR
