@@ -52,6 +52,8 @@ CPPUTEST_EXE_FLAGS +=-c -v
 # CPPUTEST_EXE_FLAGS +=-sg "statement_pdf_view_test"
 # CPPUTEST_EXE_FLAGS +=-sg "statement_page_column_view_test"
 
+CPPUTEST_CXXFLAGS += -DMINTBILL_DB_PATH=\"../storage/test/model_test.db\"
+
 CPPUTEST_CXXFLAGS +=-std=c++23 
 CPPUTEST_CXXFLAGS += $(shell pkg-config --cflags cairomm-1.16 gtkmm-4.0 poppler-cpp sqlcipher libsecret-1) -DSQLITE_HAS_CODEC
 CPPUTEST_CFLAGS += $(shell pkg-config --cflags poppler-cpp sqlcipher libsecret-1) -DSQLITE_HAS_CODEC
