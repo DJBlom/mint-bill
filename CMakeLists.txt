@@ -188,14 +188,10 @@ if(BUILD_PROJECT)
 	if (INSTALL_APPLICATION)
 		install(FILES
 			${CMAKE_SOURCE_DIR}/gui/mint-bill.css
+			${CMAKE_SOURCE_DIR}/gui/mint-bill.ui
 			DESTINATION ${APP_DATA_DIR}
 		)
 
-		install(DIRECTORY
-			${CMAKE_SOURCE_DIR}/gui/ui/
-			DESTINATION ${APP_DATA_DIR}/ui
-			FILES_MATCHING PATTERN "*.ui"
-		)
 		install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 	else ()
 		message("Application is not installed.")
