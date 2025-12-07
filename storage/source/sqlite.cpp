@@ -30,7 +30,6 @@
 #include <sqlite.h>
 #include <syslog.h>
 
-#include <iostream>
 
 //GCOVR_EXCL_START
 storage::database::sqlite::sqlite(const std::string& _path, const std::string& _db_password)
@@ -43,7 +42,6 @@ storage::database::sqlite::sqlite(const std::string& _path, const std::string& _
 	}
 	else
 	{
-		std::cerr << "DB PATH AT RUNTIME: '" << _path.c_str() << "'\n";
 		if (sqlite3_open_v2(_path.c_str(), &this->database, (SQLITE_OPEN_READWRITE | SQLITE_OPEN_NOMUTEX), nullptr) != SQLITE_OK)
 		{
 			sqlite3_close_v2(this->database);
