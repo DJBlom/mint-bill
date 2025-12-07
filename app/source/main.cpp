@@ -150,115 +150,137 @@ int mint_bill::launch(int argc, char** argv)
 
 void mint_bill::activate()
 {
-        Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
-	if (ui_builder == nullptr)
+	try
 	{
-                syslog(LOG_CRIT, "MINT_BILL: ui_builder is not valid - "
-                                 "filename %s, line number %d", __FILE__, __LINE__);
-		return;
+		Glib::RefPtr<Gtk::Builder> ui_builder{Gtk::Builder::create()};
+		if (ui_builder == nullptr)
+		{
+			syslog(LOG_CRIT, "MINT_BILL: ui_builder is not valid - "
+					 "filename %s, line number %d", __FILE__, __LINE__);
+			return;
+		}
+		else
+		{
+
+			if (this->load_ui_file(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to load the UI file - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->settings_setup() == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to set application settings - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->css_setup() == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to setup the application css - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->window_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to setup the application windows - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->database_password_components_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to setup the application windows - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->admin_page.create(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to create the business page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->client_register_page.create(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to create the client registration page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->invoice_page.create(ui_builder, this->mint_bill_window) == false)
+			{
+				syslog(LOG_CRIT, "Failed to create the invoice page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->statement_page.create(ui_builder, this->mint_bill_window) == false)
+			{
+				syslog(LOG_CRIT, "Failed to create the statement page - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->print_button_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to setup the print button - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->email_button_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to setup the email button - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->save_button_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to setup the save button - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->search_bar_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to setup the search bar - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+
+			if (this->stack_setup(ui_builder) == false)
+			{
+				syslog(LOG_CRIT, "Failed to setup the stack - "
+						 "filename %s, line number %d", __FILE__, __LINE__);
+				return;
+			}
+		}
 	}
-	else
+	catch (const std::exception& e)
 	{
-
-		if (this->load_ui_file(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to load the UI file - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->settings_setup() == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to set application settings - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->css_setup() == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to setup the application css - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->window_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to setup the application windows - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->database_password_components_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to setup the application windows - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->admin_page.create(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to create the business page - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->client_register_page.create(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to create the client registration page - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->invoice_page.create(ui_builder, this->mint_bill_window) == false)
-		{
-			syslog(LOG_CRIT, "Failed to create the invoice page - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->statement_page.create(ui_builder, this->mint_bill_window) == false)
-		{
-			syslog(LOG_CRIT, "Failed to create the statement page - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->print_button_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to setup the print button - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->email_button_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to setup the email button - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->save_button_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to setup the save button - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->search_bar_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to setup the search bar - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
-
-		if (this->stack_setup(ui_builder) == false)
-		{
-			syslog(LOG_CRIT, "Failed to setup the stack - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			return;
-		}
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --activate-- %s", e.what());
+	}
+	catch (...)
+	{
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --activate/unkown--");
 	}
 }
+	// try
+	// {
+	// }
+	// catch (const std::exception& e)
+	// {
+	// 	syslog(LOG_CRIT, "EXCEPTION: Signal handler --database password exists-- %s", e.what());
+	// }
+	// catch (...)
+	// {
+	// 	syslog(LOG_CRIT, "EXCEPTION: Signal handler --activate/unkown--");
+	// }
 
 bool mint_bill::load_ui_file(const Glib::RefPtr<Gtk::Builder>& ui_builder)
 {
@@ -682,18 +704,29 @@ bool mint_bill::database_password_components_setup(const Glib::RefPtr<Gtk::Build
 
 void mint_bill::database_password_save_button_on_clicked()
 {
-	std::string password{this->database_password_entry->get_text()};
-	this->database_password_future = std::move(std::async(std::launch::async, [password, this] () {
-		feature::password_manager password_manager{app::config::password_manager_schema_name};
-		std::string secret{""};
-		if (password_manager.store_password(password, app::config::password_number) == true)
-		{
-			secret = password_manager.lookup_password(app::config::password_number);
-		}
-		this->database_password_dispatcher.emit();
+	try
+	{
+		std::string password{this->database_password_entry->get_text()};
+		this->database_password_future = std::move(std::async(std::launch::async, [password, this] () {
+			feature::password_manager password_manager{app::config::password_manager_schema_name};
+			std::string secret{""};
+			if (password_manager.store_password(password, app::config::password_number) == true)
+			{
+				secret = password_manager.lookup_password(app::config::password_number);
+			}
+			this->database_password_dispatcher.emit();
 
-		return secret;
-	}));
+			return secret;
+		}));
+	}
+	catch (const std::exception& e)
+	{
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --database password exists-- %s", e.what());
+	}
+	catch (...)
+	{
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --activate/unkown--");
+	}
 }
 
 void mint_bill::database_password_exist()
