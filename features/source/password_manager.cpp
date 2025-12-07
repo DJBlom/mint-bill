@@ -36,7 +36,6 @@
  *  - Ensures predictable application behavior even under failure conditions.
  ******************************************************************************/
 #include <password_manager.h>
-#include <iostream>
 
 feature::password_manager::password_manager(const std::string& _name): schema_name{_name}
 {
@@ -115,8 +114,6 @@ std::string feature::password_manager::lookup_password(const int& _number)
 			secret_password_free(secret);
 		}
 	}
-
-	std::cerr << "PASSWORD FROM SECRET SERVICE: '" << password << "'" << std::endl;
 
 	return password;
 } // GCOVR_EXCL_LINE
