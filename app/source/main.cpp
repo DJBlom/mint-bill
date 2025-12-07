@@ -698,63 +698,70 @@ void mint_bill::database_password_save_button_on_clicked()
 
 void mint_bill::database_password_exist()
 {
-	std::string password{this->database_password_future.get()};
-	if (password.empty() == true)
+	try
 	{
-		syslog(LOG_CRIT, "MINT_BILL: no database password exist - "
-				"filename %s, line number %d", __FILE__, __LINE__);
-		this->database_password_window->set_visible(true);
-		this->app->add_window(*this->database_password_window);
-	}
-	else
-	{
-		model::admin admin_model{MINTBILL_DB_PATH, password};
-		std::any data{admin_model.load()};
-		data::admin admin_data{std::any_cast<data::admin> (data)};
-		if (admin_data.is_valid() == false)
+		std::string password{this->database_password_future.get()};
+		if (password.empty() == true)
 		{
-			syslog(LOG_CRIT, "MINT_BILL: the admin data is not valid - "
-					 "filename %s, line number %d", __FILE__, __LINE__);
-			if (this->stack.set_current_page("admin-page") == false)
-			{
-				syslog(LOG_CRIT, "MINT_BILL: Failed to make admin-page the visible page - "
-						 "filename %s, line number %d", __FILE__, __LINE__);
-			}
+			syslog(LOG_CRIT, "MINT_BILL: no database password exist - "
+					"filename %s, line number %d", __FILE__, __LINE__);
+			this->database_password_window->set_visible(true);
+			this->app->add_window(*this->database_password_window);
 		}
 		else
 		{
-			this->organization_label->set_text(admin_data.get_name());
-			if (this->stack.set_current_page("invoice-page") == false)
+			model::admin admin_model{MINTBILL_DB_PATH, password};
+			std::any data{admin_model.load()};
+			data::admin admin_data{std::any_cast<data::admin> (data)};
+			if (admin_data.is_valid() == false)
 			{
-				syslog(LOG_CRIT, "MINT_BILL: Failed to make invoice-page the visible page - "
+				syslog(LOG_CRIT, "MINT_BILL: the admin data is not valid - "
 						 "filename %s, line number %d", __FILE__, __LINE__);
+				if (this->stack.set_current_page("admin-page") == false)
+				{
+					syslog(LOG_CRIT, "MINT_BILL: Failed to make admin-page the visible page - "
+							 "filename %s, line number %d", __FILE__, __LINE__);
+				}
 			}
-		}
+			else
+			{
+				this->organization_label->set_text(admin_data.get_name());
+				if (this->stack.set_current_page("invoice-page") == false)
+				{
+					syslog(LOG_CRIT, "MINT_BILL: Failed to make invoice-page the visible page - "
+							 "filename %s, line number %d", __FILE__, __LINE__);
+				}
+			}
 
-		if (this->admin_page.set_database_password(password) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
-					"filename %s, line number %d", __FILE__, __LINE__);
-		}
+			if (this->admin_page.set_database_password(password) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
 
-		if (this->client_register_page.set_database_password(password) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
-					"filename %s, line number %d", __FILE__, __LINE__);
-		}
+			if (this->client_register_page.set_database_password(password) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
 
-		if (this->invoice_page.set_database_password(password) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
-					"filename %s, line number %d", __FILE__, __LINE__);
-		}
+			if (this->invoice_page.set_database_password(password) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
 
-		if (this->statement_page.set_database_password(password) == false)
-		{
-			syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
-					"filename %s, line number %d", __FILE__, __LINE__);
-		}
+			if (this->statement_page.set_database_password(password) == false)
+			{
+				syslog(LOG_CRIT, "MINT_BILL: failed to set database password - "
+						"filename %s, line number %d", __FILE__, __LINE__);
+			}
 
-		this->database_password_window->close();
+			this->database_password_window->close();
+		}
+	}
+	catch (const std::exception& e)
+	{
+		syslog(LOG_CRIT, "EXCEPTION: Signal handler --database password exists-- %s", e.what());
 	}
 }
