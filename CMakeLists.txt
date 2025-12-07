@@ -29,7 +29,8 @@ option(INSTALL_APPLICATION "Installing Application" OFF)
 option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
-option(APP_NAME "The name of the compiled application executable" "mint-bill-tme")
+option(APP_NAME "The name of the compiled application executable" "mint-bill")
+option(APP_ID "The name of the compiled application executable" "org.app.mint-bill")
 
 project(${APP_NAME} LANGUAGES CXX C ASM)
 
@@ -69,6 +70,7 @@ if(BUILD_PROJECT)
                 $<$<CONFIG:DEBUG>:DEBUG>
                 $<$<CONFIG:DEBUG>:TRACE_ENABLED>
 		SQLITE_HAS_CODEC=1
+		MINT_BILL_APP_ID="${APP_ID}"
         )
 
 	add_executable(${PROJECT_NAME}

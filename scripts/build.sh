@@ -28,6 +28,7 @@ CMAKE=cmake
 BUILD_TYPE="Debug"
 BUILD_DIR=build
 APPLICATION_NAME=$(basename `pwd`)
+APPLICATION_ID="org.app.$APPLICATION_NAME"
 BIN_DIR=$BUILD_DIR/$APPLICATION_NAME
 SUPPORTED_BUILD_TYPES=("host" "deploy")
 
@@ -54,6 +55,7 @@ function host_build()
         mkdir -p $BIN_DIR
         $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
                 -DAPP_NAME=$APPLICATION_NAME  \
+                -DAPP_ID=$APPLICATION_ID  \
                 -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
                 -DBUILD_PROJECT=ON
         $CMAKE --build $BIN_DIR

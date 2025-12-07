@@ -128,7 +128,7 @@ mint_bill::mint_bill()
 
 bool mint_bill::create()
 {
-        this->app = Gtk::Application::create(app::config::app_name);
+        this->app = Gtk::Application::create(MINT_BILL_APP_ID);
 	if (this->app == nullptr)
 	{
                 syslog(LOG_CRIT, "The mint_bill application is not valid - "
