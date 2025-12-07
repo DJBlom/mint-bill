@@ -24,21 +24,16 @@
 ###################################################################################################
 cmake_minimum_required(VERSION 3.25)
 
-option(BUILD_PROJECT_FOR_DEPLOY "Build the project for deployment" OFF)
 option(BUILD_PROJECT "Build the project" OFF)
+option(INSTALL_APPLICATION "Installing Application" OFF)
 option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
 
 
-# if(BUILD_PROJECT_FOR_DEPLOY)
-#     project(${CMAKE_PROJECT_NAME}${CMAKE_PROJECT_VERSION}${CMAKE_EXECUTABLE_SUFFIX} LANGUAGES CXX C ASM)
-#     message("Building the project with a version tag")
-# else()
-#     message("Building the project without any version tag")
-# endif()
 set(APP_NAME "mint-bill")
 project(${APP_NAME} LANGUAGES CXX C ASM)
+
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 23)
@@ -183,4 +178,12 @@ if(BUILD_PROJECT)
         else ()
                 message(STATUS "'objdump' not found: cannot generate .S file")
         endif()
+
+	if (INSTALL_APPLICATION)
+		install(TARGETS mint-bill RUNTIME DESTINATION bin)
+	else ()
+		message("Application is not installed.")
+	endif()
+
+
 endif()
