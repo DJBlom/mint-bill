@@ -30,9 +30,9 @@ option(UNIT_TESTS "Perform unit tests" OFF)
 option(STATIC_CODE_ANALYSIS "Perform static code analysis" OFF)
 option(CODE_COVERAGE "Perform code coverage" OFF)
 
+option(APP_NAME "The name of the compiled application executable" "mint-bill-tme")
 
-set(APP_NAME "mint-bill")
-project(${APP_NAME} LANGUAGES CXX C ASM)
+project(mint-bill LANGUAGES CXX C ASM)
 
 
 set(CMAKE_C_STANDARD 11)
@@ -72,7 +72,7 @@ if(BUILD_PROJECT)
 		SQLITE_HAS_CODEC=1
         )
 
-        add_executable(${PROJECT_NAME}
+	add_executable(${PROJECT_NAME}
                 ${CMAKE_SOURCE_DIR}/app/source/main.cpp
         )
 
@@ -118,6 +118,10 @@ if(BUILD_PROJECT)
                 ${GTKMM_LIBRARY_DIRS}
                 ${CAIROMM_LIBRARY_DIRS}
         )
+
+	set_target_properties(${PROJECT_NAME} PROPERTIES
+		OUTPUT_NAME "${APP_NAME}"
+	)
 
         if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/gui)
                 add_subdirectory(${CMAKE_SOURCE_DIR}/gui)

@@ -52,7 +52,7 @@ function host_build()
 {
         mkdir -p $BIN_DIR
         $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-                -DCMAKE_PROJECT_NAME=$PROJECT_NAME  \
+                -DAPP_NAME=$PROJECT_NAME  \
                 -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
                 -DBUILD_PROJECT=ON
         $CMAKE --build $BIN_DIR
@@ -61,7 +61,7 @@ function host_build()
 function deploy_build()
 {
         $CMAKE -S . -B $BIN_DIR --warn-uninitialized -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-                -DCMAKE_PROJECT_NAME=$PROJECT_NAME  \
+                -DAPP_NAME=$PROJECT_NAME  \
                 -DCMAKE_EXECUTABLE_SUFFIX=$BIN_SUFFIX  \
                 -DBUILD_PROJECT=ON \
 		-DINSTALL_APPLICATION=ON
