@@ -180,10 +180,8 @@ if(BUILD_PROJECT)
         endif()
 
 	if (INSTALL_APPLICATION)
-		install(TARGETS mint-bill RUNTIME DESTINATION bin)
+		install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 	else ()
 		message("Application is not installed.")
 	endif()
-
-
 endif()
